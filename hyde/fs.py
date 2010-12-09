@@ -4,14 +4,14 @@ python are distributed across modules: os, os.path, fnamtch, shutil and distutil
 to make the right choices for common operations to provide a single interface.
 """
 
-import codecs
-import fnmatch
+# import codecs
+# import fnmatch
 import os
-import shutil
-from datetime import datetime
+# import shutil
+# from datetime import datetime
 
 # pylint: disable-msg=E0611
-from distutils import dir_util, file_util
+# from distutils import dir_util, file_util
 
 class FS(object):
     """
@@ -26,3 +26,31 @@ class FS(object):
 
     def __repr__(self):
         return self.path
+
+    @property
+    def name(self):
+        """
+        Returns the name of the FS object with its extension
+        """
+        return os.path.basename(self.path)
+
+    @property
+    def name_without_extension(self):
+        """
+        Returns the name of the FS object without its extension
+        """
+        return os.path.splitext(self.name)[0]
+
+    @property
+    def extension(self):
+        """
+        File's extension prefixed with a dot.
+        """
+        return os.path.splitext(self.path)[1]
+
+    @property
+    def kind(self):
+        """
+        File's extension without a dot prefix.
+        """
+        return self.extension.lstrip(".")

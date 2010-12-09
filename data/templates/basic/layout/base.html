@@ -46,7 +46,7 @@
   {% endblock headjs %}
   {% block endhead %}{% endblock endhead %}
 </head>
-<body id="{{page.id if page.id else page.base_name}}">
+<body id="{{page.id if page.id else page.name_without_extension}}">
 
   <div id="container">
     <header>
