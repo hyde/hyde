@@ -47,61 +47,56 @@
   {% block endhead %}{% endblock endhead %}
 </head>
 <body id="{{page.id if page.id else page.name_without_extension}}">
-
+  {% block content %}
   <div id="container">
+    {% block container %}
     <header>
-
+    {% block header %}{% endblock header %}
     </header>
-
     <div id="main" role="main">
+        {% block main %}{% endblock main %}
     </div>
-
     <footer>
-
+        {% block footer %}{% endblock %}
     </footer>
+    {% endblock container%}
   </div> <!--! end of #container -->
+  {% endblock content%}
 
-
+  {% block js %}
   <!-- Javascript at the bottom for fast page loading -->
-
+  {% block jquery %}
   <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="js/libs/jquery-1.4.4.js"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="{% media 'js/libs/jquery-1.4.4.js' %}"%3E%3C/script%3E'))</script>
+  {% endblock jquery %}
 
-
+  {% block scripts %}
   <!-- scripts concatenated and minified via ant build script-->
-  <script src="js/plugins.js"></script>
-  <script src="js/script.js"></script>
+  <script src="{% media 'js/plugins.js' %}"></script>
+  <script src="{% media 'js/script.js' %}"></script>
   <!-- end concatenated and minified scripts-->
+  {% endblock scripts %}
 
-
+  {% block pngfix %}
   <!--[if lt IE 7 ]>
     <script>
       // More information on tackling transparent PNGs for IE goo.gl/mZiyb
       //fix any <img> or .png_bg background-images
-      $.getScript("js/libs/dd_belatedpng.js",function(){ DD_belatedPNG.fix('img, .png_bg'); });
+      $.getScript("{% media 'js/libs/dd_belatedpng.js' %}",function(){ DD_belatedPNG.fix('img, .png_bg'); });
     </script>
   <![endif]-->
+  {% endblock pngfix %}
 
-  <!-- yui profiler and profileviewer - remove for production -->
-  <script src="js/profiling/yahoo-profiling.min.js"></script>
-  <script src="js/profiling/config.js"></script>
-  <!-- end profiling code -->
-
-
-  <!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
-       change the UA-XXXXX-X to be your site's ID -->
-  <script>
-   var _gaq = [['_setAccount', 'UA-XXXXX-X'], ['_trackPageview']];
-   (function(d, t) {
-    var g = d.createElement(t),
-        s = d.getElementsByTagName(t)[0];
-    g.async = true;
-    g.src = ('https:' == location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    s.parentNode.insertBefore(g, s);
-   })(document, 'script');
-  </script>
-
+  {% block debug %}
+  {% include "devmode.html" %}
+  {% endblock debug %}
+  
+  {%block analytics %}
+  {% include "analytics.html" %}
+  {% endblock analytics %}
+  
+  {% endblock js %}
 </body>
 </html>
-{% endblock %}
+{% endblock all %}
