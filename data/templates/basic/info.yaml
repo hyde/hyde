@@ -1,0 +1,13 @@
+author: Lakshmi Vyasarajan
+description: A basic layout for hyde. Based on html5 boilerplate
+website: http://hydehub.org/hyde/templates/basic
+template: jinja2 (2.6)
+version: 0.1
+dependencies:
+    scripts:
+        - jquery (1.4)
+        - dd_belatedpng
+    extensions:
+        - media
+    widgets:
+        - analytics

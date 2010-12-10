@@ -2,6 +2,7 @@
 def init(args):
     print args.sitepath
     print args.force
+    print args.template
 
 def gen(args): pass
 

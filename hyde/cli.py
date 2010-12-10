@@ -19,6 +19,8 @@ def main():
                                         description="Entry points for hyde")
     init_command = subcommands.add_parser('init', help='Create a new hyde site')
     init_command.set_defaults(run=init)
+    init_command.add_argument('-t', '--template', action='store', default='basic', dest='template',
+                        help='Overwrite the current site if it exists')
     init_command.add_argument('-f', '--force', action='store_true', default=False, dest='force',
                         help='Overwrite the current site if it exists')
     args = parser.parse_args()
