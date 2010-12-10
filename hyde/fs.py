@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Unified object oriented interface for interacting with file system objects. File system operations in
 python are distributed across modules: os, os.path, fnamtch, shutil and distutils. This module attempts

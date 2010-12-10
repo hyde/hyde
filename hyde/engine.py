@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def init(args):
     print args.sitepath
     print args.force
