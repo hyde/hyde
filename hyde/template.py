@@ -4,7 +4,7 @@ Interface for hyde template engines. To use a different template engine,
 the following interface must be implemented.
 """
 class Template(object):
-    def setup_env(config):
+    def configure(self, config):
         """
         The config object is a simple YAML object with required settings. The template
         implementations are responsible for transforming this object to match the `settings`
