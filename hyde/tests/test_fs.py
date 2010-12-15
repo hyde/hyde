@@ -60,3 +60,10 @@ def test_read_all():
 
     txt = File(path).read_all()
     assert txt == utxt
+    
+def test_write():
+    utxt = u'åßcdeƒ'
+    path = DATA_ROOT.child('unicode.txt')
+    File(path).write(utxt)
+    txt = File(path).read_all()
+    assert txt == utxt

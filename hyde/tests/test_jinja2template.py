@@ -3,9 +3,11 @@
 Use nose
 `$ pip install nose`
 `$ nosetests`
+
+Code borrowed from rwbench.py from the jinja2 examples
 """
 from datetime import datetime
-from hyde.ext.templates.jinja2 import Jinja2Template
+from hyde.ext.templates.jinja2Template import Jinja2Template
 from hyde.fs import File, Folder
 from jinja2.utils import generate_lorem_ipsum
 from random import choice, randrange
@@ -26,6 +28,8 @@ class Article(object):
         self.pub_date = datetime.utcfromtimestamp(randrange(10 ** 9, 2 * 10 ** 9))
         self.published = True
 
+def dateformat(x):
+    return x.strftime('%Y-%m-%d')
 
 class User(object):
 
@@ -49,11 +53,17 @@ context = dict(users=users, articles=articles, page_navigation=navigation)
 
 def test_render():
     """
-    Uses the real world benchmark code from jinja.
+    Uses pyquery to test the html structure for validity
     """
     t = Jinja2Template()
-    config = yaml.load(JINJA2.child('config.yaml'))
-    t.configure(None)
+    t.configure(JINJA2.path, None)
+    t.env.filters['dateformat'] = dateformat
     html = t.render('index.html', context)
-    expected = File(JINJA2.child('index_expected.html')).read_all()
-    assert_html_equals(expected, html)
+    from pyquery import PyQuery
+    actual = PyQuery(html)
+    assert actual(".navigation li").length == 30
+    assert actual("div.article").length == 20
+    assert actual("div.article h2").length == 20
+    assert actual("div.article h2 a").length == 20
+    assert actual("div.article p.meta").length == 20
+    assert actual("div.article div.text").length == 20

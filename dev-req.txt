@@ -1,0 +1,15 @@
+Django==1.2.3
+Genshi==0.6
+Jinja2==2.5.5
+Mako==0.3.6
+Markdown==2.0.3
+MarkupSafe==0.11
+PyYAML==3.09
+logilab-astng==0.21.0
+logilab-common==0.53.0
+lxml==2.3beta1
+nose==0.11.4
+pylint==0.22.0
+pyquery==0.6.1
+unittest2==0.5.1
+wsgiref==0.1.2

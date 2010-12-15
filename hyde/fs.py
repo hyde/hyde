@@ -78,6 +78,12 @@ class File(FS):
             read_text = fin.read()
         return read_text
 
+    def write(self, text, encoding="utf-8"):
+        """
+        Writes the given text to the file using the given encoding.
+        """
+        with codecs.open(self.path, 'w', encoding) as fout:
+            fout.write(text)
 
 class Folder(FS):
     """
