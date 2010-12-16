@@ -7,7 +7,7 @@ Use nose
 Code borrowed from rwbench.py from the jinja2 examples
 """
 from datetime import datetime
-from hyde.ext.templates.jinja2Template import Jinja2Template
+from hyde.ext.templates.jinja import Jinja2Template
 from hyde.fs import File, Folder
 from jinja2.utils import generate_lorem_ipsum
 from random import choice, randrange
