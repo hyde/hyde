@@ -3,7 +3,7 @@
 """
 The hyde executable
 """
-from cli import main
+from engine import Engine
 
 if __name__ == "__main__":
-    main()
+    Engine().start()

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-A nice declarative interface for Argument parser
+Declarative interface for argparse
 """
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser
 from collections import namedtuple
 
 __all__ = [
@@ -93,8 +93,7 @@ class param(metarator):
 
 class Application(object):
     """
-    Bare bones base class for command line applications. Hides the
-    meta programming complexities.
+    Barebones base class for command line applications.
     """
     __metaclass__ = CommandLine
 

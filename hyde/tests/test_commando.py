@@ -6,7 +6,7 @@ Use nose
 """
 
 from contextlib import nested
-from hyde.command_line import Application, command, subcommand, param
+from hyde.commando import Application, command, subcommand, param
 from util import trap_exit_pass, trap_exit_fail
 from mock import Mock, patch
 try:
