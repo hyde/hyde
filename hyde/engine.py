@@ -5,7 +5,7 @@ Implements the hyde entry point commands
 from commando import *
 from hyde.exceptions import HydeException
 from hyde.fs import File, Folder
-from hyde.layout import Layout
+from hyde.layout import Layout, HYDE_DATA
 from hyde.version import __version__
 
 import os
@@ -42,9 +42,9 @@ class Engine(Application):
         if sitepath.exists and not args.overwrite:
             raise HydeException("The given site path[%s] is not empty" % sitepath)
         layout = Layout.find_layout(args.layout)
-        if not layout.exists:
+        if not layout or not layout.exists:
             raise HydeException(
             "The given layout is invalid. Please check if you have the `layout` "
-            "is in the right place and the environment variable has been setup"
-            "properly")
+            "in the right place and the environment variable(%s) has been setup "
+            "properly if you are using custom path for layouts" % HYDE_DATA)
         layout.copy_to(args.sitepath)

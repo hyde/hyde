@@ -5,5 +5,9 @@ The hyde executable
 """
 from hyde.engine import Engine
 
-if __name__ == "__main__":
+def main():
+    """Main"""
     Engine().run()
+
+if __name__ == "__main__":
+    main()

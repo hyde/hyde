@@ -55,8 +55,8 @@ def test_render():
     """
     Uses pyquery to test the html structure for validity
     """
-    t = Jinja2Template()
-    t.configure(JINJA2.path, None)
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
     t.env.filters['dateformat'] = dateformat
     html = t.render('index.html', context)
     from pyquery import PyQuery

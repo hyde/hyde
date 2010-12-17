@@ -43,3 +43,9 @@ def test_ensure_no_exception_when_sitepath_does_not_exist():
     assert TEST_SITE.child_folder('layout').exists
     assert File(TEST_SITE.child('info.yaml')).exists
 
+@raises(HydeException)
+@with_setup(create_test_site, delete_test_site)
+def test_ensure_exception_when_layout_is_invalid():
+    e = Engine()
+    e.run(e.parse(['-s', str(TEST_SITE), 'init', '-l', 'junk']))
+
