@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Unified object oriented interface for interacting with file system objects. File system operations in
-python are distributed across modules: os, os.path, fnamtch, shutil and distutils. This module attempts
-to make the right choices for common operations to provide a single interface.
+Unified object oriented interface for interacting with file system objects.
+File system operations in python are distributed across modules: os, os.path,
+fnamtch, shutil and distutils. This module attempts to make the right choices
+for common operations to provide a single interface.
 """
 
 import codecs
 # import fnmatch
 import os
-# import shutil
+import shutil
 # from datetime import datetime
 
 # pylint: disable-msg=E0611
@@ -28,6 +29,19 @@ class FS(object):
     def __repr__(self):
         return self.path
 
+    def __eq__(self, other):
+        return str(self) == str(other)
+
+    def __ne__(self, other):
+        return str(self) != str(other)
+
+    @property
+    def exists(self):
+        """
+        Does the file system object exist?
+        """
+        return os.path.exists(self.path)
+
     @property
     def name(self):
         """
@@ -41,6 +55,27 @@ class FS(object):
         The parent folder. Returns a `Folder` object.
         """
         return Folder(os.path.dirname(self.path))
+
+
+    @staticmethod
+    def file_or_folder(path):
+        """
+        Returns a File or Folder object that would represent the given path.
+        """
+        target = str(path)
+        return Folder(target) if os.path.isdir(target) else File(target)
+
+    def __get_destination__(self, destination):
+        """
+        Returns a File or Folder object that would represent this entity
+        if it were copied or moved to `destination`. `destination` must be
+        an instance of File or Folder.
+        """
+        if os.path.isdir(str(destination)):
+            return FS.file_or_folder(Folder(destination).child(self.name))
+        else:
+            return destination
+
 
 class File(FS):
     """
@@ -85,6 +120,16 @@ class File(FS):
         with codecs.open(self.path, 'w', encoding) as fout:
             fout.write(text)
 
+    def copy_to(self, destination):
+        """
+        Copies the file to the given destination. Returns a File
+        object that represents the target file. `destination` must
+        be a File or Folder object.
+        """
+        shutil.copy(self.path, str(destination))
+        return self.__get_destination__(destination)
+
+
 class Folder(FS):
     """
     Represents a directory.
@@ -103,3 +148,31 @@ class Folder(FS):
         Returns a path of a child item represented by `name`.
         """
         return os.path.join(self.path, name)
+
+    def make(self):
+        """
+        Creates this directory and any of the missing directories in the path.
+        Any errors that may occur are eaten.
+        """
+        try:
+            if not self.exists:
+                os.makedirs(self.path)
+        except os.error:
+            pass
+        return self
+
+    def delete(self):
+        """
+        Deletes the directory if it exists.
+        """
+        if self.exists:
+            shutil.rmtree(self.path)
+
+    def copy_to(self, destination):
+        """
+        Copies this directory to the given destination. Returns a Folder object
+        that represents the moved directory.
+        """
+        target = self.__get_destination__(destination)
+        shutil.copytree(self.path, str(target))
+        return target
