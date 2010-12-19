@@ -47,4 +47,17 @@ class Engine(Application):
             "The given layout is invalid. Please check if you have the `layout` "
             "in the right place and the environment variable(%s) has been setup "
             "properly if you are using custom path for layouts" % HYDE_DATA)
-        layout.copy_to(args.sitepath)
+        layout.copy_contents_to(args.sitepath)
+
+    @subcommand('gen', help='Generate the site')
+    @store('-d', '--deploy-path', default='deploy', help='Where should the site be generated?')
+    def gen(self, args):
+        """
+        The generate command. Generates the site at the given deployment directory.
+        """
+        sitepath = File(args.sitepath)
+        # Read the configuration
+        # Find the appropriate template environment
+        # Configure the environment
+        # Prepare site info
+        # Generate site one file at a time
