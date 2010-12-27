@@ -1,0 +1,9 @@
+site:
+    mode: development
+    media:
+        root:
+            path: media # Relative path from site root (the directory where this file exists)
+            url: /media
+    widgets:
+    plugins:
+    aggregators:

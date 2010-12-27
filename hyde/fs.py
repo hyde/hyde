@@ -14,6 +14,7 @@ import os
 import shutil
 from distutils import dir_util
 import functools
+import itertools
 # pylint: disable-msg=E0611
 
 logger = logging.getLogger('fs')
@@ -28,7 +29,7 @@ class FS(object):
     """
     def __init__(self, path):
         super(FS, self).__init__()
-        self.path = str(path).strip()
+        self.path = str(path).strip().rstrip(os.sep)
 
     def __str__(self):
         return self.path
@@ -63,6 +64,14 @@ class FS(object):
         """
         return Folder(os.path.dirname(self.path))
 
+    @property
+    def depth(self):
+        """
+        Returns the number of ancestors of this directory.
+        """
+        return len(self.path.rstrip(os.sep).split(os.sep))
+
+
     def ancestors(self, stop=None):
         """
         Generates the parents until stop or the absolute
@@ -75,7 +84,16 @@ class FS(object):
             yield f.parent
             f = f.parent
 
-    def get_fragment(self, root):
+    def is_descendant_of(self, ancestor):
+         stop = Folder(ancestor)
+         for folder in self.ancestors():
+             if folder == stop:
+                 return True
+             if stop.depth > folder.depth:
+                 return False
+         return False
+
+    def get_relative_path(self, root):
         """
         Gets the fragment of the current path starting at root.
         """
@@ -89,7 +107,7 @@ class FS(object):
         >>> Folder('/usr/local/hyde/stuff').get_mirror('/usr/tmp', source_root='/usr/local/hyde')
         Folder('/usr/tmp/stuff')
         """
-        fragment = self.get_fragment(source_root if source_root else self.parent)
+        fragment = self.get_relative_path(source_root if source_root else self.parent)
         return Folder(target_root).child(fragment)
 
     @staticmethod

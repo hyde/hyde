@@ -22,6 +22,16 @@ def test_name():
     f = FS(__file__)
     assert f.name == os.path.basename(__file__)
 
+def test_equals():
+    f = FS('/blog/2010/december')
+    g = FS('/blog/2010/december')
+    h = FS('/blog/2010/december/')
+    i = FS('/blog/2010/november')
+    assert f == f.path
+    assert f == g
+    assert f == h
+    assert f != i
+
 def test_name_without_extension():
     f = File(__file__)
     assert f.name_without_extension == "test_fs"
@@ -108,16 +118,23 @@ def test_ancestors_stop():
     depth = 0
     next = JINJA2
     for folder in INDEX.ancestors(stop=TEMPLATE_ROOT.parent):
-        print folder
         assert folder == next
         depth += 1
         next = folder.parent
     assert depth == 2
 
+def test_is_descendant_of():
+    assert INDEX.is_descendant_of(JINJA2)
+    print "*"
+    assert JINJA2.is_descendant_of(TEMPLATE_ROOT)
+    print "*"
+    assert INDEX.is_descendant_of(TEMPLATE_ROOT)
+    print "*"
+    assert not INDEX.is_descendant_of(DATA_ROOT)
+
 def test_fragment():
-    print INDEX.get_fragment(TEMPLATE_ROOT)
-    assert INDEX.get_fragment(TEMPLATE_ROOT) == Folder(JINJA2.name).child(INDEX.name)
-    assert INDEX.get_fragment(TEMPLATE_ROOT.parent) == Folder(
+    assert INDEX.get_relative_path(TEMPLATE_ROOT) == Folder(JINJA2.name).child(INDEX.name)
+    assert INDEX.get_relative_path(TEMPLATE_ROOT.parent) == Folder(
                         TEMPLATE_ROOT.name).child_folder(JINJA2.name).child(INDEX.name)
 
 def test_get_mirror():

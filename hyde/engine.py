@@ -50,6 +50,7 @@ class Engine(Application):
         layout.copy_contents_to(args.sitepath)
 
     @subcommand('gen', help='Generate the site')
+    @store('-c', '--config-path', default='site.yaml', help='The configuration used to generate the site')
     @store('-d', '--deploy-path', default='deploy', help='Where should the site be generated?')
     def gen(self, args):
         """

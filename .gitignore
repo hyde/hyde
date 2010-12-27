@@ -11,4 +11,4 @@ test_site
 dist
 build
 *egg*
-
+.idea
