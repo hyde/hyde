@@ -4,8 +4,10 @@ Parses & holds information about the site to be generated.
 """
 
 
-from hyde.fs import File, Folder
+
 from hyde.exceptions import HydeException
+from hyde.fs import File, Folder
+from hyde.model import Config, Expando
 
 import logging
 import os
@@ -223,16 +225,14 @@ class RootNode(Node):
 
 class Site(object):
     """
-    Represents the site to be generated
+    Represents the site to be generated.
     """
 
-    def __init__(self, site_path):
+    def __init__(self, site_path=None, config=None):
         super(Site, self).__init__()
         self.site_path = Folder(str(site_path))
-
-        # TODO: Get the value from config
-        content_folder = self.site_path.child_folder('content')
-        self.content = RootNode(content_folder, self)
+        self.config = config if config else Config(self.site_path)
+        self.content = RootNode(self.config.content_root_path, self )
         self.node_map = {}
         self.resource_map = {}
 
@@ -242,4 +242,3 @@ class Site(object):
         """
 
         self.content.build()
-

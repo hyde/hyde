@@ -346,6 +346,26 @@ class Folder(FS):
         shutil.copytree(self.path, str(target))
         return target
 
+    def move_to(self, destination):
+        """
+        Moves this directory to the given destination. Returns a Folder object
+        that represents the moved directory.
+        """
+        target = self.__get_destination__(destination)
+        logger.info("Move %s to %s" % (self, target))
+        shutil.move(self.path, str(target))
+        return target
+
+    def rename_to(self, destination_name):
+        """
+        Moves this directory to the given destination. Returns a Folder object
+        that represents the moved directory.
+        """
+        target = self.parent.child_folder(destination_name)
+        logger.info("Rename %s to %s" % (self, target))
+        shutil.move(self.path, str(target))
+        return target
+
     def _create_target_tree(self, target):
         """
         There is a bug in dir_util that makes `copy_tree` crash if a folder in

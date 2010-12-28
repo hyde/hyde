@@ -4,9 +4,13 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
+import yaml
+
 from hyde.fs import File, Folder
+from hyde.model import Config, Expando
 from hyde.site import Node, RootNode, Site
 
+from nose.tools import raises, with_setup, nottest
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 
@@ -60,3 +64,32 @@ def test_build():
     assert resource
     assert resource.relative_path == path
     assert not s.content.resource_from_relative_path('/happy-festivus.html')
+
+class TestSiteWithConfig(object):
+
+    @classmethod
+    def setup_class(cls):
+        cls.SITE_PATH =  File(__file__).parent.child_folder('sites/test_jinja_with_config')
+        cls.SITE_PATH.make()
+        TEST_SITE_ROOT.copy_contents_to(cls.SITE_PATH)
+        cls.config_file = File(cls.SITE_PATH.child('alternate.yaml'))
+        with open(cls.config_file.path) as config:
+            cls.config = Config(site_path=cls.SITE_PATH, config_dict=yaml.load(config))
+        cls.SITE_PATH.child_folder('content').rename_to(cls.config.content_root)
+
+    @classmethod
+    def teardown_class(cls):
+        cls.SITE_PATH.delete()
+
+    def test_build_with_config(self):
+        s = Site(self.SITE_PATH, config = self.config)
+        s.build()
+        path = 'blog/2010/december'
+        node = s.content.node_from_relative_path(path)
+        assert node
+        assert Folder(node.relative_path) == Folder(path)
+        path += '/merry-christmas.html'
+        resource = s.content.resource_from_relative_path(path)
+        assert resource
+        assert resource.relative_path == path
+        assert not s.content.resource_from_relative_path('/happy-festivus.html')

@@ -188,6 +188,38 @@ def test_copy_folder_contents():
         assert File(DATA_ROOT.child(f.name)).exists
 
 @with_setup(setup_data, cleanup_data)
+def test_move_folder():
+    DATA_JUNK = DATA_ROOT.child_folder('junk')
+    assert not DATA_JUNK.exists
+    JINJA2.copy_contents_to(DATA_JUNK)
+    for f in [HELPERS, INDEX, LAYOUT]:
+        assert File(DATA_JUNK.child(f.name)).exists
+    DATA_JUNK2 = DATA_ROOT.child_folder('junk2')
+    assert DATA_JUNK.exists
+    assert not DATA_JUNK2.exists
+    DATA_JUNK.move_to(DATA_JUNK2)
+    assert not DATA_JUNK.exists
+    assert DATA_JUNK2.exists
+    for f in [HELPERS, INDEX, LAYOUT]:
+        assert File(DATA_JUNK2.child_folder('junk').child(f.name)).exists
+
+@with_setup(setup_data, cleanup_data)
+def test_rename_folder():
+    DATA_JUNK = DATA_ROOT.child_folder('junk')
+    assert not DATA_JUNK.exists
+    JINJA2.copy_contents_to(DATA_JUNK)
+    for f in [HELPERS, INDEX, LAYOUT]:
+        assert File(DATA_JUNK.child(f.name)).exists
+    DATA_JUNK2 = DATA_ROOT.child_folder('junk2')
+    assert DATA_JUNK.exists
+    assert not DATA_JUNK2.exists
+    DATA_JUNK.rename_to('junk2')
+    assert not DATA_JUNK.exists
+    assert DATA_JUNK2.exists
+    for f in [HELPERS, INDEX, LAYOUT]:
+        assert File(DATA_JUNK2.child(f.name)).exists
+
+@with_setup(setup_data, cleanup_data)
 def test_read_all():
     utxt = u'åßcdeƒ'
     path = DATA_ROOT.child('unicode.txt')
