@@ -49,9 +49,9 @@ class Jinja2Template(Template):
             self.env.globals['media_url'] = media_url
             self.env.globals['content_url'] = content_url
 
-    def render(self, resource, context):
+    def render(self, text, context):
         """
         Renders the given resource using the context
         """
-        template = self.env.get_template(resource.relative_path)
+        template = self.env.from_string(text)
         return template.render(context)

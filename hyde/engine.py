@@ -98,7 +98,7 @@ class Engine(Application):
             if page.source_file.is_text:
                 logger.info("Rendering [%s]", page)
                 context.update(page=page)
-                text = template.render(page, context)
+                text = template.render(page.source_file.read_all(), context)
                 target.write(text)
             else:
                 logger.info("Copying binary file [%s]", page)

@@ -19,9 +19,9 @@ class Template(object):
         """
         abstract
 
-    def render(self, resource, context):
+    def render(self, text, context):
         """
-        Given the resource, and the context, this function
+        Given the text, and the context, this function
         must return the rendered string.
         """
         abstract
