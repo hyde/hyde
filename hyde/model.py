@@ -35,6 +35,7 @@ class Config(Expando):
     def __init__(self, site_path, config_dict=None):
         default_config = dict(
             content_root = 'content',
+            deploy_root = 'deploy',
             media_root = 'media',
             layout_root = 'layout',
             media_url = '/media',
@@ -45,6 +46,14 @@ class Config(Expando):
             conf.update(config_dict)
         super(Config, self).__init__(conf)
         self.site_path = Folder(site_path)
+
+
+    @property
+    def deploy_root_path(self):
+        """
+        Derives the deploy root path from the site path
+        """
+        return self.site_path.child_folder(self.deploy_root)
 
     @property
     def content_root_path(self):

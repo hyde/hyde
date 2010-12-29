@@ -29,20 +29,20 @@
 
   {% block favicons %}
   <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-  <link rel="shortcut icon" href="{% media '/favicon.ico' %}">
-  <link rel="apple-touch-icon" href="{% media '/apple-touch-icon.png' %}">
+  <link rel="shortcut icon" href="{{ media_url('/favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ media_url('/apple-touch-icon.png') }}">
   {% endblock favicons %}
 
   {% block css %}
   <!-- CSS : implied media="all" -->
-  <link rel="stylesheet" href="{% media 'css/site.css' %}">
+  <link rel="stylesheet" href="{{ media_url('css/site.css') }}">
   <!-- Uncomment if you are specifically targeting less enabled mobile browsers
   <link rel="stylesheet" media="handheld" href="css/handheld.css?v=2">  -->
   {% endblock css %}
 
   {% block headjs %}
   <!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects -->
-    <script src="{% media 'js/libs/modernizr-1.6.min.js' %}"></script>
+    <script src="{{ media_url('js/libs/modernizr-1.6.min.js') }}"></script>
   {% endblock headjs %}
   {% block endhead %}{% endblock endhead %}
 </head>
@@ -68,13 +68,13 @@
   {% block jquery %}
   <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="{% media 'js/libs/jquery-1.4.4.js' %}"%3E%3C/script%3E'))</script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ media_url('js/libs/jquery-1.4.4.js') }}"%3E%3C/script%3E'))</script>
   {% endblock jquery %}
 
   {% block scripts %}
   <!-- scripts concatenated and minified via ant build script-->
-  <script src="{% media 'js/plugins.js' %}"></script>
-  <script src="{% media 'js/script.js' %}"></script>
+  <script src="{{ media_url('js/plugins.js') }}"></script>
+  <script src="{{ media_url('js/script.js') }}"></script>
   <!-- end concatenated and minified scripts-->
   {% endblock scripts %}
 
@@ -83,7 +83,7 @@
     <script>
       // More information on tackling transparent PNGs for IE goo.gl/mZiyb
       //fix any <img> or .png_bg background-images
-      $.getScript("{% media 'js/libs/dd_belatedpng.js' %}",function(){ DD_belatedPNG.fix('img, .png_bg'); });
+      $.getScript("{{ media_url('js/libs/dd_belatedpng.js') }}",function(){ DD_belatedPNG.fix('img, .png_bg'); });
     </script>
   <![endif]-->
   {% endblock pngfix %}

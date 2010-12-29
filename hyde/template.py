@@ -19,9 +19,9 @@ class Template(object):
         """
         abstract
 
-    def render(self, template_name, context):
+    def render(self, resource, context):
         """
-        Given the name of a template (partial path usually), and the context, this function
+        Given the resource, and the context, this function
         must return the rendered string.
         """
         abstract

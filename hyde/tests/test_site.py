@@ -65,6 +65,23 @@ def test_build():
     assert resource.relative_path == path
     assert not s.content.resource_from_relative_path('/happy-festivus.html')
 
+def test_walk_resources():
+    s = Site(TEST_SITE_ROOT)
+    s.build()
+    pages = [page.name for page in s.content.walk_resources()]
+    expected = ["404.html",
+                "about.html",
+                "apple-touch-icon.png",
+                "merry-christmas.html",
+                "crossdomain.xml",
+                "favicon.ico",
+                "robots.txt"
+                ]
+    pages.sort()
+    expected.sort()
+    assert pages == expected
+
+
 class TestSiteWithConfig(object):
 
     @classmethod

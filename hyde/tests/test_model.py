@@ -44,6 +44,7 @@ class TestConfig(object):
 
         cls.conf2 = """
         mode: development
+        deploy_root: ~/deploy_site
         content_root: site/stuff # Relative path from site root
         media_root: mmm # Relative path from site root
         media_url: /media
@@ -62,6 +63,9 @@ class TestConfig(object):
             assert hasattr(c, path)
             assert getattr(c, path) == TEST_SITE_ROOT.child_folder(root)
 
+        assert c.deploy_root_path == TEST_SITE_ROOT.child_folder('deploy')
+
+
     def test_conf1(self):
         c = Config(site_path=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('stuff')
@@ -71,3 +75,5 @@ class TestConfig(object):
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('site/stuff')
         assert c.media_root_path == TEST_SITE_ROOT.child_folder('mmm')
         assert c.media_url == TEST_SITE_ROOT.child_folder('/media')
+        print c.deploy_root_path
+        assert c.deploy_root_path == Folder('~/deploy_site')

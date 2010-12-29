@@ -44,6 +44,10 @@ def test_kind():
     f = File(__file__)
     assert f.kind == os.path.splitext(__file__)[1].lstrip('.')
 
+def test_path_expands_user():
+    f = File("~/abc/def")
+    assert f.path == os.path.expanduser("~/abc/def")
+
 def test_parent():
     f = File(__file__)
     p = f.parent
@@ -104,6 +108,7 @@ JINJA2 = TEMPLATE_ROOT.child_folder('jinja2')
 HELPERS = File(JINJA2.child('helpers.html'))
 INDEX = File(JINJA2.child('index.html'))
 LAYOUT = File(JINJA2.child('layout.html'))
+LOGO = File(TEMPLATE_ROOT.child('../../../resources/hyde-logo.png'))
 
 def test_ancestors():
     depth = 0
@@ -132,16 +137,29 @@ def test_is_descendant_of():
     print "*"
     assert not INDEX.is_descendant_of(DATA_ROOT)
 
-def test_fragment():
+def test_get_relative_path():
     assert INDEX.get_relative_path(TEMPLATE_ROOT) == Folder(JINJA2.name).child(INDEX.name)
     assert INDEX.get_relative_path(TEMPLATE_ROOT.parent) == Folder(
                         TEMPLATE_ROOT.name).child_folder(JINJA2.name).child(INDEX.name)
+    assert JINJA2.get_relative_path(JINJA2) == ""
 
 def test_get_mirror():
     mirror = JINJA2.get_mirror(DATA_ROOT, source_root=TEMPLATE_ROOT)
     assert mirror == DATA_ROOT.child_folder(JINJA2.name)
     mirror = JINJA2.get_mirror(DATA_ROOT, source_root=TEMPLATE_ROOT.parent)
     assert mirror == DATA_ROOT.child_folder(TEMPLATE_ROOT.name).child_folder(JINJA2.name)
+
+def test_mimetype():
+    assert HELPERS.mimetype == 'text/html'
+    assert LOGO.mimetype == 'image/png'
+
+def test_is_text():
+    assert HELPERS.is_text
+    assert not LOGO.is_text
+
+def test_is_image():
+    assert not HELPERS.is_image
+    assert LOGO.is_image
 
 @nottest
 def setup_data():
@@ -242,7 +260,7 @@ def test_walker():
     files = []
     complete = []
 
-    with TEMPLATE_ROOT.walk() as walker:
+    with TEMPLATE_ROOT.walker as walker:
 
         @walker.folder_visitor
         def visit_folder(f):
@@ -265,12 +283,34 @@ def test_walker():
     assert len(folders) == 2
     assert len(complete) == 1
 
+def test_walker_walk_all():
+    items = list(TEMPLATE_ROOT.walker.walk_all())
+    assert len(items) == 6
+    assert TEMPLATE_ROOT in items
+    assert JINJA2 in items
+    assert INDEX in items
+    assert HELPERS in items
+    assert LAYOUT in items
+
+def test_walker_walk_files():
+    items = list(TEMPLATE_ROOT.walker.walk_files())
+    assert len(items) == 4
+    assert INDEX in items
+    assert HELPERS in items
+    assert LAYOUT in items
+
+def test_walker_walk_folders():
+    items = list(TEMPLATE_ROOT.walker.walk_folders())
+    assert len(items) == 2
+    assert TEMPLATE_ROOT in items
+    assert JINJA2 in items
+
 def test_walker_templates_just_root():
     folders = []
     files = []
     complete = []
 
-    with TEMPLATE_ROOT.walk() as walker:
+    with TEMPLATE_ROOT.walker as walker:
 
         @walker.folder_visitor
         def visit_folder(f):
@@ -295,7 +335,7 @@ def test_lister_templates():
     files = []
     complete = []
 
-    with TEMPLATE_ROOT.list() as lister:
+    with TEMPLATE_ROOT.lister as lister:
 
         @lister.folder_visitor
         def visit_folder(f):
@@ -315,12 +355,39 @@ def test_lister_templates():
     assert len(complete) == 1
 
 
+def test_lister_list_all():
+    items = list(TEMPLATE_ROOT.lister.list_all())
+    assert len(items) == 1
+    assert JINJA2 in items
+    items = list(JINJA2.lister.list_all())
+    assert len(items) == 4
+    assert INDEX in items
+    assert HELPERS in items
+    assert LAYOUT in items
+
+
+def test_lister_list_files():
+    items = list(TEMPLATE_ROOT.lister.list_files())
+    assert len(items) == 0
+    items = list(JINJA2.lister.list_files())
+    assert len(items) == 4
+    assert INDEX in items
+    assert HELPERS in items
+    assert LAYOUT in items
+
+def test_lister_list_folders():
+    items = list(TEMPLATE_ROOT.lister.list_folders())
+    assert len(items) == 1
+    assert JINJA2 in items
+    items = list(JINJA2.lister.list_folders())
+    assert len(items) == 0
+
 def test_lister_jinja2():
     folders = []
     files = []
     complete = []
 
-    with JINJA2.list() as lister:
+    with JINJA2.lister as lister:
 
         @lister.folder_visitor
         def visit_folder(f):

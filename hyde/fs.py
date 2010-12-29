@@ -7,14 +7,13 @@ for common operations to provide a single interface.
 """
 
 import codecs
-import contextlib
 import logging
 from logging import NullHandler
+import mimetypes
 import os
 import shutil
 from distutils import dir_util
 import functools
-import itertools
 # pylint: disable-msg=E0611
 
 logger = logging.getLogger('fs')
@@ -29,7 +28,7 @@ class FS(object):
     """
     def __init__(self, path):
         super(FS, self).__init__()
-        self.path = str(path).strip().rstrip(os.sep)
+        self.path = os.path.expanduser(str(path).strip().rstrip(os.sep))
 
     def __str__(self):
         return self.path
@@ -85,18 +84,23 @@ class FS(object):
             f = f.parent
 
     def is_descendant_of(self, ancestor):
-         stop = Folder(ancestor)
-         for folder in self.ancestors():
-             if folder == stop:
-                 return True
-             if stop.depth > folder.depth:
-                 return False
-         return False
+        """
+        Checks if this folder is inside the given ancestor.
+        """
+        stop = Folder(ancestor)
+        for folder in self.ancestors():
+            if folder == stop:
+                return True
+            if stop.depth > folder.depth:
+                return False
+        return False
 
     def get_relative_path(self, root):
         """
         Gets the fragment of the current path starting at root.
         """
+        if self == root:
+            return ''
         return functools.reduce(lambda f, p: Folder(p.name).child(f), self.ancestors(stop=root), self.name)
 
     def get_mirror(self, target_root, source_root=None):
@@ -123,7 +127,7 @@ class FS(object):
         Returns a File or Folder object that would represent this entity
         if it were copied or moved to `destination`.
         """
-        if (isinstance(destination, File) or os.path.isfile(str(destination))):
+        if isinstance(destination, File) or os.path.isfile(str(destination)):
             return destination
         else:
             return FS.file_or_folder(Folder(destination).child(self.name))
@@ -155,6 +159,19 @@ class File(FS):
         File extension without dot prefix.
         """
         return self.extension.lstrip(".")
+
+    @property
+    def mimetype(self):
+        (mime, encoding) = mimetypes.guess_type(self.path)
+        return mime
+
+    @property
+    def is_text(self):
+        return self.mimetype.split("/")[0] == "text"
+
+    @property
+    def is_image(self):
+        return self.mimetype.split("/")[0] == "image"
 
     def read_all(self, encoding='utf-8'):
         """
@@ -224,20 +241,56 @@ class FSVisitor(object):
 class FolderWalker(FSVisitor):
     """
     Walks the entire hirearchy of this directory starting with itself.
-    Calls self.visit_folder first and then calls self.visit_file for
-    any files found. After all files and folders have been exhausted
-    self.visit_complete is called.
 
     If a pattern is provided, only the files that match the pattern are
     processed.
-
-    If visitor.visit_folder returns False, the files in the folder are not
-    processed.
     """
+
+    def walk(self, walk_folders=False, walk_files=False):
+        """
+        A simple generator that yields a File or Folder object based on
+        the arguments.
+        """
+
+        if walk_files or walk_folders:
+            for root, dirs, a_files in os.walk(self.folder.path):
+                folder = Folder(root)
+                if walk_folders:
+                    yield folder
+                if walk_files:
+                    for a_file in a_files:
+                        if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
+                            yield File(folder.child(a_file))
+
+    def walk_all(self):
+        """
+        Yield both Files and Folders as the tree is walked.
+        """
+
+        return self.walk(walk_folders=True, walk_files=True)
+
+    def walk_files(self):
+        """
+        Yield only Files.
+        """
+        return self.walk(walk_folders=False, walk_files=True)
+
+    def walk_folders(self):
+        """
+        Yield only Folders.
+        """
+        return self.walk(walk_folders=True, walk_files=False)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Automatically walk the folder when the context manager is exited.
+
+        Calls self.visit_folder first and then calls self.visit_file for
+        any files found. After all files and folders have been exhausted
+        self.visit_complete is called.
+
+        If visitor.visit_folder returns False, the files in the folder are not
+        processed.
         """
 
         def __visit_folder__(folder):
@@ -271,18 +324,54 @@ class FolderWalker(FSVisitor):
 
 class FolderLister(FSVisitor):
     """
-    Lists the contents of this directory starting with itself.
-    Calls self.visit_folder first and then calls self.visit_file for
-    any files found. After all files and folders have been exhausted
-    self.visit_complete is called.
+    Lists the contents of this directory.
 
     If a pattern is provided, only the files that match the pattern are
     processed.
     """
 
+    def list(self, list_folders=False, list_files=False):
+           """
+           A simple generator that yields a File or Folder object based on
+           the arguments.
+           """
+
+           a_files = os.listdir(self.folder.path)
+           for a_file in a_files:
+               path = self.folder.child(a_file)
+               if os.path.isdir(path):
+                   if list_folders:
+                       yield Folder(path)
+               elif list_files:
+                   if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
+                       yield File(path)
+
+    def list_all(self):
+       """
+       Yield both Files and Folders as the folder is listed.
+       """
+
+       return self.list(list_folders=True, list_files=True)
+
+    def list_files(self):
+       """
+       Yield only Files.
+       """
+       return self.list(list_folders=False, list_files=True)
+
+    def list_folders(self):
+       """
+       Yield only Folders.
+       """
+       return self.list(list_folders=True, list_files=False)
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
         Automatically list the folder contents when the context manager is exited.
+
+        Calls self.visit_folder first and then calls self.visit_file for
+        any files found. After all files and folders have been exhausted
+        self.visit_complete is called.
         """
 
         a_files = os.listdir(self.folder.path)
@@ -307,13 +396,13 @@ class Folder(FS):
         """
         Returns a folder object by combining the fragment to this folder's path
         """
-        return Folder(os.path.join(self.path, fragment))
+        return Folder(os.path.join(self.path, Folder(fragment).path))
 
-    def child(self, name):
+    def child(self, fragment):
         """
-        Returns a path of a child item represented by `name`.
+        Returns a path of a child item represented by `fragment`.
         """
-        return os.path.join(self.path, name)
+        return os.path.join(self.path, FS(fragment).path)
 
     def make(self):
         """
@@ -372,13 +461,15 @@ class Folder(FS):
         the tree has been deleted before and readded now. To workaround the
         bug, we first walk the tree and create directories that are needed.
         """
-        with self.walk() as walker:
+        source = self
+        with source.walker as walker:
             @walker.folder_visitor
             def visit_folder(folder):
                 """
                 Create the mirror directory
                 """
-                Folder(folder.get_mirror(target)).make()
+                if folder != source:
+                    Folder(folder.get_mirror(target, source)).make()
 
     def copy_contents_to(self, destination):
         """
@@ -386,20 +477,24 @@ class Folder(FS):
         Returns a Folder object that represents the moved directory.
         """
         logger.info("Copying contents of %s to %s" % (self, destination))
-        self._create_target_tree(Folder(destination))
-        dir_util.copy_tree(self.path, str(destination))
-        return Folder(destination)
+        target = Folder(destination)
+        target.make()
+        self._create_target_tree(target)
+        dir_util.copy_tree(self.path, str(target))
+        return target
 
-    def walk(self, pattern=None):
+    @property
+    def walker(self, pattern=None):
         """
-        Walks this folder using `FolderWalker`
+        Return a `FolderWalker` object
         """
 
         return FolderWalker(self, pattern)
 
-    def list(self, pattern=None):
+    @property
+    def lister(self, pattern=None):
         """
-        Lists this folder using `FolderLister`
+        Return a `FolderLister` object
         """
 
         return FolderLister(self, pattern)

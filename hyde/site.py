@@ -3,32 +3,30 @@
 Parses & holds information about the site to be generated.
 """
 
-
-
 from hyde.exceptions import HydeException
-from hyde.fs import File, Folder
-from hyde.model import Config, Expando
+from hyde.fs import FS, File, Folder
+from hyde.model import Config
 
 import logging
-import os
 from logging import NullHandler
 logger = logging.getLogger('hyde.site')
 logger.addHandler(NullHandler())
 
-
-class Resource(object):
+class Processable(object):
     """
-    Represents any file that is processed by hyde
+    A node or resource.
     """
 
-    def __init__(self, source_file, node):
-        super(Resource, self).__init__()
-        self.source_file = source_file
-        if not node:
-            raise HydeException("Resource cannot exist without a node")
-        if not source_file:
-            raise HydeException("Source file is required to instantiate a resource")
-        self.node = node
+    def __init__(self, source):
+        super(Processable, self).__init__()
+        self.source = FS.file_or_folder(source)
+
+    @property
+    def name(self):
+        """
+        The resource name
+        """
+        return self.source.name
 
     def __repr__(self):
         return self.path
@@ -38,7 +36,22 @@ class Resource(object):
         """
         Gets the source path of this node.
         """
-        return self.source_file.path
+        return self.source.path
+
+class Resource(Processable):
+    """
+    Represents any file that is processed by hyde
+    """
+
+    def __init__(self, source_file, node):
+        super(Resource, self).__init__(source_file)
+        self.source_file = source_file
+        if not node:
+            raise HydeException("Resource cannot exist without a node")
+        if not source_file:
+            raise HydeException("Source file is required"
+                                " to instantiate a resource")
+        self.node = node
 
     @property
     def relative_path(self):
@@ -47,15 +60,17 @@ class Resource(object):
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
 
-class Node(object):
+
+class Node(Processable):
     """
     Represents any folder that is processed by hyde
     """
 
     def __init__(self, source_folder, parent=None):
-        super(Node, self).__init__()
+        super(Node, self).__init__(source_folder)
         if not source_folder:
-            raise HydeException("Source folder is required to instantiate a node.")
+            raise HydeException("Source folder is required"
+                                " to instantiate a node.")
         self.root = self
         self.module = None
         self.site = None
@@ -68,16 +83,14 @@ class Node(object):
         self.child_nodes = []
         self.resources = []
 
-    def __repr__(self):
-        return self.path
-
     def add_child_node(self, folder):
         """
         Creates a new child node and adds it to the list of child nodes.
         """
 
         if folder.parent != self.source_folder:
-            raise HydeException("The given folder [%s] is not a direct descendant of [%s]" %
+            raise HydeException("The given folder [%s] is not a"
+                                " direct descendant of [%s]" %
                                 (folder, self.source_folder))
         node = Node(folder, self)
         self.child_nodes.append(node)
@@ -89,18 +102,26 @@ class Node(object):
         """
 
         if afile.parent != self.source_folder:
-            raise HydeException("The given file [%s] is not a direct descendant of [%s]" %
+            raise HydeException("The given file [%s] is not"
+                                " a direct descendant of [%s]" %
                                 (afile, self.source_folder))
         resource = Resource(afile, self)
         self.resources.append(resource)
         return resource
 
-    @property
-    def path(self):
+    def walk(self):
+        yield self
+        for child in self.child_nodes:
+            for node in child.walk():
+                yield node
+
+    def walk_resources(self):
         """
-        Gets the source path of this node.
+        Walks the resources in this hierarchy.
         """
-        return self.source_folder.path
+        for node in self.walk():
+            for resource in node.resources:
+                yield resource
 
     @property
     def relative_path(self):
@@ -109,20 +130,22 @@ class Node(object):
         """
         return self.source_folder.get_relative_path(self.root.source_folder)
 
+
 class RootNode(Node):
     """
     Represents one of the roots of site: Content, Media or Layout
     """
 
     def __init__(self, source_folder, site):
-         super(RootNode, self).__init__(source_folder)
-         self.site = site
-         self.node_map = {}
-         self.resource_map = {}
+        super(RootNode, self).__init__(source_folder)
+        self.site = site
+        self.node_map = {}
+        self.resource_map = {}
 
     def node_from_path(self, path):
         """
-        Gets the node that maps to the given path. If no match is found it returns None.
+        Gets the node that maps to the given path.
+        If no match is found it returns None.
         """
         if Folder(path) == self.source_folder:
             return self
@@ -130,26 +153,32 @@ class RootNode(Node):
 
     def node_from_relative_path(self, relative_path):
         """
-        Gets the content node that maps to the given relative path. If no match is found it returns None.
+        Gets the content node that maps to the given relative path.
+        If no match is found it returns None.
         """
-        return self.node_from_path(self.source_folder.child(str(relative_path)))
+        return self.node_from_path(
+                    self.source_folder.child(str(relative_path)))
 
     def resource_from_path(self, path):
         """
-        Gets the resource that maps to the given path. If no match is found it returns None.
+        Gets the resource that maps to the given path.
+        If no match is found it returns None.
         """
         return self.resource_map.get(str(File(path)), None)
 
     def resource_from_relative_path(self, relative_path):
         """
-        Gets the content resource that maps to the given relative path. If no match is found it returns None.
+        Gets the content resource that maps to the given relative path.
+        If no match is found it returns None.
         """
-        return self.resource_from_path(self.source_folder.child(str(relative_path)))
+        return self.resource_from_path(
+                    self.source_folder.child(str(relative_path)))
 
     def add_node(self, a_folder):
         """
-        Adds a new node to this folder's hierarchy. Also adds to to the hashtable of path to
-        node associations for quick lookup.
+        Adds a new node to this folder's hierarchy.
+        Also adds to to the hashtable of path to node associations
+        for quick lookup.
         """
         folder = Folder(a_folder)
         node = self.node_from_path(folder)
@@ -158,7 +187,8 @@ class RootNode(Node):
             return node
 
         if not folder.is_descendant_of(self.source_folder):
-            raise HydeException("The given folder [%s] does not belong to this hierarchy [%s]" %
+            raise HydeException("The given folder [%s] does not"
+                                " belong to this hierarchy [%s]" %
                                 (folder, self.source_folder))
 
         p_folder = folder
@@ -174,14 +204,15 @@ class RootNode(Node):
         for h_folder in hierarchy:
             node = node.add_child_node(h_folder)
             self.node_map[str(h_folder)] = node
-            logger.info("Added node [%s] to [%s]" %  (node.relative_path, self.source_folder))
+            logger.info("Added node [%s] to [%s]" % (
+                            node.relative_path, self.source_folder))
 
         return node
 
     def add_resource(self, a_file):
         """
-        Adds a file to the parent node.  Also adds to to the hashtable of path to
-        resource associations for quick lookup.
+        Adds a file to the parent node.  Also adds to to the
+        hashtable of path to resource associations for quick lookup.
         """
 
         afile = File(a_file)
@@ -191,7 +222,8 @@ class RootNode(Node):
             logger.info("Resource exists at [%s]" % resource.relative_path)
 
         if not afile.is_descendant_of(self.source_folder):
-            raise HydeException("The given file [%s] does not reside in this hierarchy [%s]" %
+            raise HydeException("The given file [%s] does not reside"
+                                " in this hierarchy [%s]" %
                                 (afile, self.content_folder))
 
         node = self.node_from_path(afile.parent)
@@ -201,19 +233,22 @@ class RootNode(Node):
 
         resource = node.add_child_resource(afile)
         self.resource_map[str(afile)] = resource
-        logger.info("Added resource [%s] to [%s]" % (resource.relative_path, self.source_folder))
+        logger.info("Added resource [%s] to [%s]" %
+                    (resource.relative_path, self.source_folder))
         return resource
 
     def build(self):
         """
-        Walks the `source_folder` and builds the sitemap. Creates nodes and resources,
-        reads metadata and injects attributes. This is the model for hyde.
+        Walks the `source_folder` and builds the sitemap.
+        Creates nodes and resources, reads metadata and injects attributes.
+        This is the model for hyde.
         """
 
         if not self.source_folder.exists:
-            raise HydeException("The given source folder[%s] does not exist" % self.source_folder)
+            raise HydeException("The given source folder[%s]"
+                                " does not exist" % self.source_folder)
 
-        with self.source_folder.walk() as walker:
+        with self.source_folder.walker as walker:
 
             @walker.folder_visitor
             def visit_folder(folder):
@@ -222,6 +257,7 @@ class RootNode(Node):
             @walker.file_visitor
             def visit_file(afile):
                 self.add_resource(afile)
+
 
 class Site(object):
     """
@@ -232,9 +268,7 @@ class Site(object):
         super(Site, self).__init__()
         self.site_path = Folder(str(site_path))
         self.config = config if config else Config(self.site_path)
-        self.content = RootNode(self.config.content_root_path, self )
-        self.node_map = {}
-        self.resource_map = {}
+        self.content = RootNode(self.config.content_root_path, self)
 
     def build(self):
         """
