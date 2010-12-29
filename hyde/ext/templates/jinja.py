@@ -45,9 +45,11 @@ class Jinja2Template(Template):
                             str(config.media_root_path),
                             str(config.layout_root_path),
                         ])
-            self.env = Environment(loader=loader, undefined=LoyalUndefined)
-            self.env.globals['media_url'] = media_url
-            self.env.globals['content_url'] = content_url
+        else:
+            loader = FileSystemLoader(str(self.sitepath))
+        self.env = Environment(loader=loader, undefined=LoyalUndefined)
+        self.env.globals['media_url'] = media_url
+        self.env.globals['content_url'] = content_url
 
     def render(self, text, context):
         """

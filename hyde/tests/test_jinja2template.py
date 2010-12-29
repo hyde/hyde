@@ -58,7 +58,9 @@ def test_render():
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
     t.env.filters['dateformat'] = dateformat
-    html = t.render('index.html', context)
+    source = File(JINJA2.child('index.html')).read_all()
+
+    html = t.render(source, context)
     from pyquery import PyQuery
     actual = PyQuery(html)
     assert actual(".navigation li").length == 30

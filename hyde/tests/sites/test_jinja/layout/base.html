@@ -5,14 +5,14 @@
 <head>
   {% block starthead %}{% endblock starthead %}
   <meta charset="{{page.meta.charset|default('utf-8')}}">
-  <meta http-equiv="X-UA-Compatible" content="{{page.meta.compatibility|default('IE=edge,chrome=1')">
+  <meta http-equiv="X-UA-Compatible" content="{{page.meta.compatibility|default('IE=edge,chrome=1')}}">
 
   <title>{% block title %}{{page.meta.title}}{% endblock %}</title>
   <meta name="description" content="{{page.meta.description}}">
   <meta name="author" content="{{page.meta.author}}">
 
   <!--  Mobile viewport optimized: j.mp/bplateviewport -->
-  <meta name="viewport" content="{{page.meta.viewport|default('width=device-width, initial-scale=1.0')">
+  <meta name="viewport" content="{{page.meta.viewport|default('width=device-width, initial-scale=1.0')}}">
 
   {% block favicons %}
   <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
@@ -49,7 +49,8 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
   {% endblock jquery %}
 
-  {% block scripts %}
+  {% block scripts %}{% endblock scripts %}
+  {%endblock js %}
 
 </body>
 </html>

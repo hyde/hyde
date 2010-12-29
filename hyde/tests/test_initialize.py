@@ -35,26 +35,26 @@ def delete_test_site_at_user():
 @with_setup(create_test_site, delete_test_site)
 def test_ensure_exception_when_sitepath_exists():
     e = Engine()
-    e.run(e.parse(['-s', str(TEST_SITE), 'init']))
+    e.run(e.parse(['-s', str(TEST_SITE), 'create']))
 
 @with_setup(create_test_site, delete_test_site)
 def test_ensure_no_exception_when_sitepath_exists_when_forced():
     e = Engine()
-    e.run(e.parse(['-s', str(TEST_SITE), 'init', '-f']))
+    e.run(e.parse(['-s', str(TEST_SITE), 'create', '-f']))
     assert True #No Exception
 
 @with_setup(create_test_site, delete_test_site)
 def test_ensure_no_exception_when_sitepath_does_not_exist():
     e = Engine()
     TEST_SITE.delete()
-    e.run(e.parse(['-s', str(TEST_SITE), 'init', '-f']))
+    e.run(e.parse(['-s', str(TEST_SITE), 'create', '-f']))
     verify_site_contents(TEST_SITE, Layout.find_layout())
 
 @with_setup(create_test_site_at_user, delete_test_site_at_user)
 def test_ensure_can_create_site_at_user():
     e = Engine()
     TEST_SITE_AT_USER.delete()
-    e.run(e.parse(['-s', str(TEST_SITE_AT_USER), 'init', '-f']))
+    e.run(e.parse(['-s', str(TEST_SITE_AT_USER), 'create', '-f']))
     verify_site_contents(TEST_SITE_AT_USER, Layout.find_layout())
 
 @nottest
@@ -76,5 +76,5 @@ def verify_site_contents(site, layout):
 @with_setup(create_test_site, delete_test_site)
 def test_ensure_exception_when_layout_is_invalid():
     e = Engine()
-    e.run(e.parse(['-s', str(TEST_SITE), 'init', '-l', 'junk']))
+    e.run(e.parse(['-s', str(TEST_SITE), 'create', '-l', 'junk']))
 
