@@ -264,10 +264,10 @@ class Site(object):
     Represents the site to be generated.
     """
 
-    def __init__(self, site_path=None, config=None):
+    def __init__(self, sitepath=None, config=None):
         super(Site, self).__init__()
-        self.site_path = Folder(str(site_path))
-        self.config = config if config else Config(self.site_path)
+        self.sitepath = Folder(str(sitepath))
+        self.config = config if config else Config(self.sitepath)
         self.content = RootNode(self.config.content_root_path, self)
 
     def build(self):

@@ -17,6 +17,7 @@ class Template(object):
         implementations are responsible for transforming this object to match the `settings`
         required for the template engines.
         """
+
         abstract
 
     def render(self, text, context):
@@ -24,4 +25,15 @@ class Template(object):
         Given the text, and the context, this function
         must return the rendered string.
         """
+
         abstract
+
+    @staticmethod
+    def find_template(site):
+        """
+        Reads the configuration to find the appropriate template.
+        """
+        # TODO: Find the appropriate template environment
+        from hyde.ext.templates.jinja import Jinja2Template
+        template = Jinja2Template(site.sitepath)
+        return template

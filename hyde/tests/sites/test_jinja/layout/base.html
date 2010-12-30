@@ -4,15 +4,15 @@
 <html lang="en">
 <head>
   {% block starthead %}{% endblock starthead %}
-  <meta charset="{{page.meta.charset|default('utf-8')}}">
-  <meta http-equiv="X-UA-Compatible" content="{{page.meta.compatibility|default('IE=edge,chrome=1')}}">
+  <meta charset="{{resource.meta.charset|default('utf-8')}}">
+  <meta http-equiv="X-UA-Compatible" content="{{resource.meta.compatibility|default('IE=edge,chrome=1')}}">
 
-  <title>{% block title %}{{page.meta.title}}{% endblock %}</title>
-  <meta name="description" content="{{page.meta.description}}">
-  <meta name="author" content="{{page.meta.author}}">
+  <title>{% block title %}{{resource.meta.title}}{% endblock %}</title>
+  <meta name="description" content="{{resource.meta.description}}">
+  <meta name="author" content="{{resource.meta.author}}">
 
   <!--  Mobile viewport optimized: j.mp/bplateviewport -->
-  <meta name="viewport" content="{{page.meta.viewport|default('width=device-width, initial-scale=1.0')}}">
+  <meta name="viewport" content="{{resource.meta.viewport|default('width=device-width, initial-scale=1.0')}}">
 
   {% block favicons %}
   <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
@@ -25,7 +25,7 @@
   {% endblock css %}
   {% block endhead %}{% endblock endhead %}
 </head>
-<body id="{{page.id if page.id else page.name_without_extension}}">
+<body id="{{resource.id if resource.id else resource.name_without_extension}}">
   {% block content %}
   <div id="container">
     {% block container %}

@@ -54,7 +54,7 @@ class TestConfig(object):
         """
 
     def test_default_configuration(self):
-        c = Config(site_path=TEST_SITE_ROOT)
+        c = Config(sitepath=TEST_SITE_ROOT)
         for root in ['content', 'layout', 'media']:
             name = root + '_root'
             path = name + '_path'
@@ -67,11 +67,11 @@ class TestConfig(object):
 
 
     def test_conf1(self):
-        c = Config(site_path=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
+        c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('stuff')
 
     def test_conf2(self):
-        c = Config(site_path=TEST_SITE_ROOT, config_dict=yaml.load(self.conf2))
+        c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf2))
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('site/stuff')
         assert c.media_root_path == TEST_SITE_ROOT.child_folder('mmm')
         assert c.media_url == TEST_SITE_ROOT.child_folder('/media')

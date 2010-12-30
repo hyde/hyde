@@ -32,7 +32,7 @@ class Config(Expando):
     Represents the hyde configuration file
     """
 
-    def __init__(self, site_path, config_dict=None):
+    def __init__(self, sitepath, config_dict=None):
         default_config = dict(
             content_root = 'content',
             deploy_root = 'deploy',
@@ -45,7 +45,7 @@ class Config(Expando):
         if config_dict:
             conf.update(config_dict)
         super(Config, self).__init__(conf)
-        self.site_path = Folder(site_path)
+        self.sitepath = Folder(sitepath)
 
 
     @property
@@ -53,25 +53,25 @@ class Config(Expando):
         """
         Derives the deploy root path from the site path
         """
-        return self.site_path.child_folder(self.deploy_root)
+        return self.sitepath.child_folder(self.deploy_root)
 
     @property
     def content_root_path(self):
         """
         Derives the content root path from the site path
         """
-        return self.site_path.child_folder(self.content_root)
+        return self.sitepath.child_folder(self.content_root)
 
     @property
     def media_root_path(self):
         """
         Derives the media root path from the site path
         """
-        return self.site_path.child_folder(self.media_root)
+        return self.sitepath.child_folder(self.media_root)
 
     @property
     def layout_root_path(self):
         """
         Derives the layout root path from the site path
         """
-        return self.site_path.child_folder(self.layout_root)
+        return self.sitepath.child_folder(self.layout_root)

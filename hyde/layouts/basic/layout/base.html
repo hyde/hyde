@@ -9,7 +9,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <head>
   {% block starthead %}{% endblock starthead %}
-  <meta charset="{{page.meta.charset|default('utf-8')}}">
+  <meta charset="{{resource.meta.charset|default('utf-8')}}">
 
   <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
        Remove this if you use the .htaccess -->
@@ -20,9 +20,9 @@
   <!-- meta element for compatibility mode needs to be before all elements except title & meta msdn.microsoft.com/en-us/library/cc288325(VS.85).aspx -->
   <!-- Chrome Frame is only invoked if meta element for compatibility mode is within the first 1K bytes code.google.com/p/chromium/issues/detail?id=23003 -->
 
-  <title>{% block title %}{{page.meta.title}}{% endblock %}</title>
-  <meta name="description" content="{{page.meta.description}}">
-  <meta name="author" content="{{page.meta.author}}">
+  <title>{% block title %}{{resource.meta.title}}{% endblock %}</title>
+  <meta name="description" content="{{resource.meta.description}}">
+  <meta name="author" content="{{resource.meta.author}}">
 
   <!--  Mobile viewport optimized: j.mp/bplateviewport -->
   <meta name="viewport" content="{{page.meta.viewport|default('width=device-width, initial-scale=1.0')">
@@ -46,7 +46,7 @@
   {% endblock headjs %}
   {% block endhead %}{% endblock endhead %}
 </head>
-<body id="{{page.id if page.id else page.name_without_extension}}">
+<body id="{{resource.id if resource.id else resource.name_without_extension}}">
   {% block content %}
   <div id="container">
     {% block container %}

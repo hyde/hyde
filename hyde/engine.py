@@ -70,36 +70,13 @@ class Engine(Application):
         The generate command. Generates the site at the given deployment directory.
         """
         sitepath = Folder(args.sitepath)
-        logger.info("Generating site at [%s]" % sitepath)
-        # Read the configuration
         config_file = sitepath.child(args.config)
         logger.info("Reading site configuration from [%s]", config_file)
         conf = {}
         with open(config_file) as stream:
             conf = yaml.load(stream)
         site = Site(sitepath, Config(sitepath, conf))
-        # TODO: Find the appropriate template environment
-        from hyde.ext.templates.jinja import Jinja2Template
-        template = Jinja2Template(sitepath)
-        logger.info("Using [%s] as the template", template)
-        # Configure the environment
-        logger.info("Configuring Template environment")
-        template.configure(site.config)
-        # Prepare site info
-        logger.info("Analyzing site contents")
-        site.build()
-        context = dict(site=site)
-        # Generate site one file at a time
-        logger.info("Generating site to [%s]" % site.config.deploy_root_path)
-        for page in site.content.walk_resources():
-            logger.info("Processing [%s]", page)
-            target = File(page.source_file.get_mirror(site.config.deploy_root_path, site.content.source_folder))
-            target.parent.make()
-            if page.source_file.is_text:
-                logger.info("Rendering [%s]", page)
-                context.update(page=page)
-                text = template.render(page.source_file.read_all(), context)
-                target.write(text)
-            else:
-                logger.info("Copying binary file [%s]", page)
-                page.source_file.copy_to(target)
+
+        from hyde.generator import Generator
+        gen = Generator(site)
+        gen.generate_all()
