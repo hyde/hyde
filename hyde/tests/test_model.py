@@ -65,7 +65,6 @@ class TestConfig(object):
 
         assert c.deploy_root_path == TEST_SITE_ROOT.child_folder('deploy')
 
-
     def test_conf1(self):
         c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('stuff')
