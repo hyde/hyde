@@ -243,9 +243,9 @@ class RootNode(Node):
                     (resource.relative_path, self.source_folder))
         return resource
 
-    def build(self):
+    def load(self):
         """
-        Walks the `source_folder` and builds the sitemap.
+        Walks the `source_folder` and loads the sitemap.
         Creates nodes and resources, reads metadata and injects attributes.
         This is the model for hyde.
         """
@@ -276,9 +276,9 @@ class Site(object):
         self.config = config if config else Config(self.sitepath)
         self.content = RootNode(self.config.content_root_path, self)
 
-    def build(self):
+    def load(self):
         """
-        Walks the content and media folders to build up the sitemap.
+        Walks the content and media folders to load up the sitemap.
         """
 
-        self.content.build()
+        self.content.load()

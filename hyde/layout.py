@@ -16,7 +16,7 @@ class Layout(object):
     """
 
     @staticmethod
-    def find_layout(layout_name="basic"):
+    def find_layout(layout_name='basic'):
         """
         Find the layout with a given name.
         Search order:
@@ -33,7 +33,7 @@ class Layout(object):
         return layout_folder
 
     @staticmethod
-    def _get_layout_folder(root, layout_name="basic"):
+    def _get_layout_folder(root, layout_name='basic'):
         """
         Finds the layout folder from the given root folder.
         If it does not exist, return None

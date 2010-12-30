@@ -50,15 +50,15 @@ class Generator(object):
             logger.info("Configuring the template environment")
             self.template.configure(self.site.config)
 
-    def rebuild_if_needed(self):
+    def reload_if_needed(self):
         """
-        Checks if the site requries a rebuild and builds if
+        Checks if the site requries a reload and loads if
         necessary.
         """
         #TODO: Perhaps this is better suited in Site
         if not len(self.site.content.child_nodes):
             logger.info("Reading site contents")
-            self.site.build()
+            self.site.load()
 
     def generate_all(self):
         """
@@ -66,7 +66,7 @@ class Generator(object):
         """
         logger.info("Reading site contents")
         self.initialize_template_if_needed()
-        self.rebuild_if_needed()
+        self.reload_if_needed()
 
         logger.info("Generating site to [%s]" %
                         self.site.config.deploy_root_path)
@@ -78,7 +78,7 @@ class Generator(object):
         generates the entire site.
         """
         self.initialize_template_if_needed()
-        self.rebuild_if_needed()
+        self.reload_if_needed()
         node = None
         if node_path:
             node = self.site.content.node_from_path(node_path)
@@ -90,7 +90,7 @@ class Generator(object):
         non-existent, generates the entire website.
         """
         self.initialize_template_if_needed()
-        self.rebuild_if_needed()
+        self.reload_if_needed()
         if not node:
             return self.generate_all()
         try:
@@ -104,7 +104,7 @@ class Generator(object):
         generats the entire website.
         """
         self.initialize_template_if_needed()
-        self.rebuild_if_needed()
+        self.reload_if_needed()
         resource = None
         if resource_path:
             resource = self.site.content.resource_from_path(resource_path)
@@ -116,7 +116,7 @@ class Generator(object):
         non-existent, generates the entire website.
         """
         self.initialize_template_if_needed()
-        self.rebuild_if_needed()
+        self.reload_if_needed()
         if not resource:
             return self.generate_all()
         try:

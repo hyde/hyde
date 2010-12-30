@@ -52,9 +52,9 @@ def test_node_relative_path():
     c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
     assert c.relative_path == 'blog/2010/december'
 
-def test_build():
+def test_load():
     s = Site(TEST_SITE_ROOT)
-    s.build()
+    s.load()
     path = 'blog/2010/december'
     node = s.content.node_from_relative_path(path)
     assert node
@@ -67,7 +67,7 @@ def test_build():
 
 def test_walk_resources():
     s = Site(TEST_SITE_ROOT)
-    s.build()
+    s.load()
     pages = [page.name for page in s.content.walk_resources()]
     expected = ["404.html",
                 "about.html",
@@ -98,9 +98,9 @@ class TestSiteWithConfig(object):
     def teardown_class(cls):
         cls.SITE_PATH.delete()
 
-    def test_build_with_config(self):
+    def test_load_with_config(self):
         s = Site(self.SITE_PATH, config = self.config)
-        s.build()
+        s.load()
         path = 'blog/2010/december'
         node = s.content.node_from_relative_path(path)
         assert node
