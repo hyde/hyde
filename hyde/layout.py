@@ -9,6 +9,7 @@ from hyde.fs import File, Folder
 HYDE_DATA = "HYDE_DATA"
 LAYOUTS = "layouts"
 
+
 class Layout(object):
     """
     Represents a layout package
@@ -24,9 +25,11 @@ class Layout(object):
         """
         layout_folder = None
         if HYDE_DATA in os.environ:
-            layout_folder = Layout._get_layout_folder(os.environ[HYDE_DATA], layout_name)
+            layout_folder = Layout._get_layout_folder(
+                                os.environ[HYDE_DATA], layout_name)
         if not layout_folder:
-            layout_folder = Layout._get_layout_folder(File(__file__).parent, layout_name)
+            layout_folder = Layout._get_layout_folder(
+                                File(__file__).parent, layout_name)
         return layout_folder
 
     @staticmethod
@@ -35,6 +38,6 @@ class Layout(object):
         Finds the layout folder from the given root folder.
         If it does not exist, return None
         """
-        layout_folder = Folder(str(root)).child_folder(LAYOUTS).child_folder(layout_name)
+        layouts_folder = Folder(str(root)).child_folder(LAYOUTS)
+        layout_folder = layouts_folder.child_folder(layout_name)
         return layout_folder if layout_folder.exists else None
-

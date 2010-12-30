@@ -16,15 +16,18 @@ class LoyalUndefined(Undefined):
     def __call__(self, *args, **kwargs):
         return self
 
+
 @contextfunction
 def media_url(context, path):
     site = context['site']
     return Folder(site.config.media_url).child(path)
 
+
 @contextfunction
 def content_url(context, path):
     site = context['site']
     return Folder(site.config.base_url).child(path)
+
 
 # pylint: disable-msg=W0104,E0602,W0613,R0201
 class Jinja2Template(Template):

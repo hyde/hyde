@@ -50,7 +50,6 @@ class Generator(object):
             logger.info("Configuring the template environment")
             self.template.configure(self.site.config)
 
-
     def rebuild_if_needed(self):
         """
         Checks if the site requries a rebuild and builds if

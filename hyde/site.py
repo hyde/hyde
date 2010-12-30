@@ -9,8 +9,9 @@ from hyde.model import Config
 
 import logging
 from logging import NullHandler
-logger = logging.getLogger('hyde.site')
+logger = logging.getLogger('hyde.engine')
 logger.addHandler(NullHandler())
+
 
 class Processable(object):
     """
@@ -37,6 +38,7 @@ class Processable(object):
         Gets the source path of this node.
         """
         return self.source.path
+
 
 class Resource(Processable):
     """
@@ -110,6 +112,10 @@ class Node(Processable):
         return resource
 
     def walk(self):
+        """
+        Walks the node, first yielding itself then
+        yielding the child nodes depth-first.
+        """
         yield self
         for child in self.child_nodes:
             for node in child.walk():
@@ -224,7 +230,7 @@ class RootNode(Node):
         if not afile.is_descendant_of(self.source_folder):
             raise HydeException("The given file [%s] does not reside"
                                 " in this hierarchy [%s]" %
-                                (afile, self.content_folder))
+                                (afile, self.source_folder))
 
         node = self.node_from_path(afile.parent)
 

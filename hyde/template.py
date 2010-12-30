@@ -3,27 +3,30 @@
 """
 Abstract classes and utilities for template engines
 """
+
+
 class Template(object):
     """
     Interface for hyde template engines. To use a different template engine,
     the following interface must be implemented.
     """
+
     def __init__(self, sitepath):
         self.sitepath = sitepath
 
     def configure(self, config):
         """
-        The config object is a simple YAML object with required settings. The template
-        implementations are responsible for transforming this object to match the `settings`
-        required for the template engines.
+        The config object is a simple YAML object with required settings. The
+        template implementations are responsible for transforming this object
+        to match the `settings` required for the template engines.
         """
 
         abstract
 
     def render(self, text, context):
         """
-        Given the text, and the context, this function
-        must return the rendered string.
+        Given the text, and the context, this function must return the
+        rendered string.
         """
 
         abstract

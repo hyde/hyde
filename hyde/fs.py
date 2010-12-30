@@ -22,6 +22,7 @@ logger.addHandler(NullHandler())
 
 __all__ = ['File', 'Folder']
 
+
 class FS(object):
     """
     The base file system object
@@ -70,7 +71,6 @@ class FS(object):
         """
         return len(self.path.rstrip(os.sep).split(os.sep))
 
-
     def ancestors(self, stop=None):
         """
         Generates the parents until stop or the absolute
@@ -101,17 +101,22 @@ class FS(object):
         """
         if self == root:
             return ''
-        return functools.reduce(lambda f, p: Folder(p.name).child(f), self.ancestors(stop=root), self.name)
+        return functools.reduce(lambda f, p: Folder(p.name).child(f),
+                                            self.ancestors(stop=root),
+                                            self.name)
 
     def get_mirror(self, target_root, source_root=None):
         """
-        Returns a File or Folder object that reperesents if the entire fragment of this
-        directory starting with `source_root` were copied to `target_root`.
+        Returns a File or Folder object that reperesents if the entire
+        fragment of this directory starting with `source_root` were copied
+        to `target_root`.
 
-        >>> Folder('/usr/local/hyde/stuff').get_mirror('/usr/tmp', source_root='/usr/local/hyde')
+        >>> Folder('/usr/local/hyde/stuff').get_mirror('/usr/tmp',
+                                                source_root='/usr/local/hyde')
         Folder('/usr/tmp/stuff')
         """
-        fragment = self.get_relative_path(source_root if source_root else self.parent)
+        fragment = self.get_relative_path(
+                        source_root if source_root else self.parent)
         return Folder(target_root).child(fragment)
 
     @staticmethod
@@ -131,6 +136,7 @@ class FS(object):
             return destination
         else:
             return FS.file_or_folder(Folder(destination).child(self.name))
+
 
 class File(FS):
     """
@@ -201,6 +207,7 @@ class File(FS):
         shutil.copy(self.path, str(destination))
         return target
 
+
 class FSVisitor(object):
     """
     Implements syntactic sugar for walking and listing folders
@@ -235,7 +242,8 @@ class FSVisitor(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb): pass
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 
 class FolderWalker(FSVisitor):
@@ -252,15 +260,18 @@ class FolderWalker(FSVisitor):
         the arguments.
         """
 
-        if walk_files or walk_folders:
-            for root, dirs, a_files in os.walk(self.folder.path):
-                folder = Folder(root)
-                if walk_folders:
-                    yield folder
-                if walk_files:
-                    for a_file in a_files:
-                        if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
-                            yield File(folder.child(a_file))
+        if not walk_files and not walk_folders:
+            return
+
+        for root, dirs, a_files in os.walk(self.folder.path):
+            folder = Folder(root)
+            if walk_folders:
+                yield folder
+            if walk_files:
+                for a_file in a_files:
+                    if (not self.pattern or
+                        fnmatch.fnmatch(a_file, self.pattern)):
+                        yield File(folder.child(a_file))
 
     def walk_all(self):
         """
@@ -295,7 +306,7 @@ class FolderWalker(FSVisitor):
 
         def __visit_folder__(folder):
             process_folder = True
-            if hasattr(self,'visit_folder'):
+            if hasattr(self, 'visit_folder'):
                 process_folder = self.visit_folder(folder)
                 # If there is no return value assume true
                 #
@@ -304,11 +315,11 @@ class FolderWalker(FSVisitor):
             return process_folder
 
         def __visit_file__(a_file):
-            if hasattr(self,'visit_file'):
+            if hasattr(self, 'visit_file'):
                 self.visit_file(a_file)
 
         def __visit_complete__():
-            if hasattr(self,'visit_complete'):
+            if hasattr(self, 'visit_complete'):
                 self.visit_complete()
 
         for root, dirs, a_files in os.walk(self.folder.path):
@@ -331,43 +342,44 @@ class FolderLister(FSVisitor):
     """
 
     def list(self, list_folders=False, list_files=False):
-           """
-           A simple generator that yields a File or Folder object based on
-           the arguments.
-           """
+        """
+        A simple generator that yields a File or Folder object based on
+        the arguments.
+        """
 
-           a_files = os.listdir(self.folder.path)
-           for a_file in a_files:
-               path = self.folder.child(a_file)
-               if os.path.isdir(path):
-                   if list_folders:
-                       yield Folder(path)
-               elif list_files:
-                   if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
-                       yield File(path)
+        a_files = os.listdir(self.folder.path)
+        for a_file in a_files:
+            path = self.folder.child(a_file)
+            if os.path.isdir(path):
+                if list_folders:
+                    yield Folder(path)
+            elif list_files:
+                if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
+                    yield File(path)
 
     def list_all(self):
-       """
-       Yield both Files and Folders as the folder is listed.
-       """
+        """
+        Yield both Files and Folders as the folder is listed.
+        """
 
-       return self.list(list_folders=True, list_files=True)
+        return self.list(list_folders=True, list_files=True)
 
     def list_files(self):
-       """
-       Yield only Files.
-       """
-       return self.list(list_folders=False, list_files=True)
+        """
+        Yield only Files.
+        """
+        return self.list(list_folders=False, list_files=True)
 
     def list_folders(self):
-       """
-       Yield only Folders.
-       """
-       return self.list(list_folders=True, list_files=False)
+        """
+        Yield only Folders.
+        """
+        return self.list(list_folders=True, list_files=False)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         """
-        Automatically list the folder contents when the context manager is exited.
+        Automatically list the folder contents when the context manager
+        is exited.
 
         Calls self.visit_folder first and then calls self.visit_file for
         any files found. After all files and folders have been exhausted
@@ -382,8 +394,9 @@ class FolderLister(FSVisitor):
             elif hasattr(self, 'visit_file'):
                 if not self.pattern or fnmatch.fnmatch(a_file, self.pattern):
                     self.visit_file(File(path))
-        if hasattr(self,'visit_complete'):
+        if hasattr(self, 'visit_complete'):
             self.visit_complete()
+
 
 class Folder(FS):
     """

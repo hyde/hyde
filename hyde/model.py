@@ -1,9 +1,12 @@
 """
 Contains data structures and utilities for hyde.
 """
+
+
 class Expando(object):
     """
-    A generic expando class that creates attributes from the passed in dictionary.
+    A generic expando class that creates attributes from
+    the passed in dictionary.
     """
 
     def __init__(self, d):
@@ -21,12 +24,14 @@ class Expando(object):
         if isinstance(primitive, dict):
             return Expando(primitive)
         elif isinstance(primitive, (tuple, list, set, frozenset)):
-            return type(primitive)(Expando.transform(attr) for attr in primitive)
+            seq = type(primitive)
+            return seq(Expando.transform(attr) for attr in primitive)
         else:
             return primitive
 
-
 from hyde.fs import File, Folder
+
+
 class Config(Expando):
     """
     Represents the hyde configuration file
@@ -34,19 +39,18 @@ class Config(Expando):
 
     def __init__(self, sitepath, config_dict=None):
         default_config = dict(
-            content_root = 'content',
-            deploy_root = 'deploy',
-            media_root = 'media',
-            layout_root = 'layout',
-            media_url = '/media',
-            site_url = '/'
+            content_root='content',
+            deploy_root='deploy',
+            media_root='media',
+            layout_root='layout',
+            media_url='/media',
+            site_url='/'
         )
         conf = dict(**default_config)
         if config_dict:
             conf.update(config_dict)
         super(Config, self).__init__(conf)
         self.sitepath = Folder(sitepath)
-
 
     @property
     def deploy_root_path(self):
