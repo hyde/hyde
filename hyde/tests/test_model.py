@@ -62,7 +62,8 @@ class TestConfig(object):
             assert getattr(c, name) == root
             assert hasattr(c, path)
             assert getattr(c, path) == TEST_SITE_ROOT.child_folder(root)
-
+        assert hasattr(c, 'plugins')
+        assert len(c.plugins) == 0
         assert c.deploy_root_path == TEST_SITE_ROOT.child_folder('deploy')
 
     def test_conf1(self):

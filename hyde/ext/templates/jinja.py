@@ -6,8 +6,7 @@ from hyde.fs import File, Folder
 from hyde.template import Template
 from jinja2 import contextfunction, Environment, FileSystemLoader, Undefined
 
-
-class LoyalUndefined(Undefined):
+class SilentUndefined(Undefined):
     def __getattr__(self, name):
         return self
 
@@ -45,12 +44,11 @@ class Jinja2Template(Template):
         if config:
             loader = FileSystemLoader([
                             str(config.content_root_path),
-                            str(config.media_root_path),
                             str(config.layout_root_path),
                         ])
         else:
             loader = FileSystemLoader(str(self.sitepath))
-        self.env = Environment(loader=loader, undefined=LoyalUndefined)
+        self.env = Environment(loader=loader, undefined=SilentUndefined)
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
 

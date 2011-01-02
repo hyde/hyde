@@ -109,6 +109,7 @@ HELPERS = File(JINJA2.child('helpers.html'))
 INDEX = File(JINJA2.child('index.html'))
 LAYOUT = File(JINJA2.child('layout.html'))
 LOGO = File(TEMPLATE_ROOT.child('../../../resources/hyde-logo.png'))
+XML = File(TEMPLATE_ROOT.child('../sites/test_jinja/content/crossdomain.xml'))
 
 def test_ancestors():
     depth = 0
@@ -156,6 +157,7 @@ def test_mimetype():
 def test_is_text():
     assert HELPERS.is_text
     assert not LOGO.is_text
+    assert XML.is_text
 
 def test_is_image():
     assert not HELPERS.is_image

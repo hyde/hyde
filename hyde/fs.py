@@ -172,11 +172,26 @@ class File(FS):
         return mime
 
     @property
+    def is_binary(self):
+        """Return true if this is a binary file."""
+        with open(self.path, 'rb') as fin:
+            CHUNKSIZE = 1024
+            while 1:
+                chunk = fin.read(CHUNKSIZE)
+                if '\0' in chunk:
+                    return True
+                if len(chunk) < CHUNKSIZE:
+                    break
+        return False
+
+    @property
     def is_text(self):
-        return self.mimetype.split("/")[0] == "text"
+        """Return true if this is a text file."""
+        return (not self.is_binary)
 
     @property
     def is_image(self):
+        """Return true if this is an image file."""
         return self.mimetype.split("/")[0] == "image"
 
     def read_all(self, encoding='utf-8'):

@@ -75,7 +75,8 @@ def test_walk_resources():
                 "merry-christmas.html",
                 "crossdomain.xml",
                 "favicon.ico",
-                "robots.txt"
+                "robots.txt",
+                "site.css"
                 ]
     pages.sort()
     expected.sort()

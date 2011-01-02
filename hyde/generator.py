@@ -3,6 +3,7 @@ The generator class and related utility functions.
 """
 from hyde.exceptions import HydeException
 from hyde.fs import File
+from hyde.plugin import Plugin
 from hyde.template import Template
 
 from contextlib import contextmanager
@@ -24,6 +25,30 @@ class Generator(object):
         self.site = site
         self.__context__ = dict(site=site)
         self.template = None
+        Plugin.load_all(site)
+
+        class PluginProxy(object):
+            """
+            A proxy class to raise events in registered  plugins
+            """
+
+            def __init__(self, site):
+                super(PluginProxy, self).__init__()
+                self.site = site
+
+            def __getattr__(self, method_name):
+                if hasattr(Plugin, method_name):
+
+                    def __call_plugins__(*args, **kwargs):
+                        if self.site.plugins:
+                            for plugin in self.site.plugins:
+                                if hasattr(plugin, method_name):
+                                    function = getattr(plugin, method_name)
+                                    function(*args, **kwargs)
+                    return __call_plugins__
+                raise HydeException(
+                        "Unknown plugin method [%s] called." % method_name)
+        self.events = PluginProxy(self.site)
 
     @contextmanager
     def context_for_resource(self, resource):
@@ -37,7 +62,7 @@ class Generator(object):
         yield self.__context__
         self.__context__.update(resource=None)
 
-    def initialize_template_if_needed(self):
+    def load_template_if_needed(self):
         """
         Loads and configures the template environement from the site
         configuration if its not done already.
@@ -50,7 +75,16 @@ class Generator(object):
             logger.info("Configuring the template environment")
             self.template.configure(self.site.config)
 
-    def reload_if_needed(self):
+            self.events.template_loaded(self.template)
+
+    def initialize(self):
+        """
+        Start Generation. Perform setup tasks and inform plugins.
+        """
+        logger.info("Begin Generation")
+        self.events.begin_generation()
+
+    def load_site_if_needed(self):
         """
         Checks if the site requries a reload and loads if
         necessary.
@@ -60,25 +94,35 @@ class Generator(object):
             logger.info("Reading site contents")
             self.site.load()
 
+    def finalize(self):
+        """
+        Generation complete. Inform plugins and cleanup.
+        """
+        logger.info("Generation Complete")
+        self.events.generation_complete()
+
     def generate_all(self):
         """
         Generates the entire website
         """
         logger.info("Reading site contents")
-        self.initialize_template_if_needed()
-        self.reload_if_needed()
-
+        self.load_template_if_needed()
+        self.initialize()
+        self.load_site_if_needed()
+        self.events.begin_site()
         logger.info("Generating site to [%s]" %
                         self.site.config.deploy_root_path)
         self.__generate_node__(self.site.content)
+        self.events.site_complete()
+        self.finalize()
 
     def generate_node_at_path(self, node_path=None):
         """
         Generates a single node. If node_path is non-existent or empty,
         generates the entire site.
         """
-        self.initialize_template_if_needed()
-        self.reload_if_needed()
+        self.load_template_if_needed()
+        self.load_site_if_needed()
         node = None
         if node_path:
             node = self.site.content.node_from_path(node_path)
@@ -89,12 +133,16 @@ class Generator(object):
         Generates the given node. If node is invalid, empty or
         non-existent, generates the entire website.
         """
-        self.initialize_template_if_needed()
-        self.reload_if_needed()
         if not node:
             return self.generate_all()
+
+        self.load_template_if_needed()
+        self.initialize()
+        self.load_site_if_needed()
+
         try:
             self.__generate_node__(node)
+            self.finalize()
         except HydeException:
             self.generate_all()
 
@@ -103,31 +151,39 @@ class Generator(object):
         Generates a single resource. If resource_path is non-existent or empty,
         generats the entire website.
         """
-        self.initialize_template_if_needed()
-        self.reload_if_needed()
+        self.load_template_if_needed()
+        self.load_site_if_needed()
         resource = None
         if resource_path:
             resource = self.site.content.resource_from_path(resource_path)
-        return self.generate_resource(resource)
+        self.generate_resource(resource)
 
     def generate_resource(self, resource=None):
         """
         Generates the given resource. If resource is invalid, empty or
         non-existent, generates the entire website.
         """
-        self.initialize_template_if_needed()
-        self.reload_if_needed()
         if not resource:
             return self.generate_all()
+
+        self.load_template_if_needed()
+        self.initialize()
+        self.load_site_if_needed()
+
         try:
             self.__generate_resource__(resource)
+            self.finalize()
         except HydeException:
             self.generate_all()
 
+
     def __generate_node__(self, node):
         logger.info("Generating [%s]", node)
-        for resource in node.walk_resources():
-            self.__generate_resource__(resource)
+        for node in node.walk():
+            self.events.begin_node(node)
+            for resource in node.resources:
+                self.__generate_resource__(resource)
+            self.events.node_complete(node)
 
     def __generate_resource__(self, resource):
         logger.info("Processing [%s]", resource)
@@ -137,10 +193,15 @@ class Generator(object):
                             self.site.content.source_folder))
             target.parent.make()
             if resource.source_file.is_text:
+                text = resource.source_file.read_all()
+                text = self.events.begin_text_resource(resource, text) or text
                 logger.info("Rendering [%s]", resource)
-                text = self.template.render(resource.source_file.read_all(),
-                                        context)
+                text = self.template.render(text, context)
+                text = self.events.text_resource_complete(
+                                        resource, text) or text
                 target.write(text)
             else:
                 logger.info("Copying binary file [%s]", resource)
+                self.events.begin_binary_resource(resource)
                 resource.source_file.copy_to(target)
+                self.events.binary_resource_complete(resource)
