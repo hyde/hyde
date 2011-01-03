@@ -52,6 +52,15 @@ class Jinja2Template(Template):
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
 
+        try:
+            from typogrify.templatetags import jinja2_filters
+        except ImportError:
+            jinja2_filters = False
+
+        if jinja2_filters:
+            jinja2_filters.register(self.env)
+
+
     def render(self, text, context):
         """
         Renders the given resource using the context

@@ -9,6 +9,7 @@ Code borrowed from rwbench.py from the jinja2 examples
 from datetime import datetime
 from hyde.ext.templates.jinja import Jinja2Template
 from hyde.fs import File, Folder
+import jinja2
 from jinja2.utils import generate_lorem_ipsum
 from random import choice, randrange
 from util import assert_html_equals
@@ -69,3 +70,14 @@ def test_render():
     assert actual("div.article h2 a").length == 20
     assert actual("div.article p.meta").length == 20
     assert actual("div.article div.text").length == 20
+
+def test_typogrify():
+    source = """
+    {%filter typogrify%}
+    One & two
+    {%endfilter%}
+    """
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    html = t.render(source, {}).strip()
+    assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
