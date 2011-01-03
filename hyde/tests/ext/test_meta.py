@@ -9,6 +9,7 @@ from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
+from pyquery import PyQuery
 import yaml
 
 
@@ -26,21 +27,30 @@ class TestMeta(object):
 
 
     def test_can_load_front_matter(self):
-        front_matter = """
+        d = {
+            'title': 'A nice title',
+            'author': 'Lakshmi Vyas',
+            'twitter': 'lakshmivyas'
+        }
+        text = """
 ---
-title: A nice title
-author: Lakshmi Vyas
-twitter: lakshmivyas
+title: %(title)s
+author: %(author)s
+twitter: %(twitter)s
 ---
+{%% extends "base.html" %%}
+
+{%% block main %%}
+    Hi!
+
+    I am a test template to make sure jinja2 generation works well with hyde.
+    <span class="title">{{resource.meta.title}}</span>
+    <span class="author">{{resource.meta.author}}</span>
+    <span class="twitter">{{resource.meta.twitter}}</span>
+{%% endblock %%}
 """
-        about1 = File(TEST_SITE.child('content/about.html'))
         about2 = File(TEST_SITE.child('content/about2.html'))
-
-        text = front_matter
-        text += "\n"
-        text += about1.read_all()
-
-        about2.write(text)
+        about2.write(text % d)
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
         gen = Generator(s)
@@ -54,3 +64,8 @@ twitter: lakshmivyas
         assert res.meta.title == "A nice title"
         assert res.meta.author == "Lakshmi Vyas"
         assert res.meta.twitter == "lakshmivyas"
+        target = File(Folder(s.config.deploy_root_path).child('about2.html'))
+        text = target.read_all()
+        q = PyQuery(text)
+        for k, v in d.items():
+            assert v in q("span." + k).text()
