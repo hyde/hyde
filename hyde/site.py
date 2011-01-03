@@ -85,6 +85,24 @@ class Node(Processable):
         self.child_nodes = []
         self.resources = []
 
+    def contains_resource(self, resource_name):
+        """
+        Returns True if the given resource name exists as a file
+        in this node's source folder.
+        """
+
+        return File(self.source_folder.child(resource_name)).exists
+
+    def get_resource(self, resource_name):
+        """
+        Gets the resource if the given resource name exists as a file
+        in this node's source folder.
+        """
+
+        if self.contains_resource(resource_name):
+            return self.root.resource_from_path(self.source_folder.child(resource_name))
+        return None
+
     def add_child_node(self, folder):
         """
         Creates a new child node and adds it to the list of child nodes.

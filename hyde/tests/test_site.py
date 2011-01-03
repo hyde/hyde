@@ -82,6 +82,20 @@ def test_walk_resources():
     expected.sort()
     assert pages == expected
 
+def test_contains_resource():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    path = 'blog/2010/december'
+    node = s.content.node_from_relative_path(path)
+    assert node.contains_resource('merry-christmas.html')
+    
+def test_get_resource():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    path = 'blog/2010/december'
+    node = s.content.node_from_relative_path(path)
+    resource = node.get_resource('merry-christmas.html')
+    assert resource == s.content.resource_from_relative_path(Folder(path).child('merry-christmas.html'))
 
 class TestSiteWithConfig(object):
 

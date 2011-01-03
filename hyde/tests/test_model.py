@@ -26,6 +26,18 @@ def test_expando_three_levels():
     assert x.b.c == d['b']['c']
     assert x.b.d.e == d['b']['d']['e']
 
+def test_expando_update():
+    d1 = {"a": 123, "b": "abc"}
+    x = Expando(d1)
+    assert x.a == d1['a']
+    assert x.b == d1['b']
+    d = {"b": {"c": 456, "d": {"e": "abc"}}, "f": "lmn"}
+    x.update(d)
+    assert  x.a == d1['a']
+    assert x.b.c == d['b']['c']
+    assert x.b.d.e == d['b']['d']['e']
+    assert x.f == d["f"]
+
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 import yaml
 class TestConfig(object):

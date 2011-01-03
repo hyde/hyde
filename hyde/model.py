@@ -11,6 +11,12 @@ class Expando(object):
 
     def __init__(self, d):
         super(Expando, self).__init__()
+        self.update(d)
+
+    def update(self, d):
+        """
+        Updates the expando with a new dictionary
+        """
         d = d or {}
         for key, value in d.items():
             setattr(self, key, Expando.transform(value))
