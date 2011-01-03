@@ -9,6 +9,8 @@ Code borrowed from rwbench.py from the jinja2 examples
 from datetime import datetime
 from hyde.ext.templates.jinja import Jinja2Template
 from hyde.fs import File, Folder
+from hyde.model import Config
+
 import jinja2
 from jinja2.utils import generate_lorem_ipsum
 from random import choice, randrange
@@ -81,3 +83,27 @@ def test_typogrify():
     t.configure(None)
     html = t.render(source, {}).strip()
     assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
+
+def test_markdown():
+    source = """
+    {%markdown%}
+    ### Heading 3
+    {%endmarkdown%}
+    """
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    html = t.render(source, {}).strip()
+    assert html == u'<h3>Heading 3</h3>'
+    
+def test_markdown_with_extensions():
+    source = """
+    {%markdown%}
+    ### Heading 3
+    
+    {%endmarkdown%}
+    """
+    t = Jinja2Template(JINJA2.path)
+    c = Config(JINJA2.path, dict(markdown=dict(extensions=['headerid'])))
+    t.configure(c)
+    html = t.render(source, {}).strip()
+    assert html == u'<h3 id="heading_3">Heading 3</h3>'

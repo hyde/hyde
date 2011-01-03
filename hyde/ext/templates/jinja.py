@@ -4,7 +4,10 @@ Jinja template utilties
 
 from hyde.fs import File, Folder
 from hyde.template import Template
-from jinja2 import contextfunction, Environment, FileSystemLoader, Undefined
+from jinja2 import contextfunction, Environment, FileSystemLoader, Undefined, nodes
+from jinja2.ext import Extension
+from jinja2.exceptions import TemplateError
+
 
 class SilentUndefined(Undefined):
     def __getattr__(self, name):
@@ -27,6 +30,32 @@ def content_url(context, path):
     site = context['site']
     return Folder(site.config.base_url).child(path)
 
+class Markdown(Extension):
+    tags = set(['markdown'])
+
+    def parse(self, parser):
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(['name:endmarkdown'], drop_needle=True)
+
+        return nodes.CallBlock(
+                    self.call_method('_render_markdown', [], [], None, None),
+                    [], [], body
+                ).set_lineno(lineno)
+
+    def _render_markdown(self, caller=None):
+        try:
+            import markdown
+        except ImportError:
+            raise TemplateError("Cannot load the markdown library")
+        if not caller:
+            return ''
+        output = caller().strip()
+        d = {}
+        if hasattr(self.environment.config, 'markdown'):
+            d['extensions'] = getattr(self.environment.config.markdown, 'extensions', [])
+            d['extension_configs'] = getattr(self.environment.config.markdown, 'extension_configs', {})
+        md = markdown.Markdown(**d)
+        return md.convert(output)
 
 # pylint: disable-msg=W0104,E0602,W0613,R0201
 class Jinja2Template(Template):
@@ -48,9 +77,12 @@ class Jinja2Template(Template):
                         ])
         else:
             loader = FileSystemLoader(str(self.sitepath))
-        self.env = Environment(loader=loader, undefined=SilentUndefined)
+        self.env = Environment(loader=loader,
+                                undefined=SilentUndefined,
+                                extensions=[Markdown])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
+        self.env.extend(config=config)
 
         try:
             from typogrify.templatetags import jinja2_filters
