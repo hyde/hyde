@@ -39,10 +39,22 @@ def test_name_without_extension():
 def test_extension():
     f = File(__file__)
     assert f.extension == os.path.splitext(__file__)[1]
+    f = File("abc")
+    assert f.extension == ''
 
 def test_kind():
     f = File(__file__)
     assert f.kind == os.path.splitext(__file__)[1].lstrip('.')
+    f = File("abc")
+    assert f.kind == ''
+
+def test_can_create_temp_file():
+    text = "A for apple"
+    f = File.make_temp(text)
+    assert f.exists
+    assert text == f.read_all()
+    f.delete()
+    assert not f.exists
 
 def test_path_expands_user():
     f = File("~/abc/def")
@@ -96,6 +108,21 @@ def test_remove_folder():
     c.delete()
     assert not c.exists
 
+def test_can_remove_file():
+    f = FS(__file__).parent
+    c =  f.child_folder('__test__')
+    c.make()
+    assert c.exists
+    txt = "abc"
+    abc = File(c.child('abc.txt'))
+    abc.write(txt)
+    assert abc.exists
+    abc.delete()
+    assert not abc.exists
+    abc.delete()
+    assert True # No Exception
+    c.delete()
+
 def test_file_or_folder():
     f = FS.file_or_folder(__file__)
     assert isinstance(f, File)
@@ -131,11 +158,8 @@ def test_ancestors_stop():
 
 def test_is_descendant_of():
     assert INDEX.is_descendant_of(JINJA2)
-    print "*"
     assert JINJA2.is_descendant_of(TEMPLATE_ROOT)
-    print "*"
     assert INDEX.is_descendant_of(TEMPLATE_ROOT)
-    print "*"
     assert not INDEX.is_descendant_of(DATA_ROOT)
 
 def test_get_relative_path():

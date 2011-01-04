@@ -87,5 +87,4 @@ class TestConfig(object):
         assert c.content_root_path == TEST_SITE_ROOT.child_folder('site/stuff')
         assert c.media_root_path == TEST_SITE_ROOT.child_folder('mmm')
         assert c.media_url == TEST_SITE_ROOT.child_folder('/media')
-        print c.deploy_root_path
         assert c.deploy_root_path == Folder('~/deploy_site')

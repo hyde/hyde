@@ -21,6 +21,7 @@ class Processable(object):
     def __init__(self, source):
         super(Processable, self).__init__()
         self.source = FS.file_or_folder(source)
+        self.is_processable = True
 
     @property
     def name(self):
@@ -54,6 +55,8 @@ class Resource(Processable):
             raise HydeException("Source file is required"
                                 " to instantiate a resource")
         self.node = node
+        self.site = node.site
+        self._relative_deploy_path = None
 
     @property
     def relative_path(self):
@@ -62,6 +65,23 @@ class Resource(Processable):
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
 
+    def get_relative_deploy_path(self):
+        """
+        Gets the path where the file will be created
+        after its been processed.
+        """
+        return self._relative_deploy_path \
+                    if self._relative_deploy_path \
+                    else self.relative_path
+
+    def set_relative_deploy_path(self, path):
+        """
+        Sets the path where the file ought to be created
+        after its been processed.
+        """
+        self._relative_deploy_path = path
+
+    relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
 
 class Node(Processable):
     """
@@ -100,7 +120,8 @@ class Node(Processable):
         """
 
         if self.contains_resource(resource_name):
-            return self.root.resource_from_path(self.source_folder.child(resource_name))
+            return self.root.resource_from_path(
+                        self.source_folder.child(resource_name))
         return None
 
     def add_child_node(self, folder):

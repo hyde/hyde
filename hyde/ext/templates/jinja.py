@@ -93,6 +93,10 @@ class Jinja2Template(Template):
             jinja2_filters.register(self.env)
 
 
+    @property
+    def exception_class(self):
+        return TemplateError
+
     def render(self, text, context):
         """
         Renders the given resource using the context

@@ -12,7 +12,7 @@ def assert_html_equals(expected, actual, sanitize=None):
         expected = sanitize(expected)
         actual = sanitize(actual)
     assert expected == actual
-    
+
 def trap_exit_fail(f):
     def test_wrapper(*args):
         try:
@@ -25,7 +25,6 @@ def trap_exit_fail(f):
 def trap_exit_pass(f):
     def test_wrapper(*args):
         try:
-            print f.__name__
             f(*args)
         except SystemExit:
             pass

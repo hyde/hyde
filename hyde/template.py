@@ -3,7 +3,7 @@
 """
 Abstract classes and utilities for template engines
 """
-
+from hyde.exceptions import HydeException
 
 class Template(object):
     """
@@ -30,6 +30,13 @@ class Template(object):
         """
 
         abstract
+
+    @property
+    def exception_class(self):
+        return HydeException
+
+    def get_include_statement(self, path_to_include):
+        return "{%% include '%s' %%}" % path_to_include
 
     @staticmethod
     def find_template(site):

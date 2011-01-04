@@ -184,6 +184,18 @@ class File(FS):
                     break
         return False
 
+    @staticmethod
+    def make_temp(text):
+        """
+        Creates a temprorary file and writes the `text` into it
+        """
+        import tempfile
+        (handle, path) = tempfile.mkstemp(text=True)
+        os.close(handle)
+        f = File(path)
+        f.write(text)
+        return f
+
     @property
     def is_text(self):
         """Return true if this is a text file."""
@@ -221,6 +233,13 @@ class File(FS):
         logger.info("Copying %s to %s" % (self, target))
         shutil.copy(self.path, str(destination))
         return target
+
+    def delete(self):
+        """
+        Delete the file if it exists.
+        """
+        if self.exists:
+            os.remove(self.path)
 
 
 class FSVisitor(object):

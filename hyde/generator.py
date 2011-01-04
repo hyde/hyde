@@ -39,12 +39,20 @@ class Generator(object):
             def __getattr__(self, method_name):
                 if hasattr(Plugin, method_name):
 
-                    def __call_plugins__(*args, **kwargs):
+                    def __call_plugins__(*args):
+                        res = None
                         if self.site.plugins:
                             for plugin in self.site.plugins:
                                 if hasattr(plugin, method_name):
                                     function = getattr(plugin, method_name)
-                                    function(*args, **kwargs)
+                                    res = function(*args)
+                                    if res:
+                                        targs = list(args)
+                                        last = targs.pop
+                                        targs.append(res if res else last)
+                                        args = tuple(targs)
+                        return res
+
                     return __call_plugins__
                 raise HydeException(
                         "Unknown plugin method [%s] called." % method_name)
@@ -186,12 +194,11 @@ class Generator(object):
             self.events.node_complete(node)
 
     def __generate_resource__(self, resource):
+        if not resource.is_processable:
+            logger.info("Skipping [%s]", resource)
+            return
         logger.info("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
-            target = File(resource.source_file.get_mirror(
-                            self.site.config.deploy_root_path,
-                            self.site.content.source_folder))
-            target.parent.make()
             if resource.source_file.is_text:
                 text = resource.source_file.read_all()
                 text = self.events.begin_text_resource(resource, text) or text
@@ -199,9 +206,14 @@ class Generator(object):
                 text = self.template.render(text, context)
                 text = self.events.text_resource_complete(
                                         resource, text) or text
+                target = File(self.site.config.deploy_root_path.child(
+                                    resource.relative_deploy_path))
+                target.parent.make()
                 target.write(text)
             else:
                 logger.info("Copying binary file [%s]", resource)
                 self.events.begin_binary_resource(resource)
+                target = File(self.site.config.deploy_root_path.child(
+                                    resource.relative_deploy_path))
                 resource.source_file.copy_to(target)
                 self.events.binary_resource_complete(resource)

@@ -1,0 +1,18 @@
+* {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+#header {
+  color: #333333;
+  border-left: 1px;
+  border-right: 2px;
+}
+#footer {
+  color: #333333;
+}
+#content {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}

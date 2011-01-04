@@ -35,3 +35,28 @@ def test_generate_resource_from_path():
     text = about.read_all()
     q = PyQuery(text)
     assert about.name in q("div#main").text()
+
+@with_setup(create_test_site, delete_test_site)
+def test_generate_resource_from_path_with_is_processable_false():
+    site = Site(TEST_SITE)
+    site.load()
+    resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+    resource.is_processable = False
+    gen = Generator(site)
+    gen.generate_resource_at_path(TEST_SITE.child('content/about.html'))
+    about = File(Folder(site.config.deploy_root_path).child('about.html'))
+    assert not about.exists
+
+@with_setup(create_test_site, delete_test_site)
+def test_generate_resource_from_path_with_deploy_override():
+    site = Site(TEST_SITE)
+    site.load()
+    resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+    resource.relative_deploy_path = 'about/index.html'
+    gen = Generator(site)
+    gen.generate_resource_at_path(TEST_SITE.child('content/about.html'))
+    about = File(Folder(site.config.deploy_root_path).child('about/index.html'))
+    assert about.exists
+    text = about.read_all()
+    q = PyQuery(text)
+    assert resource.name in q("div#main").text()

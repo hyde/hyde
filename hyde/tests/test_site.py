@@ -88,7 +88,7 @@ def test_contains_resource():
     path = 'blog/2010/december'
     node = s.content.node_from_relative_path(path)
     assert node.contains_resource('merry-christmas.html')
-    
+
 def test_get_resource():
     s = Site(TEST_SITE_ROOT)
     s.load()
@@ -96,6 +96,29 @@ def test_get_resource():
     node = s.content.node_from_relative_path(path)
     resource = node.get_resource('merry-christmas.html')
     assert resource == s.content.resource_from_relative_path(Folder(path).child('merry-christmas.html'))
+
+def test_is_processable_default_true():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    for page in s.content.walk_resources():
+        assert page.is_processable
+
+def test_relative_deploy_path():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    for page in s.content.walk_resources():
+        assert page.relative_deploy_path == Folder(page.relative_path)
+
+def test_relative_deploy_path_override():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    res = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
+    res.relative_deploy_path = 'blog/2010/december/happy-holidays.html'
+    for page in s.content.walk_resources():
+        if res.source_file == page.source_file:
+            assert page.relative_deploy_path == 'blog/2010/december/happy-holidays.html'
+        else:
+            assert page.relative_deploy_path == Folder(page.relative_path)
 
 class TestSiteWithConfig(object):
 
