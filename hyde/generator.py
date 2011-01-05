@@ -225,5 +225,6 @@ class Generator(object):
                 self.events.begin_binary_resource(resource)
                 target = File(self.site.config.deploy_root_path.child(
                                     resource.relative_deploy_path))
+                target.parent.make()
                 resource.source_file.copy_to(target)
                 self.events.binary_resource_complete(resource)
