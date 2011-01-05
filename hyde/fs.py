@@ -371,7 +371,7 @@ class FolderWalker(FSVisitor):
             if hasattr(self, 'visit_complete'):
                 self.visit_complete()
 
-        for root, dirs, a_files in os.walk(self.folder.path):
+        for root, dirs, a_files in os.walk(self.folder.path, followlinks=True):
             folder = Folder(root)
             if not __visit_folder__(folder):
                 dirs[:] = []
