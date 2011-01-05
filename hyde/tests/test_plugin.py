@@ -169,7 +169,6 @@ class TestPlugins(object):
             gen = Generator(self.site)
             gen.generate_all()
 
-
             assert begin_node_stub.call_count == len(self.content_nodes)
             called_with_nodes = sorted([arg[0][0].path for arg in begin_node_stub.call_args_list])
             assert called_with_nodes == self.content_nodes
@@ -188,7 +187,6 @@ class TestPlugins(object):
             gen = Generator(self.site)
             gen.generate_all()
 
-
             assert node_complete_stub.call_count == len(self.content_nodes)
             called_with_nodes = sorted([arg[0][0].path for arg in node_complete_stub.call_args_list])
             assert called_with_nodes == self.content_nodes
@@ -206,7 +204,6 @@ class TestPlugins(object):
             begin_text_resource_stub.return_value = ''
             gen = Generator(self.site)
             gen.generate_all()
-
 
             called_with_resources = sorted([arg[0][0].path for arg in begin_text_resource_stub.call_args_list])
             assert begin_text_resource_stub.call_count == len(self.content_text_resources)
@@ -230,7 +227,6 @@ class TestPlugins(object):
             gen = Generator(self.site)
             gen.generate_all()
 
-
             called_with_resources = sorted([arg[0][0].path for arg in begin_binary_resource_stub.call_args_list])
             assert begin_binary_resource_stub.call_count == len(self.content_binary_resources)
             assert called_with_resources == self.content_binary_resources
@@ -241,7 +237,6 @@ class TestPlugins(object):
             gen = Generator(self.site)
             path = self.site.content.source_folder.child('favicon.ico')
             gen.generate_resource_at_path(path)
-
 
             called_with_resources = sorted([arg[0][0].path for arg in begin_binary_resource_stub.call_args_list])
             assert begin_binary_resource_stub.call_count == 1

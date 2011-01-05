@@ -48,7 +48,7 @@ class Generator(object):
                                     res = function(*args)
                                     if res:
                                         targs = list(args)
-                                        last = targs.pop
+                                        last = targs.pop()
                                         targs.append(res if res else last)
                                         args = tuple(targs)
                         return res

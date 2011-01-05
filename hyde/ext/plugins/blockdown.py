@@ -1,5 +1,5 @@
 """
-Less css plugin
+Blockdown css plugin
 """
 
 from hyde.plugin import Plugin

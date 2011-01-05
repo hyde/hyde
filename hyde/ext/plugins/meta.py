@@ -89,6 +89,8 @@ class MetaPlugin(Plugin):
         text = text[match.end():]
         data = match.group(1)
         if not hasattr(resource, 'meta') or not resource.meta:
+            if not hasattr(resource.node, 'meta'):
+                resource.node.meta = Metadata({})
             resource.meta = Metadata(data, resource.node.meta)
         else:
             resource.meta.update(data)

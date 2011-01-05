@@ -13,7 +13,7 @@ from pyquery import PyQuery
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
 
-class TestBlockdown(object):
+class TestAutoExtend(object):
 
     def setUp(self):
         TEST_SITE.make()
@@ -23,18 +23,22 @@ class TestBlockdown(object):
     def tearDown(self):
         TEST_SITE.delete()
 
-    def test_can_parse_blockdown(self):
+    def test_can_auto_extend(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.blockdown.BlockdownPlugin']
+        s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin',
+                            'hyde.ext.plugins.auto_extend.AutoExtendPlugin',
+                            'hyde.ext.plugins.blockdown.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
-{%% extends "base.html" %%}
+---
+extends: base.html
+---
 ===========================////title\\\\============================
 %s
 ===========================\\\\title////============================"""
 
         content = (templ.strip() % txt).strip()
-        bd = File(TEST_SITE.child('content/blockdown.html'))
+        bd = File(TEST_SITE.child('content/auto_extend.html'))
         bd.write(content)
         gen = Generator(s)
         gen.generate_resource_at_path(bd.path)

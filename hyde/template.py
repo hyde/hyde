@@ -35,12 +35,36 @@ class Template(object):
     def exception_class(self):
         return HydeException
 
+    @property
+    def include_pattern(self):
+        """
+        The pattern for matching include statements
+        """
+
+        return '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
+
     def get_include_statement(self, path_to_include):
         """
-        Returns a include statement for the current template,
+        Returns an include statement for the current template,
         given the path to include.
         """
         return "{%% include '%s' %%}" % path_to_include
+
+    @property
+    def block_open_pattern(self):
+        """
+        The pattern for matching include statements
+        """
+
+        return '\s*\{\%\s*block\s*([^\s]+)\s*\%\}'
+
+    @property
+    def block_close_pattern(self):
+        """
+        The pattern for matching include statements
+        """
+
+        return '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}'
 
     def get_block_open_statement(self, block_name):
         """
@@ -55,6 +79,21 @@ class Template(object):
         given the block name.
         """
         return "{%% endblock %s %%}" % block_name
+
+    @property
+    def extends_pattern(self):
+        """
+        The pattern for matching include statements
+        """
+
+        return '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
+
+    def get_extends_statement(self, path_to_extend):
+        """
+        Returns an extends statement for the current template,
+        given the path to extend.
+        """
+        return "{%% extends '%s' %%}" % path_to_extend
 
     @staticmethod
     def find_template(site):
