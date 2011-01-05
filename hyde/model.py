@@ -51,6 +51,7 @@ class Config(Expando):
             layout_root='layout',
             media_url='/media',
             site_url='/',
+            not_found='404.html',
             plugins = []
         )
         conf = dict(**default_config)

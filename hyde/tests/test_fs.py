@@ -60,6 +60,13 @@ def test_path_expands_user():
     f = File("~/abc/def")
     assert f.path == os.path.expanduser("~/abc/def")
 
+def test_fully_expanded_path():
+    f = File(__file__).parent
+    n = f.child_folder('../' + f.name)
+    e = Folder(n.fully_expanded_path)
+    assert n != e
+    assert f == e
+
 def test_parent():
     f = File(__file__)
     p = f.parent

@@ -81,7 +81,8 @@ class Generator(object):
         if not self.template:
             logger.info("Generating site at [%s]" % self.site.sitepath)
             self.template = Template.find_template(self.site)
-            logger.info("Using [%s] as the template", self.template)
+            logger.info("Using [%s] as the template",
+                            self.template.__class__.__name__)
 
             logger.info("Configuring the template environment")
             self.template.configure(self.site.config)

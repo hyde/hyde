@@ -49,7 +49,7 @@ class Engine(Application):
         The create command. Creates a new site from the template at the given
         sitepath.
         """
-        sitepath = Folder(args.sitepath)
+        sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         if sitepath.exists and not args.overwrite:
             raise HydeException(
                     "The given site path[%s] is not empty" % sitepath)
@@ -75,14 +75,41 @@ class Engine(Application):
         The generate command. Generates the site at the given
         deployment directory.
         """
-        sitepath = Folder(args.sitepath)
+        site = self.make_site(args.sitepath, args.config)
+        from hyde.generator import Generator
+        gen = Generator(site)
+        gen.generate_all()
+
+    @subcommand('serve', help='Serve the website')
+    @store('-a', '--address', default='localhost', dest='address',
+            help='The address where the website must be served from.')
+    @store('-p', '--port', type=int, default=8080, dest='port',
+            help='The port where the website must be served from.')
+    @store('-c', '--config-path', default='site.yaml', dest='config',
+            help='The configuration used to generate the site')
+    @store('-d', '--deploy-path', default='deploy',
+                                help='Where should the site be generated?')
+    def serve(self, args):
+        """
+        The serve command. Serves the site at the given
+        deployment directory, address and port. Regenerates
+        the entire site or specific files based on ths request.
+        """
+        sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         config_file = sitepath.child(args.config)
+        site = self.make_site(args.sitepath, args.config)
+        from hyde.server import HydeWebServer
+        server = HydeWebServer(site, args.address, args.port)
+        server.serve_forever()
+
+    def make_site(self, sitepath, config):
+        """
+        Creates a site object from the given sitepath and the config file.
+        """
+        sitepath = Folder(Folder(sitepath).fully_expanded_path)
+        config_file = sitepath.child(config)
         logger.info("Reading site configuration from [%s]", config_file)
         conf = {}
         with open(config_file) as stream:
             conf = yaml.load(stream)
-        site = Site(sitepath, Config(sitepath, conf))
-
-        from hyde.generator import Generator
-        gen = Generator(site)
-        gen.generate_all()
+        return Site(sitepath, Config(sitepath, conf))

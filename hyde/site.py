@@ -311,7 +311,7 @@ class Site(object):
 
     def __init__(self, sitepath=None, config=None):
         super(Site, self).__init__()
-        self.sitepath = Folder(str(sitepath))
+        self.sitepath = Folder(Folder(sitepath).fully_expanded_path)
         self.config = config if config else Config(self.sitepath)
         self.content = RootNode(self.config.content_root_path, self)
         self.plugins = []

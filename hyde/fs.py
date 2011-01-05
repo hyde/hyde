@@ -27,9 +27,11 @@ class FS(object):
     """
     The base file system object
     """
+
     def __init__(self, path):
         super(FS, self).__init__()
-        self.path = os.path.expanduser(str(path).strip().rstrip(os.sep))
+        self.path = os.path.expandvars(os.path.expanduser(
+                        str(path).strip().rstrip(os.sep)))
 
     def __str__(self):
         return self.path
@@ -42,6 +44,18 @@ class FS(object):
 
     def __ne__(self, other):
         return str(self) != str(other)
+
+    @property
+    def fully_expanded_path(self):
+        """
+        Returns the absolutely absolute path. Calls os.(
+        normpath, normcase, expandvars and expanduser).
+        """
+        return os.path.abspath(
+        os.path.normpath(
+        os.path.normcase(
+        os.path.expandvars(
+        os.path.expanduser(self.path)))))
 
     @property
     def exists(self):
@@ -142,6 +156,7 @@ class File(FS):
     """
     The File object.
     """
+
     def __init__(self, path):
         super(File, self).__init__(path)
 
@@ -436,6 +451,7 @@ class Folder(FS):
     """
     Represents a directory.
     """
+
     def __init__(self, path):
         super(Folder, self).__init__(path)
 
@@ -510,6 +526,7 @@ class Folder(FS):
         """
         source = self
         with source.walker as walker:
+
             @walker.folder_visitor
             def visit_folder(folder):
                 """

@@ -77,6 +77,7 @@ class TestConfig(object):
         assert hasattr(c, 'plugins')
         assert len(c.plugins) == 0
         assert c.deploy_root_path == TEST_SITE_ROOT.child_folder('deploy')
+        assert c.not_found == '404.html'
 
     def test_conf1(self):
         c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
