@@ -43,6 +43,27 @@ def test_node_module():
     c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
     assert c.module == n
 
+def test_node_url():
+    s = Site(TEST_SITE_ROOT)
+    r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)
+    assert not r.module
+    n = r.add_node(TEST_SITE_ROOT.child_folder('content/blog'))
+    assert n.url == '/' + n.relative_path
+    assert n.url == '/blog'
+    c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
+    assert c.url == '/' + c.relative_path
+    assert c.url == '/blog/2010/december'
+    
+def test_node_full_url():
+    s = Site(TEST_SITE_ROOT)
+    s.config.base_url = 'http://localhost'
+    r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)
+    assert not r.module
+    n = r.add_node(TEST_SITE_ROOT.child_folder('content/blog'))
+    assert n.full_url == 'http://localhost/blog'
+    c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
+    assert c.full_url == 'http://localhost/blog/2010/december'
+
 def test_node_relative_path():
     s = Site(TEST_SITE_ROOT)
     r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)

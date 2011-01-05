@@ -175,6 +175,13 @@ class Node(Processable):
         """
         return self.source_folder.get_relative_path(self.root.source_folder)
 
+    @property
+    def url(self):
+        return '/' + self.relative_path
+
+    @property
+    def full_url(self):
+        return self.site.config.base_url.rstrip('/') + self.url
 
 class RootNode(Node):
     """
