@@ -37,6 +37,11 @@ def test_expando_update():
     assert x.b.c == d['b']['c']
     assert x.b.d.e == d['b']['d']['e']
     assert x.f == d["f"]
+    d2 = {"a": 789, "f": "opq"}
+    y = Expando(d2)
+    x.update(y)
+    assert x.a == 789
+    assert x.f == "opq"
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 import yaml

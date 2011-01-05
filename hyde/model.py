@@ -18,8 +18,11 @@ class Expando(object):
         Updates the expando with a new dictionary
         """
         d = d or {}
-        for key, value in d.items():
-            setattr(self, key, Expando.transform(value))
+        if isinstance(d, dict):
+            for key, value in d.items():
+                setattr(self, key, Expando.transform(value))
+        elif isinstance(d, Expando):
+            self.update(d.__dict__)
 
     @staticmethod
     def transform(primitive):

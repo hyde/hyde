@@ -29,10 +29,10 @@ class Metadata(Expando):
         """
         Updates the metadata with new stuff
         """
-        if isinstance(data, dict):
-            super(Metadata, self).update(data)
-        else:
+        if isinstance(data, basestring):
             super(Metadata, self).update(yaml.load(data))
+        else:
+            super(Metadata, self).update(data)
 
 
 class MetaPlugin(Plugin):
