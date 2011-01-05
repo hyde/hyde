@@ -123,20 +123,39 @@ class TestPlugins(object):
             gen.generate_all()
             assert begin_site_stub.call_count == 1
 
-    def test_generator_template_begin_site_not_called_for_single_resource(self):
+    def test_generator_template_begin_site_called_for_single_resource(self):
         with patch.object(PluginLoaderStub, 'begin_site') as begin_site_stub:
             gen = Generator(self.site)
             path = self.site.content.source_folder.child('about.html')
             gen.generate_resource_at_path(path)
-            assert begin_site_stub.call_count == 0
+            assert begin_site_stub.call_count == 1
 
-    def test_generator_template_begin_site_not_called_for_single_node(self):
+    def test_generator_template_begin_site_not_called_for_single_resource_second_time(self):
+        with patch.object(PluginLoaderStub, 'begin_site') as begin_site_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            assert begin_site_stub.call_count == 1
+            path = self.site.content.source_folder.child('about.html')
+            gen.generate_resource_at_path(path)
+            assert begin_site_stub.call_count == 1
+
+    def test_generator_template_begin_site_called_for_single_node(self):
         with patch.object(PluginLoaderStub, 'begin_site') as begin_site_stub:
             gen = Generator(self.site)
             path = self.site.content.source_folder
             gen.generate_node_at_path(path)
 
-            assert begin_site_stub.call_count == 0
+            assert begin_site_stub.call_count == 1
+
+    def test_generator_template_begin_site_not_called_for_single_node_second_time(self):
+        with patch.object(PluginLoaderStub, 'begin_site') as begin_site_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            assert begin_site_stub.call_count == 1
+            path = self.site.content.source_folder
+            gen.generate_node_at_path(path)
+
+            assert begin_site_stub.call_count == 1
 
     def test_generator_template_site_complete_called(self):
         with patch.object(PluginLoaderStub, 'site_complete') as site_complete_stub:
@@ -145,23 +164,44 @@ class TestPlugins(object):
             assert site_complete_stub.call_count == 1
 
 
-    def test_generator_template_site_complete_not_called_for_single_resource(self):
+    def test_generator_template_site_complete_called_for_single_resource(self):
 
         with patch.object(PluginLoaderStub, 'site_complete') as site_complete_stub:
             gen = Generator(self.site)
             path = self.site.content.source_folder.child('about.html')
             gen.generate_resource_at_path(path)
 
-            assert site_complete_stub.call_count == 0
+            assert site_complete_stub.call_count == 1
 
-    def test_generator_template_site_complete_not_called_for_single_node(self):
+    def test_generator_template_site_complete_not_called_for_single_resource_second_time(self):
+
+        with patch.object(PluginLoaderStub, 'site_complete') as site_complete_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            assert site_complete_stub.call_count == 1
+            path = self.site.content.source_folder.child('about.html')
+            gen.generate_resource_at_path(path)
+
+            assert site_complete_stub.call_count == 1
+
+    def test_generator_template_site_complete_called_for_single_node(self):
 
         with patch.object(PluginLoaderStub, 'site_complete') as site_complete_stub:
             gen = Generator(self.site)
             path = self.site.content.source_folder
             gen.generate_node_at_path(path)
 
-            assert site_complete_stub.call_count == 0
+            assert site_complete_stub.call_count == 1
+
+    def test_generator_template_site_complete_not_called_for_single_node_second_time(self):
+
+        with patch.object(PluginLoaderStub, 'site_complete') as site_complete_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            path = self.site.content.source_folder
+            gen.generate_node_at_path(path)
+
+            assert site_complete_stub.call_count == 1
 
     def test_generator_template_begin_node_called(self):
 
@@ -173,12 +213,22 @@ class TestPlugins(object):
             called_with_nodes = sorted([arg[0][0].path for arg in begin_node_stub.call_args_list])
             assert called_with_nodes == self.content_nodes
 
-    def test_generator_template_begin_node_not_called_for_single_resource(self):
+    def test_generator_template_begin_node_called_for_single_resource(self):
 
         with patch.object(PluginLoaderStub, 'begin_node') as begin_node_stub:
             gen = Generator(self.site)
             gen.generate_resource_at_path(self.site.content.source_folder.child('about.html'))
-            assert begin_node_stub.call_count == 0
+            assert begin_node_stub.call_count == len(self.content_nodes)
+
+
+    def test_generator_template_begin_node_not_called_for_single_resource_second_time(self):
+
+        with patch.object(PluginLoaderStub, 'begin_node') as begin_node_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            assert begin_node_stub.call_count == len(self.content_nodes)
+            gen.generate_resource_at_path(self.site.content.source_folder.child('about.html'))
+            assert begin_node_stub.call_count == len(self.content_nodes) # No extra calls
 
 
     def test_generator_template_node_complete_called(self):
@@ -191,12 +241,21 @@ class TestPlugins(object):
             called_with_nodes = sorted([arg[0][0].path for arg in node_complete_stub.call_args_list])
             assert called_with_nodes == self.content_nodes
 
-    def test_generator_template_node_complete_not_called_for_single_resource(self):
+    def test_generator_template_node_complete_called_for_single_resource(self):
 
         with patch.object(PluginLoaderStub, 'node_complete') as node_complete_stub:
             gen = Generator(self.site)
             gen.generate_resource_at_path(self.site.content.source_folder.child('about.html'))
-            assert node_complete_stub.call_count == 0
+            assert node_complete_stub.call_count == len(self.content_nodes)
+
+    def test_generator_template_node_complete_not_called_for_single_resource_second_time(self):
+
+        with patch.object(PluginLoaderStub, 'node_complete') as node_complete_stub:
+            gen = Generator(self.site)
+            gen.generate_all()
+            assert node_complete_stub.call_count == len(self.content_nodes)
+            gen.generate_resource_at_path(self.site.content.source_folder.child('about.html'))
+            assert node_complete_stub.call_count == len(self.content_nodes) # No extra calls
 
     def test_generator_template_begin_text_resource_called(self):
 
@@ -214,6 +273,8 @@ class TestPlugins(object):
         with patch.object(PluginLoaderStub, 'begin_text_resource') as begin_text_resource_stub:
             begin_text_resource_stub.return_value = ''
             gen = Generator(self.site)
+            gen.generate_all()
+            begin_text_resource_stub.reset_mock()
             path = self.site.content.source_folder.child('about.html')
             gen.generate_resource_at_path(path)
 
@@ -235,6 +296,8 @@ class TestPlugins(object):
 
         with patch.object(PluginLoaderStub, 'begin_binary_resource') as begin_binary_resource_stub:
             gen = Generator(self.site)
+            gen.generate_all()
+            begin_binary_resource_stub.reset_mock()
             path = self.site.content.source_folder.child('favicon.ico')
             gen.generate_resource_at_path(path)
 

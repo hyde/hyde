@@ -23,6 +23,7 @@ class Generator(object):
     def __init__(self, site):
         super(Generator, self).__init__()
         self.site = site
+        self.generated_once = False
         self.__context__ = dict(site=site)
         self.template = None
         Plugin.load_all(site)
@@ -48,8 +49,10 @@ class Generator(object):
                                     res = function(*args)
                                     if res:
                                         targs = list(args)
-                                        last = targs.pop()
-                                        targs.append(res if res else last)
+                                        last = None
+                                        if len(targs):
+                                            last = targs.pop()
+                                            targs.append(res if res else last)
                                         args = tuple(targs)
                         return res
 
@@ -123,12 +126,15 @@ class Generator(object):
         self.__generate_node__(self.site.content)
         self.events.site_complete()
         self.finalize()
+        self.generated_once = True
 
     def generate_node_at_path(self, node_path=None):
         """
         Generates a single node. If node_path is non-existent or empty,
         generates the entire site.
         """
+        if not self.generated_once:
+            return self.generate_all()
         self.load_template_if_needed()
         self.load_site_if_needed()
         node = None
@@ -141,7 +147,7 @@ class Generator(object):
         Generates the given node. If node is invalid, empty or
         non-existent, generates the entire website.
         """
-        if not node:
+        if not node or not self.generated_once:
             return self.generate_all()
 
         self.load_template_if_needed()
@@ -159,6 +165,9 @@ class Generator(object):
         Generates a single resource. If resource_path is non-existent or empty,
         generats the entire website.
         """
+        if not self.generated_once:
+            return self.generate_all()
+
         self.load_template_if_needed()
         self.load_site_if_needed()
         resource = None
@@ -171,7 +180,7 @@ class Generator(object):
         Generates the given resource. If resource is invalid, empty or
         non-existent, generates the entire website.
         """
-        if not resource:
+        if not resource or not self.generated_once:
             return self.generate_all()
 
         self.load_template_if_needed()
