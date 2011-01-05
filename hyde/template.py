@@ -36,7 +36,25 @@ class Template(object):
         return HydeException
 
     def get_include_statement(self, path_to_include):
+        """
+        Returns a include statement for the current template,
+        given the path to include.
+        """
         return "{%% include '%s' %%}" % path_to_include
+
+    def get_block_open_statement(self, block_name):
+        """
+        Returns a open block statement for the current template,
+        given the block name.
+        """
+        return "{%% block %s %%}" % block_name
+
+    def get_block_close_statement(self, block_name):
+        """
+        Returns a close block statement for the current template,
+        given the block name.
+        """
+        return "{%% endblock %s %%}" % block_name
 
     @staticmethod
     def find_template(site):

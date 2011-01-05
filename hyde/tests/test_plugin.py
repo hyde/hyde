@@ -203,6 +203,7 @@ class TestPlugins(object):
     def test_generator_template_begin_text_resource_called(self):
 
         with patch.object(PluginLoaderStub, 'begin_text_resource') as begin_text_resource_stub:
+            begin_text_resource_stub.return_value = ''
             gen = Generator(self.site)
             gen.generate_all()
 
@@ -214,6 +215,7 @@ class TestPlugins(object):
     def test_generator_template_begin_text_resource_called_for_single_resource(self):
 
         with patch.object(PluginLoaderStub, 'begin_text_resource') as begin_text_resource_stub:
+            begin_text_resource_stub.return_value = ''
             gen = Generator(self.site)
             path = self.site.content.source_folder.child('about.html')
             gen.generate_resource_at_path(path)
