@@ -312,7 +312,7 @@ class FolderWalker(FSVisitor):
         if not walk_files and not walk_folders:
             return
 
-        for root, dirs, a_files in os.walk(self.folder.path):
+        for root, dirs, a_files in os.walk(self.folder.path, followlinks=True):
             folder = Folder(root)
             if walk_folders:
                 yield folder
