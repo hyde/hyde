@@ -73,9 +73,9 @@ twitter: %(twitter)s
             'author': 'Lakshmi Vyas',
             'twitter': 'lakshmivyas'}
         text = """
----
+===
 title: Even nicer title
----
+===
 {%% extends "base.html" %%}
 
 {%% block main %%}

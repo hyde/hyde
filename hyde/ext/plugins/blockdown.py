@@ -15,25 +15,30 @@ class BlockdownPlugin(Plugin):
 
     def __init__(self, site):
         super(BlockdownPlugin, self).__init__(site)
+        try:
+            self.open_pattern = site.config.blockdown.open_pattern
+        except AttributeError:
+            self.open_pattern = '^\s*===+\s*([A-Za-z0-9_\-.]+)\s*=*\s*$'
+
+        try:
+            self.close_pattern = site.config.blockdown.close_pattern
+        except AttributeError:
+            self.close_pattern = '^\s*===+\s*/+\s*=*/*([A-Za-z0-9_\-.]*)[\s=/]*$'
 
     def template_loaded(self, template):
         self.template = template
 
     def begin_text_resource(self, resource, text):
         """
-        Replace =======////blockname\\\\===========
+        Replace open pattern (default:===[====]blockname[===========])
         with
         {% block blockname %} or equivalent and
-        Replace =======\\\\blockname////===========
+        Replace close pattern (default===[====]/[blockname][===========])
         with
         {% block blockname %} or equivalent
         """
-        blocktag_open = re.compile(
-                            '^\s*=+/+\s*([A-Za-z0-9_\-.]+)\s*\\\\+=+$',
-                            re.MULTILINE)
-        blocktag_close = re.compile(
-                            '^\s*=+\\\\+\s*([A-Za-z0-9_\-.]+)\s*/+=+$',
-                            re.MULTILINE)
+        blocktag_open = re.compile(self.open_pattern, re.MULTILINE)
+        blocktag_close = re.compile(self.close_pattern, re.MULTILINE)
         def blockdown_to_block(match, start_block=True):
             if not match.lastindex:
                 return ''

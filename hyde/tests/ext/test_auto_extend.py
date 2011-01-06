@@ -33,9 +33,9 @@ class TestAutoExtend(object):
 ---
 extends: base.html
 ---
-===========================////title\\\\============================
+=====title========
 %s
-===========================\\\\title////============================"""
+====/title========"""
 
         content = (templ.strip() % txt).strip()
         bd = File(TEST_SITE.child('content/auto_extend.html'))

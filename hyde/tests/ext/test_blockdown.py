@@ -29,9 +29,9 @@ class TestBlockdown(object):
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 {%% extends "base.html" %%}
-===========================////title\\\\============================
+=====title========
 %s
-===========================\\\\title////============================"""
+====/title========"""
 
         content = (templ.strip() % txt).strip()
         bd = File(TEST_SITE.child('content/blockdown.html'))
