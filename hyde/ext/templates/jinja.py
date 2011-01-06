@@ -79,7 +79,11 @@ class Jinja2Template(Template):
             loader = FileSystemLoader(str(self.sitepath))
         self.env = Environment(loader=loader,
                                 undefined=SilentUndefined,
-                                extensions=[Markdown])
+                                trim_blocks=True,
+                                extensions=[Markdown, 
+                                            'jinja2.ext.do', 
+                                            'jinja2.ext.loopcontrols',
+                                            'jinja2.ext.with_'])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
         self.env.extend(config=config)

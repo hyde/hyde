@@ -54,35 +54,33 @@ class MetaPlugin(Plugin):
         super(MetaPlugin, self).__init__(site)
 
     def begin_site(self):
-        metadata = self.site.config.meta if hasattr(self.site.config, 'meta') else {}
+        """
+        Initialize site meta data.
+
+        Go through all the nodes and resources to initialize
+        meta data at each level.
+        """
+        config = self.site.config
+        metadata = config.meta if hasattr(config, 'meta') else {}
         self.site.meta = Metadata(metadata)
+        for node in self.site.content.walk():
+            self.__read_node__(node)
+            for resource in node.resources:
+                if not hasattr(resource, 'meta'):
+                    resource.meta = Metadata({}, node.meta)
+                if resource.source_file.is_text:
+                    self.__read_resource__(resource, resource.source_file.read_all())
 
-    def begin_node(self, node):
+    def __read_resource__(self, resource, text):
         """
-        Look for nodemeta.yaml. Load and assign it to the node.
-        """
-        nodemeta = node.get_resource('nodemeta.yaml')
-        parent_meta = node.parent.meta if node.parent else self.site.meta
-        if nodemeta:
-            nodemeta.is_processable = False
-            metadata = nodemeta.source_file.read_all()
-            if hasattr(node, 'meta') and node.meta:
-                node.meta.update(metadata)
-            else:
-                node.meta = Metadata(metadata, parent=parent_meta)
-        else:
-            node.meta = Metadata({}, parent=parent_meta)
-
-    def begin_text_resource(self, resource, text):
-        """
-        Load meta data by looking for the marker.
+        Reads the resource metadata and assigns it to
+        the resource. Load meta data by looking for the marker.
         Once loaded, remove the meta area from the text.
         """
-
         logger.info("Trying to load metadata from resource [%s]" % resource)
         yaml_finder = re.compile(
-                        r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n",
-                        re.MULTILINE)
+                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n",
+                    re.MULTILINE)
         match = re.match(yaml_finder, text)
         if not match:
             logger.info("No metadata found in resource [%s]" % resource)
@@ -98,3 +96,32 @@ class MetaPlugin(Plugin):
         logger.info("Successfully loaded metadata from resource [%s]"
                         % resource)
         return text
+
+    def __read_node__(self, node):
+        """
+        Look for nodemeta.yaml. Load and assign it to the node.
+        """
+        nodemeta = node.get_resource('nodemeta.yaml')
+        parent_meta = node.parent.meta if node.parent else self.site.meta
+        if nodemeta:
+            nodemeta.is_processable = False
+            metadata = nodemeta.source_file.read_all()
+            if hasattr(node, 'meta') and node.meta:
+                node.meta.update(metadata)
+            else:
+                node.meta = Metadata(metadata, parent=parent_meta)
+        else:
+            node.meta = Metadata({}, parent=parent_meta)
+
+    def begin_node(self, node):
+        """
+        Look for nodemeta.yaml. Load and assign it to the node.
+        """
+        self.__read_node__(node)
+
+    def begin_text_resource(self, resource, text):
+        """
+        Update the meta data again, just in case it
+        has changed. Return text without meta data.
+        """
+        return self.__read_resource__(resource, text)

@@ -30,7 +30,10 @@ class FS(object):
 
     def __init__(self, path):
         super(FS, self).__init__()
-        self.path = os.path.expandvars(os.path.expanduser(
+        if path == os.sep:
+            self.path = path
+        else:
+            self.path = os.path.expandvars(os.path.expanduser(
                         str(path).strip().rstrip(os.sep)))
 
     def __str__(self):
