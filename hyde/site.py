@@ -80,6 +80,7 @@ class Resource(Processable):
         after its been processed.
         """
         self._relative_deploy_path = path
+        self.site.content.resource_deploy_path_changed(self)
 
     relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
 
@@ -192,7 +193,9 @@ class RootNode(Node):
         super(RootNode, self).__init__(source_folder)
         self.site = site
         self.node_map = {}
+        self.node_deploy_map = {}
         self.resource_map = {}
+        self.resource_deploy_map = {}
 
     def node_from_path(self, path):
         """
@@ -225,6 +228,22 @@ class RootNode(Node):
         """
         return self.resource_from_path(
                     self.source_folder.child(str(relative_path)))
+
+    def resource_deploy_path_changed(self, resource):
+        """
+        Handles the case where the relative deploy path of a
+        resource has changed.
+        """
+        self.resource_deploy_map[str(resource.relative_deploy_path)] = resource
+
+    def resource_from_relative_deploy_path(self, relative_deploy_path):
+        """
+        Gets the content resource whose deploy path maps to
+        the given relative path. If no match is found it returns None.
+        """
+        if relative_deploy_path in self.resource_deploy_map:
+            return self.resource_deploy_map[relative_deploy_path]
+        return self.resource_from_relative_path(relative_deploy_path)
 
     def add_node(self, a_folder):
         """

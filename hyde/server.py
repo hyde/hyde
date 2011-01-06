@@ -61,7 +61,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         result = urlparse.urlparse(self.path)
         logger.info("Trying to load file based on request:[%s]" % result.path)
         path = result.path.lstrip('/')
-        res = site.content.resource_from_relative_path(path)
+        res = site.content.resource_from_relative_deploy_path(path)
         if not res:
             # Cannot find the source file using the given path.
             # Check if the target file exists in the deploy folder.
@@ -132,9 +132,9 @@ class HydeWebServer(HTTPServer):
         Regenerates the entire site.
         """
         try:
-            logger.info('Generating resource [%]' % resource)
+            logger.info('Generating resource [%s]' % resource)
             self.generator.generate_resource(resource)
         except Exception, exception:
             logger.error('Error [%s] occured when generating the resource [%s]'
-                            % (resource, repr(exception)))
-            self.__reinit__()
+                            % (repr(exception), resource))
+            raise

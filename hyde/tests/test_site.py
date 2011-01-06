@@ -53,7 +53,7 @@ def test_node_url():
     c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
     assert c.url == '/' + c.relative_path
     assert c.url == '/blog/2010/december'
-    
+
 def test_node_full_url():
     s = Site(TEST_SITE_ROOT)
     s.config.base_url = 'http://localhost'
@@ -117,6 +117,16 @@ def test_get_resource():
     node = s.content.node_from_relative_path(path)
     resource = node.get_resource('merry-christmas.html')
     assert resource == s.content.resource_from_relative_path(Folder(path).child('merry-christmas.html'))
+
+def test_get_resource_from_relative_deploy_path():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    path = 'blog/2010/december'
+    node = s.content.node_from_relative_path(path)
+    resource = node.get_resource('merry-christmas.html')
+    assert resource == s.content.resource_from_relative_deploy_path(Folder(path).child('merry-christmas.html'))
+    resource.relative_deploy_path = Folder(path).child('merry-christmas.php')
+    assert resource == s.content.resource_from_relative_deploy_path(Folder(path).child('merry-christmas.php'))
 
 def test_is_processable_default_true():
     s = Site(TEST_SITE_ROOT)
