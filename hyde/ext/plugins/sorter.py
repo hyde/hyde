@@ -26,8 +26,8 @@ def filter_method(item, settings=None):
     given settings evaluate to True.
     """
 
-    all_match = True
-    if settings and hasattr(settings, 'filters'):
+    all_match = item.is_processable
+    if all_match and settings and hasattr(settings, 'filters'):
         filters = settings.filters
         for field, value in filters.__dict__.items():
             try:
@@ -49,7 +49,10 @@ def sort_method(node, settings=None):
         attr = settings.attr
     filter_ = partial(filter_method, settings=settings)
     resources = ifilter(filter_, node.walk_resources())
-    return sorted(resources, key=attrgetter(attr))
+    reverse = False
+    if settings and hasattr(settings, 'reverse'):
+        reverse = settings.reverse
+    return sorted(resources, key=attrgetter(attr), reverse=reverse)
 
 def make_method(method_name, method_):
     def method__(self):
