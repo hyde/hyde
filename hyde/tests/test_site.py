@@ -103,44 +103,6 @@ def test_walk_resources():
     expected.sort()
     assert pages == expected
 
-def test_walk_resources_sorted():
-    s = Site(TEST_SITE_ROOT)
-    s.load()
-    pages = [page.name for page in s.content.walk_resources_sorted(attr='name')]
-    expected = ["404.html",
-                "about.html",
-                "apple-touch-icon.png",
-                "merry-christmas.html",
-                "crossdomain.xml",
-                "favicon.ico",
-                "robots.txt",
-                "site.css"
-                ]
-    assert pages == sorted(expected)
-    pages = [page.name for page in
-                s.content.walk_resources_sorted(attr='name', reverse=True)]
-    assert pages == sorted(expected, reverse=True)
-    pages = [page.name for page in
-                s.content.walk_resources_sorted(attr='source_file.kind')]
-    assert pages == sorted(expected, key=lambda f: File(f).kind)
-
-    from datetime import datetime, timedelta
-
-    d = {}
-    t = datetime.now()
-    for name in expected:
-        d[name] = t
-        t = t - timedelta(days=1)
-
-    for page in s.content.walk_resources():
-        page.meta = Expando(dict(time=d[page.name]))
-
-    pages = [page.name for page in
-                s.content.walk_resources_sorted(attr='meta.time', reverse=True)]
-    assert pages == expected
-
-
-
 def test_contains_resource():
     s = Site(TEST_SITE_ROOT)
     s.load()

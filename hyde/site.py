@@ -169,35 +169,6 @@ class Node(Processable):
             for resource in node.resources:
                 yield resource
 
-    def walk_resources_sorted(self, attr='name', reverse=False, default=None):
-        """
-        Walks the resources in this hierarchy sorted by
-        the given key.
-        """
-        from operator import attrgetter
-
-        def safe_attrgetter(*items):
-            f = attrgetter(*items)
-
-            def wrapper(obj):
-                res = None
-                try:
-                    res = f(obj)
-                except:
-                    logger.error("Cannot get the requested items[%s]"
-                                    " from the object [%s]" %
-                                    (items, obj))
-                    res = default
-                return res
-
-            return wrapper
-
-        sorted_resources = sorted(self.walk_resources(),
-                                    key=safe_attrgetter(attr),
-                                    reverse=reverse)
-        for resource in sorted_resources:
-            yield resource
-
     @property
     def relative_path(self):
         """
