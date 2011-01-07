@@ -73,6 +73,40 @@ class TestMeta(object):
 
         assert pages == sorted(expected)
 
+    def test_prev_next(self):
+        s = Site(TEST_SITE)
+        cfg = """
+        plugins:
+            - hyde.ext.sorter.SorterPlugin
+        sorter:
+            kind2:
+                filters:
+                    source_file.kind: html
+        """
+        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        s.load()
+        SorterPlugin(s).begin_site()
+
+        p_404 = s.content.resource_from_relative_path('404.html')
+        p_about = s.content.resource_from_relative_path('about.html')
+        p_mc = s.content.resource_from_relative_path(
+                            'blog/2010/december/merry-christmas.html')
+
+        assert hasattr(p_404, 'prev_by_kind2')
+        assert not p_404.prev_by_kind2
+        assert hasattr(p_404, 'next_by_kind2')
+        assert p_404.next_by_kind2 == p_about
+
+        assert hasattr(p_about, 'prev_by_kind2')
+        assert p_about.prev_by_kind2 == p_404
+        assert hasattr(p_about, 'next_by_kind2')
+        assert p_about.next_by_kind2 == p_mc
+
+        assert hasattr(p_mc, 'prev_by_kind2')
+        assert p_mc.prev_by_kind2 == p_about
+        assert hasattr(p_mc, 'next_by_kind2')
+        assert not p_mc.next_by_kind2
+
     def test_walk_resources_sorted_using_generator(self):
            s = Site(TEST_SITE)
            cfg = """

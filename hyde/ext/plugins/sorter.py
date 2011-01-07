@@ -7,7 +7,7 @@ from hyde.plugin import Plugin
 from hyde.site import Node, Resource
 
 from functools import partial
-from itertools import ifilter
+from itertools import ifilter, izip, tee
 from operator import attrgetter
 
 import logging
@@ -15,6 +15,10 @@ from logging import NullHandler
 logger = logging.getLogger('hyde.engine')
 logger.addHandler(NullHandler())
 
+def pairwalk(iterable):
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
 
 def filter_method(item, settings=None):
     """
@@ -104,3 +108,16 @@ class SorterPlugin(Plugin):
             add_method(Node, sort_method_name, sort_method, settings)
             match_method_name = 'is_%s' % name
             add_method(Resource, match_method_name, filter_method, settings)
+
+            prev_att = 'prev_by_%s' % name
+            next_att = 'next_by_%s' % name
+
+            setattr(Resource, prev_att, None)
+            setattr(Resource, next_att, None)
+
+            walker = getattr(self.site.content,
+                                sort_method_name,
+                                self.site.content.walk_resources)
+            for prev, next in pairwalk(walker()):
+                setattr(prev, next_att, next)
+                setattr(next, prev_att, prev)
