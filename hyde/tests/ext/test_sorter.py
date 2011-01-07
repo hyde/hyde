@@ -11,6 +11,8 @@ from hyde.site import Site
 from hyde.model import Config, Expando
 import yaml
 
+from operator import attrgetter
+
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
 
@@ -45,7 +47,6 @@ class TestMeta(object):
 
         pages = [page.name for page in
                 s.content.walk_resources_sorted_by_kind()]
-
 
         assert pages == sorted(expected, key=lambda f: File(f).kind)
 
@@ -97,6 +98,43 @@ class TestMeta(object):
         pages = [page.name for page in s.content.walk_resources_sorted_by_kind2()]
 
         assert pages == sorted(expected)
+
+    def test_walk_resources_sorted_with_multiple_attributes(self):
+        s = Site(TEST_SITE)
+        cfg = """
+        plugins:
+            - hyde.ext.sorter.SorterPlugin
+        sorter:
+            multi:
+                attr:
+                    - source_file.kind
+                    - node.name
+
+        """
+        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        s.load()
+        SorterPlugin(s).begin_site()
+
+        assert hasattr(s.content, 'walk_resources_sorted_by_multi')
+        expected = ["content/404.html",
+                    "content/about.html",
+                    "content/apple-touch-icon.png",
+                    "content/blog/2010/december/merry-christmas.html",
+                    "content/crossdomain.xml",
+                    "content/favicon.ico",
+                    "content/robots.txt",
+                    "content/site.css"
+                    ]
+
+        pages = [page.name for page in s.content.walk_resources_sorted_by_multi()]
+
+        expected_sorted = [File(page).name
+                                for page in
+                                    sorted(expected,
+                                        key=lambda p: tuple(
+                                            [File(p).kind,
+                                            File(p).parent.name]))]
+        assert pages == expected_sorted
 
     def test_walk_resources_sorted_default_is_processable(self):
         s = Site(TEST_SITE)

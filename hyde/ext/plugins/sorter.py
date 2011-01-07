@@ -52,7 +52,11 @@ def sort_method(node, settings=None):
     reverse = False
     if settings and hasattr(settings, 'reverse'):
         reverse = settings.reverse
-    return sorted(resources, key=attrgetter(attr), reverse=reverse)
+    if not isinstance(attr, list):
+        attr = [attr]
+    return sorted(resources,
+                    key=attrgetter(*attr),
+                    reverse=reverse)
 
 def make_method(method_name, method_):
     def method__(self):
