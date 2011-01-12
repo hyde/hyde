@@ -22,6 +22,7 @@ class Processable(object):
         super(Processable, self).__init__()
         self.source = FS.file_or_folder(source)
         self.is_processable = True
+        self.uses_template = True
 
     @property
     def name(self):

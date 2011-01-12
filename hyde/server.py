@@ -120,10 +120,7 @@ class HydeWebServer(HTTPServer):
             self.exception_count += 1
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
-            if self.exception_count > 1:
-                self.shutdown()
-                exit()
-            else:
+            if self.exception_count <= 1:
                 self.__reinit__()
 
 

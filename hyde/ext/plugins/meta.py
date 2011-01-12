@@ -84,18 +84,33 @@ class MetaPlugin(Plugin):
         match = re.match(yaml_finder, text)
         if not match:
             logger.info("No metadata found in resource [%s]" % resource)
-            return text
-        text = text[match.end():]
-        data = match.group(1)
+            data = {}
+        else:
+            text = text[match.end():]
+            data = match.group(1)
+
         if not hasattr(resource, 'meta') or not resource.meta:
             if not hasattr(resource.node, 'meta'):
                 resource.node.meta = Metadata({})
             resource.meta = Metadata(data, resource.node.meta)
         else:
             resource.meta.update(data)
+        self.__update_standard_attributes__(resource)
         logger.info("Successfully loaded metadata from resource [%s]"
                         % resource)
         return text
+
+    def __update_standard_attributes__(self, obj):
+        """
+        Updates standard attributes on the resource and
+        page based on the provided meta data.
+        """
+        if not hasattr(obj, 'meta'):
+            return
+        standard_attributes = ['is_processable', 'uses_template']
+        for attr in standard_attributes:
+            if hasattr(obj.meta, attr):
+                setattr(obj, attr, getattr(obj.meta, attr))
 
     def __read_node__(self, node):
         """
@@ -112,6 +127,7 @@ class MetaPlugin(Plugin):
                 node.meta = Metadata(metadata, parent=parent_meta)
         else:
             node.meta = Metadata({}, parent=parent_meta)
+        self.__update_standard_attributes__(node)
 
     def begin_node(self, node):
         """

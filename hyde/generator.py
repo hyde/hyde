@@ -212,8 +212,9 @@ class Generator(object):
             if resource.source_file.is_text:
                 text = resource.source_file.read_all()
                 text = self.events.begin_text_resource(resource, text) or text
-                logger.info("Rendering [%s]", resource)
-                text = self.template.render(text, context)
+                if resource.uses_template:
+                    logger.info("Rendering [%s]", resource)
+                    text = self.template.render(text, context)
                 text = self.events.text_resource_complete(
                                         resource, text) or text
                 target = File(self.site.config.deploy_root_path.child(

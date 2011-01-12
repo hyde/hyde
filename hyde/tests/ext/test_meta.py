@@ -26,6 +26,26 @@ class TestMeta(object):
     def tearDown(self):
         TEST_SITE.delete()
 
+    def test_can_set_standard_attributes(self):
+        text = """
+---
+is_processable: False
+---
+{% extends "base.html" %}
+"""
+        about2 = File(TEST_SITE.child('content/about2.html'))
+        about2.write(text)
+        s = Site(TEST_SITE)
+        s.load()
+        res = s.content.resource_from_path(about2.path)
+        assert res.is_processable
+
+        s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
+        gen = Generator(s)
+        gen.generate_all()
+        assert not res.meta.is_processable
+        assert not res.is_processable
+
     def test_can_load_front_matter(self):
         d = {'title': 'A nice title',
             'author': 'Lakshmi Vyas',
