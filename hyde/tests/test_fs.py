@@ -56,6 +56,16 @@ def test_can_create_temp_file():
     f.delete()
     assert not f.exists
 
+def test_time_functions():
+    f1 = File(__file__)
+    t1 = f1.last_modified
+    f2 = File.make_temp("I am new")
+    t2  = f2.last_modified
+    assert t1 < t2
+    assert f2.has_changed_since(t1)
+    assert f1.older_than(f2)
+
+
 def test_path_expands_user():
     f = File("~/abc/def")
     assert f.path == os.path.expanduser("~/abc/def")
@@ -243,16 +253,18 @@ def test_move_folder():
     DATA_JUNK = DATA_ROOT.child_folder('junk')
     assert not DATA_JUNK.exists
     JINJA2.copy_contents_to(DATA_JUNK)
+    assert DATA_JUNK.exists
     for f in [HELPERS, INDEX, LAYOUT]:
         assert File(DATA_JUNK.child(f.name)).exists
-    DATA_JUNK2 = DATA_ROOT.child_folder('junk2')
-    assert DATA_JUNK.exists
+    DATA_JUNK2 = DATA_ROOT.child_folder('second_junk')
     assert not DATA_JUNK2.exists
     DATA_JUNK.move_to(DATA_JUNK2)
     assert not DATA_JUNK.exists
     assert DATA_JUNK2.exists
     for f in [HELPERS, INDEX, LAYOUT]:
-        assert File(DATA_JUNK2.child_folder('junk').child(f.name)).exists
+        assert File(DATA_JUNK2.child_folder(
+                    DATA_JUNK.name).child(
+                        f.name)).exists
 
 @with_setup(setup_data, cleanup_data)
 def test_rename_folder():

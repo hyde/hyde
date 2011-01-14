@@ -7,6 +7,7 @@ for common operations to provide a single interface.
 """
 
 import codecs
+from datetime import datetime
 import mimetypes
 import os
 import shutil
@@ -202,6 +203,41 @@ class File(FS):
                     break
         return False
 
+    @property
+    def is_text(self):
+        """Return true if this is a text file."""
+        return (not self.is_binary)
+
+    @property
+    def is_image(self):
+        """Return true if this is an image file."""
+        return self.mimetype.split("/")[0] == "image"
+
+
+    @property
+    def last_modified(self):
+        """
+        Returns a datetime object representing the last modified time.
+        Calls os.path.getmtime.
+
+        """
+        return datetime.fromtimestamp(os.path.getmtime(self.path))
+
+    def has_changed_since(self, basetime):
+        """
+        Returns True if the file has been changed since the given time.
+
+        """
+        return self.last_modified > basetime
+
+    def older_than(self, another_file):
+        """
+        Checks if this file is older than the given file. Uses last_modified to
+        determine age.
+
+        """
+        return another_file.last_modified > self.last_modified
+
     @staticmethod
     def make_temp(text):
         """
@@ -213,16 +249,6 @@ class File(FS):
         f = File(path)
         f.write(text)
         return f
-
-    @property
-    def is_text(self):
-        """Return true if this is a text file."""
-        return (not self.is_binary)
-
-    @property
-    def is_image(self):
-        """Return true if this is an image file."""
-        return self.mimetype.split("/")[0] == "image"
 
     def read_all(self, encoding='utf-8'):
         """
