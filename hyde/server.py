@@ -10,12 +10,9 @@ from BaseHTTPServer import HTTPServer
 from hyde.fs import File, Folder
 from hyde.site import Site
 from hyde.generator import Generator
+from hyde.util import getLoggerWithConsoleHandler
 
-import logging
-logger = logging.getLogger('hyde.server')
-
-import sys
-logger.addHandler(logging.StreamHandler(sys.stdout))
+logger = getLoggerWithConsoleHandler('hyde.engine')
 
 class HydeRequestHandler(SimpleHTTPRequestHandler):
     """

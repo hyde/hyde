@@ -9,19 +9,14 @@ from hyde.layout import Layout, HYDE_DATA
 from hyde.model import Config
 from hyde.site import Site
 from hyde.version import __version__
+from hyde.util import getLoggerWithConsoleHandler
 
-import logging
 import os
 import yaml
 
 HYDE_LAYOUTS = "HYDE_LAYOUTS"
 
-logger = logging.getLogger('hyde.engine')
-logger.setLevel(logging.DEBUG)
-
-import sys
-logger.addHandler(logging.StreamHandler(sys.stdout))
-
+logger = getLoggerWithConsoleHandler('hyde.engine')
 
 class Engine(Application):
     """
