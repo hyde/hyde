@@ -25,6 +25,13 @@ class Template(object):
         """
 
         abstract
+        
+    def get_dependencies(self, text):
+        """
+        Finds the dependencies based on the included
+        files.
+        """
+        return None
 
     def render(self, text, context):
         """

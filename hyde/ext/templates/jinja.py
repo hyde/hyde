@@ -104,6 +104,21 @@ class Jinja2Template(Template):
             jinja2_filters.register(self.env)
 
 
+    def get_dependencies(self, text):
+        """
+        Finds dependencies hierarchically based on the included
+        files.
+        """
+        from jinja2.meta import find_referenced_templates
+        ast = self.env.parse(text)
+        tpls = find_referenced_templates(ast)
+        deps = []
+        for dep in tpls:
+            deps.append(dep)
+            source = self.env.loader.get_source(self.env, dep)[0]
+            deps.extend(self.get_dependencies(source))
+        return list(set(deps))
+
     @property
     def exception_class(self):
         return TemplateError

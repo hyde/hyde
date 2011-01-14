@@ -10,9 +10,9 @@ from BaseHTTPServer import HTTPServer
 from hyde.fs import File, Folder
 from hyde.site import Site
 from hyde.generator import Generator
-from hyde.util import getLoggerWithConsoleHandler
 
-logger = getLoggerWithConsoleHandler('hyde.engine')
+from hyde.util import getLoggerWithNullHandler
+logger = getLoggerWithNullHandler('hyde.server')
 
 class HydeRequestHandler(SimpleHTTPRequestHandler):
     """
@@ -131,7 +131,7 @@ class HydeWebServer(HTTPServer):
         """
         target = self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path)
-        if File(target).older_than(resource.source_file):
+        if self.generator.has_resource_changed(resource):
             try:
                 logger.info('Generating resource [%s]' % resource)
                 self.generator.generate_resource(resource)

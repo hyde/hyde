@@ -2,7 +2,7 @@
 The generator class and related utility functions.
 """
 from hyde.exceptions import HydeException
-from hyde.fs import File
+from hyde.fs import File, Folder
 from hyde.plugin import Plugin
 from hyde.template import Template
 
@@ -109,6 +109,29 @@ class Generator(object):
         """
         logger.info("Generation Complete")
         self.events.generation_complete()
+
+    def has_resource_changed(self, resource):
+        target = File(self.site.config.deploy_root_path.child(
+                                resource.relative_deploy_path))
+        if not target.exists or target.older_than(resource.source_file):
+            return True
+        if resource.source_file.is_binary:
+            return False
+        deps = self.template.get_dependencies(resource.source_file.read_all())
+        if not deps or None in deps:
+            return True
+        content = self.site.content.source_folder
+        layout = Folder(self.site.sitepath).child_folder('layout')
+        for dep in deps:
+            source = File(content.child(dep))
+            if not source.exists:
+                source = File(layout.child(dep))
+            if not source.exists:
+                return True
+            if target.older_than(source):
+                return True
+
+        return False
 
     def generate_all(self):
         """

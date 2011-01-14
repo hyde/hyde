@@ -73,6 +73,31 @@ def test_render():
     assert actual("div.article p.meta").length == 20
     assert actual("div.article div.text").length == 20
 
+def test_depends():
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    source = File(JINJA2.child('index.html')).read_all()
+    deps = list(t.get_dependencies(source))
+
+    assert len(deps) == 2
+
+    assert 'helpers.html' in deps
+    assert 'layout.html' in deps
+
+def test_depends_multi_level():
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+
+    source = "{% extends 'index.html' %}"
+    deps = list(t.get_dependencies(source))
+
+    assert len(deps) == 3
+
+    assert 'helpers.html' in deps
+    assert 'layout.html' in deps
+    assert 'index.html' in deps
+
+
 def test_typogrify():
     source = """
     {%filter typogrify%}
@@ -94,12 +119,12 @@ def test_markdown():
     t.configure(None)
     html = t.render(source, {}).strip()
     assert html == u'<h3>Heading 3</h3>'
-    
+
 def test_markdown_with_extensions():
     source = """
     {%markdown%}
     ### Heading 3
-    
+
     {%endmarkdown%}
     """
     t = Jinja2Template(JINJA2.path)

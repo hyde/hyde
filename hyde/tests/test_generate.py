@@ -74,3 +74,23 @@ def test_generate_resource_from_path_with_deploy_override():
     text = about.read_all()
     q = PyQuery(text)
     assert resource.name in q("div#main").text()
+
+@with_setup(create_test_site, delete_test_site)
+def test_has_resource_changed():
+    site = Site(TEST_SITE)
+    site.load()
+    resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+    gen = Generator(site)
+    gen.generate_all()
+    assert not gen.has_resource_changed(resource)
+    import time
+    time.sleep(1)
+    text = resource.source_file.read_all()
+    resource.source_file.write(text)
+    assert gen.has_resource_changed(resource)
+    gen.generate_all()
+    assert not gen.has_resource_changed(resource)
+    time.sleep(1)
+    l = File(TEST_SITE.child('layout/root.html'))
+    l.write(l.read_all())
+    assert gen.has_resource_changed(resource)

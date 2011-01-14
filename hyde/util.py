@@ -18,7 +18,7 @@ except:
             pass
 
 def getLoggerWithConsoleHandler(logger_name):
-    logger = logging.getLogger('hyde.server')
+    logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
     handler = logging.StreamHandler(sys.stdout)
     formatter = ColorFormatter(fmt="$COLOR%(levelname)s "

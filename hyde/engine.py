@@ -16,7 +16,7 @@ import yaml
 
 HYDE_LAYOUTS = "HYDE_LAYOUTS"
 
-logger = getLoggerWithConsoleHandler('hyde.engine')
+logger = getLoggerWithConsoleHandler('hyde')
 
 class Engine(Application):
     """
