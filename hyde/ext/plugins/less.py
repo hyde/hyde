@@ -72,7 +72,7 @@ class LessCSSPlugin(Plugin):
         source = File.make_temp(text)
         target = File.make_temp('')
         try:
-            subprocess.check_output([str(less), str(source), str(target)])
+            subprocess.check_call([str(less), str(source), str(target)])
         except subprocess.CalledProcessError, error:
             self.logger.error(traceback.format_exc())
             self.logger.error(error.output)

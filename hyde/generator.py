@@ -8,7 +8,7 @@ from hyde.template import Template
 
 from contextlib import contextmanager
 
-from hyde.logging import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.engine')
 
 

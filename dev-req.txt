@@ -1,10 +1,10 @@
+# argparse - needed for 2.6
 commando==0.1.1a
 PyYAML==3.09
 Markdown==2.0.3
 MarkupSafe==0.11
 smartypants==1.6.0.3
 -e git://github.com/hydepy/typogrify.git#egg=typogrify
-Django==1.2.3
 Jinja2==2.5.5
 pyquery==0.6.1
 unittest2==0.5.1

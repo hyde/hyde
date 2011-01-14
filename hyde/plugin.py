@@ -5,7 +5,7 @@ Contains definition for a plugin protocol and other utiltities.
 import abc
 from hyde import loader
 
-from hyde.logging import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler
 
 class Plugin(object):
     """

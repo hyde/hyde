@@ -5,7 +5,7 @@ Abstract classes and utilities for template engines
 """
 from hyde.exceptions import HydeException
 
-from hyde.logging import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler
 
 class Template(object):
     """

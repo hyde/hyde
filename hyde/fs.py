@@ -13,7 +13,7 @@ import shutil
 from distutils import dir_util
 import functools
 
-from hyde.logging import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler
 
 logger = getLoggerWithNullHandler('fs')
 

@@ -7,7 +7,7 @@ from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
 
-from hyde.logging import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler
 
 
 logger = getLoggerWithNullHandler('hyde.engine')

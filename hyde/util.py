@@ -23,3 +23,4 @@ def getLoggerWithNullHandler(logger_name):
     """
     logger = logging.getLogger(logger_name)
     logger.addHandler(NullHandler())
+    return logger
