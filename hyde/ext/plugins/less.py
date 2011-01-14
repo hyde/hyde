@@ -9,10 +9,6 @@ import re
 import subprocess
 import traceback
 
-import logging
-from logging import NullHandler
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
 
 class LessCSSPlugin(Plugin):
     """
@@ -78,8 +74,8 @@ class LessCSSPlugin(Plugin):
         try:
             subprocess.check_output([str(less), str(source), str(target)])
         except subprocess.CalledProcessError, error:
-            logger.error(traceback.format_exc())
-            logger.error(error.output)
+            self.logger.error(traceback.format_exc())
+            self.logger.error(error.output)
             raise self.template.exception_class(
                     "Cannot process less css. Error occurred when "
                     "processing [%s]" % resource.source_file)

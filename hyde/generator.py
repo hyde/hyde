@@ -8,11 +8,8 @@ from hyde.template import Template
 
 from contextlib import contextmanager
 
-import logging
-from logging import NullHandler
-
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
+from hyde.logging import getLoggerWithNullHandler
+logger = getLoggerWithNullHandler('hyde.engine')
 
 
 class Generator(object):

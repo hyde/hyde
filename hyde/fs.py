@@ -7,17 +7,17 @@ for common operations to provide a single interface.
 """
 
 import codecs
-import logging
-from logging import NullHandler
 import mimetypes
 import os
 import shutil
 from distutils import dir_util
 import functools
-# pylint: disable-msg=E0611
 
-logger = logging.getLogger('fs')
-logger.addHandler(NullHandler())
+from hyde.logging import getLoggerWithNullHandler
+
+logger = getLoggerWithNullHandler('fs')
+
+# pylint: disable-msg=E0611
 
 
 __all__ = ['File', 'Folder']

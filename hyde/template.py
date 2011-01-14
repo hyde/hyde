@@ -5,6 +5,8 @@ Abstract classes and utilities for template engines
 """
 from hyde.exceptions import HydeException
 
+from hyde.logging import getLoggerWithNullHandler
+
 class Template(object):
     """
     Interface for hyde template engines. To use a different template engine,
@@ -13,6 +15,7 @@ class Template(object):
 
     def __init__(self, sitepath):
         self.sitepath = sitepath
+        self.logger = getLoggerWithNullHandler(self.__class__.__name__)
 
     def configure(self, config):
         """

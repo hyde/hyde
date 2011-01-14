@@ -5,10 +5,8 @@ import sys
 
 from hyde.exceptions import HydeException
 
-import logging
-from logging import NullHandler
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
+from hyde.logging import getLoggerWithNullHandler
+logger = getLoggerWithNullHandler('hyde.engine')
 
 plugins = {}
 templates = {}

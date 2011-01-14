@@ -6,11 +6,6 @@ from hyde.model import Expando
 from hyde.plugin import Plugin
 import yaml
 
-import logging
-from logging import NullHandler
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
-
 
 class Metadata(Expando):
     """
@@ -77,13 +72,13 @@ class MetaPlugin(Plugin):
         the resource. Load meta data by looking for the marker.
         Once loaded, remove the meta area from the text.
         """
-        logger.info("Trying to load metadata from resource [%s]" % resource)
+        self.logger.info("Trying to load metadata from resource [%s]" % resource)
         yaml_finder = re.compile(
                     r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n",
                     re.MULTILINE)
         match = re.match(yaml_finder, text)
         if not match:
-            logger.info("No metadata found in resource [%s]" % resource)
+            self.logger.info("No metadata found in resource [%s]" % resource)
             data = {}
         else:
             text = text[match.end():]
@@ -96,7 +91,7 @@ class MetaPlugin(Plugin):
         else:
             resource.meta.update(data)
         self.__update_standard_attributes__(resource)
-        logger.info("Successfully loaded metadata from resource [%s]"
+        self.logger.info("Successfully loaded metadata from resource [%s]"
                         % resource)
         return text
 

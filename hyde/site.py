@@ -7,11 +7,10 @@ from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
 
-import logging
-from logging import NullHandler
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
+from hyde.logging import getLoggerWithNullHandler
 
+
+logger = getLoggerWithNullHandler('hyde.engine')
 
 class Processable(object):
     """

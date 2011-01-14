@@ -12,7 +12,6 @@ from hyde.site import Site
 from hyde.generator import Generator
 
 import logging
-
 logger = logging.getLogger('hyde.server')
 
 import sys

@@ -10,11 +10,6 @@ from functools import partial
 from itertools import ifilter, izip, tee
 from operator import attrgetter
 
-import logging
-from logging import NullHandler
-logger = logging.getLogger('hyde.engine')
-logger.addHandler(NullHandler())
-
 def pairwalk(iterable):
     a, b = tee(iterable)
     next(b, None)
@@ -110,7 +105,7 @@ class SorterPlugin(Plugin):
             return
 
         for name, settings in config.sorter.__dict__.items():
-            logger.info("Adding sort methods for [%s]" % name)
+            self.logger.info("Adding sort methods for [%s]" % name)
             sort_method_name = 'walk_resources_sorted_by_%s' % name
             add_method(Node, sort_method_name, sort_method, settings)
             match_method_name = 'is_%s' % name

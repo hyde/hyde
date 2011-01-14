@@ -5,6 +5,8 @@ Contains definition for a plugin protocol and other utiltities.
 import abc
 from hyde import loader
 
+from hyde.logging import getLoggerWithNullHandler
+
 class Plugin(object):
     """
     The plugin protocol
@@ -14,6 +16,8 @@ class Plugin(object):
     def __init__(self, site):
         super(Plugin, self).__init__()
         self.site = site
+        self.logger = getLoggerWithNullHandler(self.__class__.__name__)
+
 
     def template_loaded(self, template):
         """
