@@ -115,7 +115,7 @@ class Generator(object):
                                 resource.relative_deploy_path))
         if not target.exists or target.older_than(resource.source_file):
             return True
-        if resource.source_file.is_binary:
+        if resource.source_file.is_binary or not resource.uses_template:
             return False
         deps = self.template.get_dependencies(resource.source_file.read_all())
         if not deps or None in deps:
