@@ -46,7 +46,13 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
                 site = self.server.site
                 res = site.content.resource_from_relative_path(
                         site.config.not_found)
-                self.redirect("/" + res.relative_deploy_path)
+                if not res:
+                    logger.error(
+                        "Cannot find the 404 template[%s]."
+                            % site.config.not_found)
+                    return "Requested resource not found"
+                else:
+                    self.redirect("/" + res.relative_deploy_path)
 
     def translate_path(self, path):
         """

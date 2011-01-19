@@ -111,6 +111,12 @@ class Generator(object):
         self.events.generation_complete()
 
     def has_resource_changed(self, resource):
+        """
+        Checks if the given resource has changed since the
+        last generation.
+        """
+        self.load_site_if_needed()
+        self.load_template_if_needed()
         target = File(self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path))
         if not target.exists or target.older_than(resource.source_file):
