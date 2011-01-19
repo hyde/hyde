@@ -39,20 +39,11 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             logger.info('Redirecting...[%s]' % new_url)
             self.redirect(new_url)
         else:
-            try:
+            f = File(self.translate_path(self.path))
+            if not f.exists:
+                self.do_404()
+            else:
                 SimpleHTTPRequestHandler.do_GET(self)
-            except Exception, exception:
-                logger.error(exception.message)
-                site = self.server.site
-                res = site.content.resource_from_relative_path(
-                        site.config.not_found)
-                if not res:
-                    logger.error(
-                        "Cannot find the 404 template[%s]."
-                            % site.config.not_found)
-                    return "Requested resource not found"
-                else:
-                    self.redirect("/" + res.relative_deploy_path)
 
     def translate_path(self, path):
         """
@@ -85,6 +76,28 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         new_path = site.config.deploy_root_path.child(
                     res.relative_deploy_path)
         return new_path
+
+    def do_404(self):
+        """
+        Sends a 'not found' response.
+        """
+        site = self.server.site
+        if self.path != site.config.not_found:
+            self.redirect(site.config.not_found)
+        else:
+            res = site.content.resource_from_relative_deploy_path(
+                    site.config.not_found)
+
+            message = "Requested resource not found"
+            if not res:
+                logger.error(
+                    "Cannot find the 404 template[%s]."
+                        % site.config.not_found)
+            else:
+                f404 = File(self.translate_path(site.config.not_found))
+                if f404.exists:
+                    message = f404.read_all()
+            self.send_response(200, message)
 
     def redirect(self, path, temporary=True):
         """
