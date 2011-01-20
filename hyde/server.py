@@ -10,6 +10,7 @@ from BaseHTTPServer import HTTPServer
 from hyde.fs import File, Folder
 from hyde.site import Site
 from hyde.generator import Generator
+from hyde.exceptions import HydeException
 
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.server')
@@ -39,21 +40,25 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             logger.info('Redirecting...[%s]' % new_url)
             self.redirect(new_url)
         else:
-            f = File(self.translate_path(self.path))
-            if not f.exists:
-                self.do_404()
-            else:
+            try:
                 SimpleHTTPRequestHandler.do_GET(self)
+            except HydeException:
+                self.do_404()
+
 
     def translate_path(self, path):
         """
         Finds the absolute path of the requested file by
         referring to the `site` variable in the server.
         """
+        path = SimpleHTTPRequestHandler.translate_path(self, path)
         site = self.server.site
         result = urlparse.urlparse(self.path)
         logger.info("Trying to load file based on request:[%s]" % result.path)
         path = result.path.lstrip('/')
+        if path.strip() == "" or File(path).kind.strip() == "":
+            return site.config.deploy_root_path.child(path)
+
         res = site.content.resource_from_relative_deploy_path(path)
 
         if not res:
@@ -69,6 +74,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             if not res:
                 # Nothing much we can do.
                 logger.error("Cannot load file:[%s]" % path)
+                raise HydeException("Cannot load file: [%s]" % path)
 
             return site.config.deploy_root_path.child(path)
         else:
@@ -117,16 +123,10 @@ class HydeWebServer(HTTPServer):
     def __init__(self, site, address, port):
         self.site = site
         self.site.load()
-        self.exception_count = 0
         self.generator = Generator(self.site)
 
         HTTPServer.__init__(self, (address, port),
                                             HydeRequestHandler)
-
-    def __reinit__(self):
-        self.site.load()
-        self.generator = Generator(self.site)
-        self.regenerate()
 
     def regenerate(self):
         """
@@ -134,14 +134,11 @@ class HydeWebServer(HTTPServer):
         """
         try:
             logger.info('Regenerating the entire site')
+            self.site.load()
             self.generator.generate_all()
-            self.exception_count = 0
         except Exception, exception:
-            self.exception_count += 1
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
-            if self.exception_count <= 1:
-                self.__reinit__()
 
 
     def generate_resource(self, resource):
@@ -154,7 +151,6 @@ class HydeWebServer(HTTPServer):
             try:
                 logger.info('Generating resource [%s]' % resource)
                 self.generator.generate_resource(resource)
-                self.exception_count = 0
             except Exception, exception:
                 logger.error(
                     'Error [%s] occured when generating the resource [%s]'

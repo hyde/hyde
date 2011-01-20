@@ -9,6 +9,8 @@ Code borrowed from rwbench.py from the jinja2 examples
 from datetime import datetime
 from hyde.ext.templates.jinja import Jinja2Template
 from hyde.fs import File, Folder
+from hyde.site import Site
+from hyde.generator import Generator
 from hyde.model import Config
 
 import jinja2
@@ -16,6 +18,9 @@ from jinja2.utils import generate_lorem_ipsum
 from random import choice, randrange
 from util import assert_html_equals
 import yaml
+
+from pyquery import PyQuery
+from nose.tools import raises, nottest, with_setup
 
 ROOT = File(__file__).parent
 JINJA2 = ROOT.child_folder('templates/jinja2')
@@ -64,7 +69,6 @@ def test_render():
     source = File(JINJA2.child('index.html')).read_all()
 
     html = t.render(source, context)
-    from pyquery import PyQuery
     actual = PyQuery(html)
     assert actual(".navigation li").length == 30
     assert actual("div.article").length == 20
@@ -128,7 +132,92 @@ def test_markdown_with_extensions():
     {%endmarkdown%}
     """
     t = Jinja2Template(JINJA2.path)
+    s = Site(JINJA2.path)
     c = Config(JINJA2.path, dict(markdown=dict(extensions=['headerid'])))
-    t.configure(c)
+    s.config = c
+    t.configure(s)
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
+
+
+TEST_SITE = File(__file__).parent.child_folder('_test')
+
+@nottest
+def create_test_site():
+    TEST_SITE.make()
+    TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+
+@nottest
+def delete_test_site():
+    TEST_SITE.delete()
+
+@with_setup(create_test_site, delete_test_site)
+def test_can_include_templates_with_processing():
+    text = """
+===
+is_processable: False
+===
+
+{% filter typogrify %}{% markdown %}
+This is a heading
+=================
+
+Hyde & Jinja.
+
+{% endmarkdown %}{% endfilter %}
+"""
+
+
+    text2 = """
+{% include "inc.md"  %}
+
+"""
+    site = Site(TEST_SITE)
+    site.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
+    inc = File(TEST_SITE.child('content/inc.md'))
+    inc.write(text)
+    site.load()
+    gen = Generator(site)
+    gen.load_template_if_needed()
+    template = gen.template
+    html = template.render(text2, {}).strip()
+    assert html
+    q = PyQuery(html)
+    assert "is_processable" not in html
+    assert "This is a" in q("h1").text()
+    assert "heading" in q("h1").text()
+    assert q(".amp").length == 1
+
+
+#@with_setup(create_test_site, delete_test_site)
+@nottest
+def test_includetext():
+    text = """
+===
+is_processable: False
+===
+
+This is a heading
+=================
+
+An "&".
+
+"""
+
+    text2 = """
+{% includetext inc.md  %}
+
+"""
+    site = Site(TEST_SITE)
+    inc = File(TEST_SITE.child('content/inc.md'))
+    inc.write(text)
+
+    site.load()
+    gen = Generator(site)
+    gen.load_template_if_needed()
+    template = gen.template
+    html = template.render(text2, {}).strip()
+    assert html
+    q = PyQuery(html)
+    assert q("h1").length == 1
+    assert q(".amp").length == 1

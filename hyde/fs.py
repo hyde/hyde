@@ -236,7 +236,7 @@ class File(FS):
         determine age.
 
         """
-        return File(str(another_file)).last_modified > self.last_modified
+        return self.last_modified < File(str(another_file)).last_modified
 
     @staticmethod
     def make_temp(text):

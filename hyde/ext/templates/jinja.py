@@ -63,6 +63,33 @@ class Markdown(Extension):
         output = caller().strip()
         return markdown(self.environment, output)
 
+class HydeLoader(FileSystemLoader):
+
+    def __init__(self, sitepath, site, preprocessor=None):
+            config = site.config if hasattr(site, 'config') else None
+            if config:
+                super(HydeLoader, self).__init__([
+                                str(config.content_root_path),
+                                str(config.layout_root_path),
+                            ])
+            else:
+                super(HydeLoader, self).__init__(str(sitepath))
+
+            self.site = site
+            self.preprocessor = preprocessor
+
+    def get_source(self, environment, template):
+        (contents,
+            filename,
+                date) = super(HydeLoader, self).get_source(
+                                        environment, template)
+        if self.preprocessor:
+            resource = self.site.content.resource_from_relative_path(template)
+            if resource:
+                contents = self.preprocessor(resource, contents) or contents
+        return (contents, filename, date)
+
+
 # pylint: disable-msg=W0104,E0602,W0613,R0201
 class Jinja2Template(Template):
     """
@@ -72,18 +99,13 @@ class Jinja2Template(Template):
     def __init__(self, sitepath):
         super(Jinja2Template, self).__init__(sitepath)
 
-    def configure(self, config):
+    def configure(self, site, preprocessor=None, postprocessor=None):
         """
-        Uses the config object to initialize the jinja environment.
+        Uses the site object to initialize the jinja environment.
         """
-        if config:
-            loader = FileSystemLoader([
-                            str(config.content_root_path),
-                            str(config.layout_root_path),
-                        ])
-        else:
-            loader = FileSystemLoader(str(self.sitepath))
-        self.env = Environment(loader=loader,
+        self.site = site
+        self.loader = HydeLoader(self.sitepath, site, preprocessor)
+        self.env = Environment(loader=self.loader,
                                 undefined=SilentUndefined,
                                 trim_blocks=True,
                                 extensions=[Markdown,
@@ -92,8 +114,13 @@ class Jinja2Template(Template):
                                             'jinja2.ext.with_'])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
-        self.env.extend(config=config)
         self.env.filters['markdown'] = markdown
+
+        config = {}
+        if hasattr(site, 'config'):
+            config = site.config
+
+        self.env.extend(config=config)
 
         try:
             from typogrify.templatetags import jinja2_filters

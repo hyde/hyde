@@ -82,8 +82,9 @@ class Generator(object):
                             self.template.__class__.__name__)
 
             logger.info("Configuring the template environment")
-            self.template.configure(self.site.config)
-
+            self.template.configure(self.site,
+                    preprocessor=self.events.begin_text_resource,
+                    postprocessor=self.events.text_resource_complete)
             self.events.template_loaded(self.template)
 
     def initialize(self):
@@ -125,7 +126,7 @@ class Generator(object):
             return False
         deps = self.template.get_dependencies(resource.source_file.read_all())
         if not deps or None in deps:
-            return True
+            return False
         content = self.site.content.source_folder
         layout = Folder(self.site.sitepath).child_folder('layout')
         for dep in deps:
@@ -222,8 +223,8 @@ class Generator(object):
 
 
     def __generate_node__(self, node):
-        logger.info("Generating [%s]", node)
         for node in node.walk():
+            logger.info("Generating Node [%s]", node)
             self.events.begin_node(node)
             for resource in node.resources:
                 self.__generate_resource__(resource)

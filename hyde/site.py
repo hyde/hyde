@@ -291,6 +291,7 @@ class RootNode(Node):
         resource = self.resource_from_path(afile)
         if resource:
             logger.info("Resource exists at [%s]" % resource.relative_path)
+            return resource
 
         if not afile.is_descendant_of(self.source_folder):
             raise HydeException("The given file [%s] does not reside"

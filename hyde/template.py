@@ -4,7 +4,6 @@
 Abstract classes and utilities for template engines
 """
 from hyde.exceptions import HydeException
-
 from hyde.util import getLoggerWithNullHandler
 
 class Template(object):
@@ -17,15 +16,22 @@ class Template(object):
         self.sitepath = sitepath
         self.logger = getLoggerWithNullHandler(self.__class__.__name__)
 
-    def configure(self, config):
+    def configure(self, config, preprocessor=None, postprocessor=None):
         """
         The config object is a simple YAML object with required settings. The
         template implementations are responsible for transforming this object
         to match the `settings` required for the template engines.
-        """
 
+        The preprocessor and postprocessor contain the fucntions that
+        trigger the hyde plugins to preprocess the template after load
+        and postprocess it after it is processed and code is generated.
+
+        Note that the processor must only be used when referencing templates,
+        for example, using the include tag. The regular preprocessing and
+        post processing logic is handled by hyde.
+        """
         abstract
-        
+
     def get_dependencies(self, text):
         """
         Finds the dependencies based on the included
