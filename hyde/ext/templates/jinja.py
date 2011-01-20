@@ -63,6 +63,28 @@ class Markdown(Extension):
         output = caller().strip()
         return markdown(self.environment, output)
 
+class IncludeText(Extension):
+
+    tags = set(['includetext'])
+
+    def parse(self, parser):
+        node = parser.parse_include()
+        return nodes.CallBlock(
+                    self.call_method('_render_include_text', [], [], None, None),
+                    [], [], [node]
+                ).set_lineno(node.lineno)
+
+    def _render_include_text(self, caller=None):
+        if not caller:
+            return ''
+        output = caller().strip()
+        output = markdown(self.environment, output)
+        if 'typogrify' in self.environment.filters:
+            typo = self.environment.filters['typogrify']
+            output = typo(output)
+        return output
+
+
 class HydeLoader(FileSystemLoader):
 
     def __init__(self, sitepath, site, preprocessor=None):
@@ -108,7 +130,8 @@ class Jinja2Template(Template):
         self.env = Environment(loader=self.loader,
                                 undefined=SilentUndefined,
                                 trim_blocks=True,
-                                extensions=[Markdown,
+                                extensions=[IncludeText,
+                                            Markdown,
                                             'jinja2.ext.do',
                                             'jinja2.ext.loopcontrols',
                                             'jinja2.ext.with_'])

@@ -151,6 +151,25 @@ def create_test_site():
 def delete_test_site():
     TEST_SITE.delete()
 
+@nottest
+def assert_markdown_typogrify_processed_well(include_text, includer_text):
+    site = Site(TEST_SITE)
+    site.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
+    inc = File(TEST_SITE.child('content/inc.md'))
+    inc.write(include_text)
+    site.load()
+    gen = Generator(site)
+    gen.load_template_if_needed()
+    template = gen.template
+    html = template.render(includer_text, {}).strip()
+    assert html
+    q = PyQuery(html)
+    assert "is_processable" not in html
+    assert "This is a" in q("h1").text()
+    assert "heading" in q("h1").text()
+    assert q(".amp").length == 1
+
+
 @with_setup(create_test_site, delete_test_site)
 def test_can_include_templates_with_processing():
     text = """
@@ -172,25 +191,10 @@ Hyde & Jinja.
 {% include "inc.md"  %}
 
 """
-    site = Site(TEST_SITE)
-    site.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
-    inc = File(TEST_SITE.child('content/inc.md'))
-    inc.write(text)
-    site.load()
-    gen = Generator(site)
-    gen.load_template_if_needed()
-    template = gen.template
-    html = template.render(text2, {}).strip()
-    assert html
-    q = PyQuery(html)
-    assert "is_processable" not in html
-    assert "This is a" in q("h1").text()
-    assert "heading" in q("h1").text()
-    assert q(".amp").length == 1
+    assert_markdown_typogrify_processed_well(text, text2)
 
 
-#@with_setup(create_test_site, delete_test_site)
-@nottest
+@with_setup(create_test_site, delete_test_site)
 def test_includetext():
     text = """
 ===
@@ -200,24 +204,12 @@ is_processable: False
 This is a heading
 =================
 
-An "&".
+Hyde & Jinja.
 
 """
 
     text2 = """
-{% includetext inc.md  %}
+{% includetext "inc.md"  %}
 
 """
-    site = Site(TEST_SITE)
-    inc = File(TEST_SITE.child('content/inc.md'))
-    inc.write(text)
-
-    site.load()
-    gen = Generator(site)
-    gen.load_template_if_needed()
-    template = gen.template
-    html = template.render(text2, {}).strip()
-    assert html
-    q = PyQuery(html)
-    assert q("h1").length == 1
-    assert q(".amp").length == 1
+    assert_markdown_typogrify_processed_well(text, text2)

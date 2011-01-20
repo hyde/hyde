@@ -11,7 +11,7 @@ also take a look at the [cloudpanic source][cp] for a reference implementation.
 [Here](http://groups.google.com/group/hyde-dev/browse_thread/thread/2a143bd2081b3322) is
 the initial announcement of the project.
 
-# Installation
+## Installation
 
 Hyde supports both python 2.7 and 2.6.
 
@@ -28,7 +28,7 @@ You can choose to install hyde by running
 
         python setup.py install
 
-# Creating a new hyde site
+## Creating a new hyde site
 
 The new version of Hyde uses the `argparse` module and hence support subcommands.
 
@@ -38,12 +38,12 @@ The new version of Hyde uses the `argparse` module and hence support subcommands
 will create a new hyde site using the test layout.
 
 
-# Generating the hyde site
+## Generating the hyde site
 
         cd ~/test_site
         hyde gen
 
-# Serving the website
+## Serving the website
 
         cd ~/test_site
         hyde serve
@@ -54,7 +54,7 @@ The server also regenerates on demand. As long as the server is running,
 you can make changes to your source and refresh the browser to view the changes.
 
 
-# A brief list of features
+## A brief list of features
 
 
 1. Support for multiple templates (although only `Jinja2` is currently implemented)
@@ -69,7 +69,7 @@ you can make changes to your source and refresh the browser to view the changes.
    now provide additional syntactic sugar to make the content more readable. See
    `blockdown` and `autoextend` plugin for examples.
 
-# Next Steps
+## Next Steps
 
 1. Documentation
 2. Default Layouts
