@@ -6,6 +6,32 @@ Abstract classes and utilities for template engines
 from hyde.exceptions import HydeException
 from hyde.util import getLoggerWithNullHandler
 
+class HtmlWrap(object):
+    """
+    A wrapper class for raw html.
+
+    Provides pyquery interface if available.
+    Otherwise raw html access.
+    """
+
+    def __init__(self, html):
+        super(HtmlWrap, self).__init__()
+        self.raw = html
+        try:
+            from pyquery import PyQuery
+        except:
+            PyQuery = False
+        if PyQuery:
+            self.q = PyQuery(html)
+
+    def __unicode__(self):
+        return self.raw
+
+    def __call__(self, selector=None):
+        if not self.q:
+            return self.raw
+        return self.q(selector).html()
+
 class Template(object):
     """
     Interface for hyde template engines. To use a different template engine,
@@ -16,19 +42,27 @@ class Template(object):
         self.sitepath = sitepath
         self.logger = getLoggerWithNullHandler(self.__class__.__name__)
 
-    def configure(self, config, preprocessor=None, postprocessor=None):
+    def configure(self, site, engine):
         """
-        The config object is a simple YAML object with required settings. The
-        template implementations are responsible for transforming this object
-        to match the `settings` required for the template engines.
+        The site object should contain a config attribute. The config object is
+        a simple YAML object with required settings. The template implementations
+        are responsible for transforming this object to match the `settings`
+        required for the template engines.
 
-        The preprocessor and postprocessor contain the fucntions that
-        trigger the hyde plugins to preprocess the template after load
-        and postprocess it after it is processed and code is generated.
+        The engine is an informal protocol to provide access to some
+        hyde internals.
 
-        Note that the processor must only be used when referencing templates,
+        The preprocessor and postprocessor attributes must contain the
+        functions that trigger the hyde plugins to preprocess the template
+        after load and postprocess it after it is processed and code is generated.
+
+        Note that the processors must only be used when referencing templates,
         for example, using the include tag. The regular preprocessing and
         post processing logic is handled by hyde.
+
+        A context_for_path attribute must contain the function that returns the
+        context object that is populated with the appropriate variables for the given
+        path.
         """
         abstract
 

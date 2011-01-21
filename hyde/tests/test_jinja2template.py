@@ -143,15 +143,6 @@ def test_markdown_with_extensions():
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
 @nottest
-def create_test_site():
-    TEST_SITE.make()
-    TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
-
-@nottest
-def delete_test_site():
-    TEST_SITE.delete()
-
-@nottest
 def assert_markdown_typogrify_processed_well(include_text, includer_text):
     site = Site(TEST_SITE)
     site.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
@@ -168,11 +159,19 @@ def assert_markdown_typogrify_processed_well(include_text, includer_text):
     assert "This is a" in q("h1").text()
     assert "heading" in q("h1").text()
     assert q(".amp").length == 1
+    return html
 
+class TestJinjaTemplate(object):
 
-@with_setup(create_test_site, delete_test_site)
-def test_can_include_templates_with_processing():
-    text = """
+    def setUp(self):
+        TEST_SITE.make()
+        TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+
+    def tearDown(self):
+        TEST_SITE.delete()
+
+    def test_can_include_templates_with_processing(self):
+        text = """
 ===
 is_processable: False
 ===
@@ -187,16 +186,12 @@ Hyde & Jinja.
 """
 
 
-    text2 = """
-{% include "inc.md"  %}
-
-"""
-    assert_markdown_typogrify_processed_well(text, text2)
+        text2 = """{% include "inc.md"  %}"""
+        assert_markdown_typogrify_processed_well(text, text2)
 
 
-@with_setup(create_test_site, delete_test_site)
-def test_includetext():
-    text = """
+    def test_includetext(self):
+        text = """
 ===
 is_processable: False
 ===
@@ -208,8 +203,79 @@ Hyde & Jinja.
 
 """
 
-    text2 = """
-{% includetext "inc.md"  %}
+        text2 = """{% includetext "inc.md"  %}"""
+        assert_markdown_typogrify_processed_well(text, text2)
+
+    def test_reference_is_noop(self):
+        text = """
+===
+is_processable: False
+===
+
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
 
 """
-    assert_markdown_typogrify_processed_well(text, text2)
+
+        text2 = """{% includetext "inc.md"  %}"""
+        html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html
+
+    def test_refer(self):
+        text = """
+===
+is_processable: False
+===
+{% filter markdown|typogrify %}
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
+{% endfilter %}
+"""
+
+        text2 = """
+{% refer to "inc.md" as inc %}
+{% filter markdown|typogrify %}
+{{ inc.heading }}
+{{ inc.content }}
+{% endfilter %}
+"""
+        html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html
+
+    def test_refer_with_full_html(self):
+        text = """
+===
+is_processable: False
+===
+<div class="fulltext">
+{% filter markdown|typogrify %}
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
+{% endfilter %}
+</div>
+"""
+
+        text2 = """
+{% refer to "inc.md" as inc %}
+{{ inc.html('.fulltext') }}
+"""
+        html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html

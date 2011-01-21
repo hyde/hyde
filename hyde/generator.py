@@ -70,11 +70,31 @@ class Generator(object):
         yield self.__context__
         self.__context__.update(resource=None)
 
+    def context_for_path(self, path):
+        resource = self.site.resource_from_path(path)
+        if not resource:
+            return {}
+        ctx = self.__context__.copy
+        ctx.resource = resource
+        return ctx
+
     def load_template_if_needed(self):
         """
         Loads and configures the template environement from the site
         configuration if its not done already.
         """
+
+        class GeneratorProxy(object):
+            """
+            An interface to templates and plugins for
+            providing restricted access to the methods.
+            """
+
+            def __init__(self, preprocessor=None, postprocessor=None, context_for_path=None):
+                self.preprocessor = preprocessor
+                self.postprocessor = postprocessor
+                self.context_for_path = context_for_path
+
         if not self.template:
             logger.info("Generating site at [%s]" % self.site.sitepath)
             self.template = Template.find_template(self.site)
@@ -83,8 +103,10 @@ class Generator(object):
 
             logger.info("Configuring the template environment")
             self.template.configure(self.site,
-                    preprocessor=self.events.begin_text_resource,
-                    postprocessor=self.events.text_resource_complete)
+                        engine=GeneratorProxy(
+                            context_for_path=self.context_for_path,
+                            preprocessor=self.events.begin_text_resource,
+                            postprocessor=self.events.text_resource_complete))
             self.events.template_loaded(self.template)
 
     def initialize(self):
