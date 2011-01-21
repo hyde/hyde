@@ -19,10 +19,9 @@ except:
 
 def getLoggerWithConsoleHandler(logger_name):
     logger = logging.getLogger(logger_name)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     handler = logging.StreamHandler(sys.stdout)
-    formatter = ColorFormatter(fmt="$COLOR%(levelname)s "
-                                      "$RESET %(asctime)s "
+    formatter = ColorFormatter(fmt="$RESET %(asctime)s "
                                       "$BOLD$COLOR%(name)s$RESET "
                                       "%(message)s", datefmt='%H:%M:%S')
     handler.setFormatter(formatter)

@@ -20,7 +20,7 @@ def load_python_object(name):
     if module_name == '':
         (module_name, object_name) = (object_name, module_name)
     try:
-        logger.info('Loading module [%s]' % module_name)
+        logger.debug('Loading module [%s]' % module_name)
         module = __import__(module_name)
     except ImportError:
         raise HydeException("The given module name [%s] is invalid." %
@@ -36,7 +36,7 @@ def load_python_object(name):
                             module_name)
 
     try:
-        logger.info('Getting object [%s] from module [%s]' %
+        logger.debug('Getting object [%s] from module [%s]' %
                     (object_name, module_name))
         return getattr(module, object_name)
     except AttributeError:

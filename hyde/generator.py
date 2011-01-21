@@ -78,7 +78,7 @@ class Generator(object):
         if not self.template:
             logger.info("Generating site at [%s]" % self.site.sitepath)
             self.template = Template.find_template(self.site)
-            logger.info("Using [%s] as the template",
+            logger.debug("Using [%s] as the template",
                             self.template.__class__.__name__)
 
             logger.info("Configuring the template environment")
@@ -224,7 +224,7 @@ class Generator(object):
 
     def __generate_node__(self, node):
         for node in node.walk():
-            logger.info("Generating Node [%s]", node)
+            logger.debug("Generating Node [%s]", node)
             self.events.begin_node(node)
             for resource in node.resources:
                 self.__generate_resource__(resource)
@@ -232,15 +232,15 @@ class Generator(object):
 
     def __generate_resource__(self, resource):
         if not resource.is_processable:
-            logger.info("Skipping [%s]", resource)
+            logger.debug("Skipping [%s]", resource)
             return
-        logger.info("Processing [%s]", resource)
+        logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
             if resource.source_file.is_text:
                 text = resource.source_file.read_all()
                 text = self.events.begin_text_resource(resource, text) or text
                 if resource.uses_template:
-                    logger.info("Rendering [%s]", resource)
+                    logger.debug("Rendering [%s]", resource)
                     text = self.template.render(text, context)
                 text = self.events.text_resource_complete(
                                         resource, text) or text
@@ -249,7 +249,7 @@ class Generator(object):
                 target.parent.make()
                 target.write(text)
             else:
-                logger.info("Copying binary file [%s]", resource)
+                logger.debug("Copying binary file [%s]", resource)
                 self.events.begin_binary_resource(resource)
                 target = File(self.site.config.deploy_root_path.child(
                                     resource.relative_deploy_path))

@@ -254,7 +254,7 @@ class RootNode(Node):
         folder = Folder(a_folder)
         node = self.node_from_path(folder)
         if node:
-            logger.info("Node exists at [%s]" % node.relative_path)
+            logger.debug("Node exists at [%s]" % node.relative_path)
             return node
 
         if not folder.is_descendant_of(self.source_folder):
@@ -275,7 +275,7 @@ class RootNode(Node):
         for h_folder in hierarchy:
             node = node.add_child_node(h_folder)
             self.node_map[str(h_folder)] = node
-            logger.info("Added node [%s] to [%s]" % (
+            logger.debug("Added node [%s] to [%s]" % (
                             node.relative_path, self.source_folder))
 
         return node
@@ -290,7 +290,7 @@ class RootNode(Node):
 
         resource = self.resource_from_path(afile)
         if resource:
-            logger.info("Resource exists at [%s]" % resource.relative_path)
+            logger.debug("Resource exists at [%s]" % resource.relative_path)
             return resource
 
         if not afile.is_descendant_of(self.source_folder):
@@ -305,7 +305,7 @@ class RootNode(Node):
 
         resource = node.add_child_resource(afile)
         self.resource_map[str(afile)] = resource
-        logger.info("Added resource [%s] to [%s]" %
+        logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
         return resource
 

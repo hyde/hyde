@@ -25,7 +25,8 @@ class Engine(Application):
 
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
-    @version('-v', '--version', version='%(prog)s ' + __version__)
+    @true('-v', '--verbose', help="Show detailed information in console")
+    @version('--version', version='%(prog)s ' + __version__)
     @store('-s', '--sitepath', default='.', help="Location of the hyde site")
     def main(self, args):
         """
@@ -33,7 +34,9 @@ class Engine(Application):
         to provide common parameters for the subcommands and some generic stuff
         like version and metadata
         """
-        pass
+        if args.verbose:
+            import logging
+            logger.setLevel(logging.DEBUG)
 
     @subcommand('create', help='Create a new hyde site')
     @store('-l', '--layout', default='basic', help='Layout for the new site')
@@ -44,6 +47,7 @@ class Engine(Application):
         The create command. Creates a new site from the template at the given
         sitepath.
         """
+        self.main(args)
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         if sitepath.exists and not args.overwrite:
             raise HydeException(
@@ -70,6 +74,7 @@ class Engine(Application):
         The generate command. Generates the site at the given
         deployment directory.
         """
+        self.main(args)
         site = self.make_site(args.sitepath, args.config)
         from hyde.generator import Generator
         gen = Generator(site)
@@ -90,12 +95,20 @@ class Engine(Application):
         deployment directory, address and port. Regenerates
         the entire site or specific files based on ths request.
         """
+        self.main(args)
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         config_file = sitepath.child(args.config)
         site = self.make_site(args.sitepath, args.config)
         from hyde.server import HydeWebServer
         server = HydeWebServer(site, args.address, args.port)
-        server.serve_forever()
+        logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt, SystemExit:
+            logger.info("Received shutdown request. Shutting down...")
+            server.shutdown()
+            logger.info("Server successfully stopped")
+            exit()
 
     def make_site(self, sitepath, config):
         """
