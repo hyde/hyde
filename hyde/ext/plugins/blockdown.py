@@ -40,6 +40,6 @@ class BlockdownPlugin(TextyPlugin):
         {% block blockname %} or equivalent and
         Replace close pattern (default===[====]/[blockname][===========])
         with
-        {% block blockname %} or equivalent
+        {% endblock blockname %} or equivalent
         """
         return super(BlockdownPlugin, self).text_to_tag(match, start)

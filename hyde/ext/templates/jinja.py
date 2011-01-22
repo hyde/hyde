@@ -12,6 +12,7 @@ from jinja2 import environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
 
+logger = getLoggerWithNullHandler('Jinja2')
 
 class SilentUndefined(Undefined):
     """
@@ -70,23 +71,22 @@ def syntax(env, value, lexer=None):
     try:
         import pygments
         from pygments import lexers
-        self.lexers = lexers
         from pygments import formatters
     except ImportError:
         logger.error(u"pygments library is required to use syntax highlighting tags.")
         raise TemplateError("Cannot load pygments")
 
-    pyg = (self.lexers.get_lexer_by_name(lexer)
+    pyg = (lexers.get_lexer_by_name(lexer)
                 if lexer else
-                    self.lexers.guess_lexer(value))
+                    lexers.guess_lexer(value))
     settings = {}
     if hasattr(env.config, 'syntax'):
         settings = getattr(env.config.syntax, 'options', {})
 
     formatter = formatters.HtmlFormatter(**settings)
-    code = pygments.highlight(value, lexer, formatter)
+    code = pygments.highlight(value, pyg, formatter)
     code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
-    return safestring.mark_safe('\n\n<div class="code">%s</div>\n\n' % code)
+    return Markup('\n\n<div class="code">%s</div>\n\n' % code)
 
 class Markdown(Extension):
     """
@@ -125,11 +125,14 @@ class Syntax(Extension):
         Parses the statements and defers to the callback for pygments processing.
         """
         lineno = parser.stream.next().lineno
-        lex = parser.stream.next_if('name')
+        lex = None
+        if parser.stream.current.type != 'block_end':
+            lex = parser.stream.next().value
+
         body = parser.parse_statements(['name:endsyntax'], drop_needle=True)
 
         return nodes.CallBlock(
-                    self.call_method('_render_syntax', nodes.Const(lex)),
+                    self.call_method('_render_syntax', args=[nodes.Const(lex)]),
                         [], [], body).set_lineno(lineno)
 
     def _render_syntax(self, lex, caller=None):
@@ -273,9 +276,8 @@ class HydeLoader(FileSystemLoader):
         """
         Calls the plugins to preprocess prior to returning the source.
         """
-        print "Loading Template %s" % template
-        logger = getLoggerWithNullHandler('HydeLoader')
-        logger.debug("Loading template [%s] and preprocessing" % template)
+        hlogger = getLoggerWithNullHandler('HydeLoader')
+        hlogger.debug("Loading template [%s] and preprocessing" % template)
         (contents,
             filename,
                 date) = super(HydeLoader, self).get_source(

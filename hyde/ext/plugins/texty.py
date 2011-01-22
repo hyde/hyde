@@ -77,9 +77,7 @@ class TextyPlugin(Plugin):
         Replaces the matched text with tag statement
         given by the template.
         """
-        if not match.lastindex:
-            return ''
-        params = match.groups(1)[0]
+        params = match.groups(1)[0] if match.lastindex else ''
         return (self.template.get_open_tag(self.tag_name, params)
                 if start
                 else self.template.get_close_tag(self.tag_name, params))
