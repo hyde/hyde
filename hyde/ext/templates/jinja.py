@@ -50,6 +50,7 @@ def markdown(env, value):
     try:
         import markdown
     except ImportError:
+        logger.error(u"Cannot load the markdown library.")
         raise TemplateError("Cannot load the markdown library")
     output = value
     d = {}
@@ -58,6 +59,34 @@ def markdown(env, value):
         d['extension_configs'] = getattr(env.config.markdown, 'extension_configs', {})
     md = markdown.Markdown(**d)
     return md.convert(output)
+
+
+@environmentfilter
+def syntax(env, value, lexer=None):
+    """
+    Processes the contained block using `pygments`
+    """
+
+    try:
+        import pygments
+        from pygments import lexers
+        self.lexers = lexers
+        from pygments import formatters
+    except ImportError:
+        logger.error(u"pygments library is required to use syntax highlighting tags.")
+        raise TemplateError("Cannot load pygments")
+
+    pyg = (self.lexers.get_lexer_by_name(lexer)
+                if lexer else
+                    self.lexers.guess_lexer(value))
+    settings = {}
+    if hasattr(env.config, 'syntax'):
+        settings = getattr(env.config.syntax, 'options', {})
+
+    formatter = formatters.HtmlFormatter(**settings)
+    code = pygments.highlight(value, lexer, formatter)
+    code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
+    return safestring.mark_safe('\n\n<div class="code">%s</div>\n\n' % code)
 
 class Markdown(Extension):
     """
@@ -84,6 +113,33 @@ class Markdown(Extension):
             return ''
         output = caller().strip()
         return markdown(self.environment, output)
+
+class Syntax(Extension):
+    """
+    A wrapper around the syntax filter for syntactic sugar.
+    """
+    tags = set(['syntax'])
+
+    def parse(self, parser):
+        """
+        Parses the statements and defers to the callback for pygments processing.
+        """
+        lineno = parser.stream.next().lineno
+        lex = parser.stream.next_if('name')
+        body = parser.parse_statements(['name:endsyntax'], drop_needle=True)
+
+        return nodes.CallBlock(
+                    self.call_method('_render_syntax', nodes.Const(lex)),
+                        [], [], body).set_lineno(lineno)
+
+    def _render_syntax(self, lex, caller=None):
+        """
+        Calls the syntax filter to transform the output.
+        """
+        if not caller:
+            return ''
+        output = caller().strip()
+        return syntax(self.environment, output, lex)
 
 class IncludeText(Extension):
     """
@@ -255,6 +311,7 @@ class Jinja2Template(Template):
                                 trim_blocks=True,
                                 extensions=[IncludeText,
                                             Markdown,
+                                            Syntax,
                                             Reference,
                                             Refer,
                                             'jinja2.ext.do',
@@ -264,6 +321,7 @@ class Jinja2Template(Template):
         self.env.globals['content_url'] = content_url
         self.env.globals['engine'] = engine
         self.env.filters['markdown'] = markdown
+        self.env.filters['syntax'] = syntax
 
         config = {}
         if hasattr(site, 'config'):
