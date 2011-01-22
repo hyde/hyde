@@ -37,12 +37,15 @@ class Generator(object):
 
             def __getattr__(self, method_name):
                 if hasattr(Plugin, method_name):
-
                     def __call_plugins__(*args):
+                        #logger.debug("Calling plugin method [%s]", method_name)
                         res = None
                         if self.site.plugins:
                             for plugin in self.site.plugins:
                                 if hasattr(plugin, method_name):
+                                    #logger.debug(
+                                    #    "\tCalling plugin [%s]",
+                                    #   plugin.__class__.__name__)
                                     function = getattr(plugin, method_name)
                                     res = function(*args)
                                     if res:
@@ -264,7 +267,13 @@ class Generator(object):
                 text = self.events.begin_text_resource(resource, text) or text
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
-                    text = self.template.render(text, context)
+                    try:
+                        text = self.template.render(text, context)
+                    except Exception:
+                        logger.error("Error occurred when"
+                            " processing template:[%s]" % resource)
+                        raise
+
                 text = self.events.text_resource_complete(
                                         resource, text) or text
                 target = File(self.site.config.deploy_root_path.child(

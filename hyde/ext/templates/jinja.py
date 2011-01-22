@@ -5,6 +5,8 @@ Jinja template utilties
 
 from hyde.fs import File, Folder
 from hyde.template import HtmlWrap, Template
+from hyde.util import getLoggerWithNullHandler
+
 from jinja2 import contextfunction, Environment, FileSystemLoader
 from jinja2 import environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
@@ -215,6 +217,9 @@ class HydeLoader(FileSystemLoader):
         """
         Calls the plugins to preprocess prior to returning the source.
         """
+        print "Loading Template %s" % template
+        logger = getLoggerWithNullHandler('HydeLoader')
+        logger.debug("Loading template [%s] and preprocessing" % template)
         (contents,
             filename,
                 date) = super(HydeLoader, self).get_source(

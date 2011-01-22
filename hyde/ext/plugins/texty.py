@@ -25,7 +25,6 @@ class TextyPlugin(Plugin):
 
     def __init__(self, site):
         super(TextyPlugin, self).__init__(site)
-
         self.open_pattern = self.default_open_pattern
         self.close_pattern = self.default_close_pattern
         self.template = None
@@ -34,8 +33,8 @@ class TextyPlugin(Plugin):
         if config and hasattr(config, 'open_pattern'):
             self.open_pattern = config.open_pattern
 
-        if config and hasattr(config, 'close_pattern'):
-            self.open_pattern = config.close_pattern
+        if self.close_pattern and config and hasattr(config, 'close_pattern'):
+            self.close_pattern = config.close_pattern
 
     @property
     def plugin_name(self):
@@ -89,10 +88,10 @@ class TextyPlugin(Plugin):
         """
         Replace a text base pattern with a template statement.
         """
-        text_open = re.compile(self.open_pattern, re.MULTILINE)
-        text_close = re.compile(self.close_pattern, re.MULTILINE)
-
+        text_open = re.compile(self.open_pattern, re.UNICODE|re.MULTILINE)
         text = text_open.sub(self.text_to_tag, text)
-        text = text_close.sub(
+        if self.close_pattern:
+            text_close = re.compile(self.close_pattern, re.UNICODE|re.MULTILINE)
+            text = text_close.sub(
                     partial(self.text_to_tag, start=False), text)
         return text
