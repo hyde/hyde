@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Contains classes and utilities for serving a site
 generated from hyde.

@@ -1,34 +1,39 @@
+# -*- coding: utf-8 -*-
 """
-Blockdown css plugin
+Blockdown plugin
 """
 
-from hyde.plugin import Plugin
-from hyde.fs import File, Folder
+from hyde.ext.plugins.texty import TextyPlugin
 
-import re
-from functools import partial
-
-class BlockdownPlugin(Plugin):
+class BlockdownPlugin(TextyPlugin):
     """
-    The plugin class for less css
+    The plugin class for block text replacement.
     """
-
     def __init__(self, site):
         super(BlockdownPlugin, self).__init__(site)
-        try:
-            self.open_pattern = site.config.blockdown.open_pattern
-        except AttributeError:
-            self.open_pattern = '^\s*===+\s*([A-Za-z0-9_\-.]+)\s*=*\s*$'
 
-        try:
-            self.close_pattern = site.config.blockdown.close_pattern
-        except AttributeError:
-            self.close_pattern = '^\s*===+\s*/+\s*=*/*([A-Za-z0-9_\-.]*)[\s=/]*$'
+    @property
+    def tag_name(self):
+        """
+        The block tag.
+        """
+        return 'block'
 
-    def template_loaded(self, template):
-        self.template = template
+    @property
+    def default_open_pattern(self):
+        """
+        The default pattern for block open text.
+        """
+        return '^\s*===+\s*([A-Za-z0-9_\-\.]+)\s*=*\s*$'
 
-    def begin_text_resource(self, resource, text):
+    @property
+    def default_close_pattern(self):
+        """
+        The default pattern for block close text.
+        """
+        return '^\s*===+\s*/+\s*=*/*([A-Za-z0-9_\-\.]*)[\s=/]*$'
+
+    def text_to_tag(self, match, start=True):
         """
         Replace open pattern (default:===[====]blockname[===========])
         with
@@ -37,15 +42,4 @@ class BlockdownPlugin(Plugin):
         with
         {% block blockname %} or equivalent
         """
-        blocktag_open = re.compile(self.open_pattern, re.MULTILINE)
-        blocktag_close = re.compile(self.close_pattern, re.MULTILINE)
-        def blockdown_to_block(match, start_block=True):
-            if not match.lastindex:
-                return ''
-            block_name = match.groups(1)[0]
-            return (self.template.get_block_open_statement(block_name)
-                    if start_block
-                    else self.template.get_block_close_statement(block_name))
-        text = blocktag_open.sub(blockdown_to_block, text)
-        text = blocktag_close.sub(partial(blockdown_to_block, start_block=False), text)
-        return text
+        return super(BlockdownPlugin, self).text_to_tag(match, start)

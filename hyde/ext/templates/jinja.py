@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Jinja template utilties
 """
@@ -295,6 +296,45 @@ class Jinja2Template(Template):
         The exception to throw. Used by plugins.
         """
         return TemplateError
+
+    @property
+    def patterns(self):
+       """
+       The pattern for matching selected template statements.
+       """
+       return {
+           "block_open": '\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
+           "block_close": '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
+           "include": '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
+           "extends": '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
+       }
+
+    def get_include_statement(self, path_to_include):
+       """
+       Returns an include statement for the current template,
+       given the path to include.
+       """
+       return '{%% include \'%s\' %%}' % path_to_include
+
+    def get_extends_statement(self, path_to_extend):
+       """
+       Returns an extends statement for the current template,
+       given the path to extend.
+       """
+       return '{%% extends \'%s\' %%}' % path_to_extend
+
+    def get_open_tag(self, tag, params):
+       """
+       Returns an open tag statement.
+       """
+       return '{%% %s %s %%}' % (tag, params)
+
+    def get_close_tag(self, tag, params):
+       """
+       Returns an open tag statement.
+       """
+       return '{%% end%s %%}' % tag
+
 
     def render(self, text, context):
         """

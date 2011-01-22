@@ -6,6 +6,8 @@ Abstract classes and utilities for template engines
 from hyde.exceptions import HydeException
 from hyde.util import getLoggerWithNullHandler
 
+import abc
+
 class HtmlWrap(object):
     """
     A wrapper class for raw html.
@@ -38,10 +40,13 @@ class Template(object):
     the following interface must be implemented.
     """
 
+    __metaclass__ = abc.ABCMeta
+
     def __init__(self, sitepath):
         self.sitepath = sitepath
         self.logger = getLoggerWithNullHandler(self.__class__.__name__)
 
+    @abc.abstractmethod
     def configure(self, site, engine):
         """
         The site object should contain a config attribute. The config object is
@@ -64,7 +69,7 @@ class Template(object):
         context object that is populated with the appropriate variables for the given
         path.
         """
-        abstract
+        return
 
     def get_dependencies(self, text):
         """
@@ -73,77 +78,55 @@ class Template(object):
         """
         return None
 
+    @abc.abstractmethod
     def render(self, text, context):
         """
         Given the text, and the context, this function must return the
         rendered string.
         """
 
-        abstract
+        return ''
 
-    @property
+    @abc.abstractproperty
     def exception_class(self):
         return HydeException
 
-    @property
-    def include_pattern(self):
+    @abc.abstractproperty
+    def patterns(self):
         """
-        The pattern for matching include statements
+        Patterns for matching selected template statements.
         """
+        return {}
 
-        return '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
-
+    @abc.abstractmethod
     def get_include_statement(self, path_to_include):
         """
         Returns an include statement for the current template,
         given the path to include.
         """
-        return "{%% include '%s' %%}" % path_to_include
+        return '{%% include \'%s\' %%}' % path_to_include
 
-    @property
-    def block_open_pattern(self):
-        """
-        The pattern for matching include statements
-        """
-
-        return '\s*\{\%\s*block\s*([^\s]+)\s*\%\}'
-
-    @property
-    def block_close_pattern(self):
-        """
-        The pattern for matching include statements
-        """
-
-        return '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}'
-
-    def get_block_open_statement(self, block_name):
-        """
-        Returns a open block statement for the current template,
-        given the block name.
-        """
-        return "{%% block %s %%}" % block_name
-
-    def get_block_close_statement(self, block_name):
-        """
-        Returns a close block statement for the current template,
-        given the block name.
-        """
-        return "{%% endblock %s %%}" % block_name
-
-    @property
-    def extends_pattern(self):
-        """
-        The pattern for matching include statements
-        """
-
-        return '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
-
+    @abc.abstractmethod
     def get_extends_statement(self, path_to_extend):
         """
         Returns an extends statement for the current template,
         given the path to extend.
         """
-        return "{%% extends '%s' %%}" % path_to_extend
+        return '{%% extends \'%s\' %%}' % path_to_extend
+
+    @abc.abstractmethod
+    def get_open_tag(self, tag, params):
+        """
+        Returns an open tag statement.
+        """
+        return '{%% %s %s %%}' % (tag, params)
+
+    @abc.abstractmethod
+    def get_close_tag(self, tag, params):
+        """
+        Returns an open tag statement.
+        """
+        return '{%% end%s %%}' % tag
 
     @staticmethod
     def find_template(site):

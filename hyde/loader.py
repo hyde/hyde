@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Generic loader of extensions (plugins & templates)
 """

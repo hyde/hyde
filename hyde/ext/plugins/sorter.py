@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Contains classes and utilities related to sortin
 resources and nodes in hyde.

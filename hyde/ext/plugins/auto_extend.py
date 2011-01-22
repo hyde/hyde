@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Autoextend css plugin
 """
@@ -29,7 +30,7 @@ class AutoExtendPlugin(Plugin):
         except AttributeError:
             pass
         if layout:
-            extends_pattern = self.template.extends_pattern
+            extends_pattern = self.template.patterns['extends']
 
             if not re.search(extends_pattern, text):
                 extended_text = self.template.get_extends_statement(layout)

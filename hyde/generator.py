@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 The generator class and related utility functions.
 """
