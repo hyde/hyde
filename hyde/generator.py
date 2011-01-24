@@ -23,6 +23,8 @@ class Generator(object):
         self.site = site
         self.generated_once = False
         self.__context__ = dict(site=site)
+        if hasattr(site.config, 'context'):
+            self.__context__.update(site.config.context)
         self.template = None
         Plugin.load_all(site)
 
