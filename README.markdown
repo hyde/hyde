@@ -6,7 +6,7 @@ give a good understanding of the motivation behind this version. You can
 also take a look at the [cloudpanic source][cp] for a reference implementation.
 
 [hyde1-0]: http://groups.google.com/group/hyde-dev/web/hyde-1-0
-[cp]: github.com/tipiirai/cloudpanic/tree/refactor
+[cp]: http://github.com/tipiirai/cloudpanic/tree/refactor
 
 [Here](http://groups.google.com/group/hyde-dev/browse_thread/thread/2a143bd2081b3322) is
 the initial announcement of the project.
