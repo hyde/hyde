@@ -147,6 +147,8 @@ class Generator(object):
         Checks if the given resource has changed since the
         last generation.
         """
+        if not self.generated_once:
+            return True
         self.load_site_if_needed()
         self.load_template_if_needed()
         target = File(self.site.config.deploy_root_path.child(

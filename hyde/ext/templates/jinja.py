@@ -276,6 +276,7 @@ class HydeLoader(FileSystemLoader):
         """
         Calls the plugins to preprocess prior to returning the source.
         """
+        template = template.strip()
         logger.debug("Loading template [%s] and preprocessing" % template)
         (contents,
             filename,
