@@ -230,15 +230,34 @@ class Refer(Extension):
         includeNode.with_context = True
         includeNode.ignore_missing = False
         includeNode.template = template
+
         return [
-                nodes.Assign(nodes.Name(MARKINGS, 'store'), nodes.Const({})),
-                nodes.Assign(nodes.Name(namespace, 'store'), nodes.Const({})),
+                nodes.Assign(nodes.Name(MARKINGS, 'store'), nodes.Const({})).set_lineno(lineno),
+                nodes.Assign(nodes.Name(namespace, 'store'), nodes.Const({})).set_lineno(lineno),
+                nodes.CallBlock(
+                    self.call_method('_push_resource',
+                            args=[
+                                nodes.Name(namespace, 'load'),
+                                nodes.Name('site', 'load'),
+                                nodes.Name('resource', 'load'),
+                                template]),
+                            [], [], []).set_lineno(lineno),
+                nodes.Assign(nodes.Name('resource', 'store'),
+                    nodes.Getitem(nodes.Name(namespace, 'load'), nodes.Const('current_resource'), 'load')).set_lineno(lineno),
                 nodes.CallBlock(
                     self.call_method('_assign_reference',
                             args=[
                                 nodes.Name(MARKINGS, 'load'),
                                 nodes.Name(namespace, 'load')]),
-                            [], [], [includeNode]).set_lineno(lineno)]
+                            [], [], [includeNode]).set_lineno(lineno),
+                nodes.Assign(nodes.Name('resource', 'store'),
+                            nodes.Getitem(nodes.Name(namespace, 'load'), nodes.Const('parent_resource'), 'load')).set_lineno(lineno),
+        ]
+
+    def _push_resource(self, namespace, site, resource, template, caller):
+        namespace['parent_resource'] = resource
+        namespace['current_resource'] = site.content.resource_from_relative_path(template)
+        return ''
 
     def _assign_reference(self, markings, namespace, caller):
         """
