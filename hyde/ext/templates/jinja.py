@@ -391,13 +391,13 @@ class Jinja2Template(Template):
        """
        Returns an open tag statement.
        """
-       return '{%% %s %s %%}' % (tag, params)
+       return '{%% %s %s -%%}' % (tag, params)
 
     def get_close_tag(self, tag, params):
        """
        Returns an open tag statement.
        """
-       return '{%% end%s %%}' % tag
+       return '{%%- end%s %%}' % tag
 
 
     def render(self, text, context):
