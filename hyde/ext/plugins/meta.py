@@ -59,6 +59,9 @@ class MetaPlugin(Plugin):
         config = self.site.config
         metadata = config.meta if hasattr(config, 'meta') else {}
         self.site.meta = Metadata(metadata)
+        self.nodemeta = 'nodemeta.yaml'
+        if hasattr(self.site.meta, 'nodemeta'):
+            self.nodemeta = self.site.meta.nodemeta
         for node in self.site.content.walk():
             self.__read_node__(node)
             for resource in node.resources:
@@ -110,9 +113,10 @@ class MetaPlugin(Plugin):
 
     def __read_node__(self, node):
         """
-        Look for nodemeta.yaml. Load and assign it to the node.
+        Look for nodemeta.yaml (or configured name). Load and assign it
+        to the node.
         """
-        nodemeta = node.get_resource('nodemeta.yaml')
+        nodemeta = node.get_resource(self.nodemeta)
         parent_meta = node.parent.meta if node.parent else self.site.meta
         if nodemeta:
             nodemeta.is_processable = False
@@ -127,7 +131,7 @@ class MetaPlugin(Plugin):
 
     def begin_node(self, node):
         """
-        Look for nodemeta.yaml. Load and assign it to the node.
+        Read node meta data.
         """
         self.__read_node__(node)
 

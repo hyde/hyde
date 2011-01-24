@@ -182,13 +182,14 @@ title: Even nicer title
 
         page_d = {'title': 'An even nicer title'}
 
-        blog_d = {'author': 'Lakshmi'}
+        blog_d = {'author': 'Laks'}
 
         content_d  = {'title': 'A nice title',
                       'author': 'Lakshmi Vyas'}
 
         site_d = {'author': 'Lakshmi',
-                  'twitter': 'lakshmivyas'}
+                  'twitter': 'lakshmivyas',
+                  'nodemeta': 'meta.yaml'}
         text = """
 ---
 title: %(title)s
@@ -208,7 +209,7 @@ title: %(title)s
         about2.write(text % page_d)
         content_meta = File(TEST_SITE.child('content/nodemeta.yaml'))
         content_meta.write(yaml.dump(content_d))
-        content_meta = File(TEST_SITE.child('content/blog/nodemeta.yaml'))
+        content_meta = File(TEST_SITE.child('content/blog/meta.yaml'))
         content_meta.write(yaml.dump(blog_d))
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
@@ -231,4 +232,5 @@ title: %(title)s
         text = target.read_all()
         q = PyQuery(text)
         for k, v in expected.items():
-            assert v in q("span." + k).text()
+            if k != 'nodemeta':
+                assert v in q("span." + k).text()
