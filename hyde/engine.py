@@ -11,6 +11,7 @@ from hyde.site import Site
 from hyde.version import __version__
 from hyde.util import getLoggerWithConsoleHandler
 
+import codecs
 import os
 import yaml
 
@@ -118,6 +119,6 @@ class Engine(Application):
         config_file = sitepath.child(config)
         logger.info("Reading site configuration from [%s]", config_file)
         conf = {}
-        with open(config_file) as stream:
+        with codecs.open(config_file, 'r', 'utf-8') as stream:
             conf = yaml.load(stream)
         return Site(sitepath, Config(sitepath, conf))

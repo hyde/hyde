@@ -2,6 +2,8 @@
 """
 Contains data structures and utilities for hyde.
 """
+from hyde.fs import File, Folder
+import yaml
 
 class Expando(object):
     """
@@ -38,7 +40,28 @@ class Expando(object):
         else:
             return primitive
 
-from hyde.fs import File, Folder
+
+class Context(object):
+    """
+    Wraps the context related functions and utilities.
+    """
+
+    @staticmethod
+    def load(sitepath, ctx):
+        """
+        Load context from config data and providers.
+        """
+        context = {}
+        try:
+            context.update(ctx.data.__dict__)
+            for provider_name, resource_name in ctx.providers.__dict__.items():
+                res = File(Folder(sitepath).child(resource_name))
+                if res.exists:
+                    context[provider_name] = yaml.load(res.read_all())
+        except AttributeError:
+            # No context data found
+            pass
+        return context
 
 
 class Config(Expando):

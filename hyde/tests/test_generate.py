@@ -5,9 +5,9 @@ Use nose
 `$ nosetests`
 """
 
-
 from hyde.generator import Generator
 from hyde.fs import FS, File, Folder
+from hyde.model import Config
 from hyde.site import Site
 
 from nose.tools import raises, with_setup, nottest
@@ -90,12 +90,14 @@ class TestGenerator(object):
         l.write(l.read_all())
         assert gen.has_resource_changed(resource)
 
-    def test_has_resource_changed(self):
-        site = Site(TEST_SITE)
-        site.load()
-        site.config.context = {
-            "abc": "def"
-        }
+    def test_context(self):
+        site = Site(TEST_SITE, Config(TEST_SITE, config_dict={
+            "context": {
+                "data": {
+                    "abc": "def"
+                }
+            }
+        }))
         text = """
 {% extends "base.html" %}
 
@@ -107,9 +109,56 @@ class TestGenerator(object):
     {{resource.name}}
 {% endblock %}
 """
+        site.load()
         resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         resource.source_file.write(text)
         gen.generate_all()
         target = File(site.config.deploy_root_path.child(resource.name))
         assert "abc = def" in target.read_all()
+
+    def test_context_providers(self):
+        site = Site(TEST_SITE, Config(TEST_SITE, config_dict={
+            "context": {
+                "data": {
+                    "abc": "def"
+                },
+                "providers": {
+                    "nav": "nav.yaml"
+                }
+            }
+        }))
+        nav = """
+main:
+    - home
+    - articles
+    - projects
+"""
+        text = """
+{% extends "base.html" %}
+
+{% block main %}
+    {{nav}}
+    {% for item in nav.main %}
+    {{item}}
+    {% endfor %}
+    abc = {{ abc }}
+    Hi!
+
+    I am a test template to make sure jinja2 generation works well with hyde.
+    {{resource.name}}
+{% endblock %}
+"""
+        File(TEST_SITE.child('nav.yaml')).write(nav)
+        site.load()
+        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        gen = Generator(site)
+        resource.source_file.write(text)
+        gen.generate_all()
+        target = File(site.config.deploy_root_path.child(resource.name))
+        out = target.read_all()
+        print out
+        assert "abc = def" in out
+        assert "home" in out
+        assert "articles" in out
+        assert "projects" in out

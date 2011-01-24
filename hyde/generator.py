@@ -4,6 +4,7 @@ The generator class and related utility functions.
 """
 from hyde.exceptions import HydeException
 from hyde.fs import File, Folder
+from hyde.model import Context
 from hyde.plugin import Plugin
 from hyde.template import Template
 
@@ -24,7 +25,9 @@ class Generator(object):
         self.generated_once = False
         self.__context__ = dict(site=site)
         if hasattr(site.config, 'context'):
-            self.__context__.update(site.config.context)
+            self.__context__.update(
+                    Context.load(site.sitepath, site.config.context))
+
         self.template = None
         Plugin.load_all(site)
 
