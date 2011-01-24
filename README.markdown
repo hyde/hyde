@@ -75,8 +75,7 @@ you can make changes to your source and refresh the browser to view the changes.
 2. Default Layouts
 3. Django Support
 4. Plugins:
-
     * Tags
     * Atom / RSS
-    * Media Compressor
+    * Text Compressor (CSS, JS, HTML)
     * Image optimizer
