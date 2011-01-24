@@ -118,6 +118,15 @@ def test_get_resource():
     resource = node.get_resource('merry-christmas.html')
     assert resource == s.content.resource_from_relative_path(Folder(path).child('merry-christmas.html'))
 
+def test_resource_slug():
+    s = Site(TEST_SITE_ROOT)
+    s.load()
+    path = 'blog/2010/december'
+    node = s.content.node_from_relative_path(path)
+    resource = node.get_resource('merry-christmas.html')
+    assert resource.slug == 'merry-christmas'
+
+
 def test_get_resource_from_relative_deploy_path():
     s = Site(TEST_SITE_ROOT)
     s.load()

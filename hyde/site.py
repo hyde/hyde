@@ -65,6 +65,11 @@ class Resource(Processable):
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
 
+    @property
+    def slug(self):
+        #TODO: Add a more sophisticated slugify method
+        return self.source.name_without_extension
+
     def get_relative_deploy_path(self):
         """
         Gets the path where the file will be created

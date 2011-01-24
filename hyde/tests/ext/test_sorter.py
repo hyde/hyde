@@ -16,7 +16,7 @@ from operator import attrgetter
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
 
-class TestMeta(object):
+class TestSorter(object):
 
     def setUp(self):
         TEST_SITE.make()
@@ -136,7 +136,7 @@ class TestMeta(object):
                                             File(p).parent.name]))]
         assert pages == expected_sorted
 
-    def test_walk_resources_sorted_default_is_processable(self):
+    def test_walk_resources_sorted_no_default_is_processable(self):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
@@ -153,7 +153,7 @@ class TestMeta(object):
         SorterPlugin(s).begin_site()
 
         assert hasattr(s.content, 'walk_resources_sorted_by_kind2')
-        expected = ["about.html", "merry-christmas.html"]
+        expected = ["404.html", "about.html", "merry-christmas.html"]
 
         pages = [page.name for page in s.content.walk_resources_sorted_by_kind2()]
 

@@ -21,18 +21,21 @@ def filter_method(item, settings=None):
     Returns true if all the filters in the
     given settings evaluate to True.
     """
+    all_match = True
+    default_filters = {}
+    filters = {}
+    if hasattr(settings, 'filters'):
+        filters.update(default_filters)
+        filters.update(settings.filters.__dict__)
 
-    all_match = item.is_processable
-    if all_match and settings and hasattr(settings, 'filters'):
-        filters = settings.filters
-        for field, value in filters.__dict__.items():
-            try:
-                res = attrgetter(field)(item)
-            except:
-                res = None
-            if res != value:
-                all_match = False
-                break
+    for field, value in filters.items():
+        try:
+            res = attrgetter(field)(item)
+        except:
+            res = None
+        if res != value:
+            all_match = False
+            break
     return all_match
 
 def sort_method(node, settings=None):
