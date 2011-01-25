@@ -383,42 +383,53 @@ class Jinja2Template(Template):
 
     @property
     def patterns(self):
-       """
-       The pattern for matching selected template statements.
-       """
-       return {
+        """
+        The pattern for matching selected template statements.
+        """
+        return {
            "block_open": '\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
            "block_close": '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
            "include": '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
            "extends": '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
-       }
+        }
 
     def get_include_statement(self, path_to_include):
-       """
-       Returns an include statement for the current template,
-       given the path to include.
-       """
-       return '{%% include \'%s\' %%}' % path_to_include
+        """
+        Returns an include statement for the current template,
+        given the path to include.
+        """
+        return '{%% include \'%s\' %%}' % path_to_include
 
     def get_extends_statement(self, path_to_extend):
-       """
-       Returns an extends statement for the current template,
-       given the path to extend.
-       """
-       return '{%% extends \'%s\' %%}' % path_to_extend
+        """
+        Returns an extends statement for the current template,
+        given the path to extend.
+        """
+        return '{%% extends \'%s\' %%}' % path_to_extend
 
     def get_open_tag(self, tag, params):
-       """
-       Returns an open tag statement.
-       """
-       return '{%% %s %s -%%}' % (tag, params)
+        """
+        Returns an open tag statement.
+        """
+        return '{%% %s %s -%%}' % (tag, params)
 
     def get_close_tag(self, tag, params):
-       """
-       Returns an open tag statement.
-       """
-       return '{%%- end%s %%}' % tag
+        """
+        Returns an open tag statement.
+        """
+        return '{%%- end%s %%}' % tag
 
+    def get_content_url_statement(self, url):
+        """
+        Returns the content url statement.
+        """
+        return '{{ content_url(\'%s\') }}' % url
+
+    def get_media_url_statement(self, url):
+        """
+        Returns the media url statement.
+        """
+        return '{{ media_url(\'%s\') }}' % url
 
     def render(self, text, context):
         """

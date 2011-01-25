@@ -128,6 +128,20 @@ class Template(object):
         """
         return '{%% end%s %%}' % tag
 
+    @abc.abstractmethod
+    def get_content_url_statement(self, url):
+        """
+        Returns the content url statement.
+        """
+        return '/' + url
+
+    @abc.abstractmethod
+    def get_media_url_statement(self, url):
+        """
+        Returns the media url statement.
+        """
+        return '/media/' + url
+
     @staticmethod
     def find_template(site):
         """

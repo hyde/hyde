@@ -25,7 +25,7 @@ class TestSyntext(object):
 
 
 
-    def test_mark(self):
+    def test_syntext(self):
         text = u"""
 ~~~~~~~~css~~~~~~~
 .body{

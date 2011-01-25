@@ -136,6 +136,55 @@ class TestSorter(object):
                                             File(p).parent.name]))]
         assert pages == expected_sorted
 
+    # def test_walk_resources_sorted_with_grouping_one_level(self):
+    #         s = Site(TEST_SITE)
+    #         cfg = """
+    #         plugins:
+    #             - hyde.ext.sorter.SorterPlugin
+    #         sorter:
+    #             multi:
+    #                 groups: sections.yaml
+    #                 attr:
+    #                     - source_file.kind
+    #                     - node.name
+    # 
+    #         """
+    #         sections = """
+    #          group_name: section
+    #          groups:
+    #              -
+    #                  name: support
+    #                  description: All site support pages
+    #              -
+    #                  name: media
+    #                  description: Media files
+    #         """
+    #         s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+    #         s.load()
+    #         SorterPlugin(s).begin_site()
+    # 
+    #         assert hasattr(s.content, 'walk_resources_sorted_by_multi')
+    #         expected = ["content/404.html",
+    #                     "content/about.html",
+    #                     "content/apple-touch-icon.png",
+    #                     "content/blog/2010/december/merry-christmas.html",
+    #                     "content/crossdomain.xml",
+    #                     "content/favicon.ico",
+    #                     "content/robots.txt",
+    #                     "content/site.css"
+    #                     ]
+    # 
+    #         pages = [page.name for page in s.content.walk_resources_sorted_by_multi()]
+    # 
+    #         expected_sorted = [File(page).name
+    #                                 for page in
+    #                                     sorted(expected,
+    #                                         key=lambda p: tuple(
+    #                                             [File(p).kind,
+    #                                             File(p).parent.name]))]
+    #         assert pages == expected_sorted
+
+
     def test_walk_resources_sorted_no_default_is_processable(self):
         s = Site(TEST_SITE)
         cfg = """
