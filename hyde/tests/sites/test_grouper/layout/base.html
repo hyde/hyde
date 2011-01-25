@@ -1,0 +1,57 @@
+{% extends "root.html" %}
+{% block all %}
+<!doctype html>
+<html lang="en">
+<head>
+  {% block starthead %}{% endblock starthead %}
+  <meta charset="{{resource.meta.charset|default('utf-8')}}">
+  <meta http-equiv="X-UA-Compatible" content="{{resource.meta.compatibility|default('IE=edge,chrome=1')}}">
+
+  <title>{% block title %}{{resource.meta.title}}{% endblock %}</title>
+  <meta name="description" content="{{resource.meta.description}}">
+  <meta name="author" content="{{resource.meta.author}}">
+
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="{{resource.meta.viewport|default('width=device-width, initial-scale=1.0')}}">
+
+  {% block favicons %}
+  <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="{{ media_url('/favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ media_url('/apple-touch-icon.png') }}">
+  {% endblock favicons %}
+
+  {% block css %}
+  <link rel="stylesheet" href="{{ media_url('css/site.css') }}">
+  {% endblock css %}
+  {% block endhead %}{% endblock endhead %}
+</head>
+<body id="{{resource.id if resource.id else resource.name_without_extension}}">
+  {% block content %}
+  <div id="container">
+    {% block container %}
+    <header>
+    {% block header %}{% endblock header %}
+    </header>
+    <div id="main" role="main">
+        {% block main %}{% endblock main %}
+    </div>
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+    {% endblock container%}
+  </div> <!--! end of #container -->
+  {% endblock content%}
+
+  {% block js %}
+  <!-- Javascript at the bottom for fast page loading -->
+  {% block jquery %}
+  <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+  {% endblock jquery %}
+
+  {% block scripts %}{% endblock scripts %}
+  {%endblock js %}
+
+</body>
+</html>
+{% endblock all %}

@@ -1,0 +1,77 @@
+===
+title: Overview
+subtitle: hyde in a nutshell
+created: 2011-01-25 21:31:03
+===
+
+§§ blurb
+Hyde is a static website generator written in python. While Hyde took
+life as the [awesome Jekyll][Jekyll]'s evil twin, it has since been
+completely consumed by [the dark side][python] to have an identity of its own.
+
+Hyde desires to fulfill the lofty goal of removing the
+[pain points][static cons] involved in creating and maintaining
+[static websites][static pros].
+§§ .
+
+## Spotlight
+
+*   Support for powerful template languages like [Jinja2][] complemented
+    with custom tags and filters.
+*   [Rich object model][hyde objects] and
+    [overridable hierarchical metadata][metadata] thats available for use in
+    templates.
+*   Configurable [sorting, filtering and grouping][sorter] support.
+*   Extensible [plugin architecture][plugins] with Text preprocessing and html
+    postprocessing support for complex content transformations.
+*   Instant preview using built-in [webserver][server] that regenerates content
+    if needed.
+
+## Source
+
+Hyde is [socially coded on github][hydepy].
+
+## Install
+
+There will be a package soon on pypi, but this works for now:
+
+~~~sh~~~
+
+pip install -e https://github.com/hydepy/hyde#egg=hyde
+
+~~~~~~~~
+
+You can find more detailed documentation in the [installation section][install].
+
+## Project Roadmap
+
+1.  Support for Django and Mako
+        *   Template implementation
+        *   Default layouts
+2.  Support for other markup languages
+        *   restructured text
+        *   textile
+        *   asciidoc
+3.  Text Compression
+        *   Slimmer
+        *   pre-gzipping
+        *   uglifyjs
+4.  Image Manipulation
+        *   Optipng Compression
+        *   Thumbnail generation
+        *   Photo Data Extraction
+5.  Feed / Listing generation
+6.  Translation
+
+[Jekyll]: http://jekyllrb.com
+[Jinja2]: http://jinja.pocoo.org/
+[hyde objects]: [[/template/variables]]
+[hydepy]: https://github.com/hydepy/hyde
+[install]: [[/installation]]
+[metadata]: [[/plugins/metadata]]
+[plugins]: [[/plugins]]
+[python]: http://python.org
+[server]: [[/server]]
+[sorter]: [[plugins/sorter]]
+[static cons]: [[/static/#cons]]
+[static pros]: [[/static/#pros]]

@@ -1,0 +1,29 @@
+mode: development
+media_root:: media
+media_url: /media
+base_url: /
+template: hyde.ext.jinja2
+plugins:
+    - hyde.ext.plugins.meta.MetaPlugin
+    - hyde.ext.plugins.auto_extend.AutoExtendPlugin
+    - hyde.ext.plugins.less.LessCSSPlugin
+    - hyde.ext.plugins.blockdown.BlockdownPlugin
+    - hyde.ext.plugins.sorter.SorterPlugin
+    - hyde.ext.plugins.markings.MarkingsPlugin
+    - hyde.ext.plugins.markings.ReferencePlugin
+    - hyde.ext.plugins.syntext.SyntextPlugin
+context:
+meta:
+    nodemeta: meta.yaml
+    title: Hyde - A Python Static Website Generator
+    keywords: >
+                hyde,python,django,jinja,static website,static site,
+                generator,html generator
+    author: Lakshmi Vyasarajan
+less:
+    app: ~/local/bin/lessc
+markdown:
+    extensions:
+        - def_list
+        - headerid
+        - tables

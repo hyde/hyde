@@ -1,0 +1,50 @@
+- overview
+- getting started
+    - installation
+    - command line
+    - your first hyde website
+    - configuration
+        - metadata
+        - sorting
+        - texty
+- templating guide
+    - jinja2
+    - context
+        - site
+        - node
+        - resource
+        - custom context variables
+    - markdown
+    - typogrify
+    - include text
+    - mark and refer
+    - accessing arbitrary nodes and resources by path
+- snippets
+    - breadcrumbs
+    - table of contents
+    - excerpts
+    - latest excerpt
+    - demo pages (example page + documentation)
+- extending hyde
+    - contributing
+        - unit tests
+        - git workflow
+        - pull requests
+    - New Template Languages
+        - The template interface
+        - features to support
+    - Plugins
+        - What can be done
+        - The plugin interface
+        - Texty abstract plugin
+        - Error handling
+    - Layouts
+        - Custom Layouts
+        - New Themes for existing layouts
+        - Apps
+- Switching
+    - From hyde 0.5
+    - From Jekyll
+    - From wordpress or similar
+
+    
