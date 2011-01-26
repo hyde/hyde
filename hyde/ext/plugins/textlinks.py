@@ -29,7 +29,7 @@ class TextlinksPlugin(Plugin):
         with
         {{ media_url('/abc/def') }} or equivalent.
         """
-        content_link = re.compile('\[\[([^\]]*)\]\]', re.UNICODE|re.MULTILINE)
+        content_link = re.compile('\[\[([^\]^!][^\]]*)\]\]', re.UNICODE|re.MULTILINE)
         media_link = re.compile('\[\[\!\!([^\]]*)\]\]', re.UNICODE|re.MULTILINE)
         def replace_content(match):
             return self.template.get_content_url_statement(match.groups(1)[0])

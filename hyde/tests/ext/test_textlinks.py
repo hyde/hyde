@@ -33,18 +33,20 @@ class TestTextlinks(object):
         }
         text = u"""
 {%% markdown %%}
+[[!! img/hyde-logo.png ]]
 *   [Rich object model][hyde objects] and
-    [overridable hierarchical metadata]([[%(plugins)s]]) thats available for use in
+    [overridable hierarchical metadata]([[ %(plugins)s ]]) thats available for use in
     templates.
 *   Configurable [sorting][], filtering and grouping support.
 
-[hyde objects]: [[%(objects)s]]
+[hyde objects]: [[ %(objects)s ]]
 [sorting]: [[%(sorter)s]]
 {%% endmarkdown %%}
 """
         site = Site(TEST_SITE)
         site.config.plugins = ['hyde.ext.plugins.textlinks.TextlinksPlugin']
         site.config.base_url = 'http://example.com/'
+        site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))
         tlink.write(text % d)
         gen = Generator(site)
@@ -55,3 +57,4 @@ class TestTextlinks(object):
         assert html
         for name, path in d.items():
             assert site.config.base_url + path in html
+        assert '/media/img/hyde-logo.png' in html

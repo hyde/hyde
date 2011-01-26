@@ -157,7 +157,6 @@ main:
         gen.generate_all()
         target = File(site.config.deploy_root_path.child(resource.name))
         out = target.read_all()
-        print out
         assert "abc = def" in out
         assert "home" in out
         assert "articles" in out
