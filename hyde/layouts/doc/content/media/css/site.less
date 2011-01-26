@@ -1,0 +1,54 @@
+@import 'inc/reset.css';
+@import 'inc/measures';
+@import 'inc/colors';
+@import 'inc/mixins';
+@import 'inc/base.css';
+@import 'inc/common';
+@import 'inc/layout';
+@import 'inc/text';
+@import 'inc/controls';
+
+h2 {
+    font-size: @gutter * 3;
+    color: @shade;
+    line-height: @gutter * 4;
+}
+
+header.banner {
+    width: 100%;
+    height: @column * 3;
+    position: relative;
+    img{
+        display:block;
+        float: left;
+    }
+    h1 {
+        .heading;
+        float: left;
+        margin-left: @column;
+        font-size: @column * 2;
+        line-height: @column * 3;
+        margin-bottom: 0;
+    }
+    h3 {
+        color: @shade;
+        position: absolute;
+        bottom: @gutter + 2;
+        left: @column * 6 - 4;
+        margin:0;
+    }
+    margin-bottom: @column;
+}
+
+article {
+    padding: @column;
+    .boxshadow(0, 1px, 3px, @qdark);
+}
+
+.highlight pre{
+    font-size: @gutter;
+    font-family: menlo, monaco, courier;
+    .boxshadow(0, 1px, 3px, @qdark);
+    padding: @gutter;
+}
+

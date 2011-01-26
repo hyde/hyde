@@ -5,6 +5,7 @@ Jinja template utilties
 
 from hyde.fs import File, Folder
 from hyde.template import HtmlWrap, Template
+from hyde.site import Resource
 from hyde.util import getLoggerWithNullHandler, getLoggerWithConsoleHandler
 
 from jinja2 import contextfunction, Environment, FileSystemLoader
@@ -323,10 +324,10 @@ class Jinja2Template(Template):
         """
         self.site = site
         self.engine = engine
-        preprocessor = (engine.preprocessor
+        self.preprocessor = (engine.preprocessor
                             if hasattr(engine, 'preprocessor') else None)
 
-        self.loader = HydeLoader(self.sitepath, site, preprocessor)
+        self.loader = HydeLoader(self.sitepath, site, self.preprocessor)
         self.env = Environment(loader=self.loader,
                                 undefined=SilentUndefined,
                                 trim_blocks=True,
@@ -359,19 +360,19 @@ class Jinja2Template(Template):
             jinja2_filters.register(self.env)
 
 
-    def get_dependencies(self, text):
+    def get_dependencies(self, path):
         """
         Finds dependencies hierarchically based on the included
         files.
         """
+        text = self.env.loader.get_source(self.env, path)[0]
         from jinja2.meta import find_referenced_templates
         ast = self.env.parse(text)
         tpls = find_referenced_templates(ast)
         deps = []
         for dep in tpls:
             deps.append(dep)
-            source = self.env.loader.get_source(self.env, dep)[0]
-            deps.extend(self.get_dependencies(source))
+            deps.extend(self.get_dependencies(dep))
         return list(set(deps))
 
     @property
@@ -411,13 +412,13 @@ class Jinja2Template(Template):
         """
         Returns an open tag statement.
         """
-        return '{%% %s %s -%%}' % (tag, params)
+        return '{%% %s %s %%}' % (tag, params)
 
     def get_close_tag(self, tag, params):
         """
         Returns an open tag statement.
         """
-        return '{%%- end%s %%}' % tag
+        return '{%% end%s %%}' % tag
 
     def get_content_url_statement(self, url):
         """

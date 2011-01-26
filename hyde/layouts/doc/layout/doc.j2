@@ -1,0 +1,11 @@
+{% extends "root.j2" %}
+{% block main -%}
+<article>
+{% filter markdown|typogrify -%}
+{% block doc -%}
+{%- endblock %}
+</article>
+<aside>
+</aside>
+{%- endfilter %}
+{%- endblock %}

@@ -1,0 +1,156 @@
+a img {
+    border: none;
+}
+
+.clear {
+    clear: both;
+}
+
+.clickable {
+    cursor: pointer;
+}    
+
+.nobullets{
+    list-style-type:none;
+}
+
+.boxshadow(@bsLeft, @bsTop, @bsBlur, @bsColor){
+    -moz-box-shadow:@bsLeft @bsTop @bsBlur @bsColor;
+    -webkit-box-shadow:@bsLeft @bsTop @bsBlur @bsColor;
+    -o-box-shadow:@bsLeft @bsTop @bsBlur @bsColor;
+    box-shadow:@bsLeft @bsTop @bsBlur @bsColor;
+}
+
+.radius(@rad){
+    -webkit-border-radius: @rad;
+    -moz-border-radius: @rad;
+    border-radius: @rad;
+}
+
+.radiusTop(@rad:10px)
+{
+    -webkit-border-top-left-radius: @rad;
+    -webkit-border-top-right-radius: @rad;
+    -moz-border-radius-topleft: @rad;
+    -moz-border-radius-topright: @rad;
+    border-top-left-radius: @rad;
+    border-top-right-radius: @rad;
+}
+ 
+.radiusBottom(@rad:10px)
+{
+    -webkit-border-bottom-left-radius: @rad;
+    -webkit-border-bottom-right-radius: @rad;
+    -moz-border-radius-bottomleft: @rad;
+    -moz-border-radius-bottomright: @rad;
+    border-bottom-left-radius: @rad;
+    border-bottom-right-radius: @rad;
+}
+ 
+.radiusLeft(@rad:10px)
+{
+    -webkit-border-top-left-radius: @rad;
+    -webkit-border-bottom-left-radius: @rad;
+    -moz-border-radius-topleft: @rad;
+    -moz-border-radius-bottomleft: @rad;
+    border-top-left-radius: @rad;
+    border-bottom-left-radius: @rad;
+}
+ 
+.radiusRight(@rad:10px)
+{
+    -webkit-border-top-right-radius: @rad;
+    -webkit-border-bottom-right-radius: @rad;
+    -moz-border-radius-topright: @rad;
+    -moz-border-radius-bottomright: @rad;
+    border-top-right-radius: @rad;
+    border-bottom-right-radius: @rad;
+}
+ 
+.radiusTopLeft(@rad:10px)
+{
+    -webkit-border-top-left-radius: @rad;
+    -moz-border-radius-topleft: @rad;
+    border-top-left-radius: @rad;
+}
+ 
+.radiusTopRight(@rad:10px)
+{
+    -webkit-border-top-right-radius: @rad;
+    -moz-border-radius-topright: @rad;
+    border-top-right-radius: @rad;
+}
+ 
+.radiusBottomLeft(@rad:10px)
+{
+    -webkit-border-bottom-left-radius: @rad;
+    -moz-border-radius-bottomleft: @rad;
+    border-bottom-left-radius: @rad;
+}
+.radiusBottomRight(@rad:10px)
+{
+    -webkit-border-bottom-right-radius: @rad;
+    -moz-border-radius-bottomright: @rad;
+    border-bottom-right-radius: @rad;
+}
+
+.opacity(@op:100)
+{
+    filter:alpha(opacity=@op);
+    -moz-opacity:@op/100;
+    -khtml-opacity:@op/100;
+    opacity:@op/100;
+}
+ 
+.linearGradient(@from:#000, @to:#EEE)
+{
+    background: @from;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(@from), to(@to));
+    background-image: -moz-linear-gradient(top, @from, @to);
+    filter: formatstring("progid:DXImageTransform.Microsoft.gradient(startColorstr='{0}', endColorstr='{1}')", @from, @to); /* IE6,IE7 */
+    -ms-filter: formatstring("\"progid:DXImageTransform.Microsoft.gradient(startColorStr='{0}', EndColorStr='{1}')\"", @from, @to); /* IE8 */
+}
+ 
+.transition(@range: all, @time: 1s, @ease: ease-in-out)
+{
+    -moz-transition: @range @time @ease;
+    -webkit-transition: @range @time @ease;
+    -o-transition: @range @time @ease;
+    transition: @range @time @ease;
+}
+ 
+.skew(@angle_x:35, @angle_y:0)
+{
+    -webkit-transform: skew(formatstring("{0}deg", @angle_x), formatstring("{0}deg", @angle_y));
+    -moz-transform: skew(formatstring("{0}deg", @angle_x), formatstring("{0}deg", @angle_y));
+    -o-transform: skew(formatstring("{0}deg", @angle_x), formatstring("{0}deg", @angle_y));
+    -ms-transform: skew(formatstring("{0}deg", @angle_x), formatstring("{0}deg", @angle_y));
+    transform: skew(formatstring("{0}deg", @angle_x), formatstring("{0}deg", @angle_y));
+}
+ 
+.scale(@scale_x: 1)
+{
+    -webkit-transform: scale(@scale_x);
+    -moz-transform: scale(@scale_x);
+    -o-transform: scale(@scale_x);
+    -ms-transform: scale(@scale_x);
+    transform: scale(@scale_x);
+}
+ 
+.rotate(@angle:35)
+{
+    -webkit-transform: rotate(formatstring("{0}deg", @deg));
+    -moz-transform: rotate(formatstring("{0}deg", @deg));
+    -o-transform: rotate(formatstring("{0}deg", @deg));
+    -ms-transform: rotate(formatstring("{0}deg", @deg));
+    transform: rotate(formatstring("{0}deg", @deg));
+}
+ 
+.translate(@move_x: 10px, @move_y: 10px)
+{
+    -webkit-transform: translate(@move_x, @move_y);
+    -moz-transform: translate(@move_x, @move_y);
+    -o-transform: translate(@move_x, @move_y);
+    -ms-transform:translate(@move_x, @move_y);
+    transform: translate(@move_x, @move_y);
+}

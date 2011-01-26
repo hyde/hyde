@@ -4,7 +4,6 @@ Autoextend css plugin
 """
 
 from hyde.plugin import Plugin
-
 import re
 
 class AutoExtendPlugin(Plugin):
@@ -15,9 +14,6 @@ class AutoExtendPlugin(Plugin):
     def __init__(self, site):
         super(AutoExtendPlugin, self).__init__(site)
 
-    def template_loaded(self, template):
-        self.template = template
-
     def begin_text_resource(self, resource, text):
         """
         If the meta data for the resource contains a layout attribute,
@@ -25,16 +21,29 @@ class AutoExtendPlugin(Plugin):
         an extends statement to the top of the file.
         """
         layout = None
+        block = None
         try:
             layout = resource.meta.extends
         except AttributeError:
             pass
+
+        try:
+            block = resource.meta.default_block
+        except AttributeError:
+            pass
+
         if layout:
             extends_pattern = self.template.patterns['extends']
 
             if not re.search(extends_pattern, text):
                 extended_text = self.template.get_extends_statement(layout)
                 extended_text += '\n'
-                extended_text += text
-                text = extended_text
+                if block:
+                    extended_text += ('%s\n%s\n%s' %
+                                        (self.t_block_open_tag(block),
+                                            text,
+                                            self.t_block_close_tag(block)))
+                else:
+                    extended_text += text
+                return extended_text
         return text

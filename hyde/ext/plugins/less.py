@@ -19,9 +19,6 @@ class LessCSSPlugin(Plugin):
     def __init__(self, site):
         super(LessCSSPlugin, self).__init__(site)
 
-    def template_loaded(self, template):
-        self.template = template
-
     def begin_text_resource(self, resource, text):
         """
         Replace @import statements with {% include %} statements.

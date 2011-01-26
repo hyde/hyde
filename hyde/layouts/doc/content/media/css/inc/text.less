@@ -1,0 +1,33 @@
+@heading-font: "anivers-1","anivers-2", Helvetica, Arial, sans-serif;
+@subheading-font: "anivers-1","anivers-2", Helvetica, Arial, sans-serif;
+@text-font:   "ff-meta-web-pro-1","ff-meta-web-pro-2", Helvetica, Arial, sans-serif;
+@caps-font: "anivers-1","anivers-2", Helvetica, Arial, sans-serif;
+
+.heading{
+    color: @clear - 40;
+    text-shadow: -1px -1px 0px @clear - 90, 1px 1px 0px @clear + 90;
+}
+
+body{
+    font-size: @gutter + 8;
+    line-height: @gutter * 2;
+    font-weight: normal;
+}
+
+.amp {
+    font-family: Baskerville, Palatino, "Book Antiqua", serif;
+    line-height: 75%;
+}
+
+.caps, .sc {
+    font-family: @caps-font;
+}
+
+/* These selection declarations have to be separate.
+   No text-shadow: twitter.com/miketaylr/status/12228805301
+   Also: hot pink. */
+::-moz-selection{ background: @dark1; color: @clear; text-shadow: none; }
+::selection { background: @dark1; color: @clear; text-shadow: none; }
+
+/*  j.mp/webkit-tap-highlight-color */
+a:link { -webkit-tap-highlight-color: @dark1; }

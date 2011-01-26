@@ -31,14 +31,14 @@ class MarkingsPlugin(TextyPlugin):
         """
         The default pattern for mark close text.
         """
-        return u'^§§+\s*([A-Za-z0-9_\-]*)\s*\.\s*$'
+        return u'^§§+\s*/([A-Za-z0-9_\-]*)\s*$'
 
     def text_to_tag(self, match, start=True):
         """
         Replace open pattern (default:§§ CSS)
         with
         {% mark CSS %} or equivalent and
-        Replace close pattern (default: §§ CSS.)
+        Replace close pattern (default: §§ /CSS)
         with
         {% endmark %} or equivalent
         """

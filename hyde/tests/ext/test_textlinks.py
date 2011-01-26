@@ -33,7 +33,7 @@ class TestTextlinks(object):
         }
         text = u"""
 {%% markdown %%}
-[[!! img/hyde-logo.png ]]
+[[!!img/hyde-logo.png]]
 *   [Rich object model][hyde objects] and
     [overridable hierarchical metadata]([[ %(plugins)s ]]) thats available for use in
     templates.

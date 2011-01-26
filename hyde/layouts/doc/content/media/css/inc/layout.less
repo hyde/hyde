@@ -1,0 +1,34 @@
+body{
+    min-height: 1200px;
+}
+
+#container{
+    width: @totalwidth;
+    margin: 0 auto @gutter * 8;
+    background-color: @clear;
+}
+
+#main{
+    margin: @gutter;
+}
+
+article{
+    width: @totalwidth / 1.618;
+}
+
+h1, h2, h3, h4, h5, h6, p{
+    margin-bottom: @gutter * 2;
+}
+
+ul, ol{
+    padding-bottom: @gutter;
+}
+
+li {
+    margin-bottom: @gutter;
+    margin-left: @gutter * 2;
+    ul, ol {
+        padding-top: @gutter;
+        padding-bottom:0;
+    }
+}

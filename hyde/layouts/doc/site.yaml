@@ -2,6 +2,7 @@ mode: development
 media_root:: media
 media_url: /media
 base_url: /
+deploy_root: ../../../docs
 template: hyde.ext.jinja2
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
@@ -12,9 +13,18 @@ plugins:
     - hyde.ext.plugins.markings.MarkingsPlugin
     - hyde.ext.plugins.markings.ReferencePlugin
     - hyde.ext.plugins.syntext.SyntextPlugin
+    - hyde.ext.plugins.textlinks.TextlinksPlugin
 context:
 meta:
+    extends: doc.j2
+    default_block: doc
     nodemeta: meta.yaml
+    charset: utf-8
+    compatibility: 'IE=edge,chrome=1'
+    viewport: 'width=device-width, initial-scale=1.0'
+    description: >
+        Awesome documentation for hyde -
+        a python static website generator
     title: Hyde - A Python Static Website Generator
     keywords: >
                 hyde,python,django,jinja,static website,static site,

@@ -77,31 +77,6 @@ def test_render():
     assert actual("div.article p.meta").length == 20
     assert actual("div.article div.text").length == 20
 
-def test_depends():
-    t = Jinja2Template(JINJA2.path)
-    t.configure(None)
-    source = File(JINJA2.child('index.html')).read_all()
-    deps = list(t.get_dependencies(source))
-
-    assert len(deps) == 2
-
-    assert 'helpers.html' in deps
-    assert 'layout.html' in deps
-
-def test_depends_multi_level():
-    t = Jinja2Template(JINJA2.path)
-    t.configure(None)
-
-    source = "{% extends 'index.html' %}"
-    deps = list(t.get_dependencies(source))
-
-    assert len(deps) == 3
-
-    assert 'helpers.html' in deps
-    assert 'layout.html' in deps
-    assert 'index.html' in deps
-
-
 def test_typogrify():
     source = """
     {%filter typogrify%}
@@ -169,6 +144,32 @@ class TestJinjaTemplate(object):
 
     def tearDown(self):
         TEST_SITE.delete()
+
+    def test_depends(self):
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        deps = list(t.get_dependencies('index.html'))
+        assert len(deps) == 2
+
+        assert 'helpers.html' in deps
+        assert 'layout.html' in deps
+
+    def test_depends_multi_level(self):
+        site = Site(TEST_SITE)
+        JINJA2.copy_contents_to(site.content.source)
+        inc = File(TEST_SITE.child('content/inc.md'))
+        inc.write("{% extends 'index.html' %}")
+        site.load()
+        gen = Generator(site)
+        gen.load_template_if_needed()
+        t = gen.template
+        deps = list(t.get_dependencies('inc.md'))
+
+        assert len(deps) == 3
+
+        assert 'helpers.html' in deps
+        assert 'layout.html' in deps
+        assert 'index.html' in deps
 
     def test_can_include_templates_with_processing(self):
         text = """

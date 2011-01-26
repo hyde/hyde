@@ -13,13 +13,6 @@ class TextlinksPlugin(Plugin):
     def __init__(self, site):
         super(TextlinksPlugin, self).__init__(site)
 
-    def template_loaded(self, template):
-        """
-        Handles the template loaded event to keep
-        a reference to the template object.
-        """
-        self.template = template
-
     def begin_text_resource(self, resource, text):
         """
         Replace content url pattern [[/abc/def]])

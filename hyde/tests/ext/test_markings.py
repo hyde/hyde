@@ -15,6 +15,7 @@ TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 def assert_valid_conversion(html):
     assert html
     q = PyQuery(html)
+    print html
     assert "is_processable" not in html
     assert q("h1")
     assert "This is a" in q("h1").text()
@@ -22,6 +23,8 @@ def assert_valid_conversion(html):
     assert q(".amp").length == 1
     assert "mark" not in html
     assert "reference" not in html
+    assert '.' not in q.text()
+    assert '/' not in q.text()
 
 class TestMarkings(object):
 
@@ -44,11 +47,11 @@ is_processable: False
 §§ heading
 This is a heading
 =================
-§§ heading.
+§§ /heading
 
 §§ content
-Hyde & Jinja.
-§§ .
+Hyde & Jinja
+§§ /
 
 {% endfilter %}
 """
@@ -83,11 +86,11 @@ is_processable: False
 §§ heading
 This is a heading
 =================
-§§ heading.
+§§ /heading
 
 §§ content
-Hyde & Jinja.
-§§ .
+Hyde & Jinja
+§§ /
 
 {% endfilter %}
 """

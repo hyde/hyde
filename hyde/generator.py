@@ -149,19 +149,24 @@ class Generator(object):
         """
         if not self.generated_once:
             return True
+        logger.debug("Checking for changes in %s" % resource)
         self.load_site_if_needed()
         self.load_template_if_needed()
         target = File(self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path))
         if not target.exists or target.older_than(resource.source_file):
+            logger.debug("Found changes in %s" % resource)
             return True
         if resource.source_file.is_binary or not resource.uses_template:
+            logger.debug("No Changes found in %s" % resource)
             return False
-        deps = self.template.get_dependencies(resource.source_file.read_all())
+        deps = self.template.get_dependencies(resource.relative_path)
         if not deps or None in deps:
+            logger.debug("No changes found in %s" % resource)
             return False
         content = self.site.content.source_folder
         layout = Folder(self.site.sitepath).child_folder('layout')
+        logger.debug("Checking for changes in dependents:%s" % deps)
         for dep in deps:
             source = File(content.child(dep))
             if not source.exists:
@@ -170,7 +175,7 @@ class Generator(object):
                 return True
             if target.older_than(source):
                 return True
-
+        logger.debug("No changes found in %s" % resource)
         return False
 
     def generate_all(self):

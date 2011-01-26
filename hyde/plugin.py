@@ -6,6 +6,7 @@ import abc
 from hyde import loader
 
 from hyde.util import getLoggerWithNullHandler
+from functools import partial
 
 class Plugin(object):
     """
@@ -22,8 +23,28 @@ class Plugin(object):
     def template_loaded(self, template):
         """
         Called when the template for the site has been identified.
+
+        Handles the template loaded event to keep
+        a reference to the template object.
         """
-        pass
+        self.template = template
+
+    def __getattribute__(self, name):
+        """
+        Syntactic sugar for template methods
+        """
+        if name.startswith('t_') and self.template:
+            attr = name[2:]
+            if hasattr(self.template, attr):
+                return self.template[attr]
+            elif attr.endswith('_close_tag'):
+                tag = attr.replace('_close_tag', '')
+                return partial(self.template.get_close_tag, tag)
+            elif attr.endswith('_open_tag'):
+                tag = attr.replace('_open_tag', '')
+                return partial(self.template.get_open_tag, tag)
+
+        return super(Plugin, self).__getattribute__(name)
 
     def begin_generation(self):
         """
@@ -124,6 +145,5 @@ class Plugin(object):
         Loads plugins based on the configuration. Assigns the plugins to
         'site.plugins'
         """
-
         site.plugins = [loader.load_python_object(name)(site)
                             for name in site.config.plugins]

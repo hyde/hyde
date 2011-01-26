@@ -64,13 +64,6 @@ class TextyPlugin(Plugin):
         """
         return None
 
-    def template_loaded(self, template):
-        """
-        Handles the template loaded event to keep
-        a reference to the template object.
-        """
-        self.template = template
-
     @abc.abstractmethod
     def text_to_tag(self, match, start=True):
         """
