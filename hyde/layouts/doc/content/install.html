@@ -22,7 +22,8 @@ corresponding [plugin documentation][plugins].
 
 While your mileage may vary, I consider the following to be essential for
 generating a static website with hyde. These are a part of the requirements
-file and the above command will download and install them as part of hyde.
+file and the above command will download and install most of them as part 
+of hyde.
 
 It is also recommended that you use [virtualenv][] to separate the hyde
 environment from other python projects. Note that installing hyde using
@@ -40,7 +41,9 @@ control over the packages, you can install these individually:
 5.  `Pyyaml`: Much of hyde's [configuration] is done using yaml.
 6.  `Typogrify`: Typogrify automatically fixes and enhances the typographical
     accuracy of your content. While this is not a technical requirement for
-    hyde, it is absolutely essential to create good looking content.
+    hyde, it is absolutely essential to create good looking content. Note that
+    this is not installed as part of the above package and must be installed
+    separately. This will be rectified in the future.
 ~~~sh~~~
 pip install argparse
 pip install commando

@@ -14,6 +14,7 @@ setup(name='hyde',
           'jinja2',
           'pyYAML',
           'markdown',
+          'smartypants',
           'pygments'
       ),
       scripts=['main.py'],
