@@ -126,13 +126,6 @@ class Plugin(object):
         """
         pass
 
-    def site_complete(self):
-        """
-        Called when the generation process is complete. This method is called
-        only when the entire site is generated.
-        """
-        pass
-
     def generation_complete(self):
         """
         Called when generation is completed.

@@ -88,6 +88,7 @@ class Resource(Processable):
         self.site.content.resource_deploy_path_changed(self)
 
     relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
+    url = relative_deploy_path
 
 class Node(Processable):
     """
