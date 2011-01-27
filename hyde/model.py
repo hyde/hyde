@@ -3,7 +3,11 @@
 Contains data structures and utilities for hyde.
 """
 from hyde.fs import File, Folder
+import codecs
 import yaml
+
+from hyde.util import getLoggerWithNullHandler
+logger = getLoggerWithNullHandler('hyde.engine')
 
 class Expando(object):
     """
@@ -69,7 +73,7 @@ class Config(Expando):
     Represents the hyde configuration file
     """
 
-    def __init__(self, sitepath, config_dict=None):
+    def __init__(self, sitepath, config_file=None, config_dict=None):
         default_config = dict(
             content_root='content',
             deploy_root='deploy',
@@ -81,10 +85,31 @@ class Config(Expando):
             plugins = []
         )
         conf = dict(**default_config)
+        self.sitepath = Folder(sitepath)
+        conf.update(self.read_config(config_file))
         if config_dict:
             conf.update(config_dict)
         super(Config, self).__init__(conf)
-        self.sitepath = Folder(sitepath)
+
+    def read_config(self, config_file):
+        """
+        Reads the configuration file and updates this
+        object while allowing for inherited configurations.
+        """
+        conf_file = self.sitepath.child(
+                            config_file if
+                                    config_file else 'site.yaml')
+        conf = {}
+        if File(conf_file).exists:
+            logger.info("Reading site configuration from [%s]", conf_file)
+            with codecs.open(conf_file, 'r', 'utf-8') as stream:
+                conf = yaml.load(stream)
+                if 'extends' in conf:
+                    parent = self.read_config(conf['extends'])
+                    parent.update(conf)
+                    conf = parent
+        return conf
+
 
     @property
     def deploy_root_path(self):

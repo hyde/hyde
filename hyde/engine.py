@@ -116,12 +116,7 @@ class Engine(Application):
         Creates a site object from the given sitepath and the config file.
         """
         sitepath = Folder(Folder(sitepath).fully_expanded_path)
-        config_file = sitepath.child(config)
-        logger.info("Reading site configuration from [%s]", config_file)
-        conf = {}
-        with codecs.open(config_file, 'r', 'utf-8') as stream:
-            conf = yaml.load(stream)
-        config = Config(sitepath, conf)
+        config = Config(sitepath, config_file=config)
         if deploy:
             config.deploy_root = deploy
         return Site(sitepath, config)

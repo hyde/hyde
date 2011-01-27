@@ -108,7 +108,7 @@ def test_markdown_with_extensions():
     """
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
-    c = Config(JINJA2.path, dict(markdown=dict(extensions=['headerid'])))
+    c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()

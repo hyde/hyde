@@ -43,7 +43,8 @@ def test_expando_update():
     assert x.a == 789
     assert x.f == "opq"
 
-TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
+TEST_SITE = File(__file__).parent.child_folder('_test')
+
 import yaml
 class TestConfig(object):
 
@@ -70,27 +71,65 @@ class TestConfig(object):
         aggregators:
         """
 
+    def setUp(self):
+        TEST_SITE.make()
+        TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+
+    def tearDown(self):
+        TEST_SITE.delete()
+
     def test_default_configuration(self):
-        c = Config(sitepath=TEST_SITE_ROOT)
+        c = Config(sitepath=TEST_SITE, config_dict={})
         for root in ['content', 'layout', 'media']:
             name = root + '_root'
             path = name + '_path'
             assert hasattr(c, name)
             assert getattr(c, name) == root
             assert hasattr(c, path)
-            assert getattr(c, path) == TEST_SITE_ROOT.child_folder(root)
+            assert getattr(c, path) == TEST_SITE.child_folder(root)
         assert hasattr(c, 'plugins')
         assert len(c.plugins) == 0
-        assert c.deploy_root_path == TEST_SITE_ROOT.child_folder('deploy')
+        assert c.deploy_root_path == TEST_SITE.child_folder('deploy')
         assert c.not_found == '404.html'
 
     def test_conf1(self):
-        c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf1))
-        assert c.content_root_path == TEST_SITE_ROOT.child_folder('stuff')
+        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf1))
+        assert c.content_root_path == TEST_SITE.child_folder('stuff')
 
     def test_conf2(self):
-        c = Config(sitepath=TEST_SITE_ROOT, config_dict=yaml.load(self.conf2))
-        assert c.content_root_path == TEST_SITE_ROOT.child_folder('site/stuff')
-        assert c.media_root_path == TEST_SITE_ROOT.child_folder('mmm')
-        assert c.media_url == TEST_SITE_ROOT.child_folder('/media')
+        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf2))
+        assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
+        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_url == TEST_SITE.child_folder('/media')
+        assert c.deploy_root_path == Folder('~/deploy_site')
+
+    def test_read_from_file_by_default(self):
+        File(TEST_SITE.child('site.yaml')).write(self.conf2)
+        c = Config(sitepath=TEST_SITE)
+        assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
+        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_url == TEST_SITE.child_folder('/media')
+        assert c.deploy_root_path == Folder('~/deploy_site')
+
+    def test_read_from_specified_file(self):
+        File(TEST_SITE.child('another.yaml')).write(self.conf2)
+        c = Config(sitepath=TEST_SITE, config_file='another.yaml')
+        assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
+        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_url == TEST_SITE.child_folder('/media')
+        assert c.deploy_root_path == Folder('~/deploy_site')
+
+    def test_extends(self):
+        another = """
+        extends: site.yaml
+        mode: production
+        media_root: xxx
+        """
+        File(TEST_SITE.child('site.yaml')).write(self.conf2)
+        File(TEST_SITE.child('another.yaml')).write(another)
+        c = Config(sitepath=TEST_SITE, config_file='another.yaml')
+        assert c.mode == 'production'
+        assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
+        assert c.media_root_path == TEST_SITE.child_folder('xxx')
+        assert c.media_url == TEST_SITE.child_folder('/media')
         assert c.deploy_root_path == Folder('~/deploy_site')
