@@ -1,0 +1,103 @@
+<!doctype html>
+<!-- https://github.com/paulirish/html5-boilerplate/blob/master/index.html -->
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <!-- encoding must be specified within the first 512 bytes
+        www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#charset -->
+
+  <!-- meta element for compatibility mode needs to be before
+        all elements except title & meta
+        msdn.microsoft.com/en-us/library/cc288325(VS.85).aspx -->
+  <!-- Chrome Frame is only invoked if meta element for
+        compatibility mode is within the first 1K bytes
+        code.google.com/p/chromium/issues/detail?id=23003 -->
+
+  <title>Installation</title>
+  <meta name="description" content="Awesome documentation for hyde - a python static website generator
+">
+  <meta name="author" content="Lakshmi Vyasarajan">
+
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Place favicon.ico & apple-touch-icon.png
+        in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+      <script type="text/javascript" src="http://use.typekit.com/hyw1bsz.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  
+    <link rel="stylesheet" href="/media/css/site.css">
+  
+    <!-- All JavaScript at the bottom, except for Modernizr which
+        enables HTML5 elements & feature detects -->
+    <script src="/media/js/libs/modernizr-1.6.min.js"></script>
+    </head>
+<body id="install">
+    <div id="container">
+            <div id="main" role="main">
+          <header class="banner clearfix">
+          <img src="/media/img/hyde-logo-128.png">
+            <h1>hyde 1.0</h1>
+            <h3>static hotness</h3>          </header>
+          <article>
+<hgroup>
+    <h1 class="title">Installation</h1>
+    <h3 class="subtitle">PIPing hot hyde</h3>
+</hgroup>
+<p>Installing hyde is as simple as running the following&nbsp;command:</p>
+<div class="code"><div class="highlight"><pre>pip install -e https://github.com/hydepy/hyde#egg<span class="o">=</span>hyde<br /></pre></div><br /></div>
+
+<p>However, based on your choice and use of plugins you may need to install
+additional packages. The requirements for each plugin is outlined in the
+corresponding <a href="/plugins">plugin documentation</a>.</p>
+<h2 id="essential_requirements">Essential&nbsp;Requirements</h2>
+<p>While your mileage may vary, I consider the following to be essential for
+generating a static website with hyde. These are a part of the requirements
+file and the above command will download and install them as part of&nbsp;hyde.</p>
+<p>It is also recommended that you use <a href="http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/">virtualenv</a> to separate the hyde
+environment from other python projects. Note that installing hyde using
+pip would install all of the below. However, if you&#8217;d like finer grained
+control over the packages, you can install these&nbsp;individually:</p>
+<ol>
+<li><code>argparse</code>: argparse is required if you are on python&nbsp;2.6.</li>
+<li><code>commando</code>: commando is a wrapper on top of argparse to give better syntax and
+    support for multi-command&nbsp;applications.</li>
+<li><code>Jinja2</code>: While hyde will support many more template languages in the future,
+    currently, Jinja2 is wholly supported and&nbsp;recommended.</li>
+<li><code>Markdown</code>: While there are plans to add support for other markups (textile,
+    restructured text, asciidoc etc..,), markdown is the one thats currently
+    completely&nbsp;supported.</li>
+<li><code>Pyyaml</code>: Much of hyde&#8217;s [configuration] is done using&nbsp;yaml.</li>
+<li><code>Typogrify</code>: Typogrify automatically fixes and enhances the typographical
+    accuracy of your content. While this is not a technical requirement for
+    hyde, it is absolutely essential to create good looking&nbsp;content.</li>
+</ol>
+<div class="code"><div class="highlight"><pre>pip install argparse<br />pip install commando<br />pip install jinja2<br />pip install markdown<br />pip install pyyaml<br />pip install -e https://github.com/hydepy/typogrify#egg<span class="o">=</span>typogrify<br /></pre></div><br /></div>
+
+<p></article>
+<aside>
+</aside></p>      </div>
+      <footer>
+    </footer>
+      </div> <!--! end of #container -->
+      <!-- Javascript at the bottom for fast page loading -->
+    <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/media/js/libs/jquery-1.4.4.min.js"%3E%3C/script%3E'))</script>
+  
+    
+      
+  </body>
+</html>

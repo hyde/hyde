@@ -49,34 +49,53 @@
             <div id="main" role="main">
           <header class="banner clearfix">
           <img src="/media/img/hyde-logo-128.png">
-            <h1>Hyde</h1>
+            <h1>hyde 1.0</h1>
             <h3>static hotness</h3>          </header>
           <article>
+<hgroup>
+    <h1 class="title">Overview</h1>
+    <h3 class="subtitle">hyde in a nutshell</h3>
+</hgroup>
 <p>Hyde is a static website generator written in python. While Hyde took
-life as <a href="http://jekyllrb.com">awesome Jekyll</a>&#8216;s <a href="http://ringce.com/blog/2009/introducing_hyde">evil twin</a>, it has since been
-completely consumed by <a href="http://python.org">the dark side</a> to have an identity of its&nbsp;own.</p>
+life as <a href="http://jekyllrb.com">awesome Jekyll</a>&apos;s <a href="http://ringce.com/blog/2009/introducing_hyde">evil twin</a>, it has since been
+completely consumed by <a href="http://python.org">the dark side</a> and has an <a href="http://groups.google.com/group/hyde-dev/web/hyde-1-0">identity of its own</a>.</p>
 <p>Hyde desires to fulfill the lofty goal of removing the
-<a href="/static/#cons">pain points</a> involved in creating and maintaining
-<a href="/static/#pros">static websites</a>.</p>
+<a href="/static.html/#cons">pain points</a> involved in creating and maintaining
+<a href="[static.html/#pros]]">static websites</a>.</p>
 <h2 id="spotlight">Spotlight</h2>
 <ul>
 <li>Support for powerful template languages like <a href="http://jinja.pocoo.org/">Jinja2</a> complemented
     with custom tags and&nbsp;filters.</li>
-<li><a href="/template/variables">Rich object model</a> and
-    <a href="/plugins/metadata">overridable hierarchical metadata</a> thats available for use in&nbsp;templates.</li>
-<li>Configurable <a href="/plugins/sorter">sorting, filtering and grouping</a>&nbsp;support.</li>
-<li>Extensible <a href="/plugins">plugin architecture</a> with Text preprocessing and html
+<li>Rich <a href="/template.html/#variables">object model</a> and
+    overridable hierarchical <a href="/plugins/metadata.html">metadata</a> thats available for use in&nbsp;templates.</li>
+<li>Configurable <a href="/plugins/sorter.html">sorting, filtering and grouping</a>&nbsp;support.</li>
+<li>Extensible <a href="/plugins.html">plugin architecture</a> with Text preprocessing and html
     postprocessing support for complex content&nbsp;transformations.</li>
-<li>Instant preview using built-in <a href="/server">webserver</a> that regenerates content
+<li>Instant preview using built-in <a href="/server.html">webserver</a> that regenerates content
     if&nbsp;needed.</li>
 </ul>
-<h2 id="source">Source</h2>
-<p>Hyde is <a href="https://github.com/hydepy/hyde">socially coded</a>. Feel free to <a href="/contribute">fork</a>.</p>
 <h2 id="install">Install</h2>
 <p>There will be a package soon on pypi, but this works for&nbsp;now:</p>
 <div class="code"><div class="highlight"><pre>pip install -e https://github.com/hydepy/hyde#egg<span class="o">=</span>hyde<br /></pre></div><br /></div>
 
-<p>You can find more detailed documentation in the <a href="/install">installation section</a>.</p>
+<p>You can find more detailed documentation in the <a href="/install.html">installation section</a>.</p>
+<h2 id="run">Run</h2>
+<p>After installation is successful, creating <span class="amp">&amp;</span> generating your website is
+extremely&nbsp;simple.</p>
+<p>To create a new hyde&nbsp;website:</p>
+<div class="code"><div class="highlight"><pre>hyde -s /path/to/your site create<br /></pre></div><br /></div>
+
+<p>To generate the&nbsp;website:</p>
+<div class="code"><div class="highlight"><pre><span class="nb">cd</span> /path/to/your/site<br />hyde gen<br /></pre></div><br /></div>
+
+<p>To run the built in webserver that autogenerates if&nbsp;needed:</p>
+<div class="code"><div class="highlight"><pre>hyde serve<br /></pre></div><br /></div>
+
+<p>You can access the website now at <code>http://localhost:8080</code></p>
+<p>For all the supported options, read <a href="/commandline.html">command line documentation</a>
+or run <code>hyde --h</code>.</p>
+<h2 id="source">Source</h2>
+<p>Hyde is <a href="https://github.com/hydepy/hyde">socially coded</a>. Feel free to <a href="/contribute.html">fork</a>.</p>
 <h2 id="project_roadmap">Project&nbsp;Roadmap</h2>
 <ol>
 <li>Support for Django and Mako<ul>

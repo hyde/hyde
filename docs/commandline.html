@@ -1,0 +1,197 @@
+<!doctype html>
+<!-- https://github.com/paulirish/html5-boilerplate/blob/master/index.html -->
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+
+  <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+       Remove this if you use the .htaccess -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <!-- encoding must be specified within the first 512 bytes
+        www.whatwg.org/specs/web-apps/current-work/multipage/semantics.html#charset -->
+
+  <!-- meta element for compatibility mode needs to be before
+        all elements except title & meta
+        msdn.microsoft.com/en-us/library/cc288325(VS.85).aspx -->
+  <!-- Chrome Frame is only invoked if meta element for
+        compatibility mode is within the first 1K bytes
+        code.google.com/p/chromium/issues/detail?id=23003 -->
+
+  <title>Command Line</title>
+  <meta name="description" content="Awesome documentation for hyde - a python static website generator
+">
+  <meta name="author" content="Lakshmi Vyasarajan">
+
+  <!--  Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Place favicon.ico & apple-touch-icon.png
+        in the root of your domain and delete these references -->
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+      <script type="text/javascript" src="http://use.typekit.com/hyw1bsz.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+  
+    <link rel="stylesheet" href="/media/css/site.css">
+  
+    <!-- All JavaScript at the bottom, except for Modernizr which
+        enables HTML5 elements & feature detects -->
+    <script src="/media/js/libs/modernizr-1.6.min.js"></script>
+    </head>
+<body id="commandline">
+    <div id="container">
+            <div id="main" role="main">
+          <header class="banner clearfix">
+          <img src="/media/img/hyde-logo-128.png">
+            <h1>hyde 1.0</h1>
+            <h3>static hotness</h3>          </header>
+          <article>
+<hgroup>
+    <h1 class="title">Command Line</h1>
+    <h3 class="subtitle">working with hyde</h3>
+</hgroup>
+<p>The hyde command line supports three&nbsp;subcommands:</p>
+<ol>
+<li>create - Initializes a new site at a given&nbsp;path</li>
+<li>gen - Generates the website to a configured deploy&nbsp;folder</li>
+<li>serve - Starts a local http server that regenerates based on the requested&nbsp;file</li>
+</ol>
+<h2 id="the_create_command">The create&nbsp;command</h2>
+<p>Creates a new hyde&nbsp;website.</p>
+<div class="code"><div class="highlight"><pre>hyde create<br />&nbsp;<br />hyde <span class="o">[</span>-s &lt;/site/path&gt;<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> create <span class="o">[</span>-l &lt;layout&gt;<span class="o">]</span> <span class="o">[</span>-f<span class="o">]</span> <span class="o">[</span>-h<span class="o">]</span><br /></pre></div><br /></div>
+
+<ul>
+<li>
+<p><code>-s SITEPATH, --sitepath SITEPATH</code></p>
+<p>Where the site must be created. If this path is not empty then the <code>-f</code>
+option must be specified to overwrite the&nbsp;site.</p>
+<p><em>Optional</em> - defaults to current working&nbsp;directory.</p>
+</li>
+<li>
+<p><code>-f, --force</code></p>
+<p>Specifying this option will overwrite files and folders at the given
+site&nbsp;path.</p>
+<p><em>Optional</em> - If the target directory is not empty, hyde will throw an
+exception unless this is&nbsp;specified.</p>
+</li>
+<li>
+<p><code>-l LAYOUT, --layout LAYOUT</code></p>
+<p>The name of the layout to use for creating the initial site. Hyde currently
+has three layouts: <code>basic</code>, <code>test</code> and <code>doc</code>.</p>
+<p>While basic and test are really barebones, doc is the one that generates
+this documentation and is completely usable. Hyde will get more layouts
+as over&nbsp;time.</p>
+<p>Hyde tries to locate the specified layout in the following&nbsp;folders:</p>
+<ol>
+<li>In <code>layouts</code> folder under the path specified by the <code>HYDE_DATA</code>
+    environment&nbsp;variable</li>
+<li>In <code>layouts</code> folder under&nbsp;hyde</li>
+</ol>
+<p><em>Optional</em> - defaults to <code>basic</code></p>
+</li>
+<li>
+<p><code>-v, --verbose</code></p>
+<p>Logs detailed messages to the&nbsp;console.</p>
+<p><em>Optional</em> - shows only essential messages if this option is&nbsp;omitted.</p>
+</li>
+<li>
+<p><code>-h</code></p>
+<p>Displays the help text for the <code>create</code> command.</p>
+</li>
+</ul>
+<p>Assuming the <code>HYDE_DATA</code> environment variable is empty and the folder
+<code>~/test</code> is empty, the following command will create a new hyde site
+at <code>~/test</code> with the contents of <code>layouts/doc</code> folder:</p>
+<div class="code"><div class="highlight"><pre>hyde -s ~/test create -l doc<br /></pre></div><br /></div>
+
+<h2 id="the_generate_command">The generate&nbsp;command</h2>
+<p>Generates the given&nbsp;website.</p>
+<div class="code"><div class="highlight"><pre>hyde gen<br />&nbsp;<br />hyde <span class="o">[</span>-s &lt;/site/path&gt;<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> gen <span class="o">[</span>-d &lt;/deploy/path&gt;<span class="o">]</span> <span class="o">[</span>-c &lt;config/path&gt;<span class="o">]</span> <span class="o">[</span>-h<span class="o">]</span><br /></pre></div><br /></div>
+
+<ul>
+<li>
+<p><code>-s SITEPATH, --sitepath SITEPATH</code></p>
+<p>The path to the site to be&nbsp;generated.</p>
+<p><em>Optional</em> - defaults to current working&nbsp;directory.</p>
+</li>
+<li>
+<p><code>-d DEPLOY_PATH, --deploy-path DEPLOY_PATH</code></p>
+<p>Location where the site should be generated. This option overrides any
+setting specified in the hyde [configuration][]. The path is assumed to
+be relative to the site path unless a preceding path separator is&nbsp;found.</p>
+<p><em>Optional</em> - Uses what is specified in the config file. The default option
+in the configuration file is: <code>deploy</code> folder under the current site&nbsp;path.</p>
+</li>
+<li>
+<p><code>-c CONFIG, --config-path CONFIG</code></p>
+<p>This is used for specifying an alternate configuration file to use for
+generating the site. This is useful if you have two different configurations
+for you production versus development&nbsp;websites.</p>
+<p>The path is assumed to be relative to the site path unless a preceding path
+separator is&nbsp;found.</p>
+<p><em>Optional</em> - defaults to <code>site.yaml</code></p>
+</li>
+<li>
+<p><code>-v, --verbose</code></p>
+<p>Logs detailed messages to the&nbsp;console.</p>
+<p><em>Optional</em> - shows only essential messages if this option is&nbsp;omitted.</p>
+</li>
+<li>
+<p><code>-h</code></p>
+<p>Displays the help text for the <code>gen</code> command.</p>
+</li>
+</ul>
+<p>The following command will use <code>production.yaml</code> as the configuration file and
+generate the website at <code>~/test</code> to <code>~/production_site</code> directory.</p>
+<div class="code"><div class="highlight"><pre><span class="nb">cd</span> ~/test<br />hyde gen -c production.yaml -d ~/production_site<br /></pre></div><br /></div>
+
+<h2 id="the_serve_command">The serve&nbsp;command</h2>
+<p>Starts the built in web server that also regenerates based on the request if there are&nbsp;changes.</p>
+<div class="code"><div class="highlight"><pre>hyde serve<br />&nbsp;<br />hyde <span class="o">[</span>-s &lt;/site/path&gt;<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> gen <span class="o">[</span>-d &lt;/deploy/path&gt;<span class="o">]</span> <span class="o">[</span>-c &lt;config/path&gt;<span class="o">]</span> <span class="o">[</span>-h<span class="o">]</span><br /></pre></div><br /></div>
+
+<ul>
+<li><code>-s SITEPATH, --sitepath SITEPATH</code>
+  <code>-d DEPLOY_PATH, --deploy-path DEPLOY_PATH</code>
+  <code>-c CONFIG, --config-path CONFIG</code></li>
+</ul>
+<p>Since the <code>serve</code> command auto generates if there is a need, it needs the same
+  parameters as the <code>gen</code> command. The above parameters serve the same purpose here
+  as in the <code>gen</code> command.</p>
+<ul>
+<li><code>-a ADDRESS, --address ADDRESS</code></li>
+</ul>
+<p>The address to serve the&nbsp;website.</p>
+<p><em>Optional</em> - defaults to <code>localhost</code></p>
+<ul>
+<li><code>-p PORT, --port</code></li>
+</ul>
+<p>The port to serve the&nbsp;website.</p>
+<p><em>Optional</em> - default to <code>8080</code></p>
+<ul>
+<li><code>-h</code></li>
+</ul>
+<p>Displays the help text for the <code>serve</code> command.</p>
+<p>The following command will serve the website at <code>http://localhost:8181</code></p>
+<div class="code"><div class="highlight"><pre><span class="nb">cd</span> ~/test<br />hyde serve -p 8181<br /></pre></div><br /></div>
+
+<p></article>
+<aside>
+</aside></p>      </div>
+      <footer>
+    </footer>
+      </div> <!--! end of #container -->
+      <!-- Javascript at the bottom for fast page loading -->
+    <!-- Grab Google CDN's jQuery. fall back to local if necessary -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/media/js/libs/jquery-1.4.4.min.js"%3E%3C/script%3E'))</script>
+  
+    
+      
+  </body>
+</html>

@@ -9,9 +9,9 @@
 @import 'inc/controls';
 
 h2 {
-    font-size: @gutter * 3;
+    font-size: @gutter * 2;
     color: @shade;
-    line-height: @gutter * 4;
+    line-height: @gutter * 2;
 }
 
 header.banner {
@@ -25,17 +25,20 @@ header.banner {
     h1 {
         .heading;
         float: left;
-        margin-left: @column;
+        margin-left: @column - 2;
         font-size: @column * 2;
-        line-height: @column * 3;
+        line-height: @column * 3 + 8;
         margin-bottom: 0;
     }
     h3 {
-        color: @shade;
+        .subheading;
+        color: @qdark;
         position: absolute;
-        bottom: @gutter + 2;
-        left: @column * 6 - 4;
+        bottom: @gutter;
+        font-size: @gutter * 2;
+        left: @gutter * 22 + 2;
         margin:0;
+        text-shadow: -1px -1px 0px @clear - 90, 1px 1px 0px @clear + 90;
     }
     margin-bottom: @column;
 }
@@ -43,12 +46,25 @@ header.banner {
 article {
     padding: @column;
     .boxshadow(0, 1px, 3px, @qdark);
+
+    h1.title {
+        color: @dark;
+        font-size: @gutter * 3;
+        margin-bottom: @gutter / 2;
+    }
+    h3.subtitle{
+        color: @shade;
+        font-size: @gutter * 1.5;
+        font-weight: normal;
+        padding-left: 6px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        margin-bottom: @gutter * 2 - 3;
+    }
 }
 
 .highlight pre{
-    font-size: @gutter;
-    font-family: menlo, monaco, courier;
+    font-size: @gutter - 1;
     .boxshadow(0, 1px, 3px, @qdark);
-    padding: @gutter;
+    padding: @gutter * 1.5 @gutter;
 }
 

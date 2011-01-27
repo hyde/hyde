@@ -24,7 +24,7 @@ class SyntextPlugin(TextyPlugin):
         """
         The default pattern for block open text.
         """
-        return '^~~~+\s*([A-Za-z0-9_\-\.]+)\s*~*\s*$'
+        return '^\s*~~~+\s*([A-Za-z0-9_\-\.]+)\s*~*\s*$'
 
     @property
     def default_close_pattern(self):

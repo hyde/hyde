@@ -296,17 +296,17 @@ button {
 a {
   color: #497c55;
   text-decoration: none;
-  text-shadow: 0px 1px 0px #ededed;
+  text-shadow: 0px 1px 0px #fefdfd;
 }
 a:hover {
   color: #cd3b16;
   text-decoration: underline;
-  text-shadow: 0px 1px -1px #ededed;
+  text-shadow: 0px 1px -1px #fefdfd;
 }
 body {
   font-family: "ff-meta-web-pro-1", "ff-meta-web-pro-2", Helvetica, Arial, sans-serif;
   color: #132016;
-  background-color: #ededed;
+  background-color: #fefdfd;
 }
 .subheading {
   font-family: "anivers-1", "anivers-2", Helvetica, Arial, sans-serif;
@@ -320,13 +320,13 @@ body {
 #container {
   width: 972px;
   margin: 0 auto 96px;
-  background-color: #ededed;
+  background-color: #fefdfd;
 }
 #main {
   margin: 12px;
 }
 article {
-  width: 600.7416563658837px;
+  width: 612px;
 }
 h1,
 h2,
@@ -349,13 +349,28 @@ li ul, li ol {
   padding-bottom: 0;
 }
 .heading {
-  color: #c5c5c5;
-  text-shadow: -1px -1px 0px #939393, 1px 1px 0px #ffffff;
+  color: #d6d5d5;
+  text-shadow: -1px -1px 0px #a4a3a3, 1px 1px 0px #ffffff;
 }
 body {
   font-size: 20px;
   line-height: 24px;
   font-weight: normal;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "anivers-1", "anivers-2", Helvetica, Arial, sans-serif;
+}
+code, .highlight pre {
+  font-family: menlo, monaco, courier;
+}
+code {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 80%;
 }
 .amp {
   font-family: Baskerville, Palatino, "Book Antiqua", serif;
@@ -369,12 +384,12 @@ body {
    Also: hot pink. */
 ::-moz-selection {
   background: #497c55;
-  color: #ededed;
+  color: #fefdfd;
   text-shadow: none;
 }
 ::selection {
   background: #497c55;
-  color: #ededed;
+  color: #fefdfd;
   text-shadow: none;
 }
 /*  j.mp/webkit-tap-highlight-color */
@@ -387,7 +402,7 @@ a:link {
 .button:visited {
   background: #497c55;
   padding: 5px 10px 6px;
-  color: #ededed;
+  color: #fefdfd;
   text-decoration: none;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -430,9 +445,9 @@ a:link {
   padding: 0 0 24px 0;
 }
 h2 {
-  font-size: 36px;
+  font-size: 24px;
   color: #453f19;
-  line-height: 48px;
+  line-height: 24px;
 }
 header.banner {
   width: 100%;
@@ -445,20 +460,26 @@ header.banner img {
   float: left;
 }
 header.banner h1 {
-  color: #c5c5c5;
-  text-shadow: -1px -1px 0px #939393, 1px 1px 0px #ffffff;
+  color: #d6d5d5;
+  text-shadow: -1px -1px 0px #a4a3a3, 1px 1px 0px #ffffff;
   float: left;
-  margin-left: 48px;
+  margin-left: 46px;
   font-size: 96px;
-  line-height: 144px;
+  line-height: 152px;
   margin-bottom: 0;
 }
 header.banner h3 {
-  color: #453f19;
+  font-family: "anivers-1", "anivers-2", Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  font-weight: normal;
+  color: #010202;
+  color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  bottom: 14px;
-  left: 284px;
+  bottom: 12px;
+  font-size: 24px;
+  left: 266px;
   margin: 0;
+  text-shadow: -1px -1px 0px #a4a3a3, 1px 1px 0px #ffffff;
 }
 article {
   padding: 48px;
@@ -467,12 +488,24 @@ article {
   -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
+article h1.title {
+  color: #497c55;
+  font-size: 36px;
+  margin-bottom: 6px;
+}
+article h3.subtitle {
+  color: #453f19;
+  font-size: 18px;
+  font-weight: normal;
+  padding-left: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 21px;
+}
 .highlight pre {
-  font-size: 12px;
-  font-family: menlo, monaco, courier;
+  font-size: 11px;
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-  padding: 12px;
+  padding: 18px 12px;
 }

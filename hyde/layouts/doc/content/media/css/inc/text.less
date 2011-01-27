@@ -3,6 +3,8 @@
 @text-font:   "ff-meta-web-pro-1","ff-meta-web-pro-2", Helvetica, Arial, sans-serif;
 @caps-font: "anivers-1","anivers-2", Helvetica, Arial, sans-serif;
 
+
+
 .heading{
     color: @clear - 40;
     text-shadow: -1px -1px 0px @clear - 90, 1px 1px 0px @clear + 90;
@@ -12,6 +14,20 @@ body{
     font-size: @gutter + 8;
     line-height: @gutter * 2;
     font-weight: normal;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-family: @heading-font;
+}
+
+code,
+.highlight pre{
+    font-family: menlo, monaco, courier;
+}
+
+code{
+    color: @qdark;
+    font-size: 80%;
 }
 
 .amp {

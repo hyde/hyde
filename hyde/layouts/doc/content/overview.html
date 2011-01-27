@@ -6,8 +6,8 @@ created: 2011-01-25 21:31:03
 
 §§ blurb
 Hyde is a static website generator written in python. While Hyde took
-life as [awesome Jekyll][Jekyll]'s [evil twin][], it has since been
-completely consumed by [the dark side][python] to have an identity of its own.
+life as [awesome Jekyll][Jekyll]&apos;s [evil twin][], it has since been
+completely consumed by [the dark side][python] and has an [identity of its own][hydeid].
 
 Hyde desires to fulfill the lofty goal of removing the
 [pain points][static cons] involved in creating and maintaining
@@ -18,18 +18,14 @@ Hyde desires to fulfill the lofty goal of removing the
 
 *   Support for powerful template languages like [Jinja2][] complemented
     with custom tags and filters.
-*   [Rich object model][hyde objects] and
-    [overridable hierarchical metadata][metadata] thats available for use in
+*   Rich [object model][] and
+    overridable hierarchical [metadata][] thats available for use in
     templates.
 *   Configurable [sorting, filtering and grouping][sorter] support.
 *   Extensible [plugin architecture][plugins] with Text preprocessing and html
     postprocessing support for complex content transformations.
 *   Instant preview using built-in [webserver][server] that regenerates content
     if needed.
-
-## Source
-
-Hyde is [socially coded][hydepy]. Feel free to [fork][forking].
 
 ## Install
 
@@ -42,6 +38,39 @@ pip install -e https://github.com/hydepy/hyde#egg=hyde
 ~~~~~~~~
 
 You can find more detailed documentation in the [installation section][install].
+
+## Run
+
+After installation is successful, creating & generating your website is
+extremely simple.
+
+To create a new hyde website:
+
+~~~sh~~~
+hyde -s /path/to/your site create
+~~~~~~~~
+
+To generate the website:
+
+~~~sh~~~
+cd /path/to/your/site
+hyde gen
+~~~~~~~~
+
+To run the built in webserver that autogenerates if needed:
+
+~~~sh~~~
+hyde serve
+~~~~~~~~
+
+You can access the website now at `http://localhost:8080`
+
+For all the supported options, read [command line documentation][commandline]
+or run `hyde --h`.
+
+## Source
+
+Hyde is [socially coded][hydepy]. Feel free to [fork][forking].
 
 ## Project Roadmap
 
@@ -63,17 +92,19 @@ You can find more detailed documentation in the [installation section][install].
 5.  Feed / Listing generation
 6.  Translation
 
+[hydeid]: http://groups.google.com/group/hyde-dev/web/hyde-1-0
 [Jekyll]: http://jekyllrb.com
 [evil twin]: http://ringce.com/blog/2009/introducing_hyde
 [Jinja2]: http://jinja.pocoo.org/
-[hyde objects]: [[/template/variables]]
+[object model]: [[template.html/#variables]]
 [hydepy]: https://github.com/hydepy/hyde
-[install]: [[/install]]
-[metadata]: [[/plugins/metadata]]
-[plugins]: [[/plugins]]
+[install]: [[install.html]]
+[metadata]: [[plugins/metadata.html]]
+[plugins]: [[plugins.html]]
 [python]: http://python.org
-[server]: [[/server]]
-[sorter]: [[plugins/sorter]]
-[static cons]: [[/static/#cons]]
-[static pros]: [[/static/#pros]]
-[forking]: [[/contribute]]
+[server]: [[server.html]]
+[sorter]: [[plugins/sorter.html]]
+[static cons]: [[static.html/#cons]]
+[static pros]: [static.html/#pros]]
+[forking]: [[contribute.html]]
+[commandline]: [[commandline.html]]
