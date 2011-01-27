@@ -3,7 +3,7 @@ media_root:: media
 media_url: /media
 base_url: /
 deploy_root: ../../../../hydepy.github.com
-template: hyde.ext.jinja2
+template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
     - hyde.ext.plugins.auto_extend.AutoExtendPlugin
