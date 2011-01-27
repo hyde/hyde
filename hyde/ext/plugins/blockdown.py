@@ -24,14 +24,14 @@ class BlockdownPlugin(TextyPlugin):
         """
         The default pattern for block open text.
         """
-        return '^\s*===+\s*([A-Za-z0-9_\-\.]+)\s*=*\s*$'
+        return '^\s*===+([A-Za-z0-9_\-\.]+)=*\s*$'
 
     @property
     def default_close_pattern(self):
         """
         The default pattern for block close text.
         """
-        return '^\s*===+\s*/+\s*=*/*([A-Za-z0-9_\-\.]*)[\s=/]*$'
+        return '^\s*===+/+\s*=*/*([A-Za-z0-9_\-\.]*)[\s=/]*$'
 
     def text_to_tag(self, match, start=True):
         """
