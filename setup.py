@@ -9,10 +9,12 @@ setup(name='hyde',
       url='http://ringce.com/hyde',
       packages=find_packages(),
       install_requires=(
+          'argparse',
           'commando',
           'jinja2',
           'pyYAML',
-          'markdown'
+          'markdown',
+          'pygments'
       ),
       scripts=['main.py'],
       entry_points={
