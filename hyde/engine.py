@@ -68,15 +68,15 @@ class Engine(Application):
     @subcommand('gen', help='Generate the site')
     @store('-c', '--config-path', default='site.yaml', dest='config',
             help='The configuration used to generate the site')
-    @store('-d', '--deploy-path', default='deploy',
-                                help='Where should the site be generated?')
+    @store('-d', '--deploy-path', dest='deploy', default=None,
+                        help='Where should the site be generated?')
     def gen(self, args):
         """
         The generate command. Generates the site at the given
         deployment directory.
         """
         self.main(args)
-        site = self.make_site(args.sitepath, args.config)
+        site = self.make_site(args.sitepath, args.config, args.deploy)
         from hyde.generator import Generator
         gen = Generator(site)
         gen.generate_all()
@@ -88,8 +88,8 @@ class Engine(Application):
             help='The port where the website must be served from.')
     @store('-c', '--config-path', default='site.yaml', dest='config',
             help='The configuration used to generate the site')
-    @store('-d', '--deploy-path', default='deploy',
-                                help='Where should the site be generated?')
+    @store('-d', '--deploy-path', dest='deploy', default=None,
+                    help='Where should the site be generated?')
     def serve(self, args):
         """
         The serve command. Serves the site at the given
@@ -99,7 +99,7 @@ class Engine(Application):
         self.main(args)
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         config_file = sitepath.child(args.config)
-        site = self.make_site(args.sitepath, args.config)
+        site = self.make_site(args.sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
         server = HydeWebServer(site, args.address, args.port)
         logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
@@ -111,7 +111,7 @@ class Engine(Application):
             logger.info("Server successfully stopped")
             exit()
 
-    def make_site(self, sitepath, config):
+    def make_site(self, sitepath, config, deploy):
         """
         Creates a site object from the given sitepath and the config file.
         """
@@ -121,4 +121,7 @@ class Engine(Application):
         conf = {}
         with codecs.open(config_file, 'r', 'utf-8') as stream:
             conf = yaml.load(stream)
-        return Site(sitepath, Config(sitepath, conf))
+        config = Config(sitepath, conf)
+        if deploy:
+            config.deploy_root = deploy
+        return Site(sitepath, config)
