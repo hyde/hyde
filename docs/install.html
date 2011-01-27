@@ -65,7 +65,7 @@ corresponding <a href="/plugins">plugin documentation</a>.</p>
 <h2 id="essential_requirements">Essential&nbsp;Requirements</h2>
 <p>While your mileage may vary, I consider the following to be essential for
 generating a static website with hyde. These are a part of the requirements
-file and the above command will download and install most of them as part 
+file and the above command will download and install most of them as part
 of&nbsp;hyde.</p>
 <p>It is also recommended that you use <a href="http://mathematism.com/2009/07/30/presentation-pip-and-virtualenv/">virtualenv</a> to separate the hyde
 environment from other python projects. Note that installing hyde using
@@ -81,13 +81,14 @@ control over the packages, you can install these&nbsp;individually:</p>
     restructured text, asciidoc etc..,), markdown is the one thats currently
     completely&nbsp;supported.</li>
 <li><code>Pyyaml</code>: Much of hyde&#8217;s [configuration] is done using&nbsp;yaml.</li>
+<li><code>pygments</code>: For syntax&nbsp;coloring.</li>
 <li><code>Typogrify</code>: Typogrify automatically fixes and enhances the typographical
     accuracy of your content. While this is not a technical requirement for
     hyde, it is absolutely essential to create good looking content. Note that
     this is not installed as part of the above package and must be installed
     separately. This will be rectified in the&nbsp;future.</li>
 </ol>
-<div class="code"><div class="highlight"><pre>pip install argparse<br />pip install commando<br />pip install jinja2<br />pip install markdown<br />pip install pyyaml<br />pip install -e https://github.com/hydepy/typogrify#egg<span class="o">=</span>typogrify<br /></pre></div><br /></div>
+<div class="code"><div class="highlight"><pre>pip install argparse<br />pip install commando<br />pip install jinja2<br />pip install markdown<br />pip install pyyaml<br />pip install pygments<br />pip  install smartypants<br />pip install -e git://github.com/hydepy/typogrify#egg<span class="o">=</span>typogrify<br /></pre></div><br /></div>
 
 <p></article>
 <aside>
