@@ -24,24 +24,21 @@ hyde create
 hyde [-s </site/path>] [-v] create [-l <layout>] [-f] [-h]
 ~~~~~~~~
 
-* `-s SITEPATH, --sitepath SITEPATH`
-
-    Where the site must be created. If this path is not empty then the `-f`
+`-s SITEPATH, --sitepath SITEPATH`
+:   Where the site must be created. If this path is not empty then the `-f`
     option must be specified to overwrite the site.
 
     *Optional* - defaults to current working directory.
 
-* `-f, --force`
-
-    Specifying this option will overwrite files and folders at the given
+`-f, --force`
+:   Specifying this option will overwrite files and folders at the given
     site path.
 
     *Optional* - If the target directory is not empty, hyde will throw an
     exception unless this is specified.
 
-* `-l LAYOUT, --layout LAYOUT`
-
-    The name of the layout to use for creating the initial site. Hyde currently
+`-l LAYOUT, --layout LAYOUT`
+:   The name of the layout to use for creating the initial site. Hyde currently
     has three layouts: `basic`, `test` and `doc`.
 
     While basic and test are really barebones, doc is the one that generates
@@ -51,20 +48,18 @@ hyde [-s </site/path>] [-v] create [-l <layout>] [-f] [-h]
     Hyde tries to locate the specified layout in the following folders:
 
     1.  In `layouts` folder under the path specified by the `HYDE_DATA`
-        environment variable
+    environment variable
     2.  In `layouts` folder under hyde
 
     *Optional* - defaults to `basic`
 
-* `-v, --verbose`
-
-    Logs detailed messages to the console.
+`-v, --verbose`
+:   Logs detailed messages to the console.
 
     *Optional* - shows only essential messages if this option is omitted.
 
-* `-h`
-
-    Displays the help text for the `create` command.
+`-h`
+:   Displays the help text for the `create` command.
 
 Assuming the `HYDE_DATA` environment variable is empty and the folder
 `~/test` is empty, the following command will create a new hyde site
@@ -84,15 +79,13 @@ hyde gen
 hyde [-s </site/path>] [-v] gen [-d </deploy/path>] [-c <config/path>] [-h]
 ~~~~~~~~
 
-* `-s SITEPATH, --sitepath SITEPATH`
-
-    The path to the site to be generated.
+`-s SITEPATH, --sitepath SITEPATH`
+:   The path to the site to be generated.
 
     *Optional* - defaults to current working directory.
 
-* `-d DEPLOY_PATH, --deploy-path DEPLOY_PATH`
-
-    Location where the site should be generated. This option overrides any
+`-d DEPLOY_PATH, --deploy-path DEPLOY_PATH`
+:   Location where the site should be generated. This option overrides any
     setting specified in the hyde [configuration][]. The path is assumed to
     be relative to the site path unless a preceding path separator is found.
 
@@ -100,9 +93,8 @@ hyde [-s </site/path>] [-v] gen [-d </deploy/path>] [-c <config/path>] [-h]
     in the configuration file is: `deploy` folder under the current site path.
 
 
-* `-c CONFIG, --config-path CONFIG`
-
-    This is used for specifying an alternate configuration file to use for
+`-c CONFIG, --config-path CONFIG`
+:   This is used for specifying an alternate configuration file to use for
     generating the site. This is useful if you have two different configurations
     for you production versus development websites.
 
@@ -111,15 +103,13 @@ hyde [-s </site/path>] [-v] gen [-d </deploy/path>] [-c <config/path>] [-h]
 
     *Optional* - defaults to `site.yaml`
 
-* `-v, --verbose`
-
-    Logs detailed messages to the console.
+`-v, --verbose`
+:   Logs detailed messages to the console.
 
     *Optional* - shows only essential messages if this option is omitted.
 
-* `-h`
-
-    Displays the help text for the `gen` command.
+`-h`
+:   Displays the help text for the `gen` command.
 
 The following command will use `production.yaml` as the configuration file and
 generate the website at `~/test` to `~/production_site` directory.
@@ -140,34 +130,33 @@ hyde serve
 hyde [-s </site/path>] [-v] gen [-d </deploy/path>] [-c <config/path>] [-h]
 ~~~~~~~~
 
-* `-s SITEPATH, --sitepath SITEPATH`
-  `-d DEPLOY_PATH, --deploy-path DEPLOY_PATH`
-  `-c CONFIG, --config-path CONFIG`
+`-s SITEPATH, --sitepath SITEPATH`
+`-d DEPLOY_PATH, --deploy-path DEPLOY_PATH`
+`-c CONFIG, --config-path CONFIG`
 
-  Since the `serve` command auto generates if there is a need, it needs the same
-  parameters as the `gen` command. The above parameters serve the same purpose here
-  as in the `gen` command.
+:   Since the `serve` command auto generates if there is a need, it needs
+    the same parameters as the `gen` command. The above parameters serve
+    the same purpose here as in the `gen` command.
 
-* `-a ADDRESS, --address ADDRESS`
+`-a ADDRESS, --address ADDRESS`
 
-  The address to serve the website.
+:   The address to serve the website.
 
-  *Optional* - defaults to `localhost`
+    *Optional* - defaults to `localhost`
 
-* `-p PORT, --port`
+`-p PORT, --port`
 
-  The port to serve the website.
+:   The port to serve the website.
 
-  *Optional* - default to `8080`
+    *Optional* - default to `8080`
 
-* `-h`
+`-h`
 
-  Displays the help text for the `serve` command.
+:   Displays the help text for the `serve` command.
 
-The following command will serve the website at `http://localhost:8181`
+    The following command will serve the website at `http://localhost:8181`
 
 ~~~sh~~~
 cd ~/test
 hyde serve -p 8181
 ~~~~~~~~
-

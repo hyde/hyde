@@ -34,13 +34,13 @@ header.banner {
         .subheading;
         color: @qdark;
         position: absolute;
-        bottom: @gutter;
+        bottom: @gutter - 2;
         font-size: @gutter * 2;
         left: @gutter * 22 + 2;
         margin:0;
         text-shadow: -1px -1px 0px @clear - 90, 1px 1px 0px @clear + 90;
     }
-    margin-bottom: @column;
+    margin-bottom: @column - 2;
 }
 
 article {
@@ -50,7 +50,7 @@ article {
     h1.title {
         color: @dark;
         font-size: @gutter * 3;
-        margin-bottom: @gutter / 2;
+        margin-bottom: @gutter / 2 + 1;
     }
     h3.subtitle{
         color: @shade;
@@ -58,13 +58,15 @@ article {
         font-weight: normal;
         padding-left: 6px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        margin-bottom: @gutter * 2 - 3;
+        margin-bottom: @gutter * 2 - 2;
     }
 }
 
 .highlight pre{
-    font-size: @gutter - 1;
+    font-size: @gutter;
     .boxshadow(0, 1px, 3px, @qdark);
-    padding: @gutter * 1.5 @gutter;
+    padding: @gutter + 4 @gutter @gutter;
+    line-height: @gutter * 2;
+    margin-bottom: @gutter / 2 + 2;
 }
 
