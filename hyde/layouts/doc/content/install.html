@@ -22,7 +22,7 @@ corresponding [plugin documentation][plugins].
 
 While your mileage may vary, I consider the following to be essential for
 generating a static website with hyde. These are a part of the requirements
-file and the above command will download and install most of them as part 
+file and the above command will download and install most of them as part
 of hyde.
 
 It is also recommended that you use [virtualenv][] to separate the hyde
@@ -39,7 +39,8 @@ control over the packages, you can install these individually:
     restructured text, asciidoc etc..,), markdown is the one thats currently
     completely supported.
 5.  `Pyyaml`: Much of hyde's [configuration] is done using yaml.
-6.  `Typogrify`: Typogrify automatically fixes and enhances the typographical
+6.  `pygments`: For syntax coloring.
+7.  `Typogrify`: Typogrify automatically fixes and enhances the typographical
     accuracy of your content. While this is not a technical requirement for
     hyde, it is absolutely essential to create good looking content. Note that
     this is not installed as part of the above package and must be installed
@@ -50,7 +51,9 @@ pip install commando
 pip install jinja2
 pip install markdown
 pip install pyyaml
-pip install -e https://github.com/hydepy/typogrify#egg=typogrify
+pip install pygments
+pip  install smartypants
+pip install -e git://github.com/hydepy/typogrify#egg=typogrify
 ~~~~~~~~
 
 [plugins]: [[plugins]]
