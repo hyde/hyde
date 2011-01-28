@@ -1,0 +1,164 @@
+===
+title: Configuration
+subtitle: change hyde to match your style
+created: 2011-01-28 01:30:05
+===
+
+§§ blurb
+
+Hyde is configured using one or more `yaml` files. On top of all
+the niceties `yaml` provides out of the box, hyde also adds a few
+power features to manage complex websites.
+
+If a site has a `site.yaml` file in the root directory it is used
+as the configuration for generating the website. This can be
+overridden by providing a command line option. See the
+[command line reference][commandline] for details.
+
+§§ /blurb
+
+## Inheritance
+
+Configuration files can inherit from another file using the
+`extends` option.
+
+For example, the following configuration will inherit all properties
+from `site.yaml` and override the `mode` property.
+
+~~~yaml~~~
+extends: site.yaml
+mode: production
+~~~~~~~~~~
+
+This is useful for customizing the site to operate in different modes.
+For example, when running locally you may want your media files to
+come from `/media` but on production you may have a subdomain and want
+the media to come from `http://abc.example.com/media`.
+
+This can be accomplished by creating an _extended_ configuration file and
+overriding the media_url property. For a real world example, you can take
+a look at the [source of this documentation][hydedocpages].
+
+## Paths & Urls
+
+The following path & url properties can be defined for use in templates:
+
+`media_root`
+:   The root path where media files(images, css, javascript etc.,)
+    can be found. This may be used by plugins for special processing.
+    If your website does not have a folder that contains all media,
+    you can safely omit this property.
+
+    _Optional_. Default: `media`
+
+`media_url`
+:   The url prefix for serving media files. If you are using a CDN like
+    Amazon S3 or the Rackspace cloud and host all your media files from
+    there, you can make use of this property to specify the prefix for
+    all media files.
+
+    _Optional_. Default: `/media`
+
+`base_url`
+:   The base url from which the site is served. If you are hosting the
+    website in a subdomain or as part of a larger website, you can specify
+    this property to indicate the path of this project in your website.
+
+    _Optional_. Default: `/`
+
+`deploy_root`
+:   Where the generated files should go. This can either be a relative
+    path from the root of the site source or an absolute path. Note that
+    this can also be overridden in the [command line][commandline] using
+    the `-d` option.
+
+## Plugins & templates
+
+`template`
+:   The template engine to use for processing the website can be specified
+    in the configuration file as a python class path. Currently no other
+    templates apart from `Jinja2` are supported, so the `template` setting
+    is a NOOP at the moment.
+
+    _Optional_. Default: `hyde.ext.templates.jinja.Jinja2Template`
+
+`plugins`
+:   Plugins are specified as list of python class paths. Events that are
+    raised during the generation of the website are issued to the plugins
+    in the same order as they are listed here. You can learn more about
+    how the individual plugins themselves are configured in the
+    [plugin documentation][plugins].
+
+    _Optional_. Default: No plugins are loaded.
+
+    The following configuration option would load the metadata plugin
+    and the blockdown plugin and execute events in the same order.
+
+    ~~~yaml~~~
+    plugins:
+        - hyde.ext.plugins.meta.MetaPlugin
+        - hyde.ext.plugins.blockdown.BlockdownPlugin
+    ~~~~~~~~~~~
+
+## Context
+
+The context section contains key / value pairs that are simply passed
+on to the templates
+
+_Optional_. Default: No context variables are defined.
+
+For example, given the following configuration, the statement
+`{%raw%}{{hyde.current_version}}{%endraw%}` in any template
+will output `0.6`.
+
+~~~yaml~~~
+context:
+    hyde:
+        current_version: 0.6
+~~~~~~~~~~~
+
+## Providers
+
+Providers are special constructs used to import data into the context.
+For example, data from a database can be exported as `yaml` and imported
+as providers.
+
+For example, consider the following snippet:
+
+~~~yaml~~~
+context:
+    providers:
+        versions: hyde-versions.yaml
+~~~~~~~~~~~
+
+This would import the data in `hyde-versions.yaml` into `context[versions]`.
+This data can be used directly in templates in this manner:
+`{%raw%}{{ versions.latest }}{%endraw%}`.
+
+
+## Markdown
+
+Extensions and extension configuration for markdown can be configured in the
+`markdown` property. You can read about markdown extensions in
+[python markdown documentation][pymarkdown].
+
+The following configuration:
+
+~~~yaml~~~
+markdown:
+    extensions:
+        - def_list
+        - tables
+        - headerid
+~~~~~~~~~~
+
+will use the [def_list][], [tables][] and [headerid][] extensions in python markdown.
+
+
+[commandline]: [[commandline.html]]
+[plugins]: [[plugins.html]]
+[pymarkdown]: http://www.freewisdom.org/projects/python-markdown/Available_Extensions
+[hydedocpages]: https://github.com/hydepy/hyde/blob/master/hyde/layouts/doc/pages.yaml
+[def_list]: http://www.freewisdom.org/projects/python-markdown/Definition_Lists
+[headerid]: http://www.freewisdom.org/projects/python-markdown/HeaderId
+[tables]: http://www.freewisdom.org/projects/python-markdown/Tables
