@@ -1,3 +1,3 @@
 extends: site.yaml
 mode: production
-deploy_root: ../../../../hydepy.github.com
+deploy_root: ../../../../hyde.github.com

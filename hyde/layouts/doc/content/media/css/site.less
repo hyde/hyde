@@ -63,11 +63,25 @@ article {
     }
 }
 
-.highlight pre{
-    font-size: @gutter;
-    .boxshadow(0, 1px, 3px, @qdark);
-    padding: @gutter + 4 @gutter @gutter;
-    line-height: @gutter * 2;
-    margin-bottom: @gutter / 2 + 2;
+.code{
+    position: relative;
+    
+    figcaption{
+        font-size: @gutter - 2;
+        position:absolute;
+        bottom: @gutter * 2.5;
+        right: @gutter;
+        color: @qdark;
+    }
 }
 
+.highlight
+{
+     pre{
+        font-size: @gutter;
+        .boxshadow(0, 1px, 3px, @qdark);
+        padding: @gutter + 4 @gutter @gutter;
+        line-height: @gutter * 2;
+        margin-bottom: @gutter / 2 + 2;
+    }
+}

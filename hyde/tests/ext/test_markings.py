@@ -15,7 +15,6 @@ TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 def assert_valid_conversion(html):
     assert html
     q = PyQuery(html)
-    print html
     assert "is_processable" not in html
     assert q("h1")
     assert "This is a" in q("h1").text()

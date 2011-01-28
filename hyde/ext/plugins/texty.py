@@ -64,13 +64,16 @@ class TextyPlugin(Plugin):
         """
         return None
 
+    def get_params(self, match, start=True):
+        return match.groups(1)[0] if match.lastindex else ''
+
     @abc.abstractmethod
     def text_to_tag(self, match, start=True):
         """
         Replaces the matched text with tag statement
         given by the template.
         """
-        params = match.groups(1)[0] if match.lastindex else ''
+        params = self.get_params(match, start)
         return (self.template.get_open_tag(self.tag_name, params)
                 if start
                 else self.template.get_close_tag(self.tag_name, params))

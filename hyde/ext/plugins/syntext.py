@@ -24,7 +24,7 @@ class SyntextPlugin(TextyPlugin):
         """
         The default pattern for block open text.
         """
-        return '^\s*~~~+\s*([A-Za-z0-9_\-\.]+)\s*~*\s*$'
+        return '^\s*~~~+\s*([A-Za-z0-9_\-\.:\']+)\s*~*\s*$'
 
     @property
     def default_close_pattern(self):
@@ -32,6 +32,18 @@ class SyntextPlugin(TextyPlugin):
         The default pattern for block close text.
         """
         return '^\s*~~~+\s*$'
+
+
+    def get_params(self, match, start=True):
+        """
+        ~~~css~~~ will return css
+        ~~~css/style.css will return css,style.css
+        """
+        params = super(SyntextPlugin, self).get_params(match, start)
+        if ':' in params:
+            (lex, _, filename) = params.rpartition(':')
+            params = 'lex=\'%(lex)s\',filename=\'%(filename)s\'' % locals()
+        return params
 
     def text_to_tag(self, match, start=True):
         """

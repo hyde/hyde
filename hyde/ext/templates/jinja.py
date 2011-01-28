@@ -64,11 +64,10 @@ def markdown(env, value):
 
 
 @environmentfilter
-def syntax(env, value, lexer=None):
+def syntax(env, value, lexer=None, filename=None):
     """
     Processes the contained block using `pygments`
     """
-
     try:
         import pygments
         from pygments import lexers
@@ -87,7 +86,10 @@ def syntax(env, value, lexer=None):
     formatter = formatters.HtmlFormatter(**settings)
     code = pygments.highlight(value, pyg, formatter)
     code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
-    return Markup('\n\n<div class="code">%s</div>\n\n' % code)
+    caption = filename if filename else pyg.name
+    return Markup(
+                '\n\n<div class="code"><figcaption>%s</figcaption>%s</div>\n\n'
+                        % (caption, code))
 
 class Markdown(Extension):
     """
@@ -115,35 +117,66 @@ class Markdown(Extension):
         output = caller().strip()
         return markdown(self.environment, output)
 
+def parse_kwargs(parser):
+    name = parser.stream.expect('name').value
+    parser.stream.expect('assign')
+    if parser.stream.current.test('string'):
+        value = parser.parse_expression()
+    else:
+        value = nodes.Const(parser.stream.next().value)
+    return (name, value)
+
 class Syntax(Extension):
     """
     A wrapper around the syntax filter for syntactic sugar.
     """
     tags = set(['syntax'])
 
+
     def parse(self, parser):
         """
         Parses the statements and defers to the callback for pygments processing.
         """
         lineno = parser.stream.next().lineno
-        lex = None
-        if parser.stream.current.type != 'block_end':
-            lex = parser.stream.next().value
+        lex = nodes.Const(None)
+        filename = nodes.Const(None)
+
+        def fail_syntax():
+             parser.fail(
+                    'Invalid syntax tag. Expected:'
+                    '{% syntax lex=yaml, filename=abc.yaml %} or'
+                    '{% syntax yaml, \'abc.yaml\' %}')
+
+        if not parser.stream.current.test('block_end'):
+            if parser.stream.look().test('assign'):
+                name = value = name1 = value1 = None
+                (name, value) = parse_kwargs(parser)
+                if parser.stream.skip_if('comma'):
+                    (name1, value1) = parse_kwargs(parser)
+
+                (lex, filename) = (value, value1) \
+                                        if name == 'lex' \
+                                            else (value1, value)
+            else:
+                lex = nodes.Const(parser.stream.next().value)
+                if parser.stream.skip_if('comma'):
+                    filename = parser.parse_expression()
 
         body = parser.parse_statements(['name:endsyntax'], drop_needle=True)
-
         return nodes.CallBlock(
-                    self.call_method('_render_syntax', args=[nodes.Const(lex)]),
+                    self.call_method('_render_syntax',
+                        args=[lex, filename]),
                         [], [], body).set_lineno(lineno)
 
-    def _render_syntax(self, lex, caller=None):
+
+    def _render_syntax(self, lex, filename, caller=None):
         """
         Calls the syntax filter to transform the output.
         """
         if not caller:
             return ''
         output = caller().strip()
-        return syntax(self.environment, output, lex)
+        return syntax(self.environment, output, lex, filename)
 
 class IncludeText(Extension):
     """
