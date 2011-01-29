@@ -2,7 +2,7 @@ mode: development
 media_root:: media
 media_url: /media
 base_url: /
-deploy_root: ../../../../hydepy.github.com
+deploy_root: ../../../../hyde.github.com
 template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
