@@ -8,6 +8,44 @@ from hyde import loader
 from hyde.util import getLoggerWithNullHandler
 from functools import partial
 
+
+logger = getLoggerWithNullHandler('hyde.engine')
+
+class PluginProxy(object):
+    """
+    A proxy class to raise events in registered  plugins
+    """
+
+    def __init__(self, site):
+        super(PluginProxy, self).__init__()
+        self.site = site
+
+    def __getattr__(self, method_name):
+        if hasattr(Plugin, method_name):
+            def __call_plugins__(*args):
+                # logger.debug("Calling plugin method [%s]", method_name)
+                res = None
+                if self.site.plugins:
+                    for plugin in self.site.plugins:
+                        if hasattr(plugin, method_name):
+                            # logger.debug(
+                            #    "\tCalling plugin [%s]",
+                            #   plugin.__class__.__name__)
+                            function = getattr(plugin, method_name)
+                            res = function(*args)
+                            if res:
+                                targs = list(args)
+                                last = None
+                                if len(targs):
+                                    last = targs.pop()
+                                    targs.append(res if res else last)
+                                args = tuple(targs)
+                return res
+
+            return __call_plugins__
+        raise HydeException(
+                "Unknown plugin method [%s] called." % method_name)
+
 class Plugin(object):
     """
     The plugin protocol
@@ -132,6 +170,9 @@ class Plugin(object):
         """
         pass
 
+    def raise_event(self, event_name):
+        return getattr(Plugin.proxy, event_name)()
+
     @staticmethod
     def load_all(site):
         """
@@ -140,3 +181,7 @@ class Plugin(object):
         """
         site.plugins = [loader.load_python_object(name)(site)
                             for name in site.config.plugins]
+
+    @staticmethod
+    def get_proxy(site):
+        return PluginProxy(site)

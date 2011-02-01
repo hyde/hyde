@@ -4,6 +4,7 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
+from hyde.ext.plugins.meta import MetaPlugin
 from hyde.ext.plugins.sorter import SorterPlugin
 from hyde.fs import File, Folder
 from hyde.generator import Generator
@@ -135,55 +136,6 @@ class TestSorter(object):
                                             [File(p).kind,
                                             File(p).parent.name]))]
         assert pages == expected_sorted
-
-    # def test_walk_resources_sorted_with_grouping_one_level(self):
-    #         s = Site(TEST_SITE)
-    #         cfg = """
-    #         plugins:
-    #             - hyde.ext.sorter.SorterPlugin
-    #         sorter:
-    #             multi:
-    #                 groups: sections.yaml
-    #                 attr:
-    #                     - source_file.kind
-    #                     - node.name
-    # 
-    #         """
-    #         sections = """
-    #          group_name: section
-    #          groups:
-    #              -
-    #                  name: support
-    #                  description: All site support pages
-    #              -
-    #                  name: media
-    #                  description: Media files
-    #         """
-    #         s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
-    #         s.load()
-    #         SorterPlugin(s).begin_site()
-    # 
-    #         assert hasattr(s.content, 'walk_resources_sorted_by_multi')
-    #         expected = ["content/404.html",
-    #                     "content/about.html",
-    #                     "content/apple-touch-icon.png",
-    #                     "content/blog/2010/december/merry-christmas.html",
-    #                     "content/crossdomain.xml",
-    #                     "content/favicon.ico",
-    #                     "content/robots.txt",
-    #                     "content/site.css"
-    #                     ]
-    # 
-    #         pages = [page.name for page in s.content.walk_resources_sorted_by_multi()]
-    # 
-    #         expected_sorted = [File(page).name
-    #                                 for page in
-    #                                     sorted(expected,
-    #                                         key=lambda p: tuple(
-    #                                             [File(p).kind,
-    #                                             File(p).parent.name]))]
-    #         assert pages == expected_sorted
-
 
     def test_walk_resources_sorted_no_default_is_processable(self):
         s = Site(TEST_SITE)
@@ -318,3 +270,67 @@ class TestSorter(object):
            q = PyQuery(text)
 
            assert q('span.latest').text() == 'YayYayYay'
+
+class TestGrouper(object):
+
+    def setUp(self):
+        TEST_SITE.make()
+        TEST_SITE.parent.child_folder(
+                  'sites/test_grouper').copy_contents_to(TEST_SITE)
+
+    def tearDown(self):
+        TEST_SITE.delete()
+
+    def test_walk_resources_sorted_with_grouping_one_level(self):
+        s = Site(TEST_SITE)
+        cfg = """
+        plugins:
+            - hyde.ext.meta.MetaPlugin
+            - hyde.ext.sorter.SorterPlugin
+        sorter:
+            sectional:
+                grouping:
+                    name: section
+                    description: Sections in the site
+                    groups:
+                        -
+                            name: start
+                            description: Getting Started
+                        -
+                            name: plugins
+                            description: Plugins
+                attr:
+                    - source_file.kind
+                    - node.name
+
+        """
+        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        s.load()
+        MetaPlugin(s).begin_site()
+        SorterPlugin(s).begin_site()
+
+        assert hasattr(s, 'sectional')
+        assert hasattr(s.sectional, 'groups')
+        assert len(s.sectional.groups) == 2
+
+        groups = dict([(g.name, g) for g in s.sectional.groups])
+
+        assert 'start' in groups
+        assert 'plugins' in groups
+
+        start = groups['start']
+        assert hasattr(start, 'resources')
+        start_resources = [resource.name for resource in
+                                start.resources if resource.is_processable]
+        assert len(start_resources) == 3
+        assert 'installation.html' in start_resources
+        assert 'overview.html' in start_resources
+        assert 'templating.html' in start_resources
+
+        plugin = groups['plugins']
+        assert hasattr(plugin, 'resources')
+        plugin_resources = [resource.name for resource in
+                                plugin.resources if resource.is_processable]
+        assert len(plugin_resources) == 2
+        assert 'plugins.html' in plugin_resources
+        assert 'tags.html' in plugin_resources

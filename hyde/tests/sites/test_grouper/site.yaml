@@ -2,6 +2,5 @@ mode: development
 media_root:: media # Relative path from site root (the directory where this file exists)
 media_url: /media
 template: hyde.ext.jinja2
-widgets:
-plugins:
-aggregators:
+meta:
+    nodemeta: meta.yaml

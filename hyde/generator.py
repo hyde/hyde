@@ -31,41 +31,7 @@ class Generator(object):
         self.template = None
         Plugin.load_all(site)
 
-        class PluginProxy(object):
-            """
-            A proxy class to raise events in registered  plugins
-            """
-
-            def __init__(self, site):
-                super(PluginProxy, self).__init__()
-                self.site = site
-
-            def __getattr__(self, method_name):
-                if hasattr(Plugin, method_name):
-                    def __call_plugins__(*args):
-                        #logger.debug("Calling plugin method [%s]", method_name)
-                        res = None
-                        if self.site.plugins:
-                            for plugin in self.site.plugins:
-                                if hasattr(plugin, method_name):
-                                    #logger.debug(
-                                    #    "\tCalling plugin [%s]",
-                                    #   plugin.__class__.__name__)
-                                    function = getattr(plugin, method_name)
-                                    res = function(*args)
-                                    if res:
-                                        targs = list(args)
-                                        last = None
-                                        if len(targs):
-                                            last = targs.pop()
-                                            targs.append(res if res else last)
-                                        args = tuple(targs)
-                        return res
-
-                    return __call_plugins__
-                raise HydeException(
-                        "Unknown plugin method [%s] called." % method_name)
-        self.events = PluginProxy(self.site)
+        self.events = Plugin.get_proxy(self.site)
 
     @contextmanager
     def context_for_resource(self, resource):
