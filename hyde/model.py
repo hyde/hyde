@@ -26,12 +26,18 @@ class Expando(object):
         d = d or {}
         if isinstance(d, dict):
             for key, value in d.items():
-                setattr(self, key, Expando.transform(value))
+                self.set_expando(key, value)
         elif isinstance(d, Expando):
             self.update(d.__dict__)
 
-    @staticmethod
-    def transform(primitive):
+    def set_expando(self, key, value):
+        """
+        Sets the expando attribute after
+        transforming the value.
+        """
+        setattr(self, key, self.transform(value))
+
+    def transform(self, primitive):
         """
         Creates an expando object, a sequence of expando objects or just
         returns the primitive based on the primitive's type.
@@ -40,7 +46,7 @@ class Expando(object):
             return Expando(primitive)
         elif isinstance(primitive, (tuple, list, set, frozenset)):
             seq = type(primitive)
-            return seq(Expando.transform(attr) for attr in primitive)
+            return seq(self.transform(attr) for attr in primitive)
         else:
             return primitive
 

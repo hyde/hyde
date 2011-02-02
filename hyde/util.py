@@ -83,3 +83,15 @@ class ColorFormatter(logging.Formatter):
         return message + RESET_SEQ
 
 logging.ColorFormatter = ColorFormatter
+
+
+def make_method(method_name, method_):
+    def method__(self):
+        return method_(self)
+    method__.__name__ = method_name
+    return method__
+
+def add_method(obj, method_name, method_, *args, **kwargs):
+    from functools import partial
+    m = make_method(method_name, partial(method_, *args, **kwargs))
+    setattr(obj, method_name, m)
