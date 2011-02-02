@@ -2,6 +2,7 @@ commando==0.1.1a
 PyYAML==3.09
 Markdown==2.0.3
 MarkupSafe==0.11
+pygments
 smartypants==1.6.0.3
 -e git://github.com/hyde/typogrify.git#egg=typogrify
 Jinja2==2.5.5

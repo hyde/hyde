@@ -29,7 +29,7 @@ class TestLess(object):
     def test_can_execute_less(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.less.LessCSSPlugin']
-        s.config.less = Expando(dict(app='~/local/bin/lessc'))
+        s.config.less = Expando(dict(app='/usr/local/share/npm/bin/lessc'))
         source = TEST_SITE.child('content/media/css/site.less')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
         gen = Generator(s)
