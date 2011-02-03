@@ -7,7 +7,7 @@ import re
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
-from hyde.util import add_method
+from hyde.util import add_method, pairwalk
 
 from collections import namedtuple
 from functools import partial
@@ -148,6 +148,18 @@ class GrouperPlugin(Plugin):
             return
         if not hasattr(self.site, 'grouper'):
             self.site.grouper = {}
+
         for name, grouping in self.site.config.grouper.__dict__.items():
             grouping.name = name
+            prev_att = 'prev_in_%s' % name
+            next_att = 'next_in_%s' % name
+            setattr(Resource, prev_att, None)
+            setattr(Resource, next_att, None)
             self.site.grouper[name] = Group(grouping)
+            walker = Group.walk_resources(
+                            self.site.content, self.site.grouper[name])
+
+            for prev, next in pairwalk(walker):
+                print ("%s => %s" % (prev.name, next.name))
+                setattr(next, prev_att, prev)
+                setattr(prev, next_att, next)

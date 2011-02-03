@@ -7,16 +7,11 @@ import re
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
-from hyde.util import add_method
+from hyde.util import add_method, pairwalk
 
+from itertools import ifilter
 from functools import partial
-from itertools import ifilter, izip, tee, product
 from operator import attrgetter
-
-def pairwalk(iterable):
-    a, b = tee(iterable)
-    next(b, None)
-    return izip(a, b)
 
 def filter_method(item, settings=None):
     """

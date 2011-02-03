@@ -129,6 +129,28 @@ class TestGrouperSingleLevel(object):
         plugin_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_plugins()]
         assert plugin_resources == self.plugins
 
+    def test_prev_next(self):
+
+        resources = []
+        for page in self.all:
+            resources.append(self.s.content.resource_from_relative_path('blog/' + page))
+
+        index = 0
+        for res in resources:
+            if index < 4:
+                assert res.next_in_section.name == self.all[index + 1]
+            else:
+                assert not res.next_in_section
+            index += 1
+
+        index = 0
+        for res in resources:
+            if index:
+                assert res.prev_in_section.name == self.all[index - 1]
+            else:
+                assert not res.prev_in_section
+            index += 1
+
     def test_nav_with_grouper(self):
         text ="""
 {% for group, resources in site.content.walk_section_groups() %}

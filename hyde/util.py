@@ -3,6 +3,7 @@ Module for python 2.6 compatibility.
 """
 import logging
 import sys
+from itertools import ifilter, izip, tee
 
 try:
     from logging import NullHandler
@@ -95,3 +96,8 @@ def add_method(obj, method_name, method_, *args, **kwargs):
     from functools import partial
     m = make_method(method_name, partial(method_, *args, **kwargs))
     setattr(obj, method_name, m)
+    
+def pairwalk(iterable):
+    a, b = tee(iterable)
+    next(b, None)
+    return izip(a, b)
