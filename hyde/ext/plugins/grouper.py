@@ -58,7 +58,7 @@ class Group(Expando):
         that belong to this group.
         """
         for group in group.walk_groups():
-            for resource in group.list_resources(node):
+            for resource in group.walk_resources_in_node(node):
                 yield resource
 
     @staticmethod
@@ -69,7 +69,7 @@ class Group(Expando):
         """
         walker = group.walk_groups()
         for g in walker:
-            lister = g.list_resources(node)
+            lister = g.walk_resources_in_node(node)
             for r in lister:
                 yield g
                 break;
@@ -84,9 +84,9 @@ class Group(Expando):
             for child in group.walk_groups():
                 yield child
 
-    def list_resources(self, node):
+    def walk_resources_in_node(self, node):
         """
-        Lists the resources in the given node
+        Walks the resources in the given node
         sorted based on sorter configuration in this
         group.
         """
