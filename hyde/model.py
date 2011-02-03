@@ -19,6 +19,13 @@ class Expando(object):
         super(Expando, self).__init__()
         self.update(d)
 
+    def __iter__(self):
+        """
+        Returns an iterator for all the items in the
+        dictionary as key value pairs.
+        """
+        return self.__dict__.iteritems()
+
     def update(self, d):
         """
         Updates the expando with a new dictionary
