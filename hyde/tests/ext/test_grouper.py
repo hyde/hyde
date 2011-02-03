@@ -38,8 +38,7 @@ class TestGrouper(object):
                 attr:
                     - source_file.kind
         grouper:
-            sections:
-                name: section
+            section:
                 description: Sections in the site
                 sorter: kind
                 groups:
@@ -58,11 +57,20 @@ class TestGrouper(object):
         SorterPlugin(s).begin_site()
         GrouperPlugin(s).begin_site()
 
-        groups = dict([(g.name, g) for g in s.grouper['sections'].groups])
+
+        groups = dict([(g.name, g) for g in s.grouper['section'].groups])
+        assert len(groups) == 2
         assert 'start' in groups
         assert 'plugins' in groups
 
-        assert hasattr(s.content, 'walk_resources_grouped_by_sections')
+        assert hasattr(s.content, 'walk_section_groups')
+        groups = dict([(g.name, g) for g in s.content.walk_section_groups()])
+        assert len(groups) == 2
+        assert 'start' in groups
+        assert 'plugins' in groups
+
+        assert hasattr(s.content, 'walk_resources_grouped_by_section')
+
 
 
         # assert hasattr(s, 'sectional')
