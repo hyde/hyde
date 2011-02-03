@@ -9,10 +9,13 @@ from hyde.plugin import Plugin
 from hyde.site import Node, Resource
 from hyde.util import add_method
 
+from collections import namedtuple
 from functools import partial
 from itertools import ifilter, izip, tee, product
 from operator import attrgetter
 
+
+Grouper = namedtuple('Grouper', 'group resources')
 
 class Group(Expando):
     """
@@ -70,10 +73,7 @@ class Group(Expando):
         walker = group.walk_groups()
         for g in walker:
             lister = g.walk_resources_in_node(node)
-            for r in lister:
-                yield g
-                break;
-            found = False
+            yield Grouper(group=g, resources=lister)
 
     def walk_groups(self):
         """

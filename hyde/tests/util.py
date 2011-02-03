@@ -1,9 +1,11 @@
+import re
+
 def strip_spaces_between_tags(value):
     """
     Stolen from `django.util.html`
     Returns the given HTML with spaces between tags removed.
     """
-    return re.sub(r'>\s+<', '><', force_unicode(value))
+    return re.sub(r'>\s+<', '><', unicode(value))
 
 def assert_html_equals(expected, actual, sanitize=None):
     expected = strip_spaces_between_tags(expected.strip())

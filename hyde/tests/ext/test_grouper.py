@@ -11,6 +11,8 @@ from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
+
+from hyde.tests.util import assert_html_equals
 import yaml
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -27,9 +29,9 @@ class TestGrouperSingleLevel(object):
         cfg = """
         nodemeta: meta.yaml
         plugins:
-          - hyde.ext.meta.MetaPlugin
-          - hyde.ext.sorter.SorterPlugin
-          - hyde.ext.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.MetaPlugin
+          - hyde.ext.plugins.sorter.SorterPlugin
+          - hyde.ext.plugins.grouper.GrouperPlugin
         sorter:
           kind:
               attr:
@@ -56,6 +58,10 @@ class TestGrouperSingleLevel(object):
         SorterPlugin(self.s).begin_site()
         GrouperPlugin(self.s).begin_site()
 
+        self.all = ['installation.html', 'overview.html', 'templating.html', 'plugins.html', 'tags.html']
+        self.start = ['installation.html', 'overview.html', 'templating.html']
+        self.plugins = ['plugins.html', 'tags.html']
+
     def tearDown(self):
         TEST_SITE.delete()
 
@@ -77,22 +83,27 @@ class TestGrouperSingleLevel(object):
     def test_walk_section_groups(self):
 
         assert hasattr(self.s.content, 'walk_section_groups')
-        groups = dict([(g.name, g) for g in self.s.content.walk_section_groups()])
-        assert len(groups) == 2
+        groups = dict([(grouper.group.name, grouper) for grouper in self.s.content.walk_section_groups()])
+        assert len(groups) == 3
+        assert 'section' in groups
         assert 'start' in groups
         assert 'plugins' in groups
+        for name in ['start', 'plugins']:
+            res = [resource.name for resource in groups[name].resources]
+            assert res == getattr(self, name)
 
     def test_walk_start_groups(self):
 
         assert hasattr(self.s.content, 'walk_start_groups')
-        groups = dict([(g.name, g) for g in self.s.content.walk_start_groups()])
+        groups = dict([(g.name, g) for g, resources in self.s.content.walk_start_groups()])
         assert len(groups) == 1
         assert 'start' in groups
+
 
     def test_walk_plugins_groups(self):
 
         assert hasattr(self.s.content, 'walk_plugins_groups')
-        groups = dict([(g.name, g) for g in self.s.content.walk_plugins_groups()])
+        groups = dict([(g.name, g) for g, resources in self.s.content.walk_plugins_groups()])
         assert len(groups) == 1
         assert 'plugins' in groups
 
@@ -101,29 +112,74 @@ class TestGrouperSingleLevel(object):
         assert hasattr(self.s.content, 'walk_resources_grouped_by_section')
 
         resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_section()]
-        assert len(resources) == 5
-        assert 'installation.html' in resources
-        assert 'overview.html' in resources
-        assert 'templating.html' in resources
-        assert 'plugins.html' in resources
-        assert 'tags.html' in resources
+        assert resources == self.all
+
 
     def test_walk_start_resources(self):
 
         assert hasattr(self.s.content, 'walk_resources_grouped_by_start')
 
         start_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_start()]
-        assert len(start_resources) == 3
-        assert 'installation.html' in start_resources
-        assert 'overview.html' in start_resources
-        assert 'templating.html' in start_resources
+        assert start_resources == self.start
 
     def test_walk_plugins_resources(self):
 
         assert hasattr(self.s.content, 'walk_resources_grouped_by_plugins')
 
         plugin_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_plugins()]
-        assert len(plugin_resources) == 2
-        assert 'plugins.html' in plugin_resources
-        assert 'tags.html' in plugin_resources
+        assert plugin_resources == self.plugins
 
+    def test_nav_with_grouper(self):
+        text ="""
+{% for group, resources in site.content.walk_section_groups() %}
+<ul>
+    <li>
+        <h2>{{ group.name|title }}</h2>
+        <h3>{{ group.description }}</h3>
+        <ul class="links">
+            {% for resource in resources %}
+            <li>{{resource.name}}</li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>
+{% endfor %}
+
+"""
+        expected = """
+<ul>
+    <li>
+        <h2>Section</h2>
+        <h3>Sections in the site</h3>
+        <ul class="links"></ul>
+    </li>
+</ul>
+<ul>
+    <li>
+        <h2>Start</h2>
+        <h3>Getting Started</h3>
+        <ul class="links">
+            <li>installation.html</li>
+            <li>overview.html</li>
+            <li>templating.html</li>
+        </ul>
+    </li>
+</ul>
+<ul>
+    <li>
+        <h2>Plugins</h2>
+        <h3>Plugins</h3>
+        <ul class="links">
+            <li>plugins.html</li>
+            <li>tags.html</li>
+        </ul>
+    </li>
+</ul>
+
+"""
+
+        gen = Generator(self.s)
+        gen.load_site_if_needed()
+        gen.load_template_if_needed()
+        out = gen.template.render(text, {'site':self.s})
+        assert_html_equals(out, expected)
