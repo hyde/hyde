@@ -160,6 +160,5 @@ class GrouperPlugin(Plugin):
                             self.site.content, self.site.grouper[name])
 
             for prev, next in pairwalk(walker):
-                print ("%s => %s" % (prev.name, next.name))
                 setattr(next, prev_att, prev)
                 setattr(prev, next_att, next)
