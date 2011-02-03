@@ -404,8 +404,9 @@ class Jinja2Template(Template):
         tpls = find_referenced_templates(ast)
         deps = []
         for dep in tpls:
-            deps.append(dep)
-            deps.extend(self.get_dependencies(dep))
+            if dep:
+                deps.append(dep)
+                deps.extend(self.get_dependencies(dep))
         return list(set(deps))
 
     @property
