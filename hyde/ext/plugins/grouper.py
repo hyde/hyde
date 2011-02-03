@@ -21,23 +21,22 @@ class Group(Expando):
     """
 
     def __init__(self, grouping, parent=None):
+        self.name = 'groups'
         self.parent = parent
         self.root = self
         self.root = parent.root if parent else self
-        super(Group, self).__init__(grouping)
-        if hasattr(parent, 'sorter') and not hasattr(self, 'sorter'):
+        self.groups = []
+        self.sorter = getattr(grouping, 'sorter', None)
+        if hasattr(parent, 'sorter'):
             self.sorter = parent.sorter
-
-        name = 'groups'
-        if hasattr(grouping, 'name'):
-            name = grouping.name
+        super(Group, self).__init__(grouping)
 
         add_method(Node,
                 'walk_%s_groups' % self.name,
                 Group.walk_groups_in_node,
                 group=self)
         add_method(Node,
-                'walk_resources_grouped_by_%s' % name,
+                'walk_resources_grouped_by_%s' % self.name,
                 Group.walk_resources,
                 group=self)
 
@@ -58,7 +57,9 @@ class Group(Expando):
         object for walking the resources in the node
         that belong to this group.
         """
-        return group.list_resources(node)
+        for group in group.walk_groups():
+            for resource in group.list_resources(node):
+                yield resource
 
     @staticmethod
     def walk_groups_in_node(node, group):
@@ -69,25 +70,19 @@ class Group(Expando):
         walker = group.walk_groups()
         for g in walker:
             lister = g.list_resources(node)
-            found = False
             for r in lister:
-                found = True
                 yield g
                 break;
-            if not found:
-                walker.send(True)
             found = False
-
 
     def walk_groups(self):
         """
         Walks the groups in the current group
         """
+        yield self
         for group in self.groups:
-            skip = (yield group)
-            if not skip:
-                group.walk_groups()
-
+            for child in group.walk_groups():
+                yield child
 
     def list_resources(self, node):
         """
@@ -96,7 +91,7 @@ class Group(Expando):
         group.
         """
         walker = 'walk_resources'
-        if hasattr(self, 'sorter'):
+        if hasattr(self, 'sorter') and self.sorter:
             walker = 'walk_resources_sorted_by_' + self.sorter
         walker = getattr(node, walker, getattr(node, 'walk_resources'))
         for resource in walker():
@@ -104,10 +99,8 @@ class Group(Expando):
                 group_value = getattr(resource.meta, self.root.name)
             except AttributeError:
                 continue
-
             if group_value == self.name:
                 yield resource
-
 
 class GrouperPlugin(Plugin):
     """

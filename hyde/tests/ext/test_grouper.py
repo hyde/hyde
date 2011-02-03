@@ -29,6 +29,7 @@ class TestGrouper(object):
     def test_walk_resources_sorted_with_grouping_one_level(self):
         s = Site(TEST_SITE)
         cfg = """
+        nodemeta: meta.yaml
         plugins:
             - hyde.ext.meta.MetaPlugin
             - hyde.ext.sorter.SorterPlugin
@@ -37,6 +38,8 @@ class TestGrouper(object):
             kind:
                 attr:
                     - source_file.kind
+                filters:
+                    is_processable: True
         grouper:
             section:
                 description: Sections in the site
@@ -57,12 +60,18 @@ class TestGrouper(object):
         SorterPlugin(s).begin_site()
         GrouperPlugin(s).begin_site()
 
-
+        print [resource.name for resource in s.content.walk_resources_sorted_by_kind()]
         groups = dict([(g.name, g) for g in s.grouper['section'].groups])
         assert len(groups) == 2
         assert 'start' in groups
         assert 'plugins' in groups
-
+        
+        groups = dict([(g.name, g) for g in s.grouper['section'].walk_groups()])
+        assert len(groups) == 3
+        assert 'section' in groups
+        assert 'start' in groups
+        assert 'plugins' in groups
+        
         assert hasattr(s.content, 'walk_section_groups')
         groups = dict([(g.name, g) for g in s.content.walk_section_groups()])
         assert len(groups) == 2
@@ -70,8 +79,10 @@ class TestGrouper(object):
         assert 'plugins' in groups
 
         assert hasattr(s.content, 'walk_resources_grouped_by_section')
-
-
+        
+        resources = [resource.name for resource in s.content.walk_resources_grouped_by_section()]
+        
+        assert len(resources) == 5
 
         # assert hasattr(s, 'sectional')
         #        assert hasattr(s.sectional, 'groups')
