@@ -20,6 +20,9 @@ class AutoExtendPlugin(Plugin):
         and there is no extends statement, this plugin automatically adds
         an extends statement to the top of the file.
         """
+
+        if not resource.is_processable or not resource.uses_template:
+            return text
         layout = None
         block = None
         try:
