@@ -25,8 +25,8 @@ class Generator(object):
         self.generated_once = False
         self.__context__ = dict(site=site)
         if hasattr(site.config, 'context'):
-            self.__context__.update(
-                    Context.load(site.sitepath, site.config.context))
+            site.context = Context.load(site.sitepath, site.config.context)
+            self.__context__.update(site.context)
 
         self.template = None
         Plugin.load_all(site)
@@ -108,6 +108,12 @@ class Generator(object):
         logger.info("Generation Complete")
         self.events.generation_complete()
 
+    def get_dependencies(self, resource):
+        """
+        Gets the dependencies for a given resource.
+        """
+        return self.template.get_dependencies(resource.relative_path)
+
     def has_resource_changed(self, resource):
         """
         Checks if the given resource has changed since the
@@ -126,7 +132,7 @@ class Generator(object):
         if resource.source_file.is_binary or not resource.uses_template:
             logger.debug("No Changes found in %s" % resource)
             return False
-        deps = self.template.get_dependencies(resource.relative_path)
+        deps = self.get_dependencies(resource)
         if not deps or None in deps:
             logger.debug("No changes found in %s" % resource)
             return False
@@ -134,6 +140,8 @@ class Generator(object):
         layout = Folder(self.site.sitepath).child_folder('layout')
         logger.debug("Checking for changes in dependents:%s" % deps)
         for dep in deps:
+            if not dep:
+                return True
             source = File(content.child(dep))
             if not source.exists:
                 source = File(layout.child(dep))

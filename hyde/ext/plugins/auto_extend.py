@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Autoextend css plugin
+Autoextend plugin
 """
 
 from hyde.plugin import Plugin
@@ -8,7 +8,7 @@ import re
 
 class AutoExtendPlugin(Plugin):
     """
-    The plugin class for less css
+    The plugin class for extending templates using metadata.
     """
 
     def __init__(self, site):

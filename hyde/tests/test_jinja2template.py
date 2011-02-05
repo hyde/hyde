@@ -171,6 +171,39 @@ class TestJinjaTemplate(object):
         assert 'layout.html' in deps
         assert 'index.html' in deps
 
+    def test_depends_with_reference_tag(self):
+        site = Site(TEST_SITE)
+        JINJA2.copy_contents_to(site.content.source)
+        inc = File(TEST_SITE.child('content/inc.md'))
+        inc.write("{% refer to 'index.html' as index%}")
+        site.load()
+        gen = Generator(site)
+        gen.load_template_if_needed()
+        t = gen.template
+        deps = list(t.get_dependencies('inc.md'))
+
+        assert len(deps) == 3
+
+        assert 'helpers.html' in deps
+        assert 'layout.html' in deps
+        assert 'index.html' in deps
+
+    def test_cant_find_depends_with_reference_tag_var(self):
+        site = Site(TEST_SITE)
+        JINJA2.copy_contents_to(site.content.source)
+        inc = File(TEST_SITE.child('content/inc.md'))
+        inc.write("{% set ind = 'index.html' %}{% refer to ind as index %}")
+        site.load()
+        gen = Generator(site)
+        gen.load_template_if_needed()
+        t = gen.template
+        deps = list(t.get_dependencies('inc.md'))
+
+        assert len(deps) == 1
+        
+        assert not deps[0]
+
+
     def test_can_include_templates_with_processing(self):
         text = """
 ===
@@ -275,6 +308,34 @@ Hyde & Jinja.
 
         text2 = """
 {% refer to "inc.md" as inc %}
+{{ inc.html('.fulltext') }}
+"""
+        html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html
+
+
+    def test_refer_with_var(self):
+        text = """
+===
+is_processable: False
+===
+<div class="fulltext">
+{% filter markdown|typogrify %}
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
+{% endfilter %}
+</div>
+"""
+
+        text2 = """
+{% set incu = 'inc.md' %}
+{% refer to incu as inc %}
 {{ inc.html('.fulltext') }}
 """
         html = assert_markdown_typogrify_processed_well(text, text2)

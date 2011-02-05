@@ -384,6 +384,7 @@ class Jinja2Template(Template):
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
         self.env.globals['engine'] = engine
+        self.env.globals['deps'] = {}
         self.env.filters['markdown'] = markdown
         self.env.filters['syntax'] = syntax
 
@@ -411,10 +412,10 @@ class Jinja2Template(Template):
         from jinja2.meta import find_referenced_templates
         ast = self.env.parse(text)
         tpls = find_referenced_templates(ast)
-        deps = []
+        deps = list(self.env.globals['deps'].get('path', []))
         for dep in tpls:
+            deps.append(dep)
             if dep:
-                deps.append(dep)
                 deps.extend(self.get_dependencies(dep))
         return list(set(deps))
 

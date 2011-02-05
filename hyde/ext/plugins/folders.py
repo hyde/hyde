@@ -8,7 +8,7 @@ from hyde.fs import Folder
 
 class FlattenerPlugin(Plugin):
     """
-    The plugin class for syntax text replacement.
+    The plugin class for flattening nested folders.
     """
     def __init__(self, site):
         super(FlattenerPlugin, self).__init__(site)

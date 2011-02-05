@@ -348,6 +348,7 @@ class Site(object):
         self.config = config if config else Config(self.sitepath)
         self.content = RootNode(self.config.content_root_path, self)
         self.plugins = []
+        self.context = {}
 
     def load(self):
         """
