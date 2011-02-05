@@ -42,6 +42,10 @@ class Group(Expando):
                 'walk_resources_grouped_by_%s' % self.name,
                 Group.walk_resources,
                 group=self)
+        add_method(Resource,
+                    'walk_%s_groups' % self.name,
+                    Group.walk_resource_groups,
+                    group=self)
 
     def set_expando(self, key, value):
         """
@@ -52,6 +56,23 @@ class Group(Expando):
             self.groups = [Group(group, parent=self) for group in value]
         else:
             return super(Group, self).set_expando(key, value)
+
+    @staticmethod
+    def walk_resource_groups(resource, group):
+        """
+        This method gets attached to the resource object.
+        Returns group and its ancestors that the resource
+        belongs to, in that order.
+        """
+        try:
+            group_name = getattr(resource.meta, group.root.name)
+        except AttributeError:
+            group_name = None
+        if group_name:
+            for g in group.walk_groups():
+                if g.name == group_name:
+                    return reversed(list(g.walk_hierarchy()))
+        return []
 
     @staticmethod
     def walk_resources(node, group):
@@ -74,6 +95,17 @@ class Group(Expando):
         for g in walker:
             lister = g.walk_resources_in_node(node)
             yield Grouper(group=g, resources=lister)
+
+    def walk_hierarchy(self):
+        """
+        Walks the group hierarchy starting from
+        this group.
+        """
+        g = self
+        yield g
+        while g.parent:
+            yield g.parent
+            g = g.parent
 
     def walk_groups(self):
         """

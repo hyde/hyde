@@ -61,6 +61,7 @@ class TestGrouperSingleLevel(object):
         self.all = ['installation.html', 'overview.html', 'templating.html', 'plugins.html', 'tags.html']
         self.start = ['installation.html', 'overview.html', 'templating.html']
         self.plugins = ['plugins.html', 'tags.html']
+        self.section = self.all
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -128,6 +129,17 @@ class TestGrouperSingleLevel(object):
 
         plugin_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_plugins()]
         assert plugin_resources == self.plugins
+
+    def test_resource_belongs_to(self):
+
+        groups = dict([(g.name, g) for g in self.s.grouper['section'].groups])
+
+        for name, group in groups.items():
+            pages = getattr(self, name)
+            for page in pages:
+                res = self.s.content.resource_from_relative_path('blog/' + page)
+                res_groups = getattr(res, 'walk_%s_groups' % name)()
+                assert group in res_groups
 
     def test_prev_next(self):
 
