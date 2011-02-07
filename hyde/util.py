@@ -74,14 +74,25 @@ class ColorFormatter(logging.Formatter):
         levelname = record.levelname
         color     = COLOR_SEQ % (30 + COLORS[levelname])
         message   = logging.Formatter.format(self, record)
-        message   = message.replace("$RESET", RESET_SEQ)\
-                           .replace("$BOLD",  BOLD_SEQ)\
-                           .replace("$COLOR", color)
-        for k,v in COLORS.items():
-            message = message.replace("$" + k,    COLOR_SEQ % (v+30))\
-                             .replace("$BG" + k,  COLOR_SEQ % (v+40))\
-                             .replace("$BG-" + k, COLOR_SEQ % (v+40))
-        return message + RESET_SEQ
+        if sys.platform == 'win32':
+            message = message.replace("$RESET", "")\
+                             .replace("$BOLD",  "")\
+                             .replace("$COLOR", "")
+            for k,v in COLORS.items():
+                if sys.platform =='win32':
+                    message = message.replace("$" + k,    "")\
+                                     .replace("$BG" + k,  "")\
+                                     .replace("$BG-" + k, "")
+            return message
+        else:
+            message = message.replace("$RESET", RESET_SEQ)\
+                             .replace("$BOLD",  BOLD_SEQ)\
+                             .replace("$COLOR", color)
+            for k,v in COLORS.items():
+                message = message.replace("$" + k,    COLOR_SEQ % (v+30))\
+                                 .replace("$BG" + k,  COLOR_SEQ % (v+40))\
+                                 .replace("$BG-" + k, COLOR_SEQ % (v+40))
+            return message + RESET_SEQ
 
 logging.ColorFormatter = ColorFormatter
 
