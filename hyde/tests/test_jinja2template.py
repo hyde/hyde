@@ -128,6 +128,7 @@ def assert_markdown_typogrify_processed_well(include_text, includer_text):
     gen.load_template_if_needed()
     template = gen.template
     html = template.render(includer_text, {}).strip()
+    print html
     assert html
     q = PyQuery(html)
     assert "is_processable" not in html
@@ -200,7 +201,7 @@ class TestJinjaTemplate(object):
         deps = list(t.get_dependencies('inc.md'))
 
         assert len(deps) == 1
-        
+
         assert not deps[0]
 
 
@@ -311,6 +312,52 @@ Hyde & Jinja.
 {{ inc.html('.fulltext') }}
 """
         html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html
+
+    def test_two_level_refer_with_var(self):
+        text = """
+===
+is_processable: False
+===
+<div class="fulltext">
+{% filter markdown|typogrify %}
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
+{% endfilter %}
+</div>
+"""
+
+        text2 = """
+{% set super = 'super.md' %}
+{% refer to super as sup %}
+<div class="justhead">
+{% mark child %}
+{{ sup.heading }}
+{% endmark %}
+{% mark cont %}
+{{ sup.content }}
+{% endmark %}
+</div>
+"""
+        text3 = """
+{% set incu = 'inc.md' %}
+{% refer to incu as inc %}
+{% filter markdown|typogrify %}
+{{ inc.child }}
+{{ inc.cont }}
+{% endfilter %}
+"""
+
+        superinc = File(TEST_SITE.child('content/super.md'))
+        superinc.write(text)
+
+        html = assert_markdown_typogrify_processed_well(text2, text3)
         assert "mark" not in html
         assert "reference" not in html
 

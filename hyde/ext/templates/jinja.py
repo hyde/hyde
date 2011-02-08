@@ -265,7 +265,13 @@ class Refer(Extension):
         includeNode.ignore_missing = False
         includeNode.template = template
 
+        temp = parser.free_identifier(lineno)
+
         return [
+                nodes.Assign(
+                    nodes.Name(temp.name, 'store'),
+                    nodes.Name(MARKINGS, 'load')
+                ).set_lineno(lineno),
                 nodes.Assign(
                     nodes.Name(MARKINGS, 'store'),
                     nodes.Const({})).set_lineno(lineno),
@@ -294,6 +300,10 @@ class Refer(Extension):
                 nodes.Assign(nodes.Name('resource', 'store'),
                             nodes.Getitem(nodes.Name(namespace, 'load'),
                             nodes.Const('parent_resource'), 'load')
+                    ).set_lineno(lineno),
+                    nodes.Assign(
+                        nodes.Name(MARKINGS, 'store'),
+                        nodes.Name(temp.name, 'load')
                     ).set_lineno(lineno),
         ]
 
