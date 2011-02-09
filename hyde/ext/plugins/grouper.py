@@ -7,7 +7,7 @@ import re
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
-from hyde.util import add_method, pairwalk
+from hyde.util import add_method, add_property, pairwalk
 
 from collections import namedtuple
 from functools import partial
@@ -42,6 +42,10 @@ class Group(Expando):
                 'walk_resources_grouped_by_%s' % self.name,
                 Group.walk_resources,
                 group=self)
+        add_property(Resource,
+                    '%s_group' % self.name,
+                    Group.get_resource_group,
+                    group=self)
         add_method(Resource,
                     'walk_%s_groups' % self.name,
                     Group.walk_resource_groups,
@@ -56,6 +60,23 @@ class Group(Expando):
             self.groups = [Group(group, parent=self) for group in value]
         else:
             return super(Group, self).set_expando(key, value)
+
+    @staticmethod
+    def get_resource_group(resource, group):
+        """
+        This method gets attached to the resource object.
+        Returns group and its ancestors that the resource
+        belongs to, in that order.
+        """
+        try:
+            group_name = getattr(resource.meta, group.root.name)
+        except AttributeError:
+            group_name = None
+
+        return next((g for g in group.walk_groups()
+                            if g.name == group_name), None) \
+                    if group_name \
+                    else None
 
     @staticmethod
     def walk_resource_groups(resource, group):

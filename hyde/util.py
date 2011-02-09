@@ -92,11 +92,16 @@ def make_method(method_name, method_):
     method__.__name__ = method_name
     return method__
 
+def add_property(obj, method_name, method_, *args, **kwargs):
+    from functools import partial
+    m = make_method(method_name, partial(method_, *args, **kwargs))
+    setattr(obj, method_name, property(m))
+
 def add_method(obj, method_name, method_, *args, **kwargs):
     from functools import partial
     m = make_method(method_name, partial(method_, *args, **kwargs))
     setattr(obj, method_name, m)
-    
+
 def pairwalk(iterable):
     a, b = tee(iterable)
     next(b, None)

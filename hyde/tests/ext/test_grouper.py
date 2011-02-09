@@ -130,6 +130,19 @@ class TestGrouperSingleLevel(object):
         plugin_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_plugins()]
         assert plugin_resources == self.plugins
 
+    def test_resource_group(self):
+
+        groups = dict([(g.name, g) for g in self.s.grouper['section'].groups])
+
+        for name, group in groups.items():
+            pages = getattr(self, name)
+            for page in pages:
+                res = self.s.content.resource_from_relative_path('blog/' + page)
+                assert hasattr(res, 'section_group')
+                res_group = getattr(res, 'section_group')
+                print "%s, %s=%s" % (page, group.name, res_group.name)
+                assert res_group == group
+
     def test_resource_belongs_to(self):
 
         groups = dict([(g.name, g) for g in self.s.grouper['section'].groups])
