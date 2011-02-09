@@ -388,3 +388,44 @@ Hyde & Jinja.
         html = assert_markdown_typogrify_processed_well(text, text2)
         assert "mark" not in html
         assert "reference" not in html
+
+
+    def test_yaml_tag(salf):
+
+        text = """
+{% yaml test %}
+one:
+    - A
+    - B
+    - C
+two:
+    - D
+    - E
+    - F
+{% endyaml %}
+{% for section, values in test.items() %}
+<ul class="{{ section }}">
+    {% for value in values %}
+    <li>{{ value }}</li>
+    {% endfor %}
+</ul>
+{% endfor %}
+"""
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        actual = PyQuery(html)
+        assert actual("ul").length == 2
+        assert actual("ul.one").length == 1
+        assert actual("ul.two").length == 1
+
+        assert actual("li").length == 6
+
+        assert actual("ul.one li").length == 3
+        assert actual("ul.two li").length == 3
+
+        ones = [item.text for item in actual("ul.one li")]
+        assert ones == ["A", "B", "C"]
+
+        twos = [item.text for item in actual("ul.two li")]
+        assert twos == ["D", "E", "F"]

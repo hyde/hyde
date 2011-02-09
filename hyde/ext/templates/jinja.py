@@ -62,7 +62,6 @@ def markdown(env, value):
     md = markdown.Markdown(**d)
     return md.convert(output)
 
-
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
     """
@@ -116,6 +115,49 @@ class Markdown(Extension):
             return ''
         output = caller().strip()
         return markdown(self.environment, output)
+
+class YamlVar(Extension):
+    """
+    An extension that converts the content between the tags
+    into an yaml object and sets the value in the given
+    variable.
+    """
+
+    tags = set(['yaml'])
+
+    def parse(self, parser):
+        """
+        Parses the contained data and defers to the callback to load it as
+        yaml.
+        """
+        lineno = parser.stream.next().lineno
+        var = parser.stream.expect('name').value
+        body = parser.parse_statements(['name:endyaml'], drop_needle=True)
+        return [
+                nodes.Assign(
+                    nodes.Name(var, 'store'),
+                    nodes.Const({})
+                    ).set_lineno(lineno),
+                nodes.CallBlock(
+                    self.call_method('_set_yaml', args=[nodes.Name(var, 'load')]),
+                        [], [], body).set_lineno(lineno)
+                ]
+
+
+    def _set_yaml(self, var, caller=None):
+        """
+        Loads the yaml data into the specified variable.
+        """
+        if not caller:
+            return ''
+        try:
+            import yaml
+        except ImportError:
+            return ''
+
+        out = caller().strip()
+        var.update(yaml.load(out))
+        return ''
 
 def parse_kwargs(parser):
     name = parser.stream.expect('name').value
@@ -388,6 +430,7 @@ class Jinja2Template(Template):
                                             Syntax,
                                             Reference,
                                             Refer,
+                                            YamlVar,
                                             'jinja2.ext.do',
                                             'jinja2.ext.loopcontrols',
                                             'jinja2.ext.with_'])
