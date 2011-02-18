@@ -80,7 +80,7 @@ def syntax(env, value, lexer=None, filename=None):
                     lexers.guess_lexer(value))
     settings = {}
     if hasattr(env.config, 'syntax'):
-        settings = getattr(env.config.syntax, 'options', {})
+        settings = dict(getattr(env.config.syntax, 'options', {}))
 
     formatter = formatters.HtmlFormatter(**settings)
     code = pygments.highlight(value, pyg, formatter)
