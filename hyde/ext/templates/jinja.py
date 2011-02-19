@@ -4,6 +4,7 @@ Jinja template utilties
 """
 
 from hyde.fs import File, Folder
+from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
 from hyde.site import Resource
 from hyde.util import getLoggerWithNullHandler, getLoggerWithConsoleHandler
@@ -58,7 +59,9 @@ def markdown(env, value):
     d = {}
     if hasattr(env.config, 'markdown'):
         d['extensions'] = getattr(env.config.markdown, 'extensions', [])
-        d['extension_configs'] = getattr(env.config.markdown, 'extension_configs', {})
+        d['extension_configs'] = getattr(env.config.markdown,
+                                        'extension_configs',
+                                        Expando({})).to_dict()
     md = markdown.Markdown(**d)
     return md.convert(output)
 
@@ -80,7 +83,9 @@ def syntax(env, value, lexer=None, filename=None):
                     lexers.guess_lexer(value))
     settings = {}
     if hasattr(env.config, 'syntax'):
-        settings = dict(getattr(env.config.syntax, 'options', {}))
+        settings = getattr(env.config.syntax,
+                            'options',
+                            Expando({})).to_dict()
 
     formatter = formatters.HtmlFormatter(**settings)
     code = pygments.highlight(value, pyg, formatter)
