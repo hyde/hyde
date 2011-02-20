@@ -1,0 +1,5 @@
+include setup.py
+include distribute_setup.py
+include tests/*
+exclude *egg*
+recursive-include *.py *.html *.xml *.j2 *.css *.less *.yaml *.js *.png *.ico *.txt *.markdown *.md
