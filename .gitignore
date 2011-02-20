@@ -14,3 +14,4 @@ build
 .idea
 PYSMELLTAGS
 .noseids
+*.tar.gz
