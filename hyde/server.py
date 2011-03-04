@@ -58,9 +58,13 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         logger.debug("Trying to load file based on request:[%s]" % result.path)
         path = result.path.lstrip('/')
         if path.strip() == "" or File(path).kind.strip() == "":
-            return site.config.deploy_root_path.child(path)
-
-        res = site.content.resource_from_relative_deploy_path(path)
+            deployed = site.config.deploy_root_path.child(path)
+            deployed = Folder.file_or_folder(deployed)
+            if isinstance(deployed, Folder):
+                node = site.content.node_from_relative_path(path)
+                res = node.get_resource('index.html')
+        else:
+            res = site.content.resource_from_relative_deploy_path(path)
 
         if not res:
 
