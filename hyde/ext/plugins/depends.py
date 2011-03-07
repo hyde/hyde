@@ -25,7 +25,7 @@ class DependsPlugin(Plugin):
         The dependency can contain the following template variables:
         node, resource, site, context.
 
-        The folloing strings are valid:
+        The following strings are valid:
         '{node.module}/dependencies/{resource.source.name_without_extension}.inc'
         '{context.dependency_folder}/{resource.source.name_without_extension}.{site.meta.depext}'
         """
@@ -35,9 +35,11 @@ class DependsPlugin(Plugin):
         except AttributeError:
             pass
 
-        if not hasattr(resource, 'depends'):
+        if not hasattr(resource, 'depends') or not resource.depends:
             resource.depends = []
-        resource.depends = resource.depends or []
+
+        if isinstance(depends, basestring):
+            depends = [depends]
 
         for dep in depends:
             resource.depends.append(dep.format(node=resource.node,

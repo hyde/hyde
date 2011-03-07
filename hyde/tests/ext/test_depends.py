@@ -21,6 +21,9 @@ class TestDepends(object):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
                     'sites/test_jinja').copy_contents_to(TEST_SITE)
+        TEST_SITE.parent.child_folder(
+                    'templates/jinja2').copy_contents_to(
+                        TEST_SITE.child_folder('content'))
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -41,9 +44,14 @@ depends: index.html
         gen = Generator(s)
         gen.load_site_if_needed()
         gen.load_template_if_needed()
-        res = s.content.resource_from_relative_path('inc.md')
+        def dateformat(x):
+            return x.strftime('%Y-%m-%d')
+        gen.template.env.filters['dateformat'] = dateformat
+        gen.generate_resource_at_path(inc.name)
+        res = s.content.resource_from_relative_path(inc.name)
+        assert len(res.depends) == 1
+        assert 'index.html' in res.depends
         deps = list(gen.get_dependencies(res))
-
         assert len(deps) == 3
 
         assert 'helpers.html' in deps

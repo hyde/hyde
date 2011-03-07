@@ -112,7 +112,18 @@ class Generator(object):
         """
         Gets the dependencies for a given resource.
         """
-        return self.template.get_dependencies(resource.relative_path)
+        deps = []
+        if hasattr(resource, 'depends'):
+            user_deps = resource.depends
+            for dep in user_deps:
+                deps.append(dep)
+                deps.extend(self.template.get_dependencies(dep))
+
+        deps.extend(self.template.get_dependencies(resource.relative_path))
+        deps = list(set(deps))
+        if None in deps:
+            deps.remove(None)
+        return deps
 
     def has_resource_changed(self, resource):
         """
