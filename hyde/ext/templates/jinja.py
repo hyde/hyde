@@ -356,6 +356,9 @@ class Refer(Extension):
 
     def _push_resource(self, namespace, site, resource, template, caller):
         namespace['parent_resource'] = resource
+        if not hasattr(resource, 'depends'):
+            resource.depends = []
+        resource.depends.append(template)
         namespace['resource'] = site.content.resource_from_relative_path(template)
         return ''
 
