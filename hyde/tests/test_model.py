@@ -43,6 +43,26 @@ def test_expando_update():
     assert x.a == 789
     assert x.f == "opq"
 
+def test_expando_to_dict():
+    d = {"a": 123, "b": {"c": 456, "d": {"e": "abc"}}}
+    x = Expando(d)
+    assert d == x.to_dict()
+
+def test_expando_to_dict_with_update():
+    d1 = {"a": 123, "b": "abc"}
+    x = Expando(d1)
+    d = {"b": {"c": 456, "d": {"e": "abc"}}, "f": "lmn"}
+    x.update(d)
+    expected = {}
+    expected.update(d1)
+    expected.update(d)
+    assert expected == x.to_dict()
+    d2 = {"a": 789, "f": "opq"}
+    y = Expando(d2)
+    x.update(y)
+    expected.update(d2)
+    assert expected == x.to_dict()
+
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
 import yaml

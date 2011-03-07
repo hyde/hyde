@@ -57,6 +57,16 @@ class Expando(object):
         else:
             return primitive
 
+    def to_dict(self):
+        """
+        Reverse transform an expando to dict
+        """
+        d = self.__dict__
+        for k, v in d.iteritems():
+            if isinstance(v, Expando):
+                d[k] = v.to_dict()
+        return d
+
 
 class Context(object):
     """

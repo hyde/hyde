@@ -1,13 +1,14 @@
+Version 0.7b1
+
 # A brand new **hyde**
 
-This is the new version of hyde under active development.
-Incomplete documentation can be found [here][hydedocs].
-[This][hyde1-0] should give a good understanding of the motivation behind this
-version. You can also take a look at the [cloudpanic source][cp] for a
-reference implementation.
+This is the new version of hyde under active development. Incomplete documentation
+can be found [here][hydedocs]. [This][hyde1-0] should give a good understanding of
+the motivation behind this version. You can also take a look at the
+[documentation source][docs] for a reference implementation.
 
 [hyde1-0]: http://groups.google.com/group/hyde-dev/web/hyde-1-0
-[cp]: http://github.com/tipiirai/cloudpanic/tree/refactor
+[docs]: https://github.com/hyde/hyde/tree/master/hyde/layouts/doc
 [hydedocs]: http://hyde.github.com/overview
 
 [Here](http://groups.google.com/group/hyde-dev/browse_thread/thread/2a143bd2081b3322) is
@@ -15,30 +16,21 @@ the initial announcement of the project.
 
 ## Installation
 
-Hyde supports both python 2.7 and 2.6.
+To get the latest released version:
 
-        pip install -r req-2.6.txt
+    pip install hyde
 
-or
+For the current trunk:
 
-        pip install -r req-2.7.txt
-
-
-will install all the dependencies of hyde.
-
-You can choose to install hyde by running
-
-        python setup.py install
+    pip install -e git://github.com/hyde/hyde.git#egg=hyde
 
 ## Creating a new hyde site
 
-The new version of Hyde uses the `argparse` module and hence support subcommands.
+The following command:
 
-
-        hyde -s ~/test_site create -l test
+        hyde -s ~/test_site create -l doc
 
 will create a new hyde site using the test layout.
-
 
 ## Generating the hyde site
 
@@ -55,6 +47,11 @@ will create a new hyde site using the test layout.
 The server also regenerates on demand. As long as the server is running,
 you can make changes to your source and refresh the browser to view the changes.
 
+
+## Examples
+
+1. [Cloudpanic](https://github.com/tipiirai/cloudpanic)
+2. [Ringce](https://github.com/lakshmivyas/ringce/tree/v3.0)
 
 ## A brief list of features
 

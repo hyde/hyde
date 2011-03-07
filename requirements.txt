@@ -1,1 +1,8 @@
--r req-2.6.txt
+argparse
+commando
+PyYAML
+Markdown
+MarkupSafe
+smartypants
+-e git://github.com/hyde/typogrify.git#egg=typogrify
+Jinja2
