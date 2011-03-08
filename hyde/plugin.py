@@ -209,6 +209,7 @@ class CLTransformer(Plugin):
 
         return self.__class__.__name__.replace('Plugin', '').lower()
 
+    @property
     def defaults(self):
         """
         Default command line options. Can be overridden
@@ -266,10 +267,12 @@ class CLTransformer(Plugin):
         Given a list of supported arguments, consutructs an argument
         list that could be passed on to the call_app function.
         """
+        args = {}
+        args.update(self.defaults)
         try:
-            args = getattr(self.settings, 'args').to_dict()
+            args.update(getattr(self.settings, 'args').to_dict())
         except AttributeError:
-            args = {}
+            pass
 
         result = []
         for arg in supported:

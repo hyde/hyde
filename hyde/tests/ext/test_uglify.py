@@ -22,6 +22,7 @@ class TestLess(object):
         JS = TEST_SITE.child_folder('content/media/js')
         JS.make()
         UGLIFY_SOURCE.copy_contents_to(JS)
+        
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -36,7 +37,7 @@ class TestLess(object):
             assert False, "Cannot find the uglify executable"
 
         uglify = uglify[0]
-        s.config.uglify = Expando(dict(app=path))
+        s.config.uglify = Expando(dict(app=uglify))
         source = TEST_SITE.child('content/media/js/jquery.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)
@@ -57,7 +58,7 @@ class TestLess(object):
             assert False, "Cannot find the uglify executable"
 
         uglify = uglify[0]
-        s.config.uglify = Expando(dict(app=path, args={"nc":""}))
+        s.config.uglify = Expando(dict(app=uglify, args={"nc":""}))
         source = TEST_SITE.child('content/media/js/jquery.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)
