@@ -3,9 +3,11 @@
 Contains data structures and utilities for hyde.
 """
 from hyde.fs import File, Folder
+
 import codecs
 import yaml
 
+from UserDict import IterableUserDict
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -90,6 +92,25 @@ class Context(object):
             pass
         return context
 
+class Dependents(IterableUserDict):
+    """
+    Represents the dependency graph for hyde.
+    """
+
+    def __init__(self, sitepath, depends_file_name='.hyde_deps'):
+        self.sitepath = Folder(sitepath)
+        self.deps_file = File(self.sitepath.child(depends_file_name))
+        self.data = {}
+        if self.deps_file.exists:
+            self.data = yaml.load(self.deps_file.read_all())
+        import atexit
+        atexit.register(self.save)
+
+    def save(self):
+        """
+        Saves the dependency graph (just a dict for now).
+        """
+        self.deps_file.write(yaml.dump(self.data))
 
 class Config(Expando):
     """

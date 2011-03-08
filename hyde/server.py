@@ -153,13 +153,10 @@ class HydeWebServer(HTTPServer):
         """
         Regenerates the given resource.
         """
-        target = self.site.config.deploy_root_path.child(
-                                resource.relative_deploy_path)
-        if self.generator.has_resource_changed(resource):
-            try:
-                logger.info('Generating resource [%s]' % resource)
-                self.generator.generate_resource(resource)
-            except Exception, exception:
-                logger.error(
-                    'Error [%s] occured when generating the resource [%s]'
-                            % (repr(exception), resource))
+        try:
+            logger.info('Generating resource [%s]' % resource)
+            self.generator.generate_resource(resource, incremental=True)
+        except Exception, exception:
+            logger.error(
+                'Error [%s] occured when generating the resource [%s]'
+                        % (repr(exception), resource))

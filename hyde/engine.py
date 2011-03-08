@@ -70,6 +70,8 @@ class Engine(Application):
             help='The configuration used to generate the site')
     @store('-d', '--deploy-path', dest='deploy', default=None,
                         help='Where should the site be generated?')
+    @true('-i', '--incremental', dest='incremental', default=False,
+                        help='Only process changed files')
     def gen(self, args):
         """
         The generate command. Generates the site at the given
@@ -79,7 +81,7 @@ class Engine(Application):
         site = self.make_site(args.sitepath, args.config, args.deploy)
         from hyde.generator import Generator
         gen = Generator(site)
-        gen.generate_all()
+        gen.generate_all(incremental=args.incremental)
 
     @subcommand('serve', help='Serve the website')
     @store('-a', '--address', default='localhost', dest='address',

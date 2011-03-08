@@ -4,7 +4,7 @@ The generator class and related utility functions.
 """
 from hyde.exceptions import HydeException
 from hyde.fs import File, Folder
-from hyde.model import Context
+from hyde.model import Context, Dependents
 from hyde.plugin import Plugin
 from hyde.template import Template
 
@@ -23,6 +23,7 @@ class Generator(object):
         super(Generator, self).__init__()
         self.site = site
         self.generated_once = False
+        self.deps = Dependents(site.sitepath)
         self.__context__ = dict(site=site)
         if hasattr(site.config, 'context'):
             site.context = Context.load(site.sitepath, site.config.context)
@@ -112,17 +113,22 @@ class Generator(object):
         """
         Gets the dependencies for a given resource.
         """
+        rel_path = resource.relative_path
         deps = []
-        if hasattr(resource, 'depends'):
-            user_deps = resource.depends
-            for dep in user_deps:
-                deps.append(dep)
-                deps.extend(self.template.get_dependencies(dep))
+        if not rel_path in self.deps:
+            if hasattr(resource, 'depends'):
+                user_deps = resource.depends
+                for dep in user_deps:
+                    deps.append(dep)
+                    deps.extend(self.template.get_dependencies(dep))
 
-        deps.extend(self.template.get_dependencies(resource.relative_path))
-        deps = list(set(deps))
-        if None in deps:
-            deps.remove(None)
+            deps.extend(self.template.get_dependencies(resource.relative_path))
+            deps = list(set(deps))
+            if None in deps:
+                deps.remove(None)
+            self.deps[rel_path] = deps
+        else:
+            deps = self.deps[rel_path]
         return deps
 
     def has_resource_changed(self, resource):
@@ -130,8 +136,6 @@ class Generator(object):
         Checks if the given resource has changed since the
         last generation.
         """
-        if not self.generated_once:
-            return True
         logger.debug("Checking for changes in %s" % resource)
         self.load_site_if_needed()
         self.load_template_if_needed()
@@ -163,7 +167,7 @@ class Generator(object):
         logger.debug("No changes found in %s" % resource)
         return False
 
-    def generate_all(self):
+    def generate_all(self, incremental=False):
         """
         Generates the entire website
         """
@@ -174,31 +178,31 @@ class Generator(object):
         self.events.begin_site()
         logger.info("Generating site to [%s]" %
                         self.site.config.deploy_root_path)
-        self.__generate_node__(self.site.content)
+        self.__generate_node__(self.site.content, incremental)
         self.events.site_complete()
         self.finalize()
         self.generated_once = True
 
-    def generate_node_at_path(self, node_path=None):
+    def generate_node_at_path(self, node_path=None, incremental=False):
         """
         Generates a single node. If node_path is non-existent or empty,
         generates the entire site.
         """
-        if not self.generated_once:
+        if not self.generated_once and not incremental:
             return self.generate_all()
         self.load_template_if_needed()
         self.load_site_if_needed()
         node = None
         if node_path:
             node = self.site.content.node_from_path(node_path)
-        self.generate_node(node)
+        self.generate_node(node, incremental)
 
-    def generate_node(self, node=None):
+    def generate_node(self, node=None, incremental=False):
         """
         Generates the given node. If node is invalid, empty or
         non-existent, generates the entire website.
         """
-        if not node or not self.generated_once:
+        if not node or not self.generated_once and not incremental:
             return self.generate_all()
 
         self.load_template_if_needed()
@@ -206,17 +210,19 @@ class Generator(object):
         self.load_site_if_needed()
 
         try:
-            self.__generate_node__(node)
+            self.__generate_node__(node, incremental)
             self.finalize()
         except HydeException:
             self.generate_all()
 
-    def generate_resource_at_path(self, resource_path=None):
+    def generate_resource_at_path(self,
+                    resource_path=None,
+                    incremental=False):
         """
         Generates a single resource. If resource_path is non-existent or empty,
         generats the entire website.
         """
-        if not self.generated_once:
+        if not self.generated_once and not incremental:
             return self.generate_all()
 
         self.load_template_if_needed()
@@ -224,14 +230,14 @@ class Generator(object):
         resource = None
         if resource_path:
             resource = self.site.content.resource_from_path(resource_path)
-        self.generate_resource(resource)
+        self.generate_resource(resource, incremental)
 
-    def generate_resource(self, resource=None):
+    def generate_resource(self, resource=None, incremental=False):
         """
         Generates the given resource. If resource is invalid, empty or
         non-existent, generates the entire website.
         """
-        if not resource or not self.generated_once:
+        if not resource or not self.generated_once and not incremental:
             return self.generate_all()
 
         self.load_template_if_needed()
@@ -239,23 +245,26 @@ class Generator(object):
         self.load_site_if_needed()
 
         try:
-            self.__generate_resource__(resource)
+            self.__generate_resource__(resource, incremental)
             self.finalize()
         except HydeException:
             self.generate_all()
 
 
-    def __generate_node__(self, node):
+    def __generate_node__(self, node, incremental=False):
         for node in node.walk():
             logger.debug("Generating Node [%s]", node)
             self.events.begin_node(node)
             for resource in node.resources:
-                self.__generate_resource__(resource)
+                self.__generate_resource__(resource, incremental)
             self.events.node_complete(node)
 
-    def __generate_resource__(self, resource):
+    def __generate_resource__(self, resource, incremental=False):
         if not resource.is_processable:
             logger.debug("Skipping [%s]", resource)
+            return
+        if incremental and not self.has_resource_changed(resource):
+            logger.debug("No changes found. Skipping resource [%s]", resource)
             return
         logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
