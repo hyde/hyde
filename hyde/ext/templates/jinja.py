@@ -9,7 +9,8 @@ from hyde.template import HtmlWrap, Template
 from hyde.site import Resource
 from hyde.util import getLoggerWithNullHandler, getLoggerWithConsoleHandler
 
-from jinja2 import contextfunction, Environment, FileSystemLoader
+from jinja2 import contextfunction, Environment
+from jinja2 import FileSystemLoader, FileSystemBytecodeCache
 from jinja2 import environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
@@ -358,7 +359,8 @@ class Refer(Extension):
         namespace['parent_resource'] = resource
         if not hasattr(resource, 'depends'):
             resource.depends = []
-        resource.depends.append(template)
+        if not template in resource.depends:
+            resource.depends.append(template)
         namespace['resource'] = site.content.resource_from_relative_path(template)
         return ''
 
@@ -433,6 +435,7 @@ class Jinja2Template(Template):
         self.env = Environment(loader=self.loader,
                                 undefined=SilentUndefined,
                                 trim_blocks=True,
+                                bytecode_cache=FileSystemBytecodeCache(),
                                 extensions=[IncludeText,
                                             Markdown,
                                             Syntax,

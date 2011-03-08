@@ -3,7 +3,7 @@
 Markings plugin
 """
 
-from hyde.ext.plugins.texty import TextyPlugin
+from hyde.plugin import TextyPlugin
 
 class MarkingsPlugin(TextyPlugin):
     """

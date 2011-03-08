@@ -98,6 +98,7 @@ class Config(Expando):
 
     def __init__(self, sitepath, config_file=None, config_dict=None):
         default_config = dict(
+            mode='production',
             content_root='content',
             deploy_root='deploy',
             media_root='media',

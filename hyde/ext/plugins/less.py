@@ -3,15 +3,14 @@
 Less css plugin
 """
 
-from hyde.plugin import Plugin
-from hyde.fs import File, Folder
+from hyde.plugin import CLTransformer
+from hyde.fs import File
 
 import re
 import subprocess
-import traceback
 
 
-class LessCSSPlugin(Plugin):
+class LessCSSPlugin(CLTransformer):
     """
     The plugin class for less css
     """
@@ -46,6 +45,14 @@ class LessCSSPlugin(Plugin):
         text = import_finder.sub(import_to_include, text)
         return text
 
+
+    @property
+    def plugin_name(self):
+        """
+        The name of the plugin.
+        """
+        return "less"
+
     def text_resource_complete(self, resource, text):
         """
         Save the file to a temporary place and run less compiler.
@@ -54,30 +61,15 @@ class LessCSSPlugin(Plugin):
         """
         if not resource.source_file.kind == 'less':
             return
-        if not (hasattr(self.site.config, 'less') and
-            hasattr(self.site.config.less, 'app')):
-            raise self.template.exception_class(
-                            "Less css path not configured. "
-                            "This plugin expects `less.app` to point "
-                            "to the `lessc` executable.")
-
-        less = File(self.site.config.less.app)
-        if not File(less).exists:
-            raise self.template.exception_class(
-                    "Cannot find the less executable. The given path [%s] "
-                                "is incorrect" % less)
-
+        less = self.app
         source = File.make_temp(text)
         target = File.make_temp('')
         try:
-            subprocess.check_call([str(less), str(source), str(target)])
-        except subprocess.CalledProcessError, error:
-            self.logger.error(traceback.format_exc())
-            self.logger.error(error.output)
-            raise self.template.exception_class(
-                    "Cannot process less css. Error occurred when "
-                    "processing [%s]" % resource.source_file)
-
+            self.call_app([str(less), str(source), str(target)])
+        except subprocess.CalledProcessError:
+             raise self.template.exception_class(
+                    "Cannot process %s. Error occurred when "
+                    "processing [%s]" % (self.app.name, resource.source_file))
         out = target.read_all()
         new_name = resource.source_file.name_without_extension + ".css"
         target_folder = File(resource.relative_path).parent

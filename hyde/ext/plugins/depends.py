@@ -46,4 +46,5 @@ class DependsPlugin(Plugin):
                                     resource=resource,
                                     site=self.site,
                                     context=self.site.context))
+        resource.depends = list(set(resource.depends))
         return text

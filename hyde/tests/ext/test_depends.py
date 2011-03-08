@@ -49,6 +49,7 @@ depends: index.html
         gen.template.env.filters['dateformat'] = dateformat
         gen.generate_resource_at_path(inc.name)
         res = s.content.resource_from_relative_path(inc.name)
+        print res.__dict__
         assert len(res.depends) == 1
         assert 'index.html' in res.depends
         deps = list(gen.get_dependencies(res))
