@@ -3,6 +3,8 @@
 Jinja template utilties
 """
 
+import re
+
 from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
@@ -95,6 +97,35 @@ def syntax(env, value, lexer=None, filename=None):
     return Markup(
                 '\n\n<div class="code"><figcaption>%s</figcaption>%s</div>\n\n'
                         % (caption, code))
+
+class Spaceless(Extension):
+    """
+    Emulates the django spaceless template tag.
+    """
+
+    tags = set(['spaceless'])
+
+    def parse(self, parser):
+        """
+        Parses the statements and calls back to strip spaces.
+        """
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(['name:endspaceless'],
+                drop_needle=True)
+        return nodes.CallBlock(
+                    self.call_method('_render_spaceless'),
+                    [], [], body).set_lineno(lineno)
+
+    def _render_spaceless(self, caller=None):
+        """
+        Strip the spaces between tags using the regular expression
+        from django. Stolen from `django.util.html` Returns the given HTML
+        with spaces between tags removed.
+        """
+        if not caller:
+            return ''
+        return re.sub(r'>\s+<', '><', unicode(caller().strip()))
+
 
 class Markdown(Extension):
     """
@@ -437,6 +468,7 @@ class Jinja2Template(Template):
                                 trim_blocks=True,
                                 bytecode_cache=FileSystemBytecodeCache(),
                                 extensions=[IncludeText,
+                                            Spaceless,
                                             Markdown,
                                             Syntax,
                                             Reference,

@@ -88,6 +88,41 @@ def test_typogrify():
     html = t.render(source, {}).strip()
     assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
 
+def test_spaceless():
+    source = """
+    {%spaceless%}
+    <html>
+        <body>
+            <ul>
+                <li>
+                    One
+                </li>
+                <li>
+                    Two
+                </li>
+                <li>
+                    Three
+                </li>
+            </ul>
+        </body>
+    </html>
+    {%endspaceless%}
+    """
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    html = t.render(source, {}).strip()
+    expected = u"""
+<html><body><ul><li>
+                    One
+                </li><li>
+                    Two
+                </li><li>
+                    Three
+                </li></ul></body></html>
+"""
+    assert html.strip() == expected.strip()
+
+
 def test_markdown():
     source = """
     {%markdown%}

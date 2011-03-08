@@ -110,7 +110,8 @@ class Dependents(IterableUserDict):
         """
         Saves the dependency graph (just a dict for now).
         """
-        self.deps_file.write(yaml.dump(self.data))
+        if self.deps_file.parent.exists:
+            self.deps_file.write(yaml.dump(self.data))
 
 class Config(Expando):
     """
