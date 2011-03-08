@@ -45,3 +45,24 @@ class TestLess(object):
         text = target.read_all()
         expected_text = File(STYLUS_SOURCE.child('expected-site.css')).read_all()
         assert text.strip() == expected_text.strip()
+
+    def test_can_compress_with_stylus(self):
+        s = Site(TEST_SITE)
+        s.config.mode = "production"
+        s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
+        paths = ['/usr/local/share/npm/bin/stylus', '~/local/bin/stylus']
+        stylus = [path for path in paths if File(path).exists]
+        if not stylus:
+            assert False, "Cannot find the stylus executable"
+
+        stylus = stylus[0]
+        s.config.stylus = Expando(dict(app=stylus))
+        source = TEST_SITE.child('content/media/css/site.styl')
+        target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
+        gen = Generator(s)
+        gen.generate_resource_at_path(source)
+
+        assert target.exists
+        text = target.read_all()
+        expected_text = File(STYLUS_SOURCE.child('expected-site-compressed.css')).read_all()
+        assert text.strip() == expected_text.strip()
