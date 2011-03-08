@@ -262,6 +262,10 @@ class CLTransformer(Plugin):
         return app
 
     def process_args(self, supported):
+        """
+        Given a list of supported arguments, consutructs an argument
+        list that could be passed on to the call_app function.
+        """
         try:
             args = getattr(self.settings, 'args').to_dict()
         except AttributeError:
@@ -348,6 +352,9 @@ class TextyPlugin(Plugin):
         return None
 
     def get_params(self, match, start=True):
+        """
+        Default implementation for getting template args.
+        """
         return match.groups(1)[0] if match.lastindex else ''
 
     @abc.abstractmethod

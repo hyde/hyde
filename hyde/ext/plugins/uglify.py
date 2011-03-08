@@ -4,11 +4,7 @@ Uglify plugin
 """
 
 from hyde.plugin import CLTransformer
-from hyde.fs import File, Folder
-
-import subprocess
-import traceback
-
+from hyde.fs import File
 
 class UglifyPlugin(CLTransformer):
     """
@@ -20,10 +16,10 @@ class UglifyPlugin(CLTransformer):
 
     @property
     def plugin_name(self):
-       """
-       The name of the plugin.
-       """
-       return "uglify"
+        """
+        The name of the plugin.
+        """
+        return "uglify"
 
     def text_resource_complete(self, resource, text):
         """
@@ -41,7 +37,7 @@ class UglifyPlugin(CLTransformer):
         if not resource.source_file.kind == 'js':
             return
 
-        if self.site.config.mode.startswith('dev'):
+        if mode.startswith('dev'):
             self.logger.debug("Skipping uglify in development mode.")
             return
 
