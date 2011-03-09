@@ -150,6 +150,22 @@ def test_markdown_with_extensions():
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
 
 
+def test_line_statements():
+    source = """
+    ---markdown
+    ### Heading 3
+
+    --- endmarkdown
+    """
+    t = Jinja2Template(JINJA2.path)
+    s = Site(JINJA2.path)
+    c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
+    s.config = c
+    t.configure(s)
+    html = t.render(source, {}).strip()
+    assert html == u'<h3 id="heading_3">Heading 3</h3>'
+
+
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
 @nottest
@@ -163,7 +179,6 @@ def assert_markdown_typogrify_processed_well(include_text, includer_text):
     gen.load_template_if_needed()
     template = gen.template
     html = template.render(includer_text, {}).strip()
-    print html
     assert html
     q = PyQuery(html)
     assert "is_processable" not in html
@@ -206,6 +221,29 @@ class TestJinjaTemplate(object):
         assert 'helpers.html' in deps
         assert 'layout.html' in deps
         assert 'index.html' in deps
+
+    def test_line_statements_with_blocks(self):
+        site = Site(TEST_SITE)
+        JINJA2.copy_contents_to(site.content.source)
+        inc = File(TEST_SITE.child('content/inc.md'))
+        text = """
+        {% extends 'index.html' %}
+        --- block body
+        <div id="article">Heya</div>
+        --- endblock
+        """
+        site.load()
+        gen = Generator(site)
+        gen.load_template_if_needed()
+        template = gen.template
+        html = template.render(text, {}).strip()
+
+        assert html
+        q = PyQuery(html)
+        article = q("#article")
+        assert article.length == 1
+        assert article.text() == "Heya"
+
 
     def test_depends_with_reference_tag(self):
         site = Site(TEST_SITE)

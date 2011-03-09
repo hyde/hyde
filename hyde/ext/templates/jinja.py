@@ -465,6 +465,7 @@ class Jinja2Template(Template):
         self.loader = HydeLoader(self.sitepath, site, self.preprocessor)
         self.env = Environment(loader=self.loader,
                                 undefined=SilentUndefined,
+                                line_statement_prefix='---',
                                 trim_blocks=True,
                                 bytecode_cache=FileSystemBytecodeCache(),
                                 extensions=[IncludeText,
