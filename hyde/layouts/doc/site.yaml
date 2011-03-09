@@ -2,7 +2,6 @@ mode: development
 media_root:: media
 media_url: /media
 base_url: /
-deploy_root: ../../../../hyde.github.com
 template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
@@ -30,10 +29,9 @@ meta:
                 hyde,python,django,jinja,static website,static site,
                 generator,html generator
     author: Lakshmi Vyasarajan
-less:
-    app: ~/local/bin/lessc
+stylus:
+    app: ~/local/bin/stylus
 markdown:
     extensions:
         - def_list
         - headerid
-        - tables

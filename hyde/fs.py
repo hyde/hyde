@@ -118,10 +118,11 @@ class FS(object):
         """
         Gets the fragment of the current path starting at root.
         """
-        if self == root:
+        if self.path == root:
             return ''
+        ancestors = self.ancestors(stop=root)
         return functools.reduce(lambda f, p: Folder(p.name).child(f),
-                                            self.ancestors(stop=root),
+                                            ancestors,
                                             self.name)
 
     def get_mirror(self, target_root, source_root=None):

@@ -7,6 +7,7 @@ from hyde.fs import File, Folder
 from hyde.model import Context, Dependents
 from hyde.plugin import Plugin
 from hyde.template import Template
+from hyde.site import Node, Resource
 
 from contextlib import contextmanager
 
@@ -197,6 +198,18 @@ class Generator(object):
             node = self.site.content.node_from_path(node_path)
         self.generate_node(node, incremental)
 
+    @contextmanager
+    def events_for(self, obj):
+        if not self.generated_once:
+            self.events.begin_site()
+            if isinstance(obj, Resource):
+                self.events.begin_node(obj.node)
+        yield
+        if not self.generated_once:
+            if isinstance(obj, Resource):
+                self.events.node_complete(obj.node)
+            self.events.site_complete()
+
     def generate_node(self, node=None, incremental=False):
         """
         Generates the given node. If node is invalid, empty or
@@ -210,7 +223,8 @@ class Generator(object):
         self.load_site_if_needed()
 
         try:
-            self.__generate_node__(node, incremental)
+            with self.events_for(node):
+                self.__generate_node__(node, incremental)
             self.finalize()
         except HydeException:
             self.generate_all()
@@ -245,8 +259,8 @@ class Generator(object):
         self.load_site_if_needed()
 
         try:
-            self.__generate_resource__(resource, incremental)
-            self.finalize()
+            with self.events_for(resource):
+                self.__generate_resource__(resource, incremental)
         except HydeException:
             self.generate_all()
 

@@ -1,0 +1,18 @@
+{% extends "base.j2" %}
+
+{% block main -%}
+<article class="post">
+<a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
+<h1 class="title">
+    <a href="{{ content_url(resource.url) }}">
+        {{ resource.meta.title }}
+    </a>
+</h1>
+{% filter markdown|typogrify -%}
+
+{% block post -%}{%- endblock %}
+
+{%- endfilter %}
+</article>
+
+{%- endblock %}

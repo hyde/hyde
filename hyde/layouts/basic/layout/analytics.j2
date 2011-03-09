@@ -1,8 +1,8 @@
-{% if site.in_production_mode %}
+{% if site.config.mode == "production" %}
 <!-- asynchronous google analytics: mathiasbynens.be/notes/async-analytics-snippet
        change the UA-XXXXX-X to be your site's ID -->
 <script>
-    var _gaq = [['_setAccount', '{{site.meta.GAID}}'], ['_trackPageview']];
+    var _gaq = [['_setAccount', '{{ resource.meta.analytics.id }}'], ['_trackPageview']];
     (function(d, t) {
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
