@@ -262,6 +262,9 @@ class CLTransformer(Plugin):
 
         return app
 
+    def option_prefix(self, option):
+        return "--"
+
     def process_args(self, supported):
         """
         Given a list of supported arguments, consutructs an argument
@@ -282,7 +285,8 @@ class CLTransformer(Plugin):
                 descriptive = short = arg
 
             if descriptive in args or short in args:
-                result.append("--%s" % descriptive)
+                result.append("%s%s" % (self.option_prefix(descriptive),
+                                        descriptive))
                 val = args[descriptive if descriptive in args else short]
                 if val:
                     result.append(val)

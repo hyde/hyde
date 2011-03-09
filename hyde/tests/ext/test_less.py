@@ -32,7 +32,7 @@ class TestLess(object):
         paths = ['/usr/local/share/npm/bin/lessc', '~/local/bin/lessc']
         less = [path for path in paths if File(path).exists]
         if not less:
-            assert False, "Cannot find the uglify executable"
+            assert False, "Cannot find the lessc executable"
         less = less[0]
         s.config.less = Expando(dict(app=less))
         source = TEST_SITE.child('content/media/css/site.less')

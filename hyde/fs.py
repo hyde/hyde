@@ -13,6 +13,7 @@ import os
 import shutil
 from distutils import dir_util
 import functools
+import fnmatch
 
 from hyde.util import getLoggerWithNullHandler
 
@@ -94,12 +95,12 @@ class FS(object):
         Generates the parents until stop or the absolute
         root directory is reached.
         """
-        f = self
-        while f.parent != stop:
-            if f.parent == f:
+        folder = self
+        while folder.parent != stop:
+            if folder.parent == folder:
                 return
-            yield f.parent
-            f = f.parent
+            yield folder.parent
+            folder = folder.parent
 
     def is_descendant_of(self, ancestor):
         """
@@ -186,8 +187,21 @@ class File(FS):
         return self.extension.lstrip(".")
 
     @property
+    def size(self):
+        """
+        Size of this file.
+        """
+
+        if not self.exists:
+            return -1
+        return os.path.getsize(self.path)
+
+    @property
     def mimetype(self):
-        (mime, encoding) = mimetypes.guess_type(self.path)
+        """
+        Gets the mimetype of this file.
+        """
+        (mime, _) = mimetypes.guess_type(self.path)
         return mime
 
     @property
@@ -246,9 +260,9 @@ class File(FS):
         import tempfile
         (handle, path) = tempfile.mkstemp(text=True)
         os.close(handle)
-        f = File(path)
-        f.write(text)
-        return f
+        afile = File(path)
+        afile.write(text)
+        return afile
 
     def read_all(self, encoding='utf-8'):
         """
@@ -296,26 +310,26 @@ class FSVisitor(object):
         self.folder = folder
         self.pattern = pattern
 
-    def folder_visitor(self, f):
+    def folder_visitor(self, function):
         """
         Decorator for `visit_folder` protocol
         """
-        self.visit_folder = f
-        return f
+        self.visit_folder = function
+        return function
 
-    def file_visitor(self, f):
+    def file_visitor(self, function):
         """
         Decorator for `visit_file` protocol
         """
-        self.visit_file = f
-        return f
+        self.visit_file = function
+        return function
 
-    def finalizer(self, f):
+    def finalizer(self, function):
         """
         Decorator for `visit_complete` protocol
         """
-        self.visit_complete = f
-        return f
+        self.visit_complete = function
+        return function
 
     def __enter__(self):
         return self
@@ -341,7 +355,7 @@ class FolderWalker(FSVisitor):
         if not walk_files and not walk_folders:
             return
 
-        for root, dirs, a_files in os.walk(self.folder.path, followlinks=True):
+        for root, _, a_files in os.walk(self.folder.path, followlinks=True):
             folder = Folder(root)
             if walk_folders:
                 yield folder

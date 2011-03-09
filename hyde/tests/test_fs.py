@@ -204,6 +204,9 @@ def test_is_image():
     assert not HELPERS.is_image
     assert LOGO.is_image
 
+def test_file_size():
+    assert LOGO.size == 1942
+
 @nottest
 def setup_data():
     DATA_ROOT.make()
