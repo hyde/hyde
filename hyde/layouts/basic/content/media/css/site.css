@@ -258,7 +258,6 @@ section.content{
 
 /* Content */
 
-
 article.post p{
     font-size: 12px;
     line-height: 24px;
@@ -266,9 +265,15 @@ article.post p{
 }
 
 article.post img{
-
     display: block;
     margin-bottom: 24px;
+}
+
+.post time{
+    font-size: 12px;
+    color: #999;
+    float:left;
+    margin-top: 6px;
 }
 
 ul.tags{
@@ -303,8 +308,24 @@ h1 a, h2 a, h3 a{
 }
 
 nav.post_nav{
-    position: relative;
+    background-color: #efefef;
+    position: fixed;
+    width: 102px;
+    margin-left: -164px;
     font-size: 12px;
+    padding: 12px;
+    padding-right: 24px;
+    -moz-box-shadow: 0px 2px 4px #ccc; /* FF3.5+ */
+    -webkit-box-shadow: 0px 2px 4px #ccc; /* Saf3.0+, Chrome */
+          box-shadow: 0px 2px 4px #ccc; /* Opera 10.5, IE 9.0 */
+              filter:  progid:DXImageTransform.Microsoft.dropshadow(OffX=12px, OffY=12px, Color='#ccc'); /* IE6,IE7 */
+          -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=12px, OffY=12px, Color='#ccc')"; /* IE8 */
+
+}
+
+a.backlink{
+    display:block;
+    line-height: 24px;
     margin-bottom: 12px;
 }
 
@@ -321,16 +342,23 @@ a.next:after{
 }
 
 a.prev{
-    position: absolute;
-    right: 96px;
+    margin-right: 12px;
 }
 
+a.prev,
 a.next{
-    position: absolute;
-    right: 0;
+    display: block;
+    float: left;
+}
+
+a.next{ float: right };
+
+a.backlink:hover, a.prev:hover, a.next:hover{
+    color: #222;
 }
 
 .post_nav a{
+    color: #666;
     text-decoration: none;
     text-shadow: 0px 2px 0px #fff;
 }
