@@ -60,30 +60,8 @@
             <h3>A hyde website</h3>
           {%- endblock %}
           {% block nav %}
-            <nav>
-                <ul>
-                    <li>
-                        <a class="button white" href="{{ content_url('index.html') }}">
-                            Home
-                        </a>
-                    </li>
-                    <li>
-                        <a class="button white" href="{{ content_url('portfolio') }}">
-                            Portfolio
-                        </a>
-                    </li>
-                    <li>
-                        <a class="button white" href="{{ content_url('blog') }}">
-                            Blog
-                        </a>
-                    </li>
-                    <li>
-                        <a class="button white" href="{{ content_url('about.html') }}">
-                            About
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+          {% from "macros.j2" import render_nav with context %}
+          {{ render_nav(menu, 'main_nav') }}
           {% endblock %}
           </header>
           <section class="content">

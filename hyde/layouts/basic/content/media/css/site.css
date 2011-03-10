@@ -189,6 +189,14 @@ footer{
 .banner nav li a.button:hover{
     color: #000;
 }
+.banner nav li a.button.active{
+    color: #d7d7d7;
+    border: solid 1px #333;
+    background: #333;
+    background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
+    background: -moz-linear-gradient(top,  #666,  #000);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#666666', endColorstr='#000000');
+}
 
 .blog_excerpt{
     padding-bottom: 24px;
