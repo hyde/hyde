@@ -581,8 +581,15 @@ class Jinja2Template(Template):
         """
         Renders the given resource using the context
         """
-        template = self.env.get_template(resource.relative_path)
-        return template.render(context)
+        try:
+            template = self.env.get_template(resource.relative_path)
+            out = template.render(context)
+        except:
+            out = ""
+            logger.debug(self.env.loader.get_source(
+                                self.env, resource.relative_path))
+            raise
+        return out
 
     def render(self, text, context):
         """

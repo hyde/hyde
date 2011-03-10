@@ -23,6 +23,7 @@ class AutoExtendPlugin(Plugin):
 
         if not resource.uses_template:
             return text
+
         layout = None
         block = None
         try:
@@ -36,6 +37,8 @@ class AutoExtendPlugin(Plugin):
             pass
 
         if layout:
+            self.logger.debug("Autoextending %s with %s" % (
+                resource.relative_path, layout))
             extends_pattern = self.template.patterns['extends']
 
             if not re.search(extends_pattern, text):
