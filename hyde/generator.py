@@ -283,16 +283,18 @@ class Generator(object):
         logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
             if resource.source_file.is_text:
-                text = resource.source_file.read_all()
-                text = self.events.begin_text_resource(resource, text) or text
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
                     try:
-                        text = self.template.render(text, context)
+                        text = self.template.render_resource(resource,
+                                        context)
                     except Exception:
                         logger.error("Error occurred when"
                             " processing template:[%s]" % resource)
                         raise
+                else:
+                    text = resource.source_file.read_all()
+                    text = self.events.begin_text_resource(resource, text) or text
 
                 text = self.events.text_resource_complete(
                                         resource, text) or text

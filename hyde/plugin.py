@@ -63,7 +63,8 @@ class Plugin(object):
     def __init__(self, site):
         super(Plugin, self).__init__()
         self.site = site
-        self.logger = getLoggerWithNullHandler(self.__class__.__name__)
+        self.logger = getLoggerWithNullHandler(
+                            'hyde.engine.%s' % self.__class__.__name__)
         self.template = None
 
 

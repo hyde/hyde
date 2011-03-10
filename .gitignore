@@ -1,6 +1,7 @@
 *~
 *.pyc
 .DS_Store
+deploy
 deploy/*
 *.cprof
 *.profile

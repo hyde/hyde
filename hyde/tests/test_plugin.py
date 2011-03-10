@@ -276,7 +276,8 @@ class TestPlugins(object):
             gen.generate_all()
             begin_text_resource_stub.reset_mock()
             path = self.site.content.source_folder.child('about.html')
-            gen.generate_resource_at_path(path)
+            gen = Generator(self.site)
+            gen.generate_resource_at_path(path, incremental=True)
 
             called_with_resources = sorted([arg[0][0].path for arg in begin_text_resource_stub.call_args_list])
             assert begin_text_resource_stub.call_count == 1

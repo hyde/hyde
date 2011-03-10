@@ -57,6 +57,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         result = urlparse.urlparse(self.path)
         logger.debug("Trying to load file based on request:[%s]" % result.path)
         path = result.path.lstrip('/')
+        res = None
         if path.strip() == "" or File(path).kind.strip() == "":
             deployed = site.config.deploy_root_path.child(path)
             deployed = Folder.file_or_folder(deployed)
@@ -67,7 +68,6 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             res = site.content.resource_from_relative_deploy_path(path)
 
         if not res:
-
             # Check if its a new request
             if self.server.request_time > self.server.regeneration_time:
                 # Cannot find the source file using the given path.
@@ -148,11 +148,33 @@ class HydeWebServer(HTTPServer):
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
 
+    def generate_node(self, node):
+        """
+        Generates the given node.
+        """
+
+        deploy = self.site.config.deploy_root_path
+        if not deploy.exists:
+            return self.regenerate()
+
+        try:
+            logger.info('Generating node [%s]' % node)
+            self.generator.generate_node(node, incremental=True)
+        except Exception, exception:
+            logger.error(
+                'Error [%s] occured when generating the node [%s]'
+                        % (repr(exception), node))
 
     def generate_resource(self, resource):
         """
         Regenerates the given resource.
         """
+        deploy = self.site.config.deploy_root_path
+        if not deploy.exists:
+            return self.regenerate()
+        dest = deploy.child_folder(resource.node.relative_path)
+        if not dest.exists:
+            return self.generate_node(resource.node)
         try:
             logger.info('Generating resource [%s]' % resource)
             self.generator.generate_resource(resource, incremental=True)

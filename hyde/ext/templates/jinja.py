@@ -8,8 +8,7 @@ import re
 from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
-from hyde.site import Resource
-from hyde.util import getLoggerWithNullHandler, getLoggerWithConsoleHandler
+from hyde.util import getLoggerWithNullHandler
 
 from jinja2 import contextfunction, Environment
 from jinja2 import FileSystemLoader, FileSystemBytecodeCache
@@ -17,7 +16,7 @@ from jinja2 import environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
 
-logger = getLoggerWithNullHandler('Jinja2')
+logger = getLoggerWithNullHandler('hyde.engine.Jinja2')
 
 class SilentUndefined(Undefined):
     """
@@ -54,7 +53,7 @@ def markdown(env, value):
     Markdown filter with support for extensions.
     """
     try:
-        import markdown
+        import markdown as md
     except ImportError:
         logger.error(u"Cannot load the markdown library.")
         raise TemplateError("Cannot load the markdown library")
@@ -65,8 +64,8 @@ def markdown(env, value):
         d['extension_configs'] = getattr(env.config.markdown,
                                         'extension_configs',
                                         Expando({})).to_dict()
-    md = markdown.Markdown(**d)
-    return md.convert(output)
+    marked = md.Markdown(**d)
+    return marked.convert(output)
 
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
@@ -78,7 +77,8 @@ def syntax(env, value, lexer=None, filename=None):
         from pygments import lexers
         from pygments import formatters
     except ImportError:
-        logger.error(u"pygments library is required to use syntax highlighting tags.")
+        logger.error(u"pygments library is required to"
+                        " use syntax highlighting tags.")
         raise TemplateError("Cannot load pygments")
 
     pyg = (lexers.get_lexer_by_name(lexer)
@@ -176,8 +176,9 @@ class YamlVar(Extension):
                     nodes.Const({})
                     ).set_lineno(lineno),
                 nodes.CallBlock(
-                    self.call_method('_set_yaml', args=[nodes.Name(var, 'load')]),
-                        [], [], body).set_lineno(lineno)
+                    self.call_method('_set_yaml',
+                            args=[nodes.Name(var, 'load')]),
+                            [], [], body).set_lineno(lineno)
                 ]
 
 
@@ -197,6 +198,9 @@ class YamlVar(Extension):
         return ''
 
 def parse_kwargs(parser):
+    """
+    Parses keyword arguments in tags.
+    """
     name = parser.stream.expect('name').value
     parser.stream.expect('assign')
     if parser.stream.current.test('string'):
@@ -220,18 +224,12 @@ class Syntax(Extension):
         lex = nodes.Const(None)
         filename = nodes.Const(None)
 
-        def fail_syntax():
-             parser.fail(
-                    'Invalid syntax tag. Expected:'
-                    '{% syntax lex=yaml, filename=abc.yaml %} or'
-                    '{% syntax yaml, \'abc.yaml\' %}')
-
         if not parser.stream.current.test('block_end'):
             if parser.stream.look().test('assign'):
-                name = value = name1 = value1 = None
+                name = value = value1 = None
                 (name, value) = parse_kwargs(parser)
                 if parser.stream.skip_if('comma'):
-                    (name1, value1) = parse_kwargs(parser)
+                    (_, value1) = parse_kwargs(parser)
 
                 (lex, filename) = (value, value1) \
                                         if name == 'lex' \
@@ -314,6 +312,9 @@ class Reference(Extension):
 
 
     def _render_output(self, markings, name, caller=None):
+        """
+        Assigns the result of the contents to the markings variable.
+        """
         if not caller:
             return ''
         out = caller()
@@ -334,7 +335,6 @@ class Refer(Extension):
         """
         token = parser.stream.next()
         lineno = token.lineno
-        tag = token.value
         parser.stream.expect('name:to')
         template = parser.parse_expression()
         parser.stream.expect('name:as')
@@ -387,12 +387,16 @@ class Refer(Extension):
         ]
 
     def _push_resource(self, namespace, site, resource, template, caller):
+        """
+        Saves the current references in a stack.
+        """
         namespace['parent_resource'] = resource
         if not hasattr(resource, 'depends'):
             resource.depends = []
         if not template in resource.depends:
             resource.depends.append(template)
-        namespace['resource'] = site.content.resource_from_relative_path(template)
+        namespace['resource'] = site.content.resource_from_relative_path(
+                                    template)
         return ''
 
     def _assign_reference(self, markings, namespace, caller):
@@ -415,17 +419,17 @@ class HydeLoader(FileSystemLoader):
     """
 
     def __init__(self, sitepath, site, preprocessor=None):
-            config = site.config if hasattr(site, 'config') else None
-            if config:
-                super(HydeLoader, self).__init__([
-                                str(config.content_root_path),
-                                str(config.layout_root_path),
-                            ])
-            else:
-                super(HydeLoader, self).__init__(str(sitepath))
+        config = site.config if hasattr(site, 'config') else None
+        if config:
+            super(HydeLoader, self).__init__([
+                            str(config.content_root_path),
+                            str(config.layout_root_path),
+                        ])
+        else:
+            super(HydeLoader, self).__init__(str(sitepath))
 
-            self.site = site
-            self.preprocessor = preprocessor
+        self.site = site
+        self.preprocessor = preprocessor
 
     def get_source(self, environment, template):
         """
@@ -573,9 +577,16 @@ class Jinja2Template(Template):
         """
         return '{{ media_url(\'%s\') }}' % url
 
-    def render(self, text, context):
+    def render_resource(self, resource, context):
         """
         Renders the given resource using the context
+        """
+        template = self.env.get_template(resource.relative_path)
+        return template.render(context)
+
+    def render(self, text, context):
+        """
+        Renders the given text using the context
         """
         template = self.env.from_string(text)
         return template.render(context)

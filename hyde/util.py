@@ -21,12 +21,18 @@ except:
 def getLoggerWithConsoleHandler(logger_name):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler(sys.stdout)
-    formatter = ColorFormatter(fmt="$RESET %(asctime)s "
+    if not logger.handlers:
+        handler = logging.StreamHandler(sys.stdout)
+        if sys.platform == 'win32':
+            formatter = logging.Formatter(
+                            fmt="%(asctime)s %(name)s %(message)s",
+                            datefmt='%H:%M:%S')
+        else:
+            formatter = ColorFormatter(fmt="$RESET %(asctime)s "
                                       "$BOLD$COLOR%(name)s$RESET "
                                       "%(message)s", datefmt='%H:%M:%S')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
     return logger
 
 
@@ -36,7 +42,8 @@ def getLoggerWithNullHandler(logger_name):
     and a NullHandler.
     """
     logger = logging.getLogger(logger_name)
-    logger.addHandler(NullHandler())
+    if not logger.handlers:
+        logger.addHandler(NullHandler())
     return logger
 
 

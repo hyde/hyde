@@ -78,7 +78,7 @@ class MetaPlugin(Plugin):
         """
         self.logger.info("Trying to load metadata from resource [%s]" % resource)
         yaml_finder = re.compile(
-                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n",
+                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n?",
                     re.MULTILINE)
         match = re.match(yaml_finder, text)
         if not match:
