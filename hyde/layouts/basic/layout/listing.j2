@@ -1,20 +1,12 @@
 {% extends "base.j2" %}
-
+{% from "macros.j2" import render_excerpt with context  %}
 {% block main %}
 {% block page_title %}<h1 class="title">{{ resource.meta.title }}</h1>{% endblock %}
 
 <ul class="listing clear">
 {% for res in resource.node.walk_resources_sorted_by_time() %}
-{% refer to res.url as post %}
 <li>
-    <article>
-    <h3><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h3>
-    <a href="{{ content_url(res.url) }}">{{ post.image|markdown|typogrify }}</a>
-    {{ post.excerpt|markdown|typogrify }}
-    <time datetime="{{ res.meta.created.strftime('%Y-%m-%d') }}">
-        Posted: {{ res.meta.created.strftime('%a, %d %b %Y') }}
-    </time>
-    </article>
+    {{ render_excerpt(res) }}
 </li>
 {% endfor %}
 </ul>

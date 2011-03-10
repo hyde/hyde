@@ -42,12 +42,12 @@ table {
 }
 
 a {
-    color: black;
+    color: #666;
     text-decoration: underline;
 }
 
 a:hover{
-    color: red;
+    color: #222;
 }
 
 body{
@@ -190,10 +190,28 @@ footer{
     color: #000;
 }
 
+.blog_excerpt{
+    padding-bottom: 24px;
+}
+
+.blog_excerpt .post time{
+    float: none;
+    clear: left;
+}
+
+.blog_excerpt .button{
+    float: right;
+}
+
+.blog_excerpt h3,
 h1.title{
     font-size: 24px;
     line-height: 36px;
     border-bottom: 1px solid #ccc;
+}
+
+.blog_excerpt h3{
+    margin-bottom: 24px;
 }
 
 section.content{
