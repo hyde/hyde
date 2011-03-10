@@ -336,8 +336,8 @@ h1 a, h2 a, h3 a{
 nav.post_nav{
     background-color: #efefef;
     position: fixed;
-    width: 102px;
-    margin-left: -164px;
+    width: 124px;
+    margin-left: -186px;
     font-size: 12px;
     padding: 12px;
     padding-right: 24px;
@@ -375,6 +375,7 @@ a.prev,
 a.next{
     display: block;
     float: left;
+    margin-bottom: 12px;
 }
 
 a.next{ float: right };
@@ -383,8 +384,24 @@ a.backlink:hover, a.prev:hover, a.next:hover{
     color: #222;
 }
 
+.post_nav a.disabled{
+    color: #ccc;
+}
+
 .post_nav a{
     color: #666;
     text-decoration: none;
     text-shadow: 0px 2px 0px #fff;
+}
+
+.post_nav div{
+    display: block;
+    float: left;
+    width: 58px;
+    overflow: hidden;
+    margin-left: 4px;
+}
+
+#facebook_like{
+    margin-top: 1px;
 }

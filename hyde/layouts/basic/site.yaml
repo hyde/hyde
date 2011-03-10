@@ -11,6 +11,7 @@ plugins:
     - hyde.ext.plugins.textlinks.TextlinksPlugin
 context:
     data:
+        tweet_via: ringce
         menu:
             -
                 name: Home
@@ -47,4 +48,3 @@ sorter:
         filters:
             source.kind: html
             meta.listable: true
-

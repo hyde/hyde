@@ -4,22 +4,36 @@
 <article class="post">
 <nav class="post_nav">
 <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
-{% if resource.prev_by_time %}
-<a class="prev"
+<a class="prev{{' disabled' if not resource.prev_by_time }}"
     title="{{ resource.prev_by_time.meta.title }}"
-    href="{{ content_url(resource.prev_by_time.url) }}">
+    {% if resource.prev_by_time %}
+    href="{{ content_url(resource.prev_by_time.url) }}"{% endif %}>
     Previous
 </a>
-{% endif %}
 
-{% if resource.next_by_time %}
-<a class="next"
+<a class="next{{' disabled' if not resource.next_by_time }}"
     title="{{ resource.next_by_time.meta.title }}"
-    href="{{ content_url(resource.next_by_time.url) }}">
+    {% if resource.next_by_time %}
+    href="{{ content_url(resource.next_by_time.url) }}"{% endif %}>
     Next
 </a>
-{% endif %}
 
+<br>
+<div id="twitter_share">
+<a href="http://twitter.com/share"
+    class="twitter-share-button"
+    data-count="vertical"
+    data-via="{{ tweet_via }}">Tweet</a>
+    <script type="text/javascript"
+        src="http://platform.twitter.com/widgets.js"></script>
+</div>
+<div id="facebook_like">
+<iframe src="http://www.facebook.com/plugins/like.php?href&amp;layout=box_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;font=arial&amp;colorscheme=light&amp;height=65"
+            scrolling="no"
+            frameborder="0"
+            style="border:none; overflow:hidden; width:450px; height:65px;"
+            allowTransparency="true"></iframe>
+</div>
 </nav>
 <h1 class="title">
     <a href="{{ content_url(resource.url) }}">
