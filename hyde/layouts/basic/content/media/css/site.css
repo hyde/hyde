@@ -70,9 +70,84 @@ body{
       -ms-filter: "progid:DXImageTransform.Microsoft.dropshadow(OffX=12px, OffY=12px, Color='#ccc')"; /* IE8 */
 }
 
+footer{
+    font-size: 10px;
+    text-align: center;
+    margin-top: 24px;
+    text-shadow: 0px 2px 0px #fff;
+}
+
+/* Button styles from the awesome: http://www.webdesignerwall.com/demo/css-buttons.html */
+
+.button {
+    display: inline-block;
+    zoom: 1; /* zoom and *display = ie7 hack for display:inline-block */
+    *display: inline;
+    vertical-align: baseline;
+    margin: 0 2px;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font: 14px/100% Arial, Helvetica, sans-serif;
+    padding: .5em 2em .55em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.button:hover {
+    text-decoration: none;
+}
+.button:active {
+    position: relative;
+    top: 1px;
+}
+
+.bigrounded {
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+}
+.medium {
+    font-size: 12px;
+    padding: .4em 1.5em .42em;
+}
+.small {
+    font-size: 11px;
+    padding: .2em 1em .275em;
+}
+
+
+/* white */
+.white {
+    color: #606060;
+    border: solid 1px #b7b7b7;
+    background: #fff;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
+    background: -moz-linear-gradient(top,  #fff,  #ededed);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
+}
+.white:hover {
+    background: #ededed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
+    background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
+}
+.white:active {
+    color: #999;
+    background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
+    background: -moz-linear-gradient(top,  #ededed,  #fff);
+    filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
+}
+
 .banner{
-    border-bottom: 12px solid #ccc;
+    border-bottom: 12px solid #222;
     padding: 0 12px;
+    position: relative;
 }
 
 .banner h1{
@@ -81,12 +156,38 @@ body{
     line-height: 48px;
 }
 
+
 .banner h3{
     color: #666;
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
     margin-bottom: 12px;
+}
+
+.banner nav{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.banner nav li{
+    list-style-type: none;
+    float: left;
+}
+
+.banner nav li a.button{
+    margin:0;
+    -webkit-border-bottom-left-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
+    -moz-border-radius-bottomleft: 0;
+    -moz-border-radius-bottomright: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.banner nav li a.button:hover{
+    color: #000;
 }
 
 h1.title{
@@ -158,17 +259,11 @@ section.content{
 /* Content */
 
 
-article.post h1{
-    margin-bottom: 24px;
-}
-
 article.post p{
-
     font-size: 12px;
     line-height: 24px;
     margin: 6px 0;
 }
-
 
 article.post img{
 
@@ -176,16 +271,66 @@ article.post img{
     margin-bottom: 24px;
 }
 
+ul.tags{
+    margin-bottom: 24px;
+    text-align: right;
+}
+
+ul.tags li{
+    list-style-type: none;
+    display: inline;
+}
+
+ul.tags li a{
+    color: #999;
+    text-decoration: none;
+}
+
+ul.tags li a:before{
+    content: '\00AB';
+}
+
+ul.tags li a:after{
+    content: '\00BB';
+}
+
+ul.tags li a:hover{
+    color: #222;
+}
 
 h1 a, h2 a, h3 a{
     text-decoration: none;
+}
+
+nav.post_nav{
+    position: relative;
+    font-size: 12px;
+    margin-bottom: 12px;
 }
 
 a.backlink:before{
     content: '\2190';
 }
 
-a.backlink{
+a.prev:before{
+    content: '\00AB';
+}
+
+a.next:after{
+    content: '\00BB';
+}
+
+a.prev{
+    position: absolute;
+    right: 96px;
+}
+
+a.next{
+    position: absolute;
+    right: 0;
+}
+
+.post_nav a{
     text-decoration: none;
     text-shadow: 0px 2px 0px #fff;
 }

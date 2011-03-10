@@ -2,12 +2,39 @@
 
 {% block main -%}
 <article class="post">
+<nav class="post_nav">
 <a class="backlink" href="{{ content_url(resource.node.url) }}">Back to list</a>
+{% if resource.prev_by_time %}
+<a class="prev"
+    title="{{ resource.prev_by_time.meta.title }}"
+    href="{{ content_url(resource.prev_by_time.url) }}">
+    Previous
+</a>
+{% endif %}
+
+{% if resource.next_by_time %}
+<a class="next"
+    title="{{ resource.next_by_time.meta.title }}"
+    href="{{ content_url(resource.next_by_time.url) }}">
+    Next
+</a>
+{% endif %}
+
+</nav>
 <h1 class="title">
     <a href="{{ content_url(resource.url) }}">
         {{ resource.meta.title }}
     </a>
 </h1>
+{% if resource.meta.tags %}
+<ul class="tags clear">
+{% for tag in resource.meta.tags %}
+<li>
+    <a class="small">{{ tag }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
 {% filter markdown|typogrify -%}
 
 {% block post -%}{%- endblock %}
