@@ -94,8 +94,8 @@ logging.ColorFormatter = ColorFormatter
 
 
 def make_method(method_name, method_):
-    def method__(self):
-        return method_(self)
+    def method__(*args, **kwargs):
+        return method_(*args, **kwargs)
     method__.__name__ = method_name
     return method__
 

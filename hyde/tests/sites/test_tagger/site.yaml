@@ -20,11 +20,10 @@ sorter:
         reverse: true
         filters:
             source.kind: html
-            meta.listable: true
 tagger:
-    blog:
-        sorter: time
-        archives:
+    sorter: time
+    archives:
+        blog:
             template: tagged_posts.j2
             source: blog
             target: blog/tags

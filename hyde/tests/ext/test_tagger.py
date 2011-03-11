@@ -30,35 +30,41 @@ class TestTagger(object):
     def test_tagger_walker(self):
         gen = Generator(self.s)
         gen.load_site_if_needed()
+        gen.generate_all()
 
-        tags = self.s.taggger['blog'].tags
+        assert hasattr(self.s, 'tagger')
+        assert hasattr(self.s.tagger, 'tags')
+        assert self.s.tagger.tags
+        tags = self.s.tagger.tags.to_dict()
 
-        assert tags.length == 5
+        assert len(tags) == 5
 
         for tag in ['sad', 'happy', 'angry', 'thoughts', 'events']:
             assert tag in tags
 
-        # sad_posts = [post.name for post in
-        #                 self.s.content.walk_resources_tagged_with('sad')]
-        # assert sad_posts.length == 2
-        # assert "sad-post.html" in sad_posts
-        # assert "another-sad-post.html" in sad_posts
-        # 
-        # happy_posts = [post.name for post in
-        #                 self.s.content.walk_resources_tagged_with('happy')]
-        # assert happy_posts.length == 1
-        # assert "happy-post.html" in happy_posts
-        # 
-        # angry_posts = [post.name for post in
-        #                 self.s.content.walk_resources_tagged_with('angry')]
-        # assert angry_posts.length == 1
-        # assert "angry-post.html" in angry_posts
+        sad_posts = [post.name for post in tags['sad']]
+        assert len(sad_posts) == 2
+        assert "sad-post.html" in sad_posts
+        assert "another-sad-post.html" in sad_posts
+        sad_posts == [post.name for post in
+                        self.s.content.walk_resources_tagged_with('sad')]
 
-        # sad_thought_posts = [post.name for post in
-        #                 self.s.content.walk_resources_tagged_with('sad')]
-        # assert sad_posts.length == 2
-        # assert "sad-post.html" in sad_posts
-        # assert "another-sad-post.html" in sad_posts
+
+        happy_posts = [post.name for post in
+                        self.s.content.walk_resources_tagged_with('happy')]
+        assert len(happy_posts) == 1
+        assert "happy-post.html" in happy_posts
+
+        angry_posts = [post.name for post in
+                        self.s.content.walk_resources_tagged_with('angry')]
+        assert len(angry_posts) == 1
+        assert "angry-post.html" in angry_posts
+
+        sad_thought_posts = [post.name for post in
+                        self.s.content.walk_resources_tagged_with('sad+thoughts')]
+        assert len(sad_thought_posts) == 1
+        assert "sad-post.html" in sad_thought_posts
+
 
 
 

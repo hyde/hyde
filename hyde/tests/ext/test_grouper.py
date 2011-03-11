@@ -140,7 +140,6 @@ class TestGrouperSingleLevel(object):
                 res = self.s.content.resource_from_relative_path('blog/' + page)
                 assert hasattr(res, 'section_group')
                 res_group = getattr(res, 'section_group')
-                print "%s, %s=%s" % (page, group.name, res_group.name)
                 assert res_group == group
 
     def test_resource_belongs_to(self):
