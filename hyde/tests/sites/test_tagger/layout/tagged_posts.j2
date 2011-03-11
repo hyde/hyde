@@ -1,0 +1,9 @@
+{% if tag and tag.resources -%}
+<ul>
+{% for resource in tag.resources -%}
+<li>
+<a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
+</li>
+{%- endfor %}
+</ul>
+{%- endif %}

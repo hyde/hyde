@@ -48,26 +48,22 @@ class Template(object):
 
     @abc.abstractmethod
     def configure(self, site, engine):
+
         """
-        The site object should contain a config attribute. The config object is
-        a simple YAML object with required settings. The template implementations
-        are responsible for transforming this object to match the `settings`
-        required for the template engines.
+        The site object should contain a config attribute. The config object
+        is a simple YAML object with required settings. The template
+        implementations are responsible for transforming this object to match
+        the `settings` required for the template engines.
 
         The engine is an informal protocol to provide access to some
         hyde internals.
 
-        The preprocessor and postprocessor attributes must contain the
-        functions that trigger the hyde plugins to preprocess the template
-        after load and postprocess it after it is processed and code is generated.
+        The preprocessor attribute must contain the function that trigger the
+        hyde plugins to preprocess the template after load.
 
-        Note that the processors must only be used when referencing templates,
-        for example, using the include tag. The regular preprocessing and
-        post processing logic is handled by hyde.
-
-        A context_for_path attribute must contain the function that returns the
-        context object that is populated with the appropriate variables for the given
-        path.
+        A context_for_path attribute must contain the function that returns
+        the context object that is populated with the appropriate variables
+        for the given path.
         """
         return
 
@@ -77,6 +73,14 @@ class Template(object):
         files.
         """
         return None
+
+    @abc.abstractmethod
+    def render_resource(self, resource, context):
+        """
+        This function must load the file represented by the resource
+        object and return the rendered text.
+        """
+        return ''
 
     @abc.abstractmethod
     def render(self, text, context):
