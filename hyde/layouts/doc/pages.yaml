@@ -1,3 +1,0 @@
-extends: site.yaml
-mode: production
-deploy_root: ../../../../hyde.github.com

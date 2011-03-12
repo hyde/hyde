@@ -1,4 +1,4 @@
-Version 0.7b1
+Version 0.8b1
 
 # A brand new **hyde**
 
@@ -28,7 +28,7 @@ For the current trunk:
 
 The following command:
 
-        hyde -s ~/test_site create -l doc
+        hyde -s ~/test_site create
 
 will create a new hyde site using the test layout.
 
@@ -71,10 +71,10 @@ you can make changes to your source and refresh the browser to view the changes.
 ## Next Steps
 
 1. Documentation
-2. Default Layouts
+2. <del>Default Layouts</del>
 3. Django Support
 4. Plugins:
-    * Tags
+    * <del>Tags</del>
     * Atom / RSS
-    * Text Compressor (CSS, JS, HTML)
-    * Image optimizer
+    * <del>Text Compressor (CSS, JS, HTML)</del>
+    * <del>Image optimizer</del>
