@@ -48,7 +48,9 @@
 <ul class="tags clear">
 {% for tag in resource.meta.tags %}
 <li>
-    <a class="small">{{ tag }}</a>
+    <a class="small" href="{{ content_url('blog/tags/'~tag~'.html') }}">
+        {{ tag }}
+    </a>
 </li>
 {% endfor %}
 </ul>

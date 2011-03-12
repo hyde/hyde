@@ -27,4 +27,4 @@ tagger:
             template: tagged_posts.j2
             source: blog
             target: blog/tags
-            archive_extension: html
+            extension: html

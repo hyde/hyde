@@ -130,11 +130,15 @@ class TaggerPlugin(Plugin):
             text = "{%% extends \"%s\" %%}" % template
 
             for tag, resources in self.site.tagger.tags.to_dict().iteritems():
-                archive_text = self.template.render(text, dict(
+                context = {}
+                context.update(self.site.context)
+                context.update(dict(
                                     site=self.site,
                                     node=source,
+                                    tag=tag,
                                     walker=getattr(source,
                                         "walk_resources_tagged_with_%s" % tag)
                                 ))
+                archive_text = self.template.render(text, context)
                 archive_file = File(target.child("%s.%s" % (tag, extension)))
                 archive_file.write(archive_text)

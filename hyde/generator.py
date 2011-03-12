@@ -43,9 +43,9 @@ class Generator(object):
         """
         # TODO: update metadata and other resource
         # specific properties here.
-        self.__context__.update(resource=resource)
+        self.__context__.update(resource=resource, node=resource.node)
         yield self.__context__
-        self.__context__.update(resource=None)
+        self.__context__.update(resource=None, node=None)
 
     def context_for_path(self, path):
         resource = self.site.resource_from_path(path)

@@ -42,8 +42,9 @@ table {
 }
 
 a {
-    color: #666;
+    color: #37e;
     text-decoration: underline;
+    text-shadow: 0px 2px 0px #fff;
 }
 
 a:hover{
@@ -317,10 +318,12 @@ ul.tags li a{
     text-decoration: none;
 }
 
+h1.tag:before,
 ul.tags li a:before{
     content: '\00AB';
 }
 
+h1.tag:after,
 ul.tags li a:after{
     content: '\00BB';
 }
@@ -404,4 +407,33 @@ a.backlink:hover, a.prev:hover, a.next:hover{
 
 #facebook_like{
     margin-top: 1px;
+}
+
+.archives ul.posts{
+    margin-top: 24px;
+}
+
+.archives li.post{
+    list-style-type: none;
+    border-bottom: 1px dotted #ccc;
+    padding: 12px 0;
+
+}
+
+.archives li.post time{
+    color: #999;
+    text-shadow: 0px 2px 0px #fff;
+    margin-right: 24px;
+    display:block;
+    float: left;
+    width: 120px;
+}
+
+.archives li.post a{
+    float: left;
+}
+
+.archives ul.tags{
+    float: right;
+    margin-bottom:0;
 }

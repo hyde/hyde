@@ -20,7 +20,7 @@
             {% set active = (resource.url ==
                 site.content.resource_from_relative_path(item.url).url) -%}
         {% else -%}
-            {% set active = (resource.node ==
+            {% set active = (node ==
                 site.content.node_from_relative_path(item.url)) -%}
         {%- endif %}
         {% set classes = ['button', 'white'] -%}

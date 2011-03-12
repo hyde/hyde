@@ -1,0 +1,28 @@
+{% extends "base.j2" %}
+
+{% block main %}
+<section class="archives">
+<h1 class="tag title">{{ tag }}</h1>
+<ul class="posts clear">
+{% for resource in walker() -%}
+<li class="post clear">
+    <time datetime="{{ resource.meta.created.strftime('%Y-%m-%d') }}">
+        {{ resource.meta.created.strftime('%a, %d %b %Y') }}
+    </time>
+    <a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
+    {% if resource.meta.tags %}
+    <ul class="tags">
+    {% for tag in resource.meta.tags %}
+    <li>
+        <a class="small" href="{{ content_url('blog/tags/'~tag~'.html') }}">
+            {{ tag }}
+        </a>
+    </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+</li>
+{%- endfor %}
+</ul>
+</section>
+{% endblock %}
