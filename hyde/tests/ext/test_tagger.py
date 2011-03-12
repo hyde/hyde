@@ -65,26 +65,52 @@ class TestTagger(object):
         assert len(sad_thought_posts) == 1
         assert "sad-post.html" in sad_thought_posts
 
+    def test_tagger_archives_generated(self):
+        gen = Generator(self.s)
+        gen.load_site_if_needed()
+        gen.load_template_if_needed()
+        gen.generate_all()
+        tags_folder = self.deploy.child_folder('blog/tags')
 
+        assert tags_folder.exists
+        tags = ['sad', 'happy', 'angry', 'thoughts', 'events']
 
+        archives = (File(tags_folder.child("%s.html" % tag)) for tag in tags)
 
+        for archive in archives:
+            assert archive.exists
 
-    # def test_tagger_archives_generated():
-    #     gen = Generator(self.s)
-    #     gen.load_site_if_needed()
-    #     gen.load_template_if_needed()
-    #     gen.generate_all()
-    #     tags_folder = self.deploy.child_folder('blog/tags')
-    #
-    #     blog_node = self.s.node_from_relative_path('blog')
-    #     res_by_tag =
-    #     for resource in blog_node.walk_resources():
-    #
-    #
-    #     assert tags_folder.exists
-    #     tags = ['sad', 'happy', 'angry', 'thoughts']
-    #
-    #     archives = (File(tags_folder.child("%s.html" % tag)) for tag in tags)
-    #     for archive in archives:
-    #         assert archive.exists
-    #         assert
+        from pyquery import PyQuery
+
+        q = PyQuery(File(tags_folder.child('sad.html')).read_all())
+        assert q
+
+        assert q('li').length == 2
+        assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
+        assert q('li a:eq(1)').attr('href') == '/blog/sad-post.html'
+
+        q = PyQuery(File(tags_folder.child('happy.html')).read_all())
+        assert q
+
+        assert q('li').length == 1
+        assert q('li a:first-child').attr('href') == '/blog/happy-post.html'
+
+        q = PyQuery(File(tags_folder.child('angry.html')).read_all())
+        assert q
+
+        assert q('li').length == 1
+        assert q('li a:first-child').attr('href') == '/blog/angry-post.html'
+
+        q = PyQuery(File(tags_folder.child('thoughts.html')).read_all())
+        assert q
+
+        assert q('li').length == 3
+        assert q('li a:eq(0)').attr('href') == '/blog/happy-post.html'
+        assert q('li a:eq(1)').attr('href') == '/blog/angry-post.html'
+        assert q('li a:eq(2)').attr('href') == '/blog/sad-post.html'
+
+        q = PyQuery(File(tags_folder.child('events.html')).read_all())
+        assert q
+
+        assert q('li').length == 1
+        assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'

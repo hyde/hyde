@@ -1,9 +1,8 @@
-{% if tag and tag.resources -%}
+<h1>Posts tagged: {{ tag }} in {{ node.name|title }}</h1>
 <ul>
-{% for resource in tag.resources -%}
+{% for resource in walker() -%}
 <li>
 <a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
 </li>
 {%- endfor %}
 </ul>
-{%- endif %}
