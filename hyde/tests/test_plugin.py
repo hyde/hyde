@@ -260,13 +260,13 @@ class TestPlugins(object):
     def test_generator_template_begin_text_resource_called(self):
 
         with patch.object(PluginLoaderStub, 'begin_text_resource') as begin_text_resource_stub:
+            begin_text_resource_stub.reset_mock()
             begin_text_resource_stub.return_value = ''
             gen = Generator(self.site)
             gen.generate_all()
 
             called_with_resources = sorted([arg[0][0].path for arg in begin_text_resource_stub.call_args_list])
-            assert begin_text_resource_stub.call_count == len(self.content_text_resources)
-            assert called_with_resources == self.content_text_resources
+            assert set(called_with_resources) == set(self.content_text_resources)
 
     def test_generator_template_begin_text_resource_called_for_single_resource(self):
 
