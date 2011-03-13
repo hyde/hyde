@@ -65,7 +65,9 @@ def markdown(env, value):
                                         'extension_configs',
                                         Expando({})).to_dict()
     marked = md.Markdown(**d)
+
     return marked.convert(output)
+
 
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
@@ -95,8 +97,8 @@ def syntax(env, value, lexer=None, filename=None):
     code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
     caption = filename if filename else pyg.name
     return Markup(
-            '<figure class="code"><figcaption>%s</figcaption>%s</figure>\n\n'
-                        % (caption, code))
+            '<figure class="code">%s<figcaption>%s</figcaption></figure>\n\n'
+                        % (code, caption))
 
 class Spaceless(Extension):
     """

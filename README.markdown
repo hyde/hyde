@@ -4,11 +4,9 @@ Version 0.8b1
 
 This is the new version of hyde under active development. Incomplete documentation
 can be found [here][hydedocs]. [This][hyde1-0] should give a good understanding of
-the motivation behind this version. You can also take a look at the
-[documentation source][docs] for a reference implementation.
+the motivation behind this version.
 
 [hyde1-0]: http://groups.google.com/group/hyde-dev/web/hyde-1-0
-[docs]: https://github.com/hyde/hyde/tree/master/hyde/layouts/doc
 [hydedocs]: http://hyde.github.com/overview
 
 [Here](http://groups.google.com/group/hyde-dev/browse_thread/thread/2a143bd2081b3322) is
@@ -50,8 +48,9 @@ you can make changes to your source and refresh the browser to view the changes.
 
 ## Examples
 
-1. [Cloudpanic](https://github.com/tipiirai/cloudpanic)
-2. [Ringce](https://github.com/lakshmivyas/ringce/tree/v3.0)
+1. [Hyde Documentation](https://github.com/hyde/docs)
+2. [Cloudpanic](https://github.com/tipiirai/cloudpanic)
+3. [Ringce](https://github.com/lakshmivyas/ringce/tree/v3.0)
 
 ## A brief list of features
 
