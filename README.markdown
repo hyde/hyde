@@ -2,15 +2,8 @@ Version 0.8b1
 
 # A brand new **hyde**
 
-This is the new version of hyde under active development. Incomplete documentation
-can be found [here][hydedocs]. [This][hyde1-0] should give a good understanding of
-the motivation behind this version.
-
-[hyde1-0]: http://groups.google.com/group/hyde-dev/web/hyde-1-0
-[hydedocs]: http://hyde.github.com/overview
-
-[Here](http://groups.google.com/group/hyde-dev/browse_thread/thread/2a143bd2081b3322) is
-the initial announcement of the project.
+This is the new version of hyde under active development. Hyde documentation
+is a work in progress and can be found [here](http://hyde.github.com).
 
 ## Installation
 
