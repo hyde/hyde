@@ -16,7 +16,18 @@ class DependsPlugin(Plugin):
     def __init__(self, site):
         super(DependsPlugin, self).__init__(site)
 
-    def begin_text_resource(self, resource, text):
+    def begin_site(self):
+           """
+           Initialize dependencies.
+
+           Go through all the nodes and resources to initialize
+           dependencies at each level.
+           """
+           for resource in self.site.content.walk_resources():
+               self._update_resource(resource)
+
+
+    def _update_resource(self, resource):
         """
         If the meta data for the resource contains a depends attribute,
         this plugin adds an entry to the depends property of the
@@ -33,7 +44,7 @@ class DependsPlugin(Plugin):
         try:
             depends = resource.meta.depends
         except AttributeError:
-            pass
+            return
 
         if not hasattr(resource, 'depends') or not resource.depends:
             resource.depends = []
@@ -47,4 +58,3 @@ class DependsPlugin(Plugin):
                                     site=self.site,
                                     context=self.site.context))
         resource.depends = list(set(resource.depends))
-        return text

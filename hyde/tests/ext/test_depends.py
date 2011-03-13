@@ -36,8 +36,7 @@ class TestDepends(object):
 ===
 depends: index.html
 ===
-{% set ind = 'index.html' %}
-{% refer to ind as index %}
+
 """
         inc = File(TEST_SITE.child('content/inc.md'))
         inc.write(text)

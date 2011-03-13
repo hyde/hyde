@@ -14,7 +14,17 @@ import sys
 PROJECT = 'hyde'
 
 try:
+    import markdown
+except:
+    markdown = False
+
+try:
     long_description = open('README.markdown', 'rt').read()
+    if markdown:
+        long_description = markdown.markdown(long_description)
+        import re
+        long_description = re.sub('(.*)', '   \\1', long_description)
+        long_description ='.. raw:: html\n\n' + long_description
 except IOError:
     long_description = ''
 

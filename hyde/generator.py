@@ -124,16 +124,19 @@ class Generator(object):
         """
         Updates the dependencies for the given resource.
         """
-
+        if not resource.source_file.is_text:
+            return []
         rel_path = resource.relative_path
         deps = []
         if hasattr(resource, 'depends'):
             user_deps = resource.depends
             for dep in user_deps:
                 deps.append(dep)
-                deps.extend(self.template.get_dependencies(dep))
+                dep_res = self.site.content.resource_from_relative_path(dep)
+                if dep_res:
+                    deps.extend(self.get_dependencies(dep_res))
 
-        deps.extend(self.template.get_dependencies(resource.relative_path))
+        deps.extend(self.template.get_dependencies(rel_path))
         deps = list(set(deps))
         if None in deps:
             deps.remove(None)
