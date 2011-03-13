@@ -46,4 +46,4 @@ class TestSyntext(object):
         html = f.read_all()
         assert html
         q = PyQuery(html)
-        assert q('div.code').length == 1
+        assert q('figure.code').length == 1

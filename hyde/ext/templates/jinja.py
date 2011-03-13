@@ -95,7 +95,7 @@ def syntax(env, value, lexer=None, filename=None):
     code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
     caption = filename if filename else pyg.name
     return Markup(
-                '\n\n<div class="code"><figcaption>%s</figcaption>%s</div>\n\n'
+            '<figure class="code"><figcaption>%s</figcaption>%s</figure>\n\n'
                         % (caption, code))
 
 class Spaceless(Extension):
@@ -213,6 +213,7 @@ class Syntax(Extension):
     """
     A wrapper around the syntax filter for syntactic sugar.
     """
+
     tags = set(['syntax'])
 
 
