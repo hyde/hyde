@@ -113,7 +113,29 @@ class Engine(Application):
             logger.info("Server successfully stopped")
             exit()
 
-    def make_site(self, sitepath, config, deploy):
+    @subcommand('publish', help='Publish the website')
+    @store('-c', '--config-path', default='site.yaml', dest='config',
+            help='The configuration used to generate the site')
+    @store('-p', '--publisher', dest='publisher', required=True,
+            help='Points to the publisher configuration.')
+    @store('-m', '--message', dest='message',
+            help='Optional message.')
+    def publish(self, args):
+        """
+        Publishes the site based on the configuration from the `target`
+        parameter.
+        """
+        self.main(args)
+        site = self.make_site(args.sitepath, args.config)
+        from hyde.publisher import Publisher
+        publisher = Publisher.load_publisher(site,
+                        args.publisher,
+                        args.message)
+        publisher.publish()
+
+
+
+    def make_site(self, sitepath, config, deploy=None):
         """
         Creates a site object from the given sitepath and the config file.
         """
