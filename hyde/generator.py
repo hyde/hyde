@@ -114,22 +114,30 @@ class Generator(object):
         """
         Gets the dependencies for a given resource.
         """
+
+        rel_path = resource.relative_path
+        deps = self.deps[rel_path] if rel_path in self.deps \
+                    else self.update_deps(resource)
+        return deps
+
+    def update_deps(self, resource):
+        """
+        Updates the dependencies for the given resource.
+        """
+
         rel_path = resource.relative_path
         deps = []
-        if not rel_path in self.deps:
-            if hasattr(resource, 'depends'):
-                user_deps = resource.depends
-                for dep in user_deps:
-                    deps.append(dep)
-                    deps.extend(self.template.get_dependencies(dep))
+        if hasattr(resource, 'depends'):
+            user_deps = resource.depends
+            for dep in user_deps:
+                deps.append(dep)
+                deps.extend(self.template.get_dependencies(dep))
 
-            deps.extend(self.template.get_dependencies(resource.relative_path))
-            deps = list(set(deps))
-            if None in deps:
-                deps.remove(None)
-            self.deps[rel_path] = deps
-        else:
-            deps = self.deps[rel_path]
+        deps.extend(self.template.get_dependencies(resource.relative_path))
+        deps = list(set(deps))
+        if None in deps:
+            deps.remove(None)
+        self.deps[rel_path] = deps
         return deps
 
     def has_resource_changed(self, resource):
@@ -281,6 +289,7 @@ class Generator(object):
             logger.debug("No changes found. Skipping resource [%s]", resource)
             return
         logger.debug("Processing [%s]", resource)
+        self.update_deps(resource)
         with self.context_for_resource(resource) as context:
             if resource.source_file.is_text:
                 if resource.uses_template:
