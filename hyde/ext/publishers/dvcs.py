@@ -17,9 +17,6 @@ class DVCS(object):
     def save_draft(self, message=None): pass
 
     @abc.abstractmethod
-    def publish(self): pass
-
-    @abc.abstractmethod
     def pull(self): pass
 
     @abc.abstractmethod
