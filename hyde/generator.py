@@ -289,9 +289,9 @@ class Generator(object):
             logger.debug("No changes found. Skipping resource [%s]", resource)
             return
         logger.debug("Processing [%s]", resource)
-        self.update_deps(resource)
         with self.context_for_resource(resource) as context:
             if resource.source_file.is_text:
+                self.update_deps(resource)
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
                     try:
