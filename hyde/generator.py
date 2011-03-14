@@ -135,8 +135,8 @@ class Generator(object):
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
                     deps.extend(self.get_dependencies(dep_res))
-
-        deps.extend(self.template.get_dependencies(rel_path))
+        if resource.uses_template:
+            deps.extend(self.template.get_dependencies(rel_path))
         deps = list(set(deps))
         if None in deps:
             deps.remove(None)
