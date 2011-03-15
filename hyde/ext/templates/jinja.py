@@ -3,6 +3,7 @@
 Jinja template utilties
 """
 
+from datetime import datetime, date
 import re
 
 from hyde.fs import File, Folder
@@ -12,7 +13,7 @@ from hyde.util import getLoggerWithNullHandler
 
 from jinja2 import contextfunction, Environment
 from jinja2 import FileSystemLoader, FileSystemBytecodeCache
-from jinja2 import environmentfilter, Markup, Undefined, nodes
+from jinja2 import contextfilter, environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
 
@@ -46,6 +47,34 @@ def content_url(context, path):
     """
     site = context['site']
     return Folder(site.config.base_url).child(path)
+
+
+@contextfilter
+def date_format(ctx, dt, fmt=None):
+    if not dt:
+        dt = datetime.now()
+    if not isinstance(dt, datetime) or \
+        not isinstance(dt, date):
+        logger.error("Date format called on a non date object")
+        return dt
+
+    format = fmt or "%a, %d %b %Y"
+    if not fmt:
+        global_format = ctx.resolve('dateformat')
+        if not isinstance(global_format, Undefined):
+            format = global_format
+    return dt.strftime(format)
+
+
+def xmldatetime(dt):
+    if not dt:
+        dt = datetime.now()
+    zprefix = "Z"
+    tz = dt.strftime("%z")
+    if tz:
+        zprefix = tz[:3] + ":" + tz[3:]
+    return dt.strftime("%Y-%m-%dT%H:%M:%S") + zprefix
+
 
 @environmentfilter
 def markdown(env, value):
@@ -491,6 +520,8 @@ class Jinja2Template(Template):
         self.env.globals['deps'] = {}
         self.env.filters['markdown'] = markdown
         self.env.filters['syntax'] = syntax
+        self.env.filters['date_format'] = date_format
+        self.env.filters['xmldatetime'] = xmldatetime
 
         config = {}
         if hasattr(site, 'config'):
