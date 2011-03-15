@@ -5,6 +5,7 @@ Jinja template utilties
 
 from datetime import datetime, date
 import re
+import itertools
 
 from hyde.fs import File, Folder
 from hyde.model import Expando
@@ -66,6 +67,12 @@ def date_format(ctx, dt, fmt=None):
             format = global_format
     return dt.strftime(format)
 
+
+def islice(iterable, start=0, stop=3, step=1):
+    return itertools.islice(iterable, start, stop, step)
+
+def top(iterable, count=3):
+    return islice(iterable, stop=count)
 
 def xmldatetime(dt):
     if not dt:
@@ -555,6 +562,8 @@ class Jinja2Template(Template):
         self.env.filters['syntax'] = syntax
         self.env.filters['date_format'] = date_format
         self.env.filters['xmldatetime'] = xmldatetime
+        self.env.filters['islice'] = islice
+        self.env.filters['top'] = top
 
         config = {}
         if hasattr(site, 'config'):

@@ -524,3 +524,38 @@ two:
 
         twos = [item.text for item in actual("ul.two li")]
         assert twos == ["D", "E", "F"]
+
+    def test_top_filter(self):
+
+        text = """
+{% yaml test %}
+item_list:
+    - A
+    - B
+    - C
+    - D
+    - E
+    - F
+{% endyaml %}
+<ul class="top">
+{% for value in test.item_list|top(3) %}
+    <li>{{ value }}</li>
+{% endfor %}
+</ul>
+<ul class="mid">
+{% for value in test.item_list|islice(3, 6) %}
+    <li>{{ value }}</li>
+{% endfor %}
+</ul>
+"""
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        print html
+        actual = PyQuery(html)
+        assert actual("ul").length == 2
+        assert actual("li").length == 6
+        items = [item.text for item in actual("ul.top li")]
+        assert items == ["A", "B", "C"]
+        items = [item.text for item in actual("ul.mid li")]
+        assert items == ["D", "E", "F"]
