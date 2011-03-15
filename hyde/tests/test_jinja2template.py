@@ -357,6 +357,36 @@ Hyde & Jinja.
         assert "mark" not in html
         assert "reference" not in html
 
+    def test_reference_is_not_callable(self):
+        text = """
+===
+is_processable: False
+===
+
+{% mark heading %}
+This is a heading
+=================
+{% endmark %}
+{% reference content %}
+Hyde & Jinja.
+{% endreference %}
+
+{% mark repeated %}
+<span class="junk">Junk</span>
+{% endmark %}
+
+{{ self.repeated() }}
+{{ self.repeated }}
+
+"""
+
+        text2 = """{% includetext "inc.md"  %}"""
+        html = assert_markdown_typogrify_processed_well(text, text2)
+        assert "mark" not in html
+        assert "reference" not in html
+        q = PyQuery(html)
+        assert q("span.junk").length == 1
+
     def test_refer(self):
         text = """
 ===
