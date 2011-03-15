@@ -84,7 +84,9 @@ class TestTagger(object):
 
         q = PyQuery(File(tags_folder.child('sad.html')).read_all())
         assert q
+        
 
+        print q
         assert q('li').length == 2
         assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
         assert q('li a:eq(1)').attr('href') == '/blog/sad-post.html'

@@ -100,13 +100,14 @@ class TestConfig(object):
 
     def test_default_configuration(self):
         c = Config(sitepath=TEST_SITE, config_dict={})
-        for root in ['content', 'layout', 'media']:
+        for root in ['content', 'layout']:
             name = root + '_root'
             path = name + '_path'
             assert hasattr(c, name)
             assert getattr(c, name) == root
             assert hasattr(c, path)
             assert getattr(c, path) == TEST_SITE.child_folder(root)
+        assert c.media_root_path == c.content_root_path.child_folder('media')
         assert hasattr(c, 'plugins')
         assert len(c.plugins) == 0
         assert c.deploy_root_path == TEST_SITE.child_folder('deploy')
@@ -119,7 +120,7 @@ class TestConfig(object):
     def test_conf2(self):
         c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf2))
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
-        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_root_path == c.content_root_path.child_folder('mmm')
         assert c.media_url == TEST_SITE.child_folder('/media')
         assert c.deploy_root_path == Folder('~/deploy_site')
 
@@ -127,7 +128,7 @@ class TestConfig(object):
         File(TEST_SITE.child('site.yaml')).write(self.conf2)
         c = Config(sitepath=TEST_SITE)
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
-        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_root_path == c.content_root_path.child_folder('mmm')
         assert c.media_url == TEST_SITE.child_folder('/media')
         assert c.deploy_root_path == Folder('~/deploy_site')
 
@@ -135,7 +136,7 @@ class TestConfig(object):
         File(TEST_SITE.child('another.yaml')).write(self.conf2)
         c = Config(sitepath=TEST_SITE, config_file='another.yaml')
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
-        assert c.media_root_path == TEST_SITE.child_folder('mmm')
+        assert c.media_root_path == c.content_root_path.child_folder('mmm')
         assert c.media_url == TEST_SITE.child_folder('/media')
         assert c.deploy_root_path == Folder('~/deploy_site')
 
@@ -150,6 +151,6 @@ class TestConfig(object):
         c = Config(sitepath=TEST_SITE, config_file='another.yaml')
         assert c.mode == 'production'
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
-        assert c.media_root_path == TEST_SITE.child_folder('xxx')
+        assert c.media_root_path == c.content_root_path.child_folder('xxx')
         assert c.media_url == TEST_SITE.child_folder('/media')
         assert c.deploy_root_path == Folder('~/deploy_site')

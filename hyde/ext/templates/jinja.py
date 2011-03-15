@@ -38,17 +38,14 @@ def media_url(context, path):
     """
     Returns the media url given a partial path.
     """
-    site = context['site']
-    return Folder(site.config.media_url).child(path)
-
+    return context['site'].media_url(path)
 
 @contextfunction
 def content_url(context, path):
     """
     Returns the content url given a partial path.
     """
-    site = context['site']
-    return Folder(site.config.base_url).child(path)
+    return context['site'].content_url(path)
 
 
 @contextfilter

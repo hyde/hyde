@@ -61,7 +61,7 @@ class Resource(Processable):
     @property
     def relative_path(self):
         """
-        Gets the path relative to the root folder (Content, Media, Layout)
+        Gets the path relative to the root folder (Content)
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
 
@@ -89,6 +89,13 @@ class Resource(Processable):
 
     relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
     url = relative_deploy_path
+
+    @property
+    def full_url(self):
+        """
+        Returns the full url for the resource.
+        """
+        return self.site.full_url(self.relative_path)
 
 class Node(Processable):
     """
@@ -188,7 +195,7 @@ class Node(Processable):
 
     @property
     def full_url(self):
-        return self.site.config.base_url.rstrip('/') + self.url
+        return self.site.full_url(self.relative_path)
 
 class RootNode(Node):
     """
@@ -356,3 +363,37 @@ class Site(object):
         """
 
         self.content.load()
+
+    def content_url(self, path):
+        """
+        Returns the content url by appending the base url from the config
+        with the given path.
+        """
+        return Folder(self.config.base_url).child(path)
+
+    def media_url(self, path):
+        """
+        Returns the media url by appending the media base url from the config
+        with the given path.
+        """
+        return Folder(self.config.media_url).child(path)
+
+    def full_url(self, path):
+        """
+        Determines if the given path is media or content based on the
+        configuration and returns the appropriate url.
+        """
+
+        if self.is_media(path):
+            return self.media_url(
+                    FS(path).get_relative_path(
+                        self.config.media_root_path))
+        else:
+            return self.content_url(path)
+
+    def is_media(self, path):
+        """
+        Given the relative path, determines if it is content or media.
+        """
+        folder = self.content.source.child_folder(path)
+        return folder.is_descendant_of(self.config.media_root_path)

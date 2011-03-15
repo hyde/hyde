@@ -178,7 +178,7 @@ class TestSiteWithConfig(object):
         cls.SITE_PATH.delete()
 
     def test_load_with_config(self):
-        s = Site(self.SITE_PATH, config = self.config)
+        s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'blog/2010/december'
         node = s.content.node_from_relative_path(path)
@@ -189,3 +189,33 @@ class TestSiteWithConfig(object):
         assert resource
         assert resource.relative_path == path
         assert not s.content.resource_from_relative_path('/happy-festivus.html')
+
+    def test_content_url(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'blog/2010/december'
+        assert s.content_url(path) == "/" + path
+
+    def test_media_url(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'css/site.css'
+        assert s.media_url(path) == "/media/" + path
+
+    def test_is_media(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        assert s.is_media('media/css/site.css')
+
+        s.config.media_root = 'monkey'
+        assert not s.is_media('media/css/site.css')
+        assert s.is_media('monkey/css/site.css')
+
+    def test_media_url_from_resource(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'css/site.css'
+        resource = s.content.resource_from_relative_path(
+                        Folder("media").child(path))
+        assert resource
+        assert resource.full_url == "/media/" + path

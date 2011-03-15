@@ -126,7 +126,7 @@ class Config(Expando):
             media_root='media',
             layout_root='layout',
             media_url='/media',
-            site_url='/',
+            base_url="/",
             not_found='404.html',
             plugins = []
         )
@@ -174,9 +174,9 @@ class Config(Expando):
     @property
     def media_root_path(self):
         """
-        Derives the media root path from the site path
+        Derives the media root path from the content path
         """
-        return self.sitepath.child_folder(self.media_root)
+        return self.content_root_path.child_folder(self.media_root)
 
     @property
     def layout_root_path(self):
