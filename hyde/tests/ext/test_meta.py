@@ -46,6 +46,35 @@ is_processable: False
         assert not res.meta.is_processable
         assert not res.is_processable
 
+    def test_ignores_pattern_in_content(self):
+        text = """
+{% markdown %}
+
+Heading 1
+===
+
+Heading 2
+===
+
+{% endmarkdown %}
+"""
+        about2 = File(TEST_SITE.child('content/about2.html'))
+        about2.write(text)
+        s = Site(TEST_SITE)
+        s.load()
+        res = s.content.resource_from_path(about2.path)
+        assert res.is_processable
+
+        s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']
+        gen = Generator(s)
+        gen.generate_all()
+        target = File(Folder(s.config.deploy_root_path).child('about2.html'))
+        text = target.read_all()
+        q = PyQuery(text)
+        assert q("h1").length == 2
+        assert q("h1:eq(0)").text().strip() == "Heading 1"
+        assert q("h1:eq(1)").text().strip() == "Heading 2"
+
     def test_can_load_front_matter(self):
         d = {'title': 'A nice title',
             'author': 'Lakshmi Vyas',

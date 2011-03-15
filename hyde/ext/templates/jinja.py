@@ -528,7 +528,6 @@ class Jinja2Template(Template):
 
         try:
             conf = attrgetter('config.jinja2')(site).to_dict()
-            print conf
         except AttributeError:
             pass
 
@@ -540,8 +539,6 @@ class Jinja2Template(Template):
             settings['extensions'].extend(extensions)
         else:
             settings['extensions'].append(extensions)
-
-        print settings
 
         self.env = Environment(
                     loader=self.loader,
