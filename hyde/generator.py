@@ -2,6 +2,7 @@
 """
 The generator class and related utility functions.
 """
+
 from hyde.exceptions import HydeException
 from hyde.fs import File, Folder
 from hyde.model import Context, Dependents
@@ -10,6 +11,7 @@ from hyde.template import Template
 from hyde.site import Node, Resource
 
 from contextlib import contextmanager
+from datetime import datetime
 
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.engine')
@@ -43,7 +45,10 @@ class Generator(object):
         """
         # TODO: update metadata and other resource
         # specific properties here.
-        self.__context__.update(resource=resource, node=resource.node)
+        self.__context__.update(
+            resource=resource,
+            node=resource.node,
+            time_now=datetime.now())
         yield self.__context__
         self.__context__.update(resource=None, node=None)
 

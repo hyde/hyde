@@ -11,6 +11,7 @@ from hyde.site import Node, Resource
 from hyde.util import add_method, add_property, pairwalk
 
 from collections import namedtuple
+from datetime import datetime
 from functools import partial
 from itertools import ifilter, izip, tee, product
 from operator import attrgetter
@@ -133,6 +134,7 @@ class TaggerPlugin(Plugin):
                 context = {}
                 context.update(self.site.context)
                 context.update(dict(
+                                    time_now=datetime.now(),
                                     site=self.site,
                                     node=source,
                                     tag=tag,
