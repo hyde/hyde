@@ -323,7 +323,7 @@ class RootNode(Node):
         """
 
         if not self.source_folder.exists:
-            raise HydeException("The given source folder[%s]"
+            raise HydeException("The given source folder [%s]"
                                 " does not exist" % self.source_folder)
 
         with self.source_folder.walker as walker:

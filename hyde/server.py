@@ -34,7 +34,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         and serve.
         """
         self.server.request_time = datetime.now()
-        logger.info("Processing request:[%s]" % self.path)
+        logger.info("Processing request: [%s]" % self.path)
         result = urlparse.urlparse(self.path)
         query = urlparse.parse_qs(result.query)
         if 'refresh' in query or result.query=='refresh':
@@ -45,7 +45,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             parts[4] = urllib.urlencode(query)
             parts = tuple(parts)
             new_url = urlparse.urlunparse(parts)
-            logger.info('Redirecting...[%s]' % new_url)
+            logger.info('Redirecting... [%s]' % new_url)
             self.redirect(new_url)
         else:
             SimpleHTTPRequestHandler.do_GET(self)
@@ -59,7 +59,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         path = SimpleHTTPRequestHandler.translate_path(self, path)
         site = self.server.site
         result = urlparse.urlparse(self.path)
-        logger.debug("Trying to load file based on request:[%s]" % result.path)
+        logger.debug("Trying to load file based on request: [%s]" % result.path)
         path = result.path.lstrip('/')
         res = None
         if path.strip() == "" or File(path).kind.strip() == "":
@@ -72,7 +72,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             res = site.content.resource_from_relative_deploy_path(path)
 
         if not res:
-            logger.error("Cannot load file:[%s]" % path)
+            logger.error("Cannot load file: [%s]" % path)
 
             return site.config.deploy_root_path.child(path)
         else:
@@ -95,7 +95,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             message = "Requested resource not found"
             if not res:
                 logger.error(
-                    "Cannot find the 404 template[%s]."
+                    "Cannot find the 404 template [%s]."
                         % site.config.not_found)
             else:
                 f404 = File(self.translate_path(site.config.not_found))

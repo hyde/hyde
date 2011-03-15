@@ -52,7 +52,8 @@ class Engine(Application):
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         if sitepath.exists and not args.overwrite:
             raise HydeException(
-                    "The given site path[%s] is not empty" % sitepath)
+                    "The given site path [%s] already exists."
+                    " Use -f to overwrite." % sitepath)
         layout = Layout.find_layout(args.layout)
         logger.info(
             "Creating site at [%s] with layout [%s]" % (sitepath, layout))

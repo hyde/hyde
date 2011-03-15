@@ -36,7 +36,7 @@ class FlattenerPlugin(Plugin):
                 for resource in node.walk_resources():
                     target_path = target.child(resource.name)
                     self.logger.debug(
-                        'Flattening resource path[%s] to [%s]' %
+                        'Flattening resource path [%s] to [%s]' %
                             (resource, target_path))
                     resource.relative_deploy_path = target_path
 

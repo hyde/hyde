@@ -307,7 +307,7 @@ class Generator(object):
                                         context)
                     except Exception:
                         logger.error("Error occurred when"
-                            " processing template:[%s]" % resource)
+                            " processing template: [%s]" % resource)
                         raise
                 else:
                     text = resource.source_file.read_all()
