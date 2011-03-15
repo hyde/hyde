@@ -152,15 +152,37 @@ def test_markdown_with_extensions():
 
 def test_line_statements():
     source = """
-    ---markdown
+    $$$ markdown
     ### Heading 3
 
-    --- endmarkdown
+    $$$ endmarkdown
     """
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
     c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
     s.config = c
+    t.configure(s)
+    html = t.render(source, {}).strip()
+    assert html == u'<h3 id="heading_3">Heading 3</h3>'
+
+def test_line_statements_with_config():
+    source = """
+    %% markdown
+    ### Heading 3
+
+    %% endmarkdown
+    """
+    config = """
+    markdown:
+        extensions:
+            - headerid
+    jinja2:
+        line_statement_prefix: '%%'
+
+    """
+    t = Jinja2Template(JINJA2.path)
+    s = Site(JINJA2.path)
+    s.config = Config(JINJA2.path, config_dict=yaml.load(config))
     t.configure(s)
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
@@ -228,9 +250,9 @@ class TestJinjaTemplate(object):
         inc = File(TEST_SITE.child('content/inc.md'))
         text = """
         {% extends 'index.html' %}
-        --- block body
+        $$$ block body
         <div id="article">Heya</div>
-        --- endblock
+        $$$ endblock
         """
         site.load()
         gen = Generator(site)

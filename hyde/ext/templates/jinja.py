@@ -10,6 +10,7 @@ from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
 from hyde.util import getLoggerWithNullHandler
+from operator import attrgetter
 
 from jinja2 import contextfunction, Environment
 from jinja2 import FileSystemLoader, FileSystemBytecodeCache
@@ -499,21 +500,56 @@ class Jinja2Template(Template):
                             if hasattr(engine, 'preprocessor') else None)
 
         self.loader = HydeLoader(self.sitepath, site, self.preprocessor)
-        self.env = Environment(loader=self.loader,
-                                undefined=SilentUndefined,
-                                line_statement_prefix='---',
-                                trim_blocks=True,
-                                bytecode_cache=FileSystemBytecodeCache(),
-                                extensions=[IncludeText,
-                                            Spaceless,
-                                            Markdown,
-                                            Syntax,
-                                            Reference,
-                                            Refer,
-                                            YamlVar,
-                                            'jinja2.ext.do',
-                                            'jinja2.ext.loopcontrols',
-                                            'jinja2.ext.with_'])
+
+        default_extensions = [
+                IncludeText,
+                Spaceless,
+                Markdown,
+                Syntax,
+                Reference,
+                Refer,
+                YamlVar,
+                'jinja2.ext.do',
+                'jinja2.ext.loopcontrols',
+                'jinja2.ext.with_'
+        ]
+
+        defaults = {
+            'line_statement_prefix': '$$$',
+            'trim_blocks': True,
+        }
+
+        settings = dict()
+        settings.update(defaults)
+        settings['extensions'] = list()
+        settings['extensions'].extend(default_extensions)
+
+        conf = {}
+
+        try:
+            conf = attrgetter('config.jinja2')(site).to_dict()
+            print conf
+        except AttributeError:
+            pass
+
+        settings.update(
+            dict([(key, conf[key]) for key in defaults if key in conf]))
+
+        extensions = conf.get('extensions', [])
+        if isinstance(extensions, list):
+            settings['extensions'].extend(extensions)
+        else:
+            settings['extensions'].append(extensions)
+
+        print settings
+
+        self.env = Environment(
+                    loader=self.loader,
+                    undefined=SilentUndefined,
+                    line_statement_prefix=settings['line_statement_prefix'],
+                    trim_blocks=True,
+                    bytecode_cache=FileSystemBytecodeCache(),
+                    extensions=settings['extensions'])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
         self.env.globals['engine'] = engine
