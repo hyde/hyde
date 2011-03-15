@@ -34,7 +34,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         and serve.
         """
         self.server.request_time = datetime.now()
-        logger.info("Processing request: [%s]" % self.path)
+        logger.debug("Processing request: [%s]" % self.path)
         result = urlparse.urlparse(self.path)
         query = urlparse.parse_qs(result.query)
         if 'refresh' in query or result.query=='refresh':
@@ -73,6 +73,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
 
         if not res:
             logger.error("Cannot load file: [%s]" % path)
+            print site.content.resource_deploy_map
 
             return site.config.deploy_root_path.child(path)
         else:
@@ -188,7 +189,7 @@ class HydeWebServer(HTTPServer):
             return self.regenerate()
 
         try:
-            logger.info('Generating node [%s]' % node)
+            logger.debug('Serving node [%s]' % node)
             self.generator.generate_node(node, incremental=True)
         except Exception, exception:
             logger.error(
@@ -206,9 +207,9 @@ class HydeWebServer(HTTPServer):
         if not dest.exists:
             return self.generate_node(resource.node)
         try:
-            logger.info('Generating resource [%s]' % resource)
+            logger.debug('Serving resource [%s]' % resource)
             self.generator.generate_resource(resource, incremental=True)
         except Exception, exception:
             logger.error(
-                'Error [%s] occured when generating the resource [%s]'
+                'Error [%s] occured when serving the resource [%s]'
                         % (repr(exception), resource))

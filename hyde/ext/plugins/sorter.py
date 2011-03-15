@@ -96,8 +96,8 @@ class SorterPlugin(Plugin):
             return
 
         for name, settings in config.sorter.__dict__.items():
-            self.logger.info("Adding sort methods for [%s]" % name)
             sort_method_name = 'walk_resources_sorted_by_%s' % name
+            self.logger.debug("Adding sort methods for [%s]" % name)
             add_method(Node, sort_method_name, sort_method, settings=settings)
             match_method_name = 'is_%s' % name
             add_method(Resource, match_method_name, filter_method, settings)

@@ -95,7 +95,7 @@ class Generator(object):
         """
         Start Generation. Perform setup tasks and inform plugins.
         """
-        logger.info("Begin Generation")
+        logger.debug("Begin Generation")
         self.events.begin_generation()
 
     def load_site_if_needed(self):
@@ -112,7 +112,7 @@ class Generator(object):
         """
         Generation complete. Inform plugins and cleanup.
         """
-        logger.info("Generation Complete")
+        logger.debug("Generation Complete")
         self.events.generation_complete()
 
     def get_dependencies(self, resource):

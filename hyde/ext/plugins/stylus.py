@@ -18,6 +18,16 @@ class StylusPlugin(CLTransformer):
     def __init__(self, site):
         super(StylusPlugin, self).__init__(site)
 
+    def begin_site(self):
+        """
+        Find all the styl files and set their relative deploy path.
+        """
+        for resource in self.site.content.walk_resources():
+            if resource.source_file.kind == 'styl':
+                new_name = resource.source_file.name_without_extension + ".css"
+                target_folder = File(resource.relative_deploy_path).parent
+                resource.relative_deploy_path = target_folder.child(new_name)
+
     def begin_text_resource(self, resource, text):
         """
         Replace @import statements with {% include %} statements.
@@ -95,8 +105,4 @@ class StylusPlugin(CLTransformer):
             raise self.template.exception_class(
                     "Cannot process %s. Error occurred when "
                     "processing [%s]" % (stylus.name, resource.source_file))
-        out = target.read_all()
-        new_name = resource.source_file.name_without_extension + ".css"
-        target_folder = File(resource.relative_path).parent
-        resource.relative_deploy_path = target_folder.child(new_name)
-        return out
+        return target.read_all()
