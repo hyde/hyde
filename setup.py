@@ -13,7 +13,7 @@ import sys
 
 PROJECT = 'hyde'
 try:
-    long_description = open('README.markdown', 'rt').read()
+    long_description = open('README.rst', 'rt').read()
 except IOError:
     long_description = ''
 
