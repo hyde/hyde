@@ -49,9 +49,29 @@ Serving the website
         hyde serve
         open http://localhost:8080
 
-The server also regenerates on demand. As long as the server is running,
-you can make changes to your source and refresh the browser to view the
-changes.
+Publishing the website
+----------------------
+
+::
+
+        cd ~/test_site
+        hyde publish -p github
+
+
+Hyde supports extensible publishers. Right now only github is implemented.
+The hyde documentation is published to github pages using this command with
+the following configuration:
+
+::
+
+        publisher:
+            github:
+                type: hyde.ext.publishers.dvcs.Git
+                path: ../hyde.github.com
+                url: git@github.com:hyde/hyde.github.com.git
+
+.. Note:: Currently, the initial path must have clone of the repository
+          already in place for this command to work.
 
 Examples
 --------
@@ -82,10 +102,10 @@ A brief list of features
 Next Steps
 ----------
 
-1. Documentation ✓
+1. Documentation
 2. Default Layouts ✓
-3. Django Support ✓
-4. Plugins: 
+3. Django Support
+4. Plugins:
 
    -  Tags ✓
    -  Atom / RSS
