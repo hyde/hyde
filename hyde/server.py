@@ -73,8 +73,6 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
 
         if not res:
             logger.error("Cannot load file: [%s]" % path)
-            print site.content.resource_deploy_map
-
             return site.config.deploy_root_path.child(path)
         else:
             self.server.generate_resource(res)
