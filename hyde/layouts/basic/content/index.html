@@ -9,12 +9,12 @@ description: Home page for the BASIC hyde template
 <section class="blog_excerpt">
 {% set latest = site.content.walk_resources_sorted_by_time()|first %}
 
---- if latest:
+{% if latest -%}
 {{ render_excerpt(latest, 'post') }}
 
 <a class="button white medium"
     href="{{ content_url(latest.url) }}">Read more&hellip;</a>
 
---- endif
+{%- endif %}
 
 </section>

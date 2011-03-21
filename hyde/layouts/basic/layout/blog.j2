@@ -56,9 +56,9 @@
 </ul>
 {% endif %}
 {% filter markdown|typogrify -%}
-
+{% mark post -%}
 {% block post -%}{%- endblock %}
-
+{%- endmark %}
 {%- endfilter %}
 </article>
 

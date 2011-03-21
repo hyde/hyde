@@ -1,0 +1,40 @@
+{% from "macros.j2" import render_excerpt, render_post with context %}
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>
+        {% block title %}{{ resource.meta.title|default(feed_title) }}{% endblock %}
+    </title>
+    {% block self_url %}
+    <link href="{{ resource.url }}" rel="self" />
+    {% endblock %}
+
+    {% block site_url %}
+    <link href="{{ content_url('') }}"/>
+    {% endblock %}
+
+    {% block feed_extra %}
+    {% endblock %}
+
+    <updated>{{ now|xmldatetime }}</updated>
+
+    <id>{{ content_url(resource.url) }}/</id>
+
+    {% for res in resource.node.walk_resources_sorted_by_time() %}
+        <entry>
+            <title type="html">{{ res.meta.title }}</title>
+            <author><name>{{ res.meta.author }}</name></author>
+            <link href="{{ content_url(res.url) }}"/>
+            <updated>{{ res.meta.created|xmldatetime }}</updated>
+            <published>{{ res.meta.created|xmldatetime }}</published>
+            <id>{{ content_url(res.url) }}</id>
+            <content type="html">
+                {% if resource.meta.excerpts_only -%}
+                {{ render_excerpt(res) }}
+                {%- else %}
+                {{ render_post(res) }}
+                {%- endif %}
+              {{ res.text }}
+            </content>
+        </entry>
+    {% endfor %}
+</feed>
