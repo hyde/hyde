@@ -92,11 +92,11 @@ A brief list of features
 3. Metadata: Hyde now supports hierarchical metadata. You can specify
    and override variables at the site, node or the page level and access
    them in the templates.
-4. Sorting: The sorter plugin provides rich sorting options that extend
-   the object model.
+4. Organization: The sorter, gruouper and tagger plugins provide rich
+   meta-data driven organizational capabilities to hyde sites.
 5. Syntactic Sugar: Because of the richness of the plugin
    infrastructure, hyde can now provide additional syntactic sugar to
-   make the content more readable. See ``blockdown`` and ``autoextend``
+   make the content more readable. See ``blockdown`` and ``syntext``
    plugin for examples.
 
 Next Steps
