@@ -1,15 +1,3 @@
-{% macro render_post(res) %}
-{% refer to res.url as article %}
-<article>
-<h3><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h3>
-<time datetime="{{ res.meta.created.strftime('%Y-%m-%d') }}">
-    Posted: {{ res.meta.created.strftime('%a, %d %b %Y') }}
-</time>
-{{ article.post|markdown|typogrify }}
-</article>
-{% endmacro %}
-
-
 {% macro render_excerpt(res, class=None) %}
 {% refer to res.url as post %}
 <article {{'class='~class if class }}>

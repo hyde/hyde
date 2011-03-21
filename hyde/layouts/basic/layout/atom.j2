@@ -15,7 +15,7 @@
     {% block feed_extra %}
     {% endblock %}
 
-    <updated>{{ now|xmldatetime }}</updated>
+    <updated>{{ time_now|xmldatetime }}</updated>
 
     <id>{{ content_url(resource.url) }}/</id>
 
@@ -27,13 +27,22 @@
             <updated>{{ res.meta.created|xmldatetime }}</updated>
             <published>{{ res.meta.created|xmldatetime }}</published>
             <id>{{ content_url(res.url) }}</id>
+            {% for tag in res.meta.tags %}
+            <category   scheme="{{ content_url('blog/tags') }}"
+                        term="{{tag}}"
+                        label="{{ tag|title }}" />
+            {% endfor %}
+
             <content type="html">
+                {% refer to res.url as article -%}
+                {% filter forceescape -%}
                 {% if resource.meta.excerpts_only -%}
-                {{ render_excerpt(res) }}
+                {{ article.image|markdown|typogrify }}
+                {{ article.excerpt|markdown|typogrify }}
                 {%- else %}
-                {{ render_post(res) }}
+                {{ article.post|markdown|typogrify }}
                 {%- endif %}
-              {{ res.text }}
+                {%- endfilter %}
             </content>
         </entry>
     {% endfor %}

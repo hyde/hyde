@@ -1,4 +1,4 @@
-Version 0.8rc1
+Version 0.8rc2
 
 A brand new **hyde**
 ====================
@@ -108,7 +108,7 @@ Next Steps
 4. Plugins:
 
    -  Tags ✓
-   -  Atom / RSS
+   -  Atom / RSS ✓
    -  Text Compressor (CSS, JS, HTML) ✓
    -  Image optimizer ✓
 
