@@ -4,6 +4,7 @@ Jinja template utilties
 """
 
 from datetime import datetime, date
+import os
 import re
 import itertools
 
