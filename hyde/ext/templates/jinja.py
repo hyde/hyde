@@ -473,6 +473,10 @@ class HydeLoader(FileSystemLoader):
         Calls the plugins to preprocess prior to returning the source.
         """
         template = template.strip()
+        # Fixed so that jinja2 loader does not have issues with
+        # seprator in windows
+        #
+        template = template.replace(os.sep, '/')
         logger.debug("Loading template [%s] and preprocessing" % template)
         (contents,
             filename,
