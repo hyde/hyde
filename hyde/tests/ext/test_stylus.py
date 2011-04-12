@@ -44,6 +44,9 @@ class TestLess(object):
         assert target.exists
         text = target.read_all()
         expected_text = File(STYLUS_SOURCE.child('expected-site.css')).read_all()
+        print text.strip()
+        print "=" * 80
+        print expected_text.strip()
         assert text.strip() == expected_text.strip()
 
     def test_can_compress_with_stylus(self):
