@@ -2,7 +2,7 @@
 """
 Parses & holds information about the site to be generated.
 """
-
+import os
 from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
@@ -369,14 +369,14 @@ class Site(object):
         Returns the content url by appending the base url from the config
         with the given path.
         """
-        return Folder(self.config.base_url).child(path)
+        return Folder(self.config.base_url).child(path).replace(os.sep, '/')
 
     def media_url(self, path):
         """
         Returns the media url by appending the media base url from the config
         with the given path.
         """
-        return Folder(self.config.media_url).child(path)
+        return Folder(self.config.media_url).child(path).replace(os.sep, '/')
 
     def full_url(self, path):
         """
