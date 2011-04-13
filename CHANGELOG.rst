@@ -1,3 +1,8 @@
+Version 0.8
+==============
+
+*   Relative path bugs in windows generation have been fixed.
+
 Version 0.8rc3
 ==============
 
