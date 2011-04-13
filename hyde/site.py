@@ -8,7 +8,13 @@ from hyde.fs import FS, File, Folder
 from hyde.model import Config
 
 from hyde.util import getLoggerWithNullHandler
+from functools import wraps
 
+def path_normalized(f):
+    @wraps(f)
+    def wrapper(self, path):
+        return f(self, str(path).replace('/', os.sep))
+    return wrapper
 
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -210,6 +216,7 @@ class RootNode(Node):
         self.resource_map = {}
         self.resource_deploy_map = {}
 
+    @path_normalized
     def node_from_path(self, path):
         """
         Gets the node that maps to the given path.
@@ -219,6 +226,7 @@ class RootNode(Node):
             return self
         return self.node_map.get(str(Folder(path)), None)
 
+    @path_normalized
     def node_from_relative_path(self, relative_path):
         """
         Gets the content node that maps to the given relative path.
@@ -227,6 +235,7 @@ class RootNode(Node):
         return self.node_from_path(
                     self.source_folder.child(str(relative_path)))
 
+    @path_normalized
     def resource_from_path(self, path):
         """
         Gets the resource that maps to the given path.
@@ -234,6 +243,7 @@ class RootNode(Node):
         """
         return self.resource_map.get(str(File(path)), None)
 
+    @path_normalized
     def resource_from_relative_path(self, relative_path):
         """
         Gets the content resource that maps to the given relative path.
@@ -249,6 +259,7 @@ class RootNode(Node):
         """
         self.resource_deploy_map[str(resource.relative_deploy_path)] = resource
 
+    @path_normalized
     def resource_from_relative_deploy_path(self, relative_deploy_path):
         """
         Gets the content resource whose deploy path maps to
