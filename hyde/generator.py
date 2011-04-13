@@ -302,6 +302,7 @@ class Generator(object):
                 self.update_deps(resource)
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
+                    context = self.events.begin_render_resource(resource, context) or context
                     try:
                         text = self.template.render_resource(resource,
                                         context)
@@ -309,6 +310,7 @@ class Generator(object):
                         logger.error("Error occurred when"
                             " processing template: [%s]" % resource)
                         raise
+                    self.events.render_resource_complete(resource, context)
                 else:
                     text = resource.source_file.read_all()
                     text = self.events.begin_text_resource(resource, text) or text

@@ -115,6 +115,19 @@ class Plugin(object):
         """
         pass
 
+    def begin_render_resource(self, resource, context):
+        """
+        Called when a resource is about to be rendered.
+        You can inject context changes here.
+        """
+        pass
+
+    def render_resource_complete(self, resource, context):
+        """
+        Called when a resource has finished rendering
+        """
+        pass
+
     def begin_text_resource(self, resource, text):
         """
         Called when a text resource is about to be processed for generation.
