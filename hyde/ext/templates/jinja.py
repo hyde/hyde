@@ -581,6 +581,13 @@ class Jinja2Template(Template):
         if jinja2_filters:
             jinja2_filters.register(self.env)
 
+    def clear_caches(self):
+        """
+        Clear all caches to prepare for regeneration
+        """
+        if self.env.bytecode_cache:
+            self.env.bytecode_cache.clear()
+
 
     def get_dependencies(self, path):
         """

@@ -67,6 +67,12 @@ class Template(object):
         """
         return
 
+    def clear_caches(self):
+        """
+        Clear all caches to prepare for regeneration
+        """
+        return
+
     def get_dependencies(self, text):
         """
         Finds the dependencies based on the included

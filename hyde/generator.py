@@ -190,6 +190,7 @@ class Generator(object):
         """
         logger.info("Reading site contents")
         self.load_template_if_needed()
+        self.template.clear_caches()
         self.initialize()
         self.load_site_if_needed()
         self.events.begin_site()

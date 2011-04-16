@@ -88,6 +88,7 @@ class Engine(Application):
             incremental = False
 
         gen.generate_all(incremental=incremental)
+        logger.info("Generation complete.")
 
     @subcommand('serve', help='Serve the website')
     @store('-a', '--address', default='localhost', dest='address',
