@@ -226,6 +226,7 @@ class Generator(object):
             if isinstance(obj, Resource):
                 self.events.node_complete(obj.node)
             self.events.site_complete()
+            self.generated_once = True
 
     def generate_node(self, node=None, incremental=False):
         """
@@ -289,6 +290,7 @@ class Generator(object):
             for resource in node.resources:
                 self.__generate_resource__(resource, incremental)
             self.events.node_complete(node)
+
 
     def __generate_resource__(self, resource, incremental=False):
         if not resource.is_processable:
