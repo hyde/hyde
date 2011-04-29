@@ -34,7 +34,7 @@ class LessCSSPlugin(CLTransformer):
         """
 
         if not resource.source_file.kind == 'less':
-            return
+            return text
         import_finder = re.compile(
                             '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
                             re.MULTILINE)
