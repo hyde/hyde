@@ -131,6 +131,9 @@ def syntax(env, value, lexer=None, filename=None):
     code = pygments.highlight(value, pyg, formatter)
     code = code.replace('\n\n', '\n&nbsp;\n').replace('\n', '<br />')
     caption = filename if filename else pyg.name
+    if hasattr(env.config, 'syntax'):
+        if not getattr(env.config.syntax, 'use_figure', True):
+            return Markup(code)
     return Markup(
             '<figure class="code">%s<figcaption>%s</figcaption></figure>\n\n'
                         % (code, caption))
