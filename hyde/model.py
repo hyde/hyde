@@ -128,7 +128,8 @@ class Config(Expando):
             media_url='/media',
             base_url="/",
             not_found='404.html',
-            plugins = []
+            plugins = [],
+            ignore = [ "*~", "*.bak" ]
         )
         conf = dict(**default_config)
         self.sitepath = Folder(sitepath)
