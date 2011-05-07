@@ -50,8 +50,10 @@ combine:
 ---
 
 Last line""")
-        assert len(text.split("\n")) == 4
-        assert text.split("\n")[-1] == "Last line"
+        assert text == """var a = 1 + 2;
+var b = a + 3;
+var c = a + 5;
+Last line"""
         return
 
     def test_combine_bottom(self):
@@ -64,8 +66,10 @@ combine:
 
 First line
 """)
-        assert len(text.split("\n")) == 4
-        assert text.split("\n")[0] == "First line"
+        assert text == """First line
+var a = 1 + 2;
+var b = a + 3;
+var c = a + 5;"""
         return
 
     def test_combine_remove(self):

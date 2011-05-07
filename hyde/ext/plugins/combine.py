@@ -55,7 +55,7 @@ class CombinePlugin(Plugin):
             self.logger.debug("No resources to combine for [%s]" % resource)
             return []
 
-        return resources
+        return sorted(resources, key=lambda r: r.name)
 
     def begin_site(self):
         """
