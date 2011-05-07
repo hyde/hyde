@@ -17,41 +17,34 @@ class CombinePlugin(Plugin):
                 - ns1.*.js
                 - ns2.*.js
             where: top
+            remove: yes
 
     `files` is a list of resources (or just a resource) that should be
     combined. Globbing is performed. `where` indicate where the
     combination should be done. This could be `top` or `bottom` of the
-    file.
+    file. `remove` tell if we should remove resources that have been
+    combined into the resource.
     """
 
     def __init__(self, site):
         super(CombinePlugin, self).__init__(site)
 
-    def begin_text_resource(self, resource, text):
+    def _combined(self, resource):
         """
-        When generating a resource, add combined file if needed.
+        Return the list of resources to combine to build this one.
         """
-        # Grab configuration
         try:
             config = resource.meta.combine
         except AttributeError:
-            return
-        # Grab file list
+            return []    # Not a combined resource
         try:
             files = config.files
         except AttributeError:
             raise "No resources to combine for [%s]" % resource
         if type(files) is str:
             files = [ files ]
-        where = "bottom"
-        try:
-            where = config.where
-        except AttributeError:
-            pass
 
-        if where not in [ "top", "bottom" ]:
-            raise ValueError("%r should be either `top` or `bottom`" % where)
-
+        # Grab resources to combine
         resources = []
         for r in resource.node.resources:
             for f in files:
@@ -60,14 +53,55 @@ class CombinePlugin(Plugin):
                     break
         if not resources:
             self.logger.debug("No resources to combine for [%s]" % resource)
+            return []
+
+        return resources
+
+    def begin_site(self):
+        """
+        Initialize the plugin and search for the combined resources
+        """
+        for node in self.site.content.walk():
+            for resource in node.resources:
+                resources = self._combined(resource)
+                if not resources:
+                    continue
+
+                # Build depends
+                if not hasattr(resource, 'depends'):
+                    resource.depends = []
+                resource.depends.extend(
+                    [r.relative_path for r in resources
+                     if r.relative_path not in resource.depends])
+
+                # Remove combined resources if needed
+                if hasattr(resource.meta.combine, "remove") and \
+                        resource.meta.combine.remove:
+                    for r in resources:
+                        self.logger.debug(
+                            "Resource [%s] removed because combined" % r)
+                        r.is_processable = False
+
+    def begin_text_resource(self, resource, text):
+        """
+        When generating a resource, add combined file if needed.
+        """
+        resources = self._combined(resource)
+        if not resources:
             return
+
+        where = "bottom"
+        try:
+            where = resource.meta.combine.where
+        except AttributeError:
+            pass
+
+        if where not in [ "top", "bottom" ]:
+            raise ValueError("%r should be either `top` or `bottom`" % where)
+
         self.logger.debug(
             "Combining %d resources for [%s]" % (len(resources),
                                                  resource))
-        if not hasattr(resource, 'depends'):
-            resource.depends = []
-        resource.depends.extend([r.relative_path for r in resources
-                                 if r.relative_path not in resource.depends])
         if where == "top":
             return "".join([r.source.read_all() for r in resources] + [text])
         else:
