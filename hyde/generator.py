@@ -161,7 +161,7 @@ class Generator(object):
         if not target.exists or target.older_than(resource.source_file):
             logger.debug("Found changes in %s" % resource)
             return True
-        if resource.source_file.is_binary or not resource.uses_template:
+        if resource.source_file.is_binary:
             logger.debug("No Changes found in %s" % resource)
             return False
         deps = self.get_dependencies(resource)
@@ -302,7 +302,6 @@ class Generator(object):
         logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
             if resource.source_file.is_text:
-                self.update_deps(resource)
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
                     try:
@@ -322,6 +321,7 @@ class Generator(object):
                                     resource.relative_deploy_path))
                 target.parent.make()
                 target.write(text)
+                self.update_deps(resource)
             else:
                 logger.debug("Copying binary file [%s]", resource)
                 self.events.begin_binary_resource(resource)
