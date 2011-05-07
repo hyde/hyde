@@ -40,7 +40,7 @@ class CombinePlugin(Plugin):
         try:
             files = config.files
         except AttributeError:
-            raise "No resources to combine for [%s]" % resource
+            raise AttributeError("No resources to combine for [%s]" % resource)
         if type(files) is str:
             files = [ files ]
 
