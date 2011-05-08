@@ -81,4 +81,44 @@ class TestImageSizer(object):
 """
         html = self._generic_test_image(text)
 
+    def test_size_image_multiline(self):
+        text = u"""
+     <img 
+src="/media/img/%s"
+>
+""" % IMAGE_NAME
+        html = self._generic_test_image(text)
+        assert ' width="%d"' % IMAGE_SIZE[0] in html
+        assert ' height="%d"' % IMAGE_SIZE[1] in html
 
+    def test_size_multiple_images(self):
+        text = u"""
+<img src="/media/img/%s">
+<img src="/media/img/%s">Hello <img src="/media/img/%s">
+<img src="/media/img/%s">Bye
+""" % ((IMAGE_NAME,)*4)
+        html = self._generic_test_image(text)
+        assert ' width="%d"' % IMAGE_SIZE[0] in html
+        assert ' height="%d"' % IMAGE_SIZE[1] in html
+        assert 'Hello ' in html
+        assert 'Bye' in html
+        assert len([f for f in html.split("<img")
+                    if ' width=' in f]) == 4
+        assert len([f for f in html.split("<img")
+                    if ' height=' in f]) == 4
+
+    def test_size_malformed1(self):
+        text = u"""
+<img src="/media/img/%s>
+""" % IMAGE_NAME
+        html = self._generic_test_image(text)
+        assert ' width="%d"' % IMAGE_SIZE[0] in html
+        assert ' height="%d"' % IMAGE_SIZE[1] in html
+
+    def test_size_malformed2(self):
+        text = u"""
+<img src="/media/img/%s alt="hello">
+""" % IMAGE_NAME
+        html = self._generic_test_image(text)
+        assert ' width="%d"' % IMAGE_SIZE[0] in html
+        assert ' height="%d"' % IMAGE_SIZE[1] in html
