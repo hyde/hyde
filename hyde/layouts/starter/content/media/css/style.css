@@ -1,0 +1,144 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    color: #fafafa;
+    background-color: black;
+}
+
+body {
+    margin: 0 auto;
+    width: 980px;
+    min-height: 700px;
+    background: url('../img/background.jpg') top left no-repeat;
+    font-size: 14px;
+    position: relative;
+
+    font-size: 62.5%;
+    font-family: Tahoma, sans-serif;
+}
+
+a {
+    color: #f1ee00;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+p, ul {
+    margin-bottom: 1.6em;
+}
+
+ul {
+    margin-left: 2em;
+}
+
+header {
+    position: absolute;
+    top: 120px;
+    right: 120px;
+    font-family: Anton, Tahoma, sans-serif;
+    text-transform: uppercase;
+    font-weight: none;
+}
+
+header h1 {
+    font-size: 50px;
+    font-weight: normal;
+    text-shadow: -1px 2px 1px black;
+}
+
+header h1 span {
+    color: #f1ee00;
+}
+
+header h2 {
+    font-size: 28px;
+    font-weight: normal;
+    letter-spacing: 11px;
+    text-shadow: -1px 2px 1px black;
+}
+
+nav {
+    position: absolute;
+    top: 340px;
+    right: 120px;
+    width: 200px;
+    text-align: right;
+    font-family: Anton, Tahoma, sans-serif;
+}
+
+nav a,
+nav a:visited {
+    text-decoration: none;
+    color: #fafafa;
+    text-transform: uppercase;
+    font-size: 2.8em;
+}
+
+nav a.selected {
+    color: #888;
+}
+
+nav a:hover {
+    color: #f1ee00;
+}
+
+nav ul li {
+    list-style-type: none;
+}
+
+aside {
+    position: absolute;
+    top: 550px;
+    right: 120px;
+    width: 140px;
+    text-align: right;
+    font-size: 1em;
+}
+
+nav, aside {
+    /* to line up with the header */
+    padding-right: 5px;
+}
+
+#content {
+    font-size: 1.4em;
+    line-height: 1.6em;
+    position: absolute;
+    top: 350px;
+    left: 180px;
+    width: 410px;
+    padding-bottom: 100px;
+}
+
+#content h1 {
+    font-weight: normal;
+    font-size: 2em;
+    font-family: Anton, Tahoma, sans-serif;
+    text-transform: uppercase;
+    margin-bottom: 0.8em;
+}
+
+#content h2 {
+    font-weight: bold;
+    font-size: 1.2em;
+    font-family: Tahoma, sans-serif;
+    margin-bottom: 1.33em;
+}
+
+#content code {
+    display: block;
+    font-family: 'DejaVu Sans Mono', 'Liberation Mono', 'Courier New';
+    font-size: 1.2em;
+    background-color: #222;
+    padding: 5px 10px;
+    margin-bottom: 1.33em;
+    border-top: 1px solid #444;
+    border-right: 1px solid #333;
+    border-bottom: 1px solid #222;
+    border-left: 1px solid #111;
+}
