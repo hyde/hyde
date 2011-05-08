@@ -51,4 +51,4 @@ class GitDatesPlugin(Plugin):
                     resource.meta.created = created
                 if modified == "git":
                     modified = parse(commits[0].strip())
-                    resource.meta.modified = created
+                    resource.meta.modified = modified
