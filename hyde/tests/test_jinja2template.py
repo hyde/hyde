@@ -85,6 +85,7 @@ def test_typogrify():
     """
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
+    t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
 
@@ -110,6 +111,7 @@ def test_spaceless():
     """
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
+    t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     expected = u"""
 <html><body><ul><li>
@@ -146,6 +148,7 @@ def test_markdown_with_extensions():
     c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
     s.config = c
     t.configure(s)
+    t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
 
@@ -162,6 +165,7 @@ def test_line_statements():
     c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
     s.config = c
     t.configure(s)
+    t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
 
@@ -184,6 +188,7 @@ def test_line_statements_with_config():
     s = Site(JINJA2.path)
     s.config = Config(JINJA2.path, config_dict=yaml.load(config))
     t.configure(s)
+    t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
 
@@ -221,6 +226,7 @@ class TestJinjaTemplate(object):
     def test_depends(self):
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
+        t.env.filters['dateformat'] = dateformat
         deps = list(t.get_dependencies('index.html'))
         assert len(deps) == 2
 
@@ -258,6 +264,7 @@ class TestJinjaTemplate(object):
         gen = Generator(site)
         gen.load_template_if_needed()
         template = gen.template
+        template.env.filters['dateformat'] = dateformat
         html = template.render(text, {}).strip()
 
         assert html
@@ -538,6 +545,7 @@ two:
 """
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
+        t.env.filters['dateformat'] = dateformat
         html = t.render(text, {}).strip()
         actual = PyQuery(html)
         assert actual("ul").length == 2
@@ -580,6 +588,7 @@ item_list:
 """
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
+        t.env.filters['dateformat'] = dateformat
         html = t.render(text, {}).strip()
         print html
         actual = PyQuery(html)
