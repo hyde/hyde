@@ -1,3 +1,11 @@
+Version 0.8.1-c1
+================
+
+Thanks to @pestaa
+
+*   Added support `UTF8` keys in `metadata` and `config`
+
+
 Version 0.8.1
 =============
 
