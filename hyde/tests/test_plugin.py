@@ -19,6 +19,16 @@ TEST_SITE = File(__file__).parent.child_folder('_test')
 
 class PluginLoaderStub(Plugin):
     pass
+    
+class NoReturnPlugin(Plugin):
+    
+    def begin_text_resource(self, resource, text):
+        return None
+
+class ConstantReturnPlugin(Plugin):
+
+    def begin_text_resource(self, resource, text):
+        return "Jam"
 
 
 class TestPlugins(object):
@@ -305,3 +315,14 @@ class TestPlugins(object):
             called_with_resources = sorted([arg[0][0].path for arg in begin_binary_resource_stub.call_args_list])
             assert begin_binary_resource_stub.call_count == 1
             assert called_with_resources[0] == path
+
+    def test_plugin_chaining(self):
+         self.site.config.plugins = [
+            'hyde.tests.test_plugin.NoReturnPlugin',
+            'hyde.tests.test_plugin.ConstantReturnPlugin']
+         path = self.site.content.source_folder.child('about.html')
+         gen = Generator(self.site)
+         gen.generate_resource_at_path(path, incremental=True)
+         about = File(Folder(
+                    self.site.config.deploy_root_path).child('about.html'))
+         assert about.read_all() == "Jam"
