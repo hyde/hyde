@@ -1,0 +1,73 @@
+---
+extends: base.j2
+title_ending: "| What next"
+---
+{# In-file metadata. Supplements data from the site's configuration file 
+   and node (folder) level data in "meta.yaml" files.
+
+   Use the AutoExtendPlugin to extend templates from metadata. In this
+   case the metadata and "extends" statement has to be on the top of the
+   file.
+#}
+
+{% block content %}
+There and back again
+====================
+
+This template was created to look at its code. So you should spend about
+5% of your time looking at the web from the outside and the other 95%
+tinkering with things under the hood.
+
+The template is not perfect nor does it contain the best practices. It
+is not even consistent. It is designed to help you with the learning
+process. If you follow the steps below, you'll get a pretty good picture of
+how things work. Every step adds some new features and builds upon the
+previous one.
+
+
+1. Site structure and configuration file
+----------------------------------------
+
+The site is made of two folders and a [Hyde configuration][hyde_config]
+file. The folders are _content_ and _layout_.
+
+_content_ contains all your page content, blog articles, pictures and
+resources like CSS and JavaScript. Everything that is unique is here.
+
+_layout_ contains templates and macros. Everything that you'll want to
+reuse is here.
+
+
+2. Jinja2 template
+------------------
+
+_base.j2_ is a very short and simple Jinja2 template. This way you can
+concentrate on some of the basic features. Notice meta and context
+variables invocation inside curly braces, dynamic media path generation
+and running all content through the Markdown filter.
+
+_macros.j2_ contains a macro for generating the main menu.
+
+For more information or to try something new, visit the extensive [Jinja2
+documentation][jinja2_docs].
+
+
+3. Content
+----------
+
+Look at the three files in this order: _index.html_, _what-next.html_
+and _about.html_.
+
+_Index_ extends the base layout in the classic Jinja way and fills the
+content block with some simple Markdown data.
+
+_What next_ goes a step furher. It introduces the in-file metadata that
+plugins will use to extend and fill the layout. It also uses some new
+Markdown features.
+
+_About_ has a _default_block_ metadata and mixes Markdown content with
+Jinja templates.
+
+[hyde_config]: http://hyde.github.com/config.html "Hyde configuration"
+[jinja2_docs]: http://jinja.pocoo.org/docs/templates/ "Jinja2 documentation"
+{% endblock %}
