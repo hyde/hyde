@@ -67,6 +67,10 @@ class Expando(object):
         for k, v in d.iteritems():
             if isinstance(v, Expando):
                 d[k] = v.to_dict()
+            elif isinstance(v, (tuple, list, set, frozenset)):
+                seq = type(v)
+                d[k] = seq(item.to_dict() if isinstance(item, Expando)
+                                            else item for item in v)
         return d
 
 

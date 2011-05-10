@@ -1,3 +1,12 @@
+Version 0.8.1
+=============
+
+Thanks to @rfk.
+
+*   Updated to use nose 1.0
+*   Bug fixes to Less CSS
+*   PyFS publisher with mimetypes and etags support.
+
 Version 0.8
 ==============
 

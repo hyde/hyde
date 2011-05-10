@@ -1,4 +1,4 @@
-Version 0.8
+Version 0.8.1
 
 A brand new **hyde**
 ====================
@@ -112,8 +112,17 @@ Next Steps
    -  Text Compressor (CSS, JS, HTML) ✓
    -  Image optimizer ✓
 
+Links
+-----
+
+1. `Changelog`_
+2. `Authors`_
+
+
 .. _hyde: https://github.com/lakshmivyas/hyde
 .. _here: http://hyde.github.com
 .. _Hyde Documentation: https://github.com/hyde/docs
 .. _Cloudpanic: https://github.com/tipiirai/cloudpanic
 .. _Ringce: https://github.com/lakshmivyas/ringce/tree/v3.0
+.. _Authors: https://github.com/hyde/hyde/blob/master/AUTHORS
+.. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
