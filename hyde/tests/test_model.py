@@ -110,6 +110,8 @@ class TestConfig(object):
         assert c.media_root_path == c.content_root_path.child_folder('media')
         assert hasattr(c, 'plugins')
         assert len(c.plugins) == 0
+        assert hasattr(c, 'ignore')
+        assert c.ignore == ["*~", "*.bak"]
         assert c.deploy_root_path == TEST_SITE.child_folder('deploy')
         assert c.not_found == '404.html'
 

@@ -219,3 +219,15 @@ class TestSiteWithConfig(object):
                         Folder("media").child(path))
         assert resource
         assert resource.full_url == "/media/" + path
+        
+    def test_config_ignore(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'apple-touch-icon.png'
+        resource = s.content.resource_from_relative_path(path)
+        assert resource
+        assert resource.full_url ==  "/" + path
+        s = Site(self.SITE_PATH, config=self.config)
+        s.config.ignore.append('*.png')
+        resource = s.content.resource_from_relative_path(path)
+        assert not resource
