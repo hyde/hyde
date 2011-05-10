@@ -3,6 +3,7 @@
 Parses & holds information about the site to be generated.
 """
 import os
+import fnmatch
 from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
@@ -352,6 +353,9 @@ class RootNode(Node):
 
             @walker.file_visitor
             def visit_file(afile):
+                for pattern in self.site.config.ignore:
+                    if fnmatch.fnmatch(afile.name, pattern):
+                        return
                 self.add_resource(afile)
 
 
