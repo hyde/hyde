@@ -1,3 +1,12 @@
+Version 0.8.1-c2
+================
+
+Thanks to @vincentbernat
+
+*   Bug Fix: Made sorting tests more predictable
+*   Bug Fix: Added more standard paths for executables
+*   Added Combine files plugin
+
 Version 0.8.1-c1
 ================
 

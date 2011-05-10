@@ -7,13 +7,20 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |vincentbernat|_
+
+    *   Bug Fix: Made sorting tests more predictable
+    *   Bug Fix: Added more standard paths for executables
+    *   Added Combine files plugin
+
 -   |pestaa|_
 
-    *   Added support `UTF8` keys in `metadata` and `config`
+    *   Added support for `UTF8` keys in `metadata` and `config`
 
 -   |rfk|_
 
-    *   Bug fixes
+    *   Bug fix: LessCSSPlugin: return original text if not a .less file
+    *   Added 'use_figure' configuration option for syntax tag
     *   Pyfs publisher with `mimetype` and `etags` support
 
 -   |tinnet|_
@@ -31,3 +38,5 @@ Contributors
 .. _tinnet: http://github.com/tinnet
 .. |pestaa| replace:: pestaa
 .. _pestaa: http://github.com/pestaa
+.. |vincentbernat| replace:: Vincent Bernat
+.. _vincentbernat: http://github.com/vincentbernat
