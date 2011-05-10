@@ -71,11 +71,24 @@ class LessCSSPlugin(CLTransformer):
         """
         if not resource.source_file.kind == 'less':
             return
+
+        supported = [
+            "verbose",
+            ("silent", "s"),
+            ("compress", "x"),
+            "O0",
+            "O1",
+            "O2"
+        ]
+
         less = self.app
         source = File.make_temp(text)
         target = File.make_temp('')
+        args = [str(less)]
+        args.extend(self.process_args(supported))
+        args.extend([str(source), str(target)])
         try:
-            self.call_app([str(less), str(source), str(target)])
+            self.call_app(args)
         except subprocess.CalledProcessError:
              raise self.template.exception_class(
                     "Cannot process %s. Error occurred when "
