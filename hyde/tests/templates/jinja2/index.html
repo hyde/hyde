@@ -6,7 +6,7 @@
   <div class="article">
     <h2><a href="{{ article.href|e }}">{{ article.title|e }}</a></h2>
     <p class="meta">written by <a href="{{ article.user.href|e
-      }}">{{ article.user.username|e }}</a> on {{ article.pub_date.strftime('%Y-%m-%d') }}</p>
+      }}">{{ article.user.username|e }}</a> on {{ article.pub_date|dateformat }}</p>
     <div class="text">{{ article.body }}</div>
   </div>
   {%- endfor %}

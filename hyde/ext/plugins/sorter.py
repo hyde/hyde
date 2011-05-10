@@ -44,8 +44,7 @@ def sort_method(node, settings=None):
     if settings and hasattr(settings, 'attr') and settings.attr:
         attr = settings.attr
     filter_ = partial(filter_method, settings=settings)
-    resources = sorted(ifilter(filter_, node.walk_resources()),
-                       key=lambda f: f.name)
+    resources = ifilter(filter_, node.walk_resources())
     reverse = False
     if settings and hasattr(settings, 'reverse'):
         reverse = settings.reverse

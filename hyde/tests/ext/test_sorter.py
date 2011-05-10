@@ -31,7 +31,7 @@ class TestSorter(object):
         s = Site(TEST_SITE)
         s.load()
         s.config.plugins = ['hyde.ext.sorter.SorterPlugin']
-        s.config.sorter = Expando(dict(kind=dict(attr='source_file.kind')))
+        s.config.sorter = Expando(dict(kind=dict(attr=['source_file.kind', 'name'])))
 
         SorterPlugin(s).begin_site()
 
@@ -49,13 +49,13 @@ class TestSorter(object):
         pages = [page.name for page in
                 s.content.walk_resources_sorted_by_kind()]
 
-        assert pages == sorted(sorted(expected), key=lambda f: File(f).kind)
+        assert pages == sorted(expected, key=lambda f: (File(f).kind, f))
 
     def test_walk_resources_sorted_reverse(self):
         s = Site(TEST_SITE)
         s.load()
         s.config.plugins = ['hyde.ext.sorter.SorterPlugin']
-        s.config.sorter = Expando(dict(kind=dict(attr='source_file.kind', reverse=True)))
+        s.config.sorter = Expando(dict(kind=dict(attr=['source_file.kind', 'name'], reverse=True)))
 
         SorterPlugin(s).begin_site()
 
@@ -74,7 +74,7 @@ class TestSorter(object):
                 s.content.walk_resources_sorted_by_kind()]
 
 
-        assert pages == sorted(sorted(expected), key=lambda f: File(f).kind, reverse=True)
+        assert pages == sorted(expected, key=lambda f: (File(f).kind, f), reverse=True)
 
     def test_walk_resources_sorted_with_filters(self):
         s = Site(TEST_SITE)
@@ -110,6 +110,7 @@ class TestSorter(object):
                 attr:
                     - source_file.kind
                     - node.name
+                    - name
 
         """
         s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
@@ -131,10 +132,10 @@ class TestSorter(object):
 
         expected_sorted = [File(page).name
                                 for page in
-                                    sorted(sorted(expected),
+                                    sorted(expected,
                                         key=lambda p: tuple(
                                             [File(p).kind,
-                                            File(p).parent.name]))]
+                                            File(p).parent.name, p]))]
         assert pages == expected_sorted
 
     def test_walk_resources_sorted_no_default_is_processable(self):
@@ -146,6 +147,8 @@ class TestSorter(object):
             kind2:
                 filters:
                     source_file.kind: html
+                attr:
+                    - name
         """
         s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
         s.load()
@@ -169,6 +172,8 @@ class TestSorter(object):
             kind2:
                 filters:
                     source_file.kind: html
+                attr:
+                    - name
         """
         s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
         s.load()
@@ -201,7 +206,8 @@ class TestSorter(object):
               - hyde.ext.sorter.SorterPlugin
           sorter:
               folder_name:
-                  attr: node.name
+                  attr:
+                    - node.name
                   reverse: True
                   filters:
                       source_file.kind: html
