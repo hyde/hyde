@@ -6,6 +6,7 @@ Thanks to @vincentbernat
 *   Bug Fix: Made sorting tests more predictable
 *   Bug Fix: Added more standard paths for executables
 *   Added Combine files plugin
+*   Added ignore option in site configuration to igore based on wildcards
 
 Version 0.8.1-c1
 ================
