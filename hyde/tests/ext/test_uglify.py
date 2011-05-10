@@ -31,7 +31,8 @@ class TestLess(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
         s.config.mode = "production"
-        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs']
+        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs',
+                 '/usr/bin/uglifyjs', '~/bin/uglifyjs']
         uglify = [path for path in paths if File(path).exists]
         if not uglify:
             assert False, "Cannot find the uglify executable"
@@ -52,7 +53,8 @@ class TestLess(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
         s.config.mode = "production"
-        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs']
+        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs',
+                 '/usr/bin/uglifyjs', '~/bin/uglifyjs']
         uglify = [path for path in paths if File(path).exists]
         if not uglify:
             assert False, "Cannot find the uglify executable"
@@ -74,7 +76,8 @@ class TestLess(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
         s.config.mode = "dev"
-        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs']
+        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs',
+                 '/usr/bin/uglifyjs', '~/bin/uglifyjs']
         uglify = [path for path in paths if File(path).exists]
         if not uglify:
             assert False, "Cannot find the uglify executable"

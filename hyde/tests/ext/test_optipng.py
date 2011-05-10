@@ -31,7 +31,7 @@ class TestOptipng(object):
         s = Site(TEST_SITE)
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.optipng.OptiPNGPlugin']
-        paths = ['/usr/local/bin/optipng']
+        paths = ['/usr/local/bin/optipng', '/usr/bin/optipng']
         optipng = [path for path in paths if File(path).exists]
         if not optipng:
             assert False, "Cannot find the optipng executable"
