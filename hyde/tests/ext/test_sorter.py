@@ -49,7 +49,7 @@ class TestSorter(object):
         pages = [page.name for page in
                 s.content.walk_resources_sorted_by_kind()]
 
-        assert pages == sorted(expected, key=lambda f: File(f).kind)
+        assert pages == sorted(sorted(expected), key=lambda f: File(f).kind)
 
     def test_walk_resources_sorted_reverse(self):
         s = Site(TEST_SITE)
@@ -74,7 +74,7 @@ class TestSorter(object):
                 s.content.walk_resources_sorted_by_kind()]
 
 
-        assert pages == sorted(expected, key=lambda f: File(f).kind, reverse=True)
+        assert pages == sorted(sorted(expected), key=lambda f: File(f).kind, reverse=True)
 
     def test_walk_resources_sorted_with_filters(self):
         s = Site(TEST_SITE)
@@ -131,7 +131,7 @@ class TestSorter(object):
 
         expected_sorted = [File(page).name
                                 for page in
-                                    sorted(expected,
+                                    sorted(sorted(expected),
                                         key=lambda p: tuple(
                                             [File(p).kind,
                                             File(p).parent.name]))]
