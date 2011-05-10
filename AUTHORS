@@ -1,0 +1,24 @@
+Hyde is primarily developed and maintained by [Lakshmi Vyasarajan][1]. The new
+version of Hyde is sponsored by [Flowplayer][2] and [Tero Piirainen][3].
+
+This version would not exist without the contributions for the
+[original hyde project][4].
+
+Contributors
+=============
+
+
+-   @rfk
+
+    *   Bug fixes
+    *   Pyfs publisher with mimetype and etags support
+
+-   @tinnet
+
+    *   Bug fixes (Default template, Syntax template tag)
+
+
+[1]: http://twitter.com/lakshmivyas
+[2]: http://flowplayer.org
+[3]: http://cloudpanic.com
+[4]: http://github.com/lakshmivyas/hyde
