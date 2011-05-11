@@ -6,7 +6,7 @@ A brand new **hyde**
 This is the new version of `hyde`_ under active development.
 `Hyde documentation`_ is a work in progress.
 
-`Hyde starter kit`_ by `merlinrebrovik`_ is a really nice way to get started
+`Hyde starter kit`_ by `merlinrebrovic`_ is a really nice way to get started
 with hyde.
 
 Installation
@@ -130,4 +130,4 @@ Links
 .. _Authors: https://github.com/hyde/hyde/blob/master/AUTHORS
 .. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
 .. _Hyde starter kit: http://merlin.rebrovic.net/hyde-starter-kit/about.html
-.. _merlinrebrovik: https://github.com/merlinrebrovic
+.. _merlinrebrovic: https://github.com/merlinrebrovic

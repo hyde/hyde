@@ -48,5 +48,5 @@ Contributors
 .. _pestaa: http://github.com/pestaa
 .. |vincentbernat| replace:: Vincent Bernat
 .. _vincentbernat: http://github.com/vincentbernat
-.. |merlinrebrovic| replace:: Merlin Rebrovic
+.. |merlinrebrovic| replace:: Merlin Rebrović
 .. _merlinrebrovic: https://github.com/merlinrebrovic
