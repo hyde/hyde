@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Contains classes to handle images related things
+
+# Requires PIL
 """
 
 from hyde.plugin import Plugin

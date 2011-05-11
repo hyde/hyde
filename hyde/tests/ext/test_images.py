@@ -3,6 +3,8 @@
 Use nose
 `$ pip install nose`
 `$ nosetests`
+
+Requires PIL
 """
 from hyde.fs import File, Folder
 from hyde.generator import Generator
@@ -14,6 +16,9 @@ TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 IMAGE_SOURCE = File(__file__).parent.child_folder('optipng')
 IMAGE_NAME = "hyde-lt-b.png"
 IMAGE_SIZE = (538, 132)
+
+# PIL requirement
+import Image
 
 class TestImageSizer(object):
 
@@ -83,9 +88,7 @@ class TestImageSizer(object):
 
     def test_size_image_multiline(self):
         text = u"""
-     <img 
-src="/media/img/%s"
->
+     <img src="/media/img/%s">
 """ % IMAGE_NAME
         html = self._generic_test_image(text)
         assert ' width="%d"' % IMAGE_SIZE[0] in html

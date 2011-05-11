@@ -13,3 +13,4 @@ nose==1.0.0
 pep8==0.6.1
 pylint==0.22.0
 pysmell==0.7.3
+PIL
