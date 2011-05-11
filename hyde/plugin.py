@@ -40,11 +40,10 @@ class PluginProxy(object):
                             #    "\tCalling plugin [%s]",
                             #   plugin.__class__.__name__)
                             function = getattr(plugin, method_name)
-                            newres = function(*args)
-                            if newres:
-                                res = newres
+                            res = function(*args)
+                            last = None
+                            if res:
                                 targs = list(args)
-                                last = None
                                 if len(targs):
                                     last = targs.pop()
                                     targs.append(res if res else last)
