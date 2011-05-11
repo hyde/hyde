@@ -41,12 +41,11 @@ class PluginProxy(object):
                             #   plugin.__class__.__name__)
                             function = getattr(plugin, method_name)
                             res = function(*args)
-                            last = None
-                            if res:
-                                targs = list(args)
-                                if len(targs):
-                                    last = targs.pop()
-                                    targs.append(res if res else last)
+                            targs = list(args)
+                            if len(targs):
+                                last = targs.pop()
+                                res = res if res else last
+                                targs.append(res)
                                 args = tuple(targs)
                 return res
 
