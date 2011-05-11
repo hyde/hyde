@@ -88,7 +88,8 @@ class TestImageSizer(object):
 
     def test_size_image_multiline(self):
         text = u"""
-     <img src="/media/img/%s">
+     <img 
+src="/media/img/%s">
 """ % IMAGE_NAME
         html = self._generic_test_image(text)
         assert ' width="%d"' % IMAGE_SIZE[0] in html
