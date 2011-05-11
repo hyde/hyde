@@ -13,6 +13,9 @@ Contributors
     *   Bug Fix: Added more standard paths for executables
     *   Added Combine files plugin
     *   Added ignore option in site configuration to igore based on wildcards
+    *   Added silent, compress and optimization parameter support for less css plugin
+    *   Fixed plugin chaining issues
+    *   Added Language(translation) plugin
 
 -   |pestaa|_
 

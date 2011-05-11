@@ -1,3 +1,20 @@
+Version 0.8.1-c4
+================
+
+Thanks to @vincentbernat
+
+*   Added git dates plugin
+*   Added Image size plugin
+
+Version 0.8.1-c3
+================
+
+Thanks to @vincentbernat
+
+*   Added silent, compress and optimization parameter support for less css plugin
+*   Fixed plugin chaining issues
+*   Added Language(translation) plugin
+
 Version 0.8.1-c2
 ================
 
