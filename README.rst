@@ -1,10 +1,13 @@
-Version 0.8.1
+Version 0.8.2
 
 A brand new **hyde**
 ====================
 
-This is the new version of `hyde`_ under active development. Hyde
-documentation is a work in progress and can be found `here`_.
+This is the new version of `hyde`_ under active development.
+`Hyde documentation`_ is a work in progress.
+
+`Hyde starter kit`_ by `merlinrebrovik`_ is a really nice way to get started
+with hyde.
 
 Installation
 ------------
@@ -76,7 +79,7 @@ the following configuration:
 Examples
 --------
 
-1. `Hyde Documentation`_
+1. `Hyde Documentation Source`_
 2. `Cloudpanic`_
 3. `Ringce`_
 
@@ -120,9 +123,11 @@ Links
 
 
 .. _hyde: https://github.com/lakshmivyas/hyde
-.. _here: http://hyde.github.com
-.. _Hyde Documentation: https://github.com/hyde/docs
+.. _Hyde documentation: http://hyde.github.com
+.. _Hyde Documentation Source: https://github.com/hyde/docs
 .. _Cloudpanic: https://github.com/tipiirai/cloudpanic
 .. _Ringce: https://github.com/lakshmivyas/ringce/tree/v3.0
 .. _Authors: https://github.com/hyde/hyde/blob/master/AUTHORS
 .. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
+.. _Hyde starter kit: http://merlin.rebrovic.net/hyde-starter-kit/about.html
+.. _merlinrebrovik: https://github.com/merlinrebrovic

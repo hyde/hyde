@@ -1,32 +1,21 @@
-Version 0.8.1-c4
-================
+Version 0.8.2
+=============
+
+Thanks to @merlinrebrovic
+
+*   Added hyde starter kit
 
 Thanks to @vincentbernat
 
 *   Added git dates plugin
 *   Added Image size plugin
-
-Version 0.8.1-c3
-================
-
-Thanks to @vincentbernat
-
 *   Added silent, compress and optimization parameter support for less css plugin
 *   Fixed plugin chaining issues
 *   Added Language(translation) plugin
-
-Version 0.8.1-c2
-================
-
-Thanks to @vincentbernat
-
 *   Bug Fix: Made sorting tests more predictable
 *   Bug Fix: Added more standard paths for executables
 *   Added Combine files plugin
 *   Added ignore option in site configuration to igore based on wildcards
-
-Version 0.8.1-c1
-================
 
 Thanks to @pestaa
 

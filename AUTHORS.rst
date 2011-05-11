@@ -7,6 +7,10 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |merlinrebrovic|_
+    
+    * Hyde starter kit
+
 -   |vincentbernat|_
 
     *   Bug Fix: Made sorting tests more predictable
@@ -44,3 +48,5 @@ Contributors
 .. _pestaa: http://github.com/pestaa
 .. |vincentbernat| replace:: Vincent Bernat
 .. _vincentbernat: http://github.com/vincentbernat
+.. |merlinrebrovic| replace:: Merlin Rebrovic
+.. _merlinrebrovic: https://github.com/merlinrebrovic
