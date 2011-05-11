@@ -1,0 +1,34 @@
+---
+extends: base.j2
+title_ending: "| About"
+default_block: content
+---
+
+About
+=====
+
+This beginner's tutorial was created by [Merlin Rebrović][0] for the
+[Hyde project][1]. It is included in Hyde as a layout named _starter_.
+If you have a [default Hyde installation][2], all you have to do is
+write:
+
+    hyde -s folder_name create -l starter
+
+To check for the newest version, to download it separately or to report
+a bug, please visit Hyde Starter Kit's [GitHub page][3].
+
+
+Attributions
+------------
+
+The [photo][4] used for part of the background.
+
+
+{# You can use Jinja tags in Markdown content also; they get processed
+   before the content gets to the Markdown filter.
+#}
+[0]: {{ author.url }}
+[1]: {{ project.url }}
+[2]: {{ project.install }}
+[3]: {{ layout.url }}
+[4]: http://www.flickr.com/photos/batintherain/5613841957/

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <link href="http://fonts.googleapis.com/css?family=Anton" rel="stylesheet" type="text/css">
+        <title>Hyde Starter Kit {{ resource.meta.title_ending }}</title>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="{{ media_url('css/style.css') }}">
+        <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js">
+        </script>
+        <![endif]-->
+    </head>
+    <body>
+        <header>
+            <hgroup>
+            <h1><span>Hyde</span> Starter Kit</h1>
+            <h2>Know your tool</h2>
+            </hgroup>
+        </header>
+        <nav>
+        {# Move main menu rendering away from the base layout. This
+           way it can be used to generate the list many times, in
+           a footer, etc.
+        #}
+            {% from "macros.j2" import render_main_menu with context %}
+            {{ render_main_menu() }}
+        </nav>
+        <article id="content">
+        {# Main content block. Notice it has to pass through the
+           Markdown filter to generate HTML. If a block in content
+           pages contains only markup, you can omit the filter.
+        #}
+            {% filter markdown -%}
+            {% block content %}{% endblock %}
+            {%- endfilter %}
+        </article>
+        <aside>
+            <p>Created by <a href="{{ author.url}}">{{ author.name}}</a>
+            for <a href="{{ project.url }}">{{ project.name }}</a></p>
+        </aside>
+    </body>
+</html>
