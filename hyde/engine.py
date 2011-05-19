@@ -73,13 +73,15 @@ class Engine(Application):
                         help='Where should the site be generated?')
     @true('-r', '--regen', dest='regen', default=False,
                         help='Only process changed files')
+    @append('-o', '--override', dest="overrides", default=[], 
+                        help='key=value overrides of properties')
     def gen(self, args):
         """
         The generate command. Generates the site at the given
         deployment directory.
         """
         self.main(args)
-        site = self.make_site(args.sitepath, args.config, args.deploy)
+        site = self.make_site(args.sitepath, args.config, args.deploy, args.overrides)
         from hyde.generator import Generator
         gen = Generator(site)
         incremental = True
@@ -142,7 +144,7 @@ class Engine(Application):
 
 
 
-    def make_site(self, sitepath, config, deploy=None):
+    def make_site(self, sitepath, config, deploy=None, overrides=None):
         """
         Creates a site object from the given sitepath and the config file.
         """
@@ -150,4 +152,32 @@ class Engine(Application):
         config = Config(sitepath, config_file=config)
         if deploy:
             config.deploy_root = deploy
+            
+        if overrides:
+            for override in overrides:
+                key, value = (x.strip() for x in override.split("=", 1))
+                logger.info("overriding %s to: %s" % (key, value))
+
+                try:
+                    target = config
+
+                    path = key.split('.')
+
+                    if len(path) == 1:
+                        target.set_expando(key, value)
+                    else:
+                        for name in path[:-1]:
+                            idx = None
+                            if "#" in name:
+                                name, idx = name.split("#", 1)
+                            
+                            target = getattr(target, name)
+
+                            if idx:
+                                target = target[int(idx)]
+                        
+                        target.set_expando(path[-1], value)
+                except (AttributeError, TypeError, IndexError):
+                    logger.error("unable to resolve override of %r" % (key,))
+                    
         return Site(sitepath, config)
