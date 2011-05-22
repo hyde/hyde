@@ -50,13 +50,21 @@ class StylusPlugin(CLTransformer):
             if len(afile.kind.strip()) == 0:
                 afile = File(afile.path + '.styl')
             ref = self.site.content.resource_from_path(afile.path)
+
             if not ref:
-                raise self.template.exception_class(
+                try:
+                    include = self.settings.args.include
+                except AttributeError:
+                    include = False
+                if not include:
+                    raise self.template.exception_class(
                         "Cannot import from path [%s]" % afile.path)
-            ref.is_processable = False
-            return "\n" + \
-                    self.template.get_include_statement(ref.relative_path) + \
-                    "\n"
+            else:
+                ref.is_processable = False
+                return "\n" + \
+                        self.template.get_include_statement(ref.relative_path) + \
+                        "\n"
+            return '@import "' + path + '"\n'
 
         text = import_finder.sub(import_to_include, text)
         return text
@@ -101,7 +109,7 @@ class StylusPlugin(CLTransformer):
         args.append(str(source))
         try:
             self.call_app(args)
-        except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError, e:
             raise self.template.exception_class(
                     "Cannot process %s. Error occurred when "
                     "processing [%s]" % (stylus.name, resource.source_file))

@@ -65,11 +65,15 @@ combine:
 ---
 
 First line
+
 """)
-        assert text == """First line
+        expected = """First line
 var a = 1 + 2;
 var b = a + 3;
-var c = a + 5;"""
+var c = a + 5;
+"""
+
+        assert text == expected
         return
 
     def test_combine_remove(self):
