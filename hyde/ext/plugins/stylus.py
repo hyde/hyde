@@ -94,7 +94,7 @@ class StylusPlugin(CLTransformer):
         stylus = self.app
         source = File.make_temp(text)
         target = source
-        supported = [("compress", "C")]
+        supported = [("compress", "c"), ("include", "I")]
 
         args = [str(stylus)]
         args.extend(self.process_args(supported))
