@@ -48,6 +48,13 @@ def content_url(context, path):
     """
     return context['site'].content_url(path)
 
+@contextfunction
+def full_url(context, path):
+    """
+    Returns the full url given a partial path.
+    """
+    return context['site'].full_url(path)
+
 
 @contextfilter
 def date_format(ctx, dt, fmt=None):
@@ -561,6 +568,7 @@ class Jinja2Template(Template):
                     extensions=settings['extensions'])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
+        self.env.globals['full_url'] = full_url
         self.env.globals['engine'] = engine
         self.env.globals['deps'] = {}
         self.env.filters['markdown'] = markdown
@@ -664,6 +672,12 @@ class Jinja2Template(Template):
         Returns the media url statement.
         """
         return '{{ media_url(\'%s\') }}' % url
+
+    def get_full_url_statement(self, url):
+        """
+        Returns the full url statement.
+        """
+        return '{{ full_url(\'%s\') }}' % url
 
     def render_resource(self, resource, context):
         """
