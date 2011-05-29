@@ -599,7 +599,11 @@ class Jinja2Template(Template):
         """
         text = self.env.loader.get_source(self.env, path)[0]
         from jinja2.meta import find_referenced_templates
-        ast = self.env.parse(text)
+        try:
+            ast = self.env.parse(text)
+        except:
+            logger.error("Error parsing[%s]" % path)
+            raise
         tpls = find_referenced_templates(ast)
         deps = list(self.env.globals['deps'].get('path', []))
         for dep in tpls:
