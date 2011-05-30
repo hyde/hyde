@@ -28,10 +28,14 @@ class ImageSizerPlugin(Plugin):
             self.logger.warn("[%s] has an img tag without src attribute" % resource)
             return ""           # Nothing
         if src not in self.cache:
-            if not re.match(r"(/[^/]|[^/]).*", src):
+            if src.startswith(self.site.config.media_url):
+                path = src[len(self.site.config.media_url):].lstrip("/")
+                path = self.site.config.media_root_path.child(path)
+                image = self.site.content.resource_from_relative_deploy_path(path)
+            elif re.match(r'([a-z]+://|//).*', src):
                 # Not a local link
                 return ""       # Nothing
-            if src.startswith("/"):
+            elif src.startswith("/"):
                 # Absolute resource
                 path = src.lstrip("/")
                 image = self.site.content.resource_from_relative_deploy_path(path)
