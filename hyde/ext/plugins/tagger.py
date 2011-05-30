@@ -142,5 +142,6 @@ class TaggerPlugin(Plugin):
                                         "walk_resources_tagged_with_%s" % tag)
                                 ))
                 archive_text = self.template.render(text, context)
-                archive_file = File(target.child("%s.%s" % (tag, extension)))
+                archive_file = File(target.child("%s.%s" % (tag, extension)
+                    if extension is not None else tag))
                 archive_file.write(archive_text)
