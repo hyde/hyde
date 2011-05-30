@@ -99,6 +99,9 @@ class Engine(Application):
             help='The configuration used to generate the site')
     @store('-d', '--deploy-path', dest='deploy', default=None,
                     help='Where should the site be generated?')
+    @append('-t', '--type', dest='types', default=[], nargs='+',
+                    metavar=('TYPE', 'EXT'), help='Add a MIME type mapping for'
+                    ' one or more extensions, or set the default MIME type.')
     def serve(self, args):
         """
         The serve command. Serves the site at the given
@@ -109,7 +112,10 @@ class Engine(Application):
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
         config_file = sitepath.child(args.config)
         site = self.make_site(args.sitepath, args.config, args.deploy)
-        from hyde.server import HydeWebServer
+        from hyde.server import HydeWebServer, HydeRequestHandler
+        for t in args.types:
+          for e in t[1:] or ['']:
+            HydeRequestHandler.extensions_map[e] = t[0]
         server = HydeWebServer(site, args.address, args.port)
         logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
         try:
