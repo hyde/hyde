@@ -15,7 +15,7 @@ from datetime import datetime
 from functools import partial
 from itertools import ifilter, izip, tee, product
 from operator import attrgetter
-
+import unicodedata
 
 def get_tagger_sort_method(site):
     config = site.config
@@ -69,6 +69,17 @@ class TaggerPlugin(Plugin):
     def __init__(self, site):
         super(TaggerPlugin, self).__init__(site)
 
+    def _norm_tag(self, tag):
+        """
+        Normalize the given tag to be able to use it in a function name.
+        """
+        if type(tag) != unicode:
+            tag = unicode(tag, 'utf-8')
+        tag = unicodedata.normalize('NFKD', tag).encode('ascii', 'ignore')
+        tag = unicode(re.sub('[^\w\s_-]', '', tag).strip().lower())
+        tag = unicode(re.sub('[-\s]+', '_', tag))
+        return str(tag)
+
     def begin_site(self):
         """
         Initialize plugin. Add tag to the site context variable
@@ -91,7 +102,7 @@ class TaggerPlugin(Plugin):
                 if not tag in tags:
                     tags[tag] = [resource]
                     add_method(Node,
-                        'walk_resources_tagged_with_%s' % tag,
+                        'walk_resources_tagged_with_%s' % self._norm_tag(tag),
                         walk_resources_tagged_with,
                         tag=tag)
                 else:
@@ -139,8 +150,8 @@ class TaggerPlugin(Plugin):
                                     node=source,
                                     tag=tag,
                                     walker=getattr(source,
-                                        "walk_resources_tagged_with_%s" % tag)
+                                        "walk_resources_tagged_with_%s" % self._norm_tag(tag))
                                 ))
                 archive_text = self.template.render(text, context)
-                archive_file = File(target.child("%s.%s" % (tag, extension)))
+                archive_file = File(target.child("%s.%s" % (self._norm_tag(tag), extension)))
                 archive_file.write(archive_text)
