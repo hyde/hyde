@@ -32,6 +32,8 @@ Contributors
     *   Bug fix: LessCSSPlugin: return original text if not a .less file
     *   Added 'use_figure' configuration option for syntax tag
     *   PyFS publisher with `mtime` and `etags` support
+    *   Added PyPI publisher
+    *   Made `site.full_url` ignore fully qualified paths
 
 -   |tinnet|_
 

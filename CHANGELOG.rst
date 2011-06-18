@@ -1,3 +1,11 @@
+Version 0.8.3c2
+================
+
+Thanks to @rfk
+
+*   Added PyPI publisher
+*   Made `site.full_url` ignore fully qualified paths
+
 Version 0.8.3c1
 ================
 
