@@ -51,8 +51,6 @@ class UrlCleanerPlugin(Plugin):
 
         settings = config.urlcleaner
 
-        print settings.to_dict()
-
         def clean_url(urlgetter):
             @wraps(urlgetter)
             def wrapper(site, path):

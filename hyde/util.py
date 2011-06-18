@@ -92,7 +92,6 @@ class ColorFormatter(logging.Formatter):
 
 logging.ColorFormatter = ColorFormatter
 
-
 def make_method(method_name, method_):
     def method__(*args, **kwargs):
         return method_(*args, **kwargs)
@@ -113,3 +112,13 @@ def pairwalk(iterable):
     a, b = tee(iterable)
     next(b, None)
     return izip(a, b)
+
+def first_match(predicate, iterable):
+    """
+    Gets the first element matched by the predicate
+    in the iterable.
+    """
+    for item in iterable:
+        if predicate(item):
+            return item
+    return None

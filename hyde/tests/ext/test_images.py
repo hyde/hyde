@@ -45,7 +45,6 @@ class TestImageSizer(object):
         assert f.exists
         html = f.read_all()
         assert html
-        print html
         return html
 
     def test_size_image(self):

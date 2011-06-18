@@ -8,10 +8,11 @@ from hyde import loader
 
 from hyde.exceptions import HydeException
 from hyde.fs import File
-from hyde.util import getLoggerWithNullHandler
+from hyde.util import getLoggerWithNullHandler, first_match
 from hyde.model import Expando
 
 from functools import partial
+
 import re
 import subprocess
 import traceback
@@ -263,6 +264,11 @@ class CLTransformer(Plugin):
         return app
 
     def option_prefix(self, option):
+        """
+        Return the prefix for the given option.
+
+        Defaults to --.
+        """
         return "--"
 
     def process_args(self, supported):
@@ -273,32 +279,30 @@ class CLTransformer(Plugin):
         args = {}
         args.update(self.defaults)
         try:
-            args.update(getattr(self.settings, 'args').to_dict())
+            args.update(self.settings.args.to_dict())
         except AttributeError:
             pass
 
-        result = []
-        for arg in supported:
-            if isinstance(arg, tuple):
-                (descriptive, short) = arg
+        params = []
+        for option in supported:
+            if isinstance(option, tuple):
+                (descriptive, short) = option
             else:
-                descriptive = short = arg
+                descriptive = short = option
 
-            equal = False
-            if descriptive.endswith("="):
-                descriptive = descriptive[:-1]
-                equal = True
-            if descriptive in args or short in args:
-                val = args[descriptive if descriptive in args else short]
-                if equal and val:
-                    result.append("%s%s=%s" % (self.option_prefix(descriptive),
-                                              descriptive, str(val)))
-                else:
-                    result.append("%s%s" % (self.option_prefix(descriptive),
-                                            descriptive))
-                    if val:
-                        result.append(str(val))
-        return result
+            options = [descriptive.rstrip("="), short.rstrip("=")]
+            match = first_match(lambda arg: arg in options, args)
+            if match:
+                val = args[match]
+                param = "%s%s" % (self.option_prefix(descriptive),
+                                        descriptive)
+                if descriptive.endswith("="):
+                    param.append(val)
+                    val = None
+                params.append(param)
+                if val:
+                    params.append(val)
+        return params
 
     def call_app(self, args):
         """

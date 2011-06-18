@@ -590,7 +590,6 @@ item_list:
         t.configure(None)
         t.env.filters['dateformat'] = dateformat
         html = t.render(text, {}).strip()
-        print html
         actual = PyQuery(html)
         assert actual("ul").length == 2
         assert actual("li").length == 6
