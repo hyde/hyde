@@ -4,6 +4,7 @@ Parses & holds information about the site to be generated.
 """
 import os
 import fnmatch
+import urlparse
 from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
@@ -398,7 +399,8 @@ class Site(object):
         Determines if the given path is media or content based on the
         configuration and returns the appropriate url.
         """
-
+        if urlparse.urlparse(path)[:2] != ("",""):
+            return path
         if self.is_media(path):
             return self.media_url(
                     FS(path).get_relative_path(

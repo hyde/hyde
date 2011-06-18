@@ -29,7 +29,7 @@ Contributors
 
     *   Bug fix: LessCSSPlugin: return original text if not a .less file
     *   Added 'use_figure' configuration option for syntax tag
-    *   Pyfs publisher with `mimetype` and `etags` support
+    *   PyFS publisher with `mtime` and `etags` support
 
 -   |tinnet|_
 
