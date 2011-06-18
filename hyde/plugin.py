@@ -284,12 +284,20 @@ class CLTransformer(Plugin):
             else:
                 descriptive = short = arg
 
+            equal = False
+            if descriptive.endswith("="):
+                descriptive = descriptive[:-1]
+                equal = True
             if descriptive in args or short in args:
-                result.append("%s%s" % (self.option_prefix(descriptive),
-                                        descriptive))
                 val = args[descriptive if descriptive in args else short]
-                if val:
-                    result.append(val)
+                if equal and val:
+                    result.append("%s%s=%s" % (self.option_prefix(descriptive),
+                                              descriptive, str(val)))
+                else:
+                    result.append("%s%s" % (self.option_prefix(descriptive),
+                                            descriptive))
+                    if val:
+                        result.append(str(val))
         return result
 
     def call_app(self, args):
