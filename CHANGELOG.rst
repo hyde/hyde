@@ -37,7 +37,7 @@ Thanks to @rfk.
 
 *   Updated to use nose 1.0
 *   Bug fix: LessCSSPlugin: return original text if not a .less file
-*   PyFS publisher with mimetypes and etags support.
+*   PyFS publisher with mtime and etags support.
 
 Version 0.8
 ==============
