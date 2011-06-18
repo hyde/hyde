@@ -22,6 +22,7 @@ Contributors
     *   Added Language(translation) plugin
     *   Added support for parameters with `=` to `CLTransformer`
     *   Added JPEGOptim plugin
+    *   Bug Fix: Ensure image sizer plugin handles external urls properly.
 
 -   |pestaa|_
 
@@ -33,7 +34,7 @@ Contributors
     *   Added 'use_figure' configuration option for syntax tag
     *   PyFS publisher with `mtime` and `etags` support
     *   Added PyPI publisher
-    *   Made `site.full_url` ignore fully qualified paths
+    *   Bug fix: Made `site.full_url` ignore fully qualified paths
 
 -   |tinnet|_
 

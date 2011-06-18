@@ -1,10 +1,17 @@
+Version 0.8.3c3
+===============
+
+Thanks to @vincentbernat
+
+*   Bug Fix: Ensure image sizer plugin handles external urls properly.
+    
 Version 0.8.3c2
 ================
 
 Thanks to @rfk
 
 *   Added PyPI publisher
-*   Made `site.full_url` ignore fully qualified paths
+*   Bug Fix: Made `site.full_url` ignore fully qualified paths
 
 Version 0.8.3c1
 ================
