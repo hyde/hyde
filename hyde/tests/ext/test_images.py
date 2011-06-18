@@ -29,19 +29,19 @@ class TestImageSizer(object):
         IMAGES = TEST_SITE.child_folder('content/media/img')
         IMAGES.make()
         IMAGE_SOURCE.copy_contents_to(IMAGES)
+        self.site = Site(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
 
     def _generic_test_image(self, text):
-        site = Site(TEST_SITE)
-        site.config.mode = "production"
-        site.config.plugins = ['hyde.ext.plugins.images.ImageSizerPlugin']
-        tlink = File(site.content.source_folder.child('timg.html'))
+        self.site.config.mode = "production"
+        self.site.config.plugins = ['hyde.ext.plugins.images.ImageSizerPlugin']
+        tlink = File(self.site.content.source_folder.child('timg.html'))
         tlink.write(text)
-        gen = Generator(site)
+        gen = Generator(self.site)
         gen.generate_all()
-        f = File(site.config.deploy_root_path.child(tlink.name))
+        f = File(self.site.config.deploy_root_path.child(tlink.name))
         assert f.exists
         html = f.read_all()
         assert html
@@ -121,6 +121,15 @@ src="/media/img/%s">
     def test_size_malformed2(self):
         text = u"""
 <img src="/media/img/%s alt="hello">
+""" % IMAGE_NAME
+        html = self._generic_test_image(text)
+        assert ' width="%d"' % IMAGE_SIZE[0] in html
+        assert ' height="%d"' % IMAGE_SIZE[1] in html
+
+    def test_outside_media_url(self):
+        self.site.config.media_url = "http://media.example.com/"
+        text = u"""
+<img src="http://media.example.com/img/%s" alt="hello">
 """ % IMAGE_NAME
         html = self._generic_test_image(text)
         assert ' width="%d"' % IMAGE_SIZE[0] in html
