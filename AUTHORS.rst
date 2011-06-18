@@ -20,6 +20,8 @@ Contributors
     *   Added silent, compress and optimization parameter support for less css plugin
     *   Fixed plugin chaining issues
     *   Added Language(translation) plugin
+    *   Added support for parameters with `=` to `CLTransformer`
+    *   Added JPEGOptim plugin
 
 -   |pestaa|_
 

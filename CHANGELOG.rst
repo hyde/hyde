@@ -1,3 +1,11 @@
+Version 0.8.3c1
+================
+
+Thanks to @vincentbernat
+
+*   Added JPEG Optim plugin
+*   Fixes to CLTransformer
+
 Version 0.8.2
 =============
 
