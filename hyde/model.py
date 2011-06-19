@@ -45,7 +45,7 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, key.encode('utf-8'), self.transform(value))
+        setattr(self, str(key).encode('utf-8'), self.transform(value))
 
     def transform(self, primitive):
         """
@@ -91,7 +91,7 @@ class Context(object):
             for provider_name, resource_name in ctx.providers.__dict__.items():
                 res = File(Folder(sitepath).child(resource_name))
                 if res.exists:
-                    context[provider_name] = yaml.load(res.read_all())
+                    context[provider_name] = Expando(yaml.load(res.read_all()))
         except AttributeError:
             # No context data found
             pass

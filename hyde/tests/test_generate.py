@@ -161,3 +161,60 @@ main:
         assert "home" in out
         assert "articles" in out
         assert "projects" in out
+
+    def test_context_providers_equivalence(self):
+        import yaml
+        events = """
+    2011:
+        -
+            title: "one event"
+            location: "a city"
+        -
+            title: "one event"
+            location: "a city"
+
+    2010:
+        -
+            title: "one event"
+            location: "a city"
+        -
+            title: "one event"
+            location: "a city"
+"""
+        events_dict = yaml.load(events)
+        config_dict = dict(context=dict(
+            data=dict(events1=events_dict),
+            providers=dict(events2="events.yaml")
+        ))
+        text = """
+{%% extends "base.html" %%}
+
+{%% block main %%}
+    <ul>
+    {%% for year, eventlist in %s %%}
+        <li>
+            <h1>{{ year }}</h1>
+            <ul>
+                {%% for event in eventlist %%}
+                <li>{{ event.title }}-{{ event.location }}</li>
+                {%% endfor %%}
+            </ul>
+        </li>
+    {%% endfor %%}
+    </ul>
+{%% endblock %%}
+"""
+
+        File(TEST_SITE.child('events.yaml')).write(events)
+        f1 = File(TEST_SITE.child('content/text1.html'))
+        f2 = File(TEST_SITE.child('content/text2.html'))
+        f1.write(text % "events1")
+        f2.write(text % "events2")
+        site = Site(TEST_SITE, Config(TEST_SITE, config_dict=config_dict))
+        site.load()
+        gen = Generator(site)
+        gen.generate_all()
+        left = File(site.config.deploy_root_path.child(f1.name)).read_all()
+        right = File(site.config.deploy_root_path.child(f2.name)).read_all()
+        assert left == right
+
