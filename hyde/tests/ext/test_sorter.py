@@ -287,6 +287,27 @@ class TestSorterMeta(object):
    def tearDown(self):
        TEST_SITE.delete()
 
+   def test_attribute_checker_no_meta(self):
+       s = Site(TEST_SITE)
+       s.load()
+       from hyde.ext.plugins.sorter import attributes_checker
+       for r in s.content.walk_resources():
+           assert not attributes_checker(r, ['meta.index'])
+
+   def test_attribute_checker_with_meta(self):
+       s = Site(TEST_SITE)
+       s.load()
+       MetaPlugin(s).begin_site()
+       from hyde.ext.plugins.sorter import attributes_checker
+       have_index = ["angry-post.html",
+                   "another-sad-post.html",
+                   "happy-post.html"]
+       for r in s.content.walk_resources():
+           print r.meta.to_dict()
+           expected = r.name in have_index
+           assert attributes_checker(r, ['meta.index']) == expected
+
+
    def test_walk_resources_sorted_by_index(self):
        s = Site(TEST_SITE)
        s.load()
@@ -296,6 +317,7 @@ class TestSorterMeta(object):
         }
        }
        s.config.sorter = Expando(config)
+       MetaPlugin(s).begin_site()
        SorterPlugin(s).begin_site()
 
        assert hasattr(s.content, 'walk_resources_sorted_by_index')
@@ -304,7 +326,7 @@ class TestSorterMeta(object):
                    "happy-post.html"]
 
        pages = [page.name for page in
-               s.content.walk_resources_sorted_by_kind()]
+               s.content.walk_resources_sorted_by_index()]
 
        assert pages == sorted(expected, key=lambda f: (File(f).kind, f))
 

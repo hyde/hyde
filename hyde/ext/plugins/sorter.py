@@ -35,6 +35,16 @@ def filter_method(item, settings=None):
             break
     return all_match
 
+def attributes_checker(item, attributes=None):
+    """
+    Checks if the given list of attributes exist.
+    """
+    try:
+      x = attrgetter(*attributes)(item)
+      return True
+    except AttributeError:
+      return False
+
 def sort_method(node, settings=None):
     """
     Sorts the resources in the given node based on the
@@ -43,13 +53,17 @@ def sort_method(node, settings=None):
     attr = 'name'
     if settings and hasattr(settings, 'attr') and settings.attr:
         attr = settings.attr
-    filter_ = partial(filter_method, settings=settings)
-    resources = ifilter(filter_, node.walk_resources())
     reverse = False
     if settings and hasattr(settings, 'reverse'):
         reverse = settings.reverse
     if not isinstance(attr, list):
         attr = [attr]
+    filter_ = partial(filter_method, settings=settings)
+
+    excluder_ = partial(attributes_checker, attributes=attr)
+
+    resources = ifilter(lambda x: excluder_(x) and filter_(x),
+                        node.walk_resources())
     return sorted(resources,
                     key=attrgetter(*attr),
                     reverse=reverse)
