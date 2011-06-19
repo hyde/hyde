@@ -130,8 +130,24 @@ class HydeWebServer(HTTPServer):
         self.regeneration_time = datetime.strptime('1-1-1998', '%m-%d-%Y')
         self.__is_shut_down = threading.Event()
         self.__shutdown_request = False
+        self.map_extensions()
         HTTPServer.__init__(self, (address, port),
                                             HydeRequestHandler)
+
+    def map_extensions(self):
+        """
+        Maps extensions specified in the configuration.
+        """
+        try:
+            extensions = self.site.config.server.extensions.to_dict()
+        except AttributeError:
+            extensions = {}
+
+        for extension, type in extensions.iteritems():
+            ext = "." + extension if not extension == 'default' else ''
+            HydeRequestHandler.extensions_map[ext] = type
+
+
 ####### Code from python 2.7.1: Socket server
 ####### Duplicated to make sure shutdown works in Python v > 2.6
 #######
