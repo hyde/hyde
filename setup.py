@@ -139,10 +139,9 @@ setup(name=PROJECT,
                                      package=PROJECT,
                                      only_in_packages=False,
                                      ),
-      scripts=['main.py'],
       entry_points={
           'console_scripts': [
-              'hyde = main:main'
+              'hyde = hyde.main:main'
           ]
       },
       license='MIT',

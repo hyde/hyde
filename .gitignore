@@ -17,3 +17,4 @@ PYSMELLTAGS
 .noseids
 *.tar.gz
 .hyde_deps
+src
