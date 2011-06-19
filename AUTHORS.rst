@@ -7,6 +7,10 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |gfuchedzhy|_
+
+    *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
+
 -   |merlinrebrovic|_
     
     * Hyde starter kit
@@ -55,3 +59,5 @@ Contributors
 .. _vincentbernat: http://github.com/vincentbernat
 .. |merlinrebrovic| replace:: Merlin Rebrović
 .. _merlinrebrovic: https://github.com/merlinrebrovic
+.. |gfuchedzhy| replace:: Grygoriy Fuchedzhy
+.. _gfuchedzhy: https://github.com/gfuchedzhy

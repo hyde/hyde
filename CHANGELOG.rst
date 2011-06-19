@@ -1,10 +1,17 @@
+Version 0.8.3c4
+===============
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: Hyde server now takes the url cleaner plugin into account.
+
 Version 0.8.3c3
 ===============
 
 Thanks to @vincentbernat
 
 *   Bug Fix: Ensure image sizer plugin handles external urls properly.
-    
+
 Version 0.8.3c2
 ================
 
