@@ -6,6 +6,7 @@ Use nose
 """
 from hyde.fs import File, Folder
 from hyde.generator import Generator
+from hyde.model import Expando
 from hyde.site import Site
 
 from hyde.tests.util import assert_html_equals
@@ -42,7 +43,7 @@ class TestTagger(object):
         for tag in ['sad', 'happy', 'angry', 'thoughts', 'events']:
             assert tag in tags
 
-        sad_posts = [post.name for post in tags['sad']]
+        sad_posts = [post.name for post in tags['sad'].resources]
         assert len(sad_posts) == 2
         assert "sad-post.html" in sad_posts
         assert "another-sad-post.html" in sad_posts
@@ -84,7 +85,7 @@ class TestTagger(object):
 
         q = PyQuery(File(tags_folder.child('sad.html')).read_all())
         assert q
-        
+
 
         assert q('li').length == 2
         assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
@@ -115,3 +116,36 @@ class TestTagger(object):
 
         assert q('li').length == 1
         assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
+
+    def test_tagger_metadata(self):
+        conf = {
+            "sad" : {
+                "emotions": ["Dissappointed", "Lost"]
+            },
+            "Angry": {
+                "emotions": ["Irritated", "Annoyed", "Disgusted"]
+            }
+        }
+        self.s.config.tagger.meta = Expando(conf)
+        gen = Generator(self.s)
+        gen.load_site_if_needed()
+        gen.generate_all()
+
+        assert hasattr(self.s, 'tagger')
+        assert hasattr(self.s.tagger, 'tags')
+        assert self.s.tagger.tags
+        tags = self.s.tagger.tags.to_dict()
+        sad_tag = tags["sad"]
+        assert sad_tag
+        assert hasattr(sad_tag, "emotions")
+        assert sad_tag.emotions == self.s.config.tagger.meta.sad.emotions
+
+        happy_tag = tags["happy"]
+        assert happy_tag
+        assert hasattr(happy_tag, "emotions")
+        assert happy_tag.emotions == self.s.config.tagger.meta.happy.emotions
+
+        for tagname in ['angry', 'thoughts', 'events']:
+            tag = tags[tagname]
+            assert tag
+            assert not hasattr(tag, "emotions")

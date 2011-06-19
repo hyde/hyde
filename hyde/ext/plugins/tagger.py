@@ -17,6 +17,26 @@ from itertools import ifilter, izip, tee, product
 from operator import attrgetter
 
 
+class Tag(object):
+    """
+    A simple object that represents a tag.
+    """
+
+    def __init__(self, name):
+        """
+        Initialize the tag with a name.
+        """
+        self.name = name
+        self.resources = []
+
+
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
+
+
 def get_tagger_sort_method(site):
     config = site.config
     content = site.content
@@ -36,7 +56,7 @@ def get_tagger_sort_method(site):
     return walker
 
 def walk_resources_tagged_with(node, tag):
-    tags = set(tag.split('+'))
+    tags = set(str(tag).split('+'))
     walker = get_tagger_sort_method(node.site)
     for resource in walker():
         try:
@@ -87,15 +107,20 @@ class TaggerPlugin(Plugin):
                 taglist = attrgetter("meta.tags")(resource)
             except AttributeError:
                 continue
-            for tag in taglist:
-                if not tag in tags:
-                    tags[tag] = [resource]
+            for tagname in taglist:
+                if not tagname in tags:
+                    tag = Tag(tagname)
+                    tags[tagname] = tag
+                    tag.resources.append(resource)
                     add_method(Node,
                         'walk_resources_tagged_with_%s' % tag,
                         walk_resources_tagged_with,
                         tag=tag)
                 else:
-                    tags[tag].append(resource)
+                    tags[tagname].resources.append(resource)
+                if not hasattr(resource, 'tags'):
+                    setattr(resource, 'tags', [])
+                resource.tags.append(tags[tagname])
 
         self.site.tagger = Expando(dict(tags=tags))
 
@@ -130,7 +155,7 @@ class TaggerPlugin(Plugin):
             template = config['template']
             text = "{%% extends \"%s\" %%}" % template
 
-            for tag, resources in self.site.tagger.tags.to_dict().iteritems():
+            for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
                 context = {}
                 context.update(self.site.context)
                 context.update(dict(
@@ -139,9 +164,9 @@ class TaggerPlugin(Plugin):
                                     node=source,
                                     tag=tag,
                                     walker=getattr(source,
-                                        "walk_resources_tagged_with_%s" % tag)
+                                        "walk_resources_tagged_with_%s" % tagname)
                                 ))
                 archive_text = self.template.render(text, context)
-                archive_file = File(target.child("%s.%s" % (tag, extension)
-                    if extension is not None else tag))
+                archive_file = File(target.child("%s.%s" % (tagname, extension)
+                    if extension is not None else tagname))
                 archive_file.write(archive_text)
