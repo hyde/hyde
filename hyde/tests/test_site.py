@@ -223,8 +223,6 @@ class TestSiteWithConfig(object):
         path = 'media/css/site.css'
         assert s.is_media(path)
         full_url = s.full_url(path)
-        print s.config.media_root_path
-        print File(path).get_relative_path(s.config.media_root_path)
         assert full_url == "/" + path
 
     def test_media_url_from_resource(self):

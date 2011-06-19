@@ -402,9 +402,9 @@ class Site(object):
         if urlparse.urlparse(path)[:2] != ("",""):
             return path
         if self.is_media(path):
-            return self.media_url(
-                    FS(path).get_relative_path(
-                        self.config.media_root_path))
+            relative_path = File(path).get_relative_path(
+                                Folder(self.config.media_root))
+            return self.media_url(relative_path)
         else:
             return self.content_url(path)
 
