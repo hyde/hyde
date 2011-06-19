@@ -4,7 +4,7 @@ Implements the hyde entry point commands
 """
 from commando import *
 from hyde.exceptions import HydeException
-from hyde.fs import File, Folder
+from hyde.fs import FS, File, Folder
 from hyde.layout import Layout, HYDE_DATA
 from hyde.model import Config
 from hyde.site import Site
@@ -23,6 +23,28 @@ class Engine(Application):
     """
     The Hyde Application
     """
+    def __init__(self, raise_exceptions=False):
+        self.raise_exceptions = raise_exceptions
+        super(Engine, self).__init__()
+
+    def run(self, args=None):
+        """
+        The engine entry point.
+        """
+
+        # Catch any errors thrown and log the message.
+
+        try:
+            super(Engine, self).run(args)
+        except HydeException, he:
+            if self.raise_exceptions:
+                raise
+            elif self.__parser__:
+                self.__parser__.error(he.message)
+            else:
+                logger.error(he.message)
+                return -1
+
 
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
@@ -39,7 +61,7 @@ class Engine(Application):
             import logging
             logger.setLevel(logging.DEBUG)
 
-    @subcommand('create', help='Create a new hyde site')
+    @subcommand('create', help='Create a new hyde site.')
     @store('-l', '--layout', default='basic', help='Layout for the new site')
     @true('-f', '--force', default=False, dest='overwrite',
                             help='Overwrite the current site if it exists')
@@ -50,9 +72,12 @@ class Engine(Application):
         """
         self.main(args)
         sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
-        if sitepath.exists and not args.overwrite:
+        markers = ['content', 'layout', 'site.yaml']
+        exists = any((FS(sitepath.child(item)).exists for item in markers))
+
+        if exists and not args.overwrite:
             raise HydeException(
-                    "The given site path [%s] already exists."
+                    "The given site path [%s] already contains a hyde site."
                     " Use -f to overwrite." % sitepath)
         layout = Layout.find_layout(args.layout)
         logger.info(

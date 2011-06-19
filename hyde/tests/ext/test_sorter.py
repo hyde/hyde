@@ -329,6 +329,3 @@ class TestSorterMeta(object):
                s.content.walk_resources_sorted_by_index()]
 
        assert pages == sorted(expected, key=lambda f: (File(f).kind, f))
-
-
-

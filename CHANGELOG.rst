@@ -1,3 +1,11 @@
+Version 0.8.3c10
+===============
+
+*   Bug Fix: `hyde create` only fails when `content`, `layout` or `site.yaml`
+    is present in the target directory. (Issue #21)
+*   Bug Fix: Exceptions are now handled with `ArgumentParser.error`.
+    (Issue #21)
+
 Version 0.8.3c9
 ===============
 
