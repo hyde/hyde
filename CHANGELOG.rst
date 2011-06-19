@@ -1,3 +1,9 @@
+Version 0.8.3c7
+===============
+
+*   Added `display:block` for html5 elements in basic template so that it
+    works in not so modern browsers as well.
+
 Version 0.8.3c6
 ===============
 
