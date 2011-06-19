@@ -66,5 +66,5 @@ Contributors
 .. _merlinrebrovic: https://github.com/merlinrebrovic
 .. |gfuchedzhy| replace:: Grygoriy Fuchedzhy
 .. _gfuchedzhy: https://github.com/gfuchedzhy
-.. |stiell|: replace:: Stian Ellingsen
+.. |stiell| replace:: Stian Ellingsen
 .. _stiell: https://github.com/stiell
