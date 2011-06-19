@@ -276,3 +276,37 @@ class TestSorter(object):
            q = PyQuery(text)
 
            assert q('span.latest').text() == 'YayYayYay'
+
+class TestSorterMeta(object):
+
+   def setUp(self):
+       TEST_SITE.make()
+       TEST_SITE.parent.child_folder(
+                   'sites/test_sorter').copy_contents_to(TEST_SITE)
+
+   def tearDown(self):
+       TEST_SITE.delete()
+
+   def test_walk_resources_sorted_by_index(self):
+       s = Site(TEST_SITE)
+       s.load()
+       config = {
+        "index": {
+            "attr": ['meta.index', 'name']
+        }
+       }
+       s.config.sorter = Expando(config)
+       SorterPlugin(s).begin_site()
+
+       assert hasattr(s.content, 'walk_resources_sorted_by_index')
+       expected = ["angry-post.html",
+                   "another-sad-post.html",
+                   "happy-post.html"]
+
+       pages = [page.name for page in
+               s.content.walk_resources_sorted_by_kind()]
+
+       assert pages == sorted(expected, key=lambda f: (File(f).kind, f))
+
+
+
