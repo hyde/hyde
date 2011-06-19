@@ -1,10 +1,19 @@
+Version 0.8.3c6
+===============
+
+Thanks to Joe Steeve.
+
+*   Changed deploy location for main.py and fixed entry point in
+    `setup.py`. (Issue #56)
+
+
 Version 0.8.3c5
 ===============
 
 Thanks to @stiell
 
-*   Bug Fix: Better mime type support in hyde server
-*   Bug Fix: Support empty extension in tagger archives
+*   Bug Fix: Better mime type support in hyde server (Issue #50)
+*   Bug Fix: Support empty extension in tagger archives (Issue #50)
 
 Version 0.8.3c4
 ===============
@@ -12,6 +21,7 @@ Version 0.8.3c4
 Thanks to @gfuchedzhy
 
 *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
+    (Issue #54)
 
 Version 0.8.3c3
 ===============
@@ -19,45 +29,48 @@ Version 0.8.3c3
 Thanks to @vincentbernat
 
 *   Bug Fix: Ensure image sizer plugin handles external urls properly.
+    (Issue #52)
 
 Version 0.8.3c2
 ================
 
 Thanks to @rfk
 
-*   Added PyPI publisher
-*   Bug Fix: Made `site.full_url` ignore fully qualified paths
+*   Added PyPI publisher (Issue #49)
+*   Bug Fix: Made `site.full_url` ignore fully qualified paths (Issue #49)
 
 Version 0.8.3c1
 ================
 
 Thanks to @vincentbernat
 
-*   Added JPEG Optim plugin
-*   Fixes to CLTransformer
+*   Added JPEG Optim plugin (Issue #47)
+*   Fixes to CLTransformer (Issue #47)
 
 Version 0.8.2
 =============
 
 Thanks to @merlinrebrovic
 
-*   Added hyde starter kit
+*   Added hyde starter kit (Issue #43)
 
 Thanks to @vincentbernat
 
-*   Added git dates plugin
-*   Added Image size plugin
-*   Added silent, compress and optimization parameter support for less css plugin
-*   Fixed plugin chaining issues
-*   Added Language(translation) plugin
-*   Bug Fix: Made sorting tests more predictable
-*   Bug Fix: Added more standard paths for executables
-*   Added Combine files plugin
+*   Added git dates plugin (Issue #42)
+*   Added Image size plugin (Issue #44)
+*   Added silent, compress and optimization parameter support for less css
+    plugin (Issue #40)
+*   Fixed plugin chaining issues (Issue #38)
+*   Added Language(translation) plugin (Issue #37)
+*   Bug Fix: Made sorting tests more predictable (Issue #41)
+*   Bug Fix: Added more standard paths for executables (Issue #41)
+*   Added Combine files plugin (Issue #39)
 *   Added ignore option in site configuration to igore based on wildcards
+    (Issue #32)
 
 Thanks to @pestaa
 
-*   Added support `UTF8` keys in `metadata` and `config`
+*   Added support `UTF8` keys in `metadata` and `config` (Issue #33)
 
 
 Version 0.8.1
@@ -65,9 +78,10 @@ Version 0.8.1
 
 Thanks to @rfk.
 
-*   Updated to use nose 1.0
+*   Updated to use nose 1.0 (Issue #28)
 *   Bug fix: LessCSSPlugin: return original text if not a .less file
-*   PyFS publisher with mtime and etags support.
+    (Issue #28)
+*   PyFS publisher with mtime and etags support. (Issue #28)
 
 Version 0.8
 ==============
