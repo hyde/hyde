@@ -211,6 +211,20 @@ class TestSiteWithConfig(object):
         assert not s.is_media('media/css/site.css')
         assert s.is_media('monkey/css/site.css')
 
+    def test_full_url_for_content(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'blog/2010/december'
+        assert s.full_url(path) == "/" + path
+
+    def test_full_url_for_media(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = 'media/css/site.css'
+        assert s.is_media(path)
+        full_url = s.full_url(path)
+        assert full_url == "/" + path
+
     def test_media_url_from_resource(self):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
@@ -219,7 +233,7 @@ class TestSiteWithConfig(object):
                         Folder("media").child(path))
         assert resource
         assert resource.full_url == "/media/" + path
-        
+
     def test_config_ignore(self):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
