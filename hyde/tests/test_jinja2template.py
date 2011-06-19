@@ -597,3 +597,40 @@ item_list:
         assert items == ["A", "B", "C"]
         items = [item.text for item in actual("ul.mid li")]
         assert items == ["D", "E", "F"]
+
+    def test_raw_tag(self):
+        expected = """
+<div class="template secondary">
+<aside class="secondary">
+  <ul>
+    {{#sections}}
+      <li><a href="#{{id}}">{{textContent}}</a></li>
+    {{/sections}}
+  </ul>
+</aside>
+"""
+        text = "{%% raw %%}%s{%% endraw %%}" % expected
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        assert html.strip() == expected.strip()
+
+    def test_raw_tag_with_markdown_typogrify(self):
+        expected = """
+<div class="template secondary">
+<aside class="secondary">
+  <ul>
+    {{#sections}}
+      <li><a href="#{{id}}">{{textContent}}</a></li>
+    {{/sections}}
+  </ul>
+</aside>
+"""
+        text = "{%% filter markdown|typogrify %%}{%% raw %%}%s{%% endraw %%}{%% endfilter %%}" % expected
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        assert html.strip() == expected.strip()
+
+
+
