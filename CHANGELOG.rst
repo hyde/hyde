@@ -1,3 +1,10 @@
+Version 0.8.3c12
+================
+
+*   Ensured that the context data & providers behave in the same manner. Both
+    get loaded as expandos. (Issue #29)
+
+
 Version 0.8.3c11
 =================
 
