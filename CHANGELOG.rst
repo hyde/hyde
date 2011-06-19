@@ -1,3 +1,11 @@
+Version 0.8.3c5
+===============
+
+Thanks to @stiell
+
+*   Bug Fix: Better mime type support in hyde server
+*   Bug Fix: Support empty extension in tagger archives
+
 Version 0.8.3c4
 ===============
 

@@ -7,6 +7,11 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |stiell|_
+    
+    *   Bug Fix: Better mime type support in hyde server
+    *   Bug Fix: Support empty extension in tagger archives
+
 -   |gfuchedzhy|_
 
     *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
@@ -61,3 +66,5 @@ Contributors
 .. _merlinrebrovic: https://github.com/merlinrebrovic
 .. |gfuchedzhy| replace:: Grygoriy Fuchedzhy
 .. _gfuchedzhy: https://github.com/gfuchedzhy
+.. |stiell|: replace:: Stian Ellingsen
+.. _stiell: https://github.com/stiell
