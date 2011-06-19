@@ -15,6 +15,7 @@ Contributors
 -   |gfuchedzhy|_
 
     *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
+    *   Bug Fix: Sorter excludes items that do not have sorting attributes.
 
 -   |merlinrebrovic|_
     

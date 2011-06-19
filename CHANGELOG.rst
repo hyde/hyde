@@ -1,3 +1,9 @@
+Version 0.8.3c9
+===============
+
+*   Bug Fix: Sorter excludes items that do not have sorting attributes.
+    (Issue #18)
+
 Version 0.8.3c8
 ===============
 
