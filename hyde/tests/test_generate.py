@@ -77,9 +77,9 @@ class TestGenerator(object):
         resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         gen.generate_all()
-        assert not gen.has_resource_changed(resource)
         import time
         time.sleep(1)
+        assert not gen.has_resource_changed(resource)
         text = resource.source_file.read_all()
         resource.source_file.write(text)
         assert gen.has_resource_changed(resource)

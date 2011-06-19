@@ -5,12 +5,13 @@ Parses & holds information about the site to be generated.
 import os
 import fnmatch
 import urlparse
+from functools import wraps
+
 from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.model import Config
-
 from hyde.util import getLoggerWithNullHandler
-from functools import wraps
+
 
 def path_normalized(f):
     @wraps(f)
@@ -359,7 +360,6 @@ class RootNode(Node):
                         return
                 self.add_resource(afile)
 
-
 class Site(object):
     """
     Represents the site to be generated.
@@ -373,11 +373,29 @@ class Site(object):
         self.plugins = []
         self.context = {}
 
+    def refresh_config(self):
+        """
+        Refreshes config data if one or more config files have
+        changed. Note that this does not refresh the meta data.
+        """
+        if self.config.needs_refresh():
+            logger.debug("Refreshing config data")
+            self.config = Config(self.sitepath,
+                        self.config.config_file,
+                        self.config.config_dict)
+
+    def reload_if_needed(self):
+        """
+        Reloads if the site has not been loaded before or if the
+        configuration has changed since the last load.
+        """
+        if not len(self.content.child_nodes):
+            self.load()
+
     def load(self):
         """
         Walks the content and media folders to load up the sitemap.
         """
-
         self.content.load()
 
     def content_url(self, path):

@@ -6,8 +6,9 @@ from hyde.fs import File, Folder
 
 import codecs
 import yaml
-
+from datetime import datetime
 from UserDict import IterableUserDict
+
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -135,12 +136,26 @@ class Config(Expando):
             plugins = [],
             ignore = [ "*~", "*.bak" ]
         )
-        conf = dict(**default_config)
+        self.config_file = config_file
+        self.config_dict = config_dict
+        self.load_time = datetime.min
+        self.config_files = []
         self.sitepath = Folder(sitepath)
+        conf = dict(**default_config)
         conf.update(self.read_config(config_file))
         if config_dict:
             conf.update(config_dict)
         super(Config, self).__init__(conf)
+
+    @property
+    def last_modified(self):
+        return max((conf.last_modified for conf in self.config_files))
+
+    def needs_refresh(self):
+        if not self.config_files:
+            return True
+        return any((conf.has_changed_since(self.load_time)
+                        for conf in self.config_files))
 
     def read_config(self, config_file):
         """
@@ -152,6 +167,7 @@ class Config(Expando):
                                     config_file else 'site.yaml')
         conf = {}
         if File(conf_file).exists:
+            self.config_files.append(File(conf_file))
             logger.info("Reading site configuration from [%s]", conf_file)
             with codecs.open(conf_file, 'r', 'utf-8') as stream:
                 conf = yaml.load(stream)
@@ -159,6 +175,7 @@ class Config(Expando):
                     parent = self.read_config(conf['extends'])
                     parent.update(conf)
                     conf = parent
+        self.load_time = datetime.now()
         return conf
 
 

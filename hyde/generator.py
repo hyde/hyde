@@ -27,15 +27,19 @@ class Generator(object):
         self.site = site
         self.generated_once = False
         self.deps = Dependents(site.sitepath)
+        self.create_context()
+        self.template = None
+        Plugin.load_all(site)
+
+        self.events = Plugin.get_proxy(self.site)
+
+    def create_context(self):
+        site = self.site
         self.__context__ = dict(site=site)
         if hasattr(site.config, 'context'):
             site.context = Context.load(site.sitepath, site.config.context)
             self.__context__.update(site.context)
 
-        self.template = None
-        Plugin.load_all(site)
-
-        self.events = Plugin.get_proxy(self.site)
 
     @contextmanager
     def context_for_resource(self, resource):
@@ -43,8 +47,6 @@ class Generator(object):
         Context manager that intializes the context for a given
         resource and rolls it back after the resource is processed.
         """
-        # TODO: update metadata and other resource
-        # specific properties here.
         self.__context__.update(
             resource=resource,
             node=resource.node,
@@ -103,10 +105,7 @@ class Generator(object):
         Checks if the site requries a reload and loads if
         necessary.
         """
-        #TODO: Perhaps this is better suited in Site
-        if not len(self.site.content.child_nodes):
-            logger.info("Reading site contents")
-            self.site.load()
+        self.site.reload_if_needed()
 
     def finalize(self):
         """
@@ -154,8 +153,9 @@ class Generator(object):
         last generation.
         """
         logger.debug("Checking for changes in %s" % resource)
-        self.load_site_if_needed()
         self.load_template_if_needed()
+        self.load_site_if_needed()
+
         target = File(self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path))
         if not target.exists or target.older_than(resource.source_file):
@@ -164,6 +164,11 @@ class Generator(object):
         if resource.source_file.is_binary:
             logger.debug("No Changes found in %s" % resource)
             return False
+        if self.site.config.needs_refresh() or \
+           not target.has_changed_since(self.site.config.last_modified):
+            logger.debug("Site configuration changed")
+            return True
+
         deps = self.get_dependencies(resource)
         if not deps or None in deps:
             logger.debug("No changes found in %s" % resource)
@@ -282,8 +287,14 @@ class Generator(object):
         except HydeException:
             self.generate_all()
 
+    def refresh_config(self):
+        if self.site.config.needs_refresh():
+            logger.debug("Refreshing configuration and context")
+            self.site.refresh_config()
+            self.create_context()
 
     def __generate_node__(self, node, incremental=False):
+        self.refresh_config()
         for node in node.walk():
             logger.debug("Generating Node [%s]", node)
             self.events.begin_node(node)
@@ -293,6 +304,7 @@ class Generator(object):
 
 
     def __generate_resource__(self, resource, incremental=False):
+        self.refresh_config()
         if not resource.is_processable:
             logger.debug("Skipping [%s]", resource)
             return

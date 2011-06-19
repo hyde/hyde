@@ -1,3 +1,10 @@
+Version 0.8.3c11
+=================
+
+*   `hyde serve` now picks up changes in config data automatically.
+    (Issue #24)
+
+
 Version 0.8.3c10
 ===============
 

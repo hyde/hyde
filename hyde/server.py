@@ -8,6 +8,7 @@ import select
 import threading
 import urlparse
 import urllib
+from datetime import datetime
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
 from hyde.fs import File, Folder
@@ -17,8 +18,6 @@ from hyde.exceptions import HydeException
 
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.server')
-
-from datetime import datetime
 
 class HydeRequestHandler(SimpleHTTPRequestHandler):
     """

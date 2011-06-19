@@ -303,7 +303,6 @@ class TestSorterMeta(object):
                    "another-sad-post.html",
                    "happy-post.html"]
        for r in s.content.walk_resources():
-           print r.meta.to_dict()
            expected = r.name in have_index
            assert attributes_checker(r, ['meta.index']) == expected
 
