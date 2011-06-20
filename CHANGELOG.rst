@@ -1,3 +1,11 @@
+Version 0.8.3c13
+================
+
+*   Bug Fix: A bad bug in Expando that modified the `__dict__` has been fixed.
+    (Issue #53)
+*   Tags now support metadata. Metadata can be provided as part of the tagger
+    plugin configuration in `site.yaml`
+
 Version 0.8.3c12
 ================
 
