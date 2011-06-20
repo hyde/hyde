@@ -32,7 +32,7 @@ class TestTagger(object):
         gen = Generator(self.s)
         gen.load_site_if_needed()
         gen.generate_all()
-        
+
         assert hasattr(self.s, 'tagger')
         assert hasattr(self.s.tagger, 'tags')
         assert self.s.tagger.tags
@@ -155,3 +155,72 @@ class TestTagger(object):
             tag = getattr(tags, tagname)
             assert tag
             assert not hasattr(tag, "emotions")
+
+    def test_tagger_metadata(self):
+        conf = {
+           "tagger":{
+               "sorter": "time",
+               "archives": {
+                    "blog": {
+                        "template": "emotions.j2",
+                        "source": "blog",
+                        "target": "blog/tags",
+                        "extension": "html"
+                    }
+               },
+               "tags": {
+                   "sad" : {
+                       "emotions": ["Dissappointed", "Lost"]
+                   },
+                   "angry": {
+                       "emotions": ["Irritated", "Annoyed", "Disgusted"]
+                   }
+               }
+           }
+        }
+
+        text = """
+<h1>Posts tagged: {{ tag }} in {{ node.name|title }}</h1>
+Emotions:
+<ul>
+{% for emotion in tag.emotions %}
+<li class="emotion">
+{{ emotion }}
+</li>'
+{% endfor %}
+<ul>
+{% for resource in walker() -%}
+<li>
+<a href="{{ content_url(resource.url) }}">{{ resource.meta.title }}</a>
+</li>
+{%- endfor %}
+</ul>
+"""
+        template = File(TEST_SITE.child('layout/emotions.j2'))
+        template.write(text)
+        s = Site(TEST_SITE)
+        s.config.update(conf)
+        gen = Generator(s)
+        gen.load_site_if_needed()
+        gen.generate_all()
+
+        tags_folder = self.deploy.child_folder('blog/tags')
+        assert tags_folder.exists
+        tags = ['sad', 'happy', 'angry', 'thoughts', 'events']
+        archives = dict((tag, File(tags_folder.child("%s.html" % tag))) for tag in tags)
+
+        for tag, archive in archives.items():
+            assert archive.exists
+
+        from pyquery import PyQuery
+
+        q = PyQuery(archives['sad'].read_all())
+        assert len(q("li.emotion")) == 2
+
+        q = PyQuery(archives['angry'].read_all())
+        assert len(q("li.emotion")) == 3
+
+        for tag, archive in archives.items():
+            if tag not in ["sad", "angry"]:
+                q = PyQuery(archives[tag].read_all())
+                assert not len(q("li.emotion"))
