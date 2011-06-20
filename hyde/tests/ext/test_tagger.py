@@ -32,7 +32,7 @@ class TestTagger(object):
         gen = Generator(self.s)
         gen.load_site_if_needed()
         gen.generate_all()
-
+        
         assert hasattr(self.s, 'tagger')
         assert hasattr(self.s.tagger, 'tags')
         assert self.s.tagger.tags
@@ -43,7 +43,7 @@ class TestTagger(object):
         for tag in ['sad', 'happy', 'angry', 'thoughts', 'events']:
             assert tag in tags
 
-        sad_posts = [post.name for post in tags['sad'].resources]
+        sad_posts = [post.name for post in tags['sad']['resources']]
         assert len(sad_posts) == 2
         assert "sad-post.html" in sad_posts
         assert "another-sad-post.html" in sad_posts
@@ -119,33 +119,39 @@ class TestTagger(object):
 
     def test_tagger_metadata(self):
         conf = {
-            "sad" : {
-                "emotions": ["Dissappointed", "Lost"]
-            },
-            "Angry": {
-                "emotions": ["Irritated", "Annoyed", "Disgusted"]
+            "tagger":{
+                "tags": {
+                    "sad" : {
+                        "emotions": ["Dissappointed", "Lost"]
+                    },
+                    "angry": {
+                        "emotions": ["Irritated", "Annoyed", "Disgusted"]
+                    }
+                }
             }
         }
-        self.s.config.tagger.meta = Expando(conf)
-        gen = Generator(self.s)
+        s = Site(TEST_SITE)
+        s.config.update(conf)
+        gen = Generator(s)
         gen.load_site_if_needed()
         gen.generate_all()
 
-        assert hasattr(self.s, 'tagger')
-        assert hasattr(self.s.tagger, 'tags')
-        assert self.s.tagger.tags
-        tags = self.s.tagger.tags.to_dict()
-        sad_tag = tags["sad"]
-        assert sad_tag
+        assert hasattr(s, 'tagger')
+        assert hasattr(s.tagger, 'tags')
+        assert s.tagger.tags
+        tags = s.tagger.tags
+        sad_tag = tags.sad
         assert hasattr(sad_tag, "emotions")
-        assert sad_tag.emotions == self.s.config.tagger.meta.sad.emotions
 
-        happy_tag = tags["happy"]
-        assert happy_tag
-        assert hasattr(happy_tag, "emotions")
-        assert happy_tag.emotions == self.s.config.tagger.meta.happy.emotions
+        assert sad_tag.emotions == s.config.tagger.tags.sad.emotions
 
-        for tagname in ['angry', 'thoughts', 'events']:
-            tag = tags[tagname]
+        assert hasattr(tags, "angry")
+        angry_tag = tags.angry
+        assert angry_tag
+        assert hasattr(angry_tag, "emotions")
+        assert angry_tag.emotions == s.config.tagger.tags.angry.emotions
+
+        for tagname in ['happy', 'thoughts', 'events']:
+            tag = getattr(tags, tagname)
             assert tag
             assert not hasattr(tag, "emotions")

@@ -38,7 +38,7 @@ class Expando(object):
             for key, value in d.items():
                 self.set_expando(key, value)
         elif isinstance(d, Expando):
-            self.update(d.__dict__)
+            self.update(d.to_dict())
 
     def set_expando(self, key, value):
         """
@@ -46,6 +46,7 @@ class Expando(object):
         transforming the value.
         """
         setattr(self, str(key).encode('utf-8'), self.transform(value))
+
 
     def transform(self, primitive):
         """
@@ -60,19 +61,25 @@ class Expando(object):
         else:
             return primitive
 
+    def __repr__(self):
+        return str(self.to_dict())
+
     def to_dict(self):
         """
         Reverse transform an expando to dict
         """
+        result = {}
         d = self.__dict__
-        for k, v in d.iteritems():
+        for k, v in d.items():
             if isinstance(v, Expando):
-                d[k] = v.to_dict()
+                result[k] = v.to_dict()
             elif isinstance(v, (tuple, list, set, frozenset)):
                 seq = type(v)
-                d[k] = seq(item.to_dict() if isinstance(item, Expando)
+                result[k] = seq(item.to_dict() if isinstance(item, Expando)
                                             else item for item in v)
-        return d
+            else:
+                result[k] = v
+        return result
 
 
 class Context(object):

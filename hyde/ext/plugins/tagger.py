@@ -17,7 +17,7 @@ from itertools import ifilter, izip, tee, product
 from operator import attrgetter
 
 
-class Tag(object):
+class Tag(Expando):
     """
     A simple object that represents a tag.
     """
@@ -113,7 +113,7 @@ class TaggerPlugin(Plugin):
                     tags[tagname] = tag
                     tag.resources.append(resource)
                     add_method(Node,
-                        'walk_resources_tagged_with_%s' % tag,
+                        'walk_resources_tagged_with_%s' % tagname,
                         walk_resources_tagged_with,
                         tag=tag)
                 else:
@@ -121,7 +121,19 @@ class TaggerPlugin(Plugin):
                 if not hasattr(resource, 'tags'):
                     setattr(resource, 'tags', [])
                 resource.tags.append(tags[tagname])
+        try:
+            tag_meta = self.site.config.tagger.tags.to_dict()
+        except AttributeError:
+            tag_meta = {}
 
+        for tagname, meta in tag_meta.iteritems():
+            # Don't allow name and resources in meta
+            if 'resources' in meta:
+                del(meta['resources'])
+            if 'name' in meta:
+                del(meta['name'])
+            if tagname in tags:
+                tags[tagname].update(meta)
         self.site.tagger = Expando(dict(tags=tags))
 
     def site_complete(self):
