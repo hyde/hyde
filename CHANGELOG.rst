@@ -1,93 +1,47 @@
-Version 0.8.3c13
+Version 0.8.3
 ================
 
 *   Bug Fix: A bad bug in Expando that modified the `__dict__` has been fixed.
     (Issue #53)
 *   Tags now support metadata. Metadata can be provided as part of the tagger
     plugin configuration in `site.yaml`
-
-Version 0.8.3c12
-================
-
 *   Ensured that the context data & providers behave in the same manner. Both
     get loaded as expandos. (Issue #29)
-
-
-Version 0.8.3c11
-=================
-
 *   `hyde serve` now picks up changes in config data automatically.
     (Issue #24)
-
-
-Version 0.8.3c10
-===============
-
 *   Bug Fix: `hyde create` only fails when `content`, `layout` or `site.yaml`
     is present in the target directory. (Issue #21)
 *   Bug Fix: Exceptions are now handled with `ArgumentParser.error`.
-    (Issue #21)
-
-Version 0.8.3c9
-===============
-
 *   Bug Fix: Sorter excludes items that do not have sorting attributes.
     (Issue #18)
-
-Version 0.8.3c8
-===============
-
 *   Wrapped `<figure>` inside `<div>` to appease markdown. (Issue #17)
-
-Version 0.8.3c7
-===============
-
 *   Added `display:block` for html5 elements in basic template so that it
     works in not so modern browsers as well. (Issue #17)
-
-Version 0.8.3c6
-===============
 
 Thanks to Joe Steeve.
 
 *   Changed deploy location for main.py and fixed entry point in
     `setup.py`. (Issue #56)
 
-
-Version 0.8.3c5
-===============
-
 Thanks to @stiell
 
 *   Bug Fix: Better mime type support in hyde server (Issue #50)
 *   Bug Fix: Support empty extension in tagger archives (Issue #50)
-
-Version 0.8.3c4
-===============
 
 Thanks to @gfuchedzhy
 
 *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
     (Issue #54)
 
-Version 0.8.3c3
-===============
-
 Thanks to @vincentbernat
 
 *   Bug Fix: Ensure image sizer plugin handles external urls properly.
     (Issue #52)
 
-Version 0.8.3c2
-================
-
 Thanks to @rfk
 
 *   Added PyPI publisher (Issue #49)
 *   Bug Fix: Made `site.full_url` ignore fully qualified paths (Issue #49)
-
-Version 0.8.3c1
-================
 
 Thanks to @vincentbernat
 
