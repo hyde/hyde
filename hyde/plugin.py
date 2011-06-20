@@ -297,7 +297,7 @@ class CLTransformer(Plugin):
                 param = "%s%s" % (self.option_prefix(descriptive),
                                         descriptive)
                 if descriptive.endswith("="):
-                    param.append(val)
+                    param += val
                     val = None
                 params.append(param)
                 if val:
