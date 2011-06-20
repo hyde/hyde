@@ -29,7 +29,6 @@ class Tag(Expando):
         self.name = name
         self.resources = []
 
-
     def __repr__(self):
         return self.name
 

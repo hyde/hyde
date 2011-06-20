@@ -2,7 +2,7 @@
 
 {% block main %}
 <section class="archives">
-<h1 class="tag title">{{ tag }}</h1>
+<h1 class="tag title">{{ tag.name }}</h1>
 <ul class="posts clear">
 {% for resource in walker() -%}
 <li class="post clear">
