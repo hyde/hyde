@@ -3,7 +3,7 @@
 Sphinx plugin.
 
 This plugin lets you easily include sphinx-generated documentation as part
-of your Hyde site.
+of your Hyde site.  It is simultaneously a Hyde plugin and a Sphinx plugin.
 """
 
 #  We need absolute import so that we can import the main "sphinx"
@@ -18,6 +18,7 @@ import tempfile
 from hyde.plugin import Plugin
 from hyde.fs import File, Folder
 from hyde.model import Expando
+from hyde.ext.plugins.meta import MetaPlugin as _MetaPlugin
 
 import sphinx
 from sphinx.builders.html import JSONHTMLBuilder
@@ -85,6 +86,12 @@ class SphinxPlugin(Plugin):
         return self._sphinx_config
 
     def begin_site(self):
+        """Event hook for when site processing begins.
+
+        This hook checks that the site is correctly configured for building
+        with sphinx, and adjusts any sphinx-controlled resources so that
+        hyde will process them correctly.
+        """
         settings = self.settings
         if settings.sanity_check:
             self._sanity_check()
@@ -102,10 +109,14 @@ class SphinxPlugin(Plugin):
                     resource.meta.default_block = None
 
     def begin_text_resource(self,resource,text):
-        """If this is a sphinx input file, replace it with the generated docs.
+        """Event hook for processing an individual resource.
 
-        This method will replace the text of the file with the sphinx-generated
-        documentation, lazily running sphinx if it has not yet been called.
+        If the input resource is a sphinx input file, this method will replace
+        replace the text of the file with the sphinx-generated documentation.
+
+        Sphinx itself is run lazily the first time this method is called.
+        This means that if no sphinx-related resources need updating, then
+        we entirely avoid running sphinx.
         """
         suffix = self.sphinx_config.get("source_suffix",".rst")
         if not resource.source_file.path.endswith(suffix):
@@ -132,6 +143,10 @@ class SphinxPlugin(Plugin):
         return "\n".join(output)
 
     def site_complete(self):
+        """Event hook for when site processing ends.
+
+        This simply cleans up any temorary build file.
+        """
         if self.sphinx_build_dir is not None:
             self.sphinx_build_dir.delete()
 
@@ -173,6 +188,19 @@ class SphinxPlugin(Plugin):
             logger.error("sphinx conf.py file.")
             logger.info("(set sphinx.sanity_check=false to disable this check)")
             raise RuntimeError("sphinx is not configured correctly")
+        #  Check that I am *before* the other plugins,
+        #  with the possible exception of MetaPlugin
+        for plugin in self.site.plugins:
+            if plugin is self:
+                break
+            if not isinstance(plugin,_MetaPlugin):
+                logger.error("The sphinx plugin is installed after the")
+                logger.error("plugin %r.",plugin.__class__.__name__)
+                logger.error("It's quite likely that this will break things.")
+                logger.error("Please move the sphinx plugin to the top")
+                logger.error("of the plugins list.")
+                logger.info("(sphinx.sanity_check=false to disable this check)")
+                raise RuntimeError("sphinx is not configured correctly")
 
     def _run_sphinx(self):
         """Run sphinx to generate the necessary output files.
@@ -194,6 +222,13 @@ class SphinxPlugin(Plugin):
             raise RuntimeError("sphinx build failed")
 
     def _get_sphinx_output(self,resource):
+        """Get the sphinx output for a given resource.
+
+        This returns a dict mapping block names to HTML text fragments.
+        The most important fragment is "body" which contains the main text
+        of the document.  The other fragments are for things like navigation,
+        related pages and so-on.
+        """
         relpath = File(resource.relative_path)
         relpath = relpath.parent.child(relpath.name_without_extension+".fjson")
         with open(self.sphinx_build_dir.child(relpath),"rb") as f:
@@ -202,12 +237,26 @@ class SphinxPlugin(Plugin):
 
 
 class HydeJSONHTMLBuilder(JSONHTMLBuilder):
+    """A slightly-customised JSONHTMLBuilder, for use by Hyde.
+
+    This is a Sphinx builder that serilises the generated HTML fragments into
+    a JSON docuent, so they can be later retrieved and dealt with at will.
+
+    The only customistion we do over the standard JSONHTMLBuilder is to 
+    reference documents with a .html suffix, so that internal link will
+    work correctly once things have been processed by Hyde.
+    """
     name = "hyde_json"
     def get_target_uri(self, docname, typ=None):
         return docname + ".html"
 
 
 def setup(app):
+    """Sphinx plugin setup function.
+
+    This function allows the module to act as a Sphinx plugin as well as a
+    Hyde plugin.  It simply registers the HydeJSONHTMLBuilder class.
+    """
     app.add_builder(HydeJSONHTMLBuilder)
 
 
