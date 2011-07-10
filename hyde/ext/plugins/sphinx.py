@@ -16,6 +16,8 @@ from hyde.fs import File, Folder
 from hyde.model import Expando
 
 import sphinx
+from sphinx.builders.html import JSONHTMLBuilder
+from sphinx.util.osutil import SEP
 
 
 class SphinxPlugin(Plugin):
@@ -94,7 +96,7 @@ class SphinxPlugin(Plugin):
         conf_path = self.site.sitepath.child_folder(self.settings.conf_path)
         sphinx_args = ["sphinx-build"]
         sphinx_args.extend([
-            "-b", "json",
+            "-b", "hyde_json",
             "-c", conf_path.path,
             self.site.content.path,
             self.sphinx_build_dir.path
@@ -107,4 +109,16 @@ class SphinxPlugin(Plugin):
         relpath = relpath.parent.child(relpath.name_without_extension+".fjson")
         with open(self.sphinx_build_dir.child(relpath),"rb") as f:
             return json.load(f)
+
+
+
+class HydeJSONHTMLBuilder(JSONHTMLBuilder):
+    name = "hyde_json"
+    def get_target_uri(self, docname, typ=None):
+        return docname + ".html"
+
+
+def setup(app):
+    app.add_builder(HydeJSONHTMLBuilder)
+
 
