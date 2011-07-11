@@ -20,13 +20,17 @@ from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.ext.plugins.meta import MetaPlugin as _MetaPlugin
 
-import sphinx
-from sphinx.builders.html import JSONHTMLBuilder
-from sphinx.util.osutil import SEP
-
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.ext.plugins.sphinx')
 
+try:
+    import sphinx
+    from sphinx.builders.html import JSONHTMLBuilder
+    from sphinx.util.osutil import SEP
+except ImportError:
+    logger.error("The sphinx plugin requires sphinx.")
+    logger.error("`pip install -U sphinx` to get it.")
+    raise
 
 
 class SphinxPlugin(Plugin):

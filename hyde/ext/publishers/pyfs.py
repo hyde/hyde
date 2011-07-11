@@ -21,9 +21,14 @@ from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.ext.publishers.pyfs')
 
 
-from fs.osfs import OSFS
-from fs.path import pathjoin
-from fs.opener import fsopendir
+try:
+    from fs.osfs import OSFS
+    from fs.path import pathjoin
+    from fs.opener import fsopendir
+except ImportError:
+    logger.error("The PyFS publisher requires PyFilesystem v0.4 or later.")
+    logger.error("`pip install -U fs` to get it.")
+    raise
 
 
 
