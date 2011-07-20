@@ -110,6 +110,18 @@ def markdown(env, value):
 
     return marked.convert(output)
 
+@environmentfilter
+def restructuredtext(env, value):
+    """
+    RestructuredText filter
+    """
+    try:
+        from docutils.core import publish_parts
+    except ImportError:
+        print u"Requires docutils library to use restructuredtext tag."
+        raise
+    parts = publish_parts(source=value, writer_name="html")
+    return parts['html_body']
 
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
@@ -199,6 +211,31 @@ class Markdown(Extension):
             return ''
         output = caller().strip()
         return markdown(self.environment, output)
+
+class restructuredText(Extension):
+    """
+    A wrapper around the restructuredtext filter for syntactic sugar
+    """
+    tags = set(['restructuredtext'])
+
+    def parse(self, parser):
+        """
+        Simply extract our content
+        """
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(['name:endrestructuredtext'], drop_needle=True)
+
+        return nodes.CallBlock(self.call_method('_render_rst'), [],  [], body
+                              ).set_lineno(lineno)
+
+    def _render_rst(self, caller=None):
+        """
+        call our restructuredtext filter
+        """
+        if not caller:
+            return ''
+        output = caller().strip()
+        return restructuredtext(self.environment, output)
 
 class YamlVar(Extension):
     """
@@ -524,6 +561,7 @@ class Jinja2Template(Template):
                 IncludeText,
                 Spaceless,
                 Markdown,
+                restructuredText,
                 Syntax,
                 Reference,
                 Refer,
