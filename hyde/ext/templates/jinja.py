@@ -610,6 +610,7 @@ class Jinja2Template(Template):
         self.env.globals['engine'] = engine
         self.env.globals['deps'] = {}
         self.env.filters['markdown'] = markdown
+        self.env.filters['restructuredtext'] = restructuredtext
         self.env.filters['syntax'] = syntax
         self.env.filters['date_format'] = date_format
         self.env.filters['xmldatetime'] = xmldatetime
