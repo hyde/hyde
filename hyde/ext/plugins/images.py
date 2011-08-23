@@ -6,9 +6,12 @@ Contains classes to handle images related things
 """
 
 from hyde.plugin import Plugin
+from hyde.fs import File, Folder
 
 import re
 import Image
+import glob
+import os
 
 class ImageSizerPlugin(Plugin):
     """
@@ -145,3 +148,97 @@ class ImageSizerPlugin(Plugin):
                 continue
 
         return text
+
+class ImageThumbnailsPlugin(Plugin):
+    """
+    Provide a function to get thumbnail for any image resource.
+
+    Example of usage:
+    Setting optional defaults in site.yaml:
+        thumbnails:
+          width: 100
+          height: 120
+          prefix: thumbnail_
+
+    Setting thumbnails options in nodemeta.yaml:
+        thumbnails:
+          - width: 50
+            prefix: thumbs1_
+            include:
+            - '*.png'
+            - '*.jpg'
+          - height: 100
+            prefix: thumbs2_
+            include:
+            - '*.png'
+            - '*.jpg'
+    which means - make from every picture two thumbnails with different prefixes
+    and sizes
+
+    Currently, only supports PNG and JPG.
+    """
+
+    def __init__(self, site):
+        super(ImageThumbnailsPlugin, self).__init__(site)
+
+    def thumb(self, resource, width, height, prefix):
+        """
+        Generate a thumbnail for the given image
+        """
+        # Prepare path
+        path = os.path.join(os.path.dirname(resource.get_relative_deploy_path()),
+                            "%s%s" % (prefix, os.path.basename(resource.get_relative_deploy_path())))
+        target = File(Folder(resource.site.config.deploy_root_path).child(path))
+        target.parent.make()
+        if os.path.exists(target.path) and os.path.getmtime(resource.path) <= os.path.getmtime(target.path):
+            return
+        self.logger.debug("Making thumbnail for [%s]" % resource)
+
+        im = Image.open(resource.path)
+        if im.mode != 'RGBA':
+            im = im.convert('RGBA')
+        # Convert to a thumbnail
+        if width is None:
+            # height is not None
+            width = im.size[0]*height/im.size[1] + 1
+        elif height is None:
+            # width is not None
+            height = im.size[1]*width/im.size[0] + 1
+        im.thumbnail((width, height), Image.ANTIALIAS)
+        if resource.name.endswith(".jpg"):
+            im.save(target.path, "JPEG", optimize=True, quality=75)
+        else:
+            im.save(target.path, "PNG", optimize=True)
+
+    def begin_site(self):
+        """
+        Find any image resource to add them the thumb() function.
+        """
+        # Grab default values from config
+        config = self.site.config
+        defaults = { "width": None,
+                     "height": None,
+                     "prefix": 'thumb_'}
+        if hasattr(config, 'thumbnails'):
+            defaults.update(config.thumbnails)
+
+        for node in self.site.content.walk():
+            if hasattr(node, 'meta') and hasattr(node.meta, 'thumbnails'):
+                for th in node.meta.thumbnails:
+                    if not hasattr(th, 'include'):
+                        self.logger.error("Include is not set for node [%s]" % node)
+                        continue
+                    include = th.include
+                    prefix = th.prefix if hasattr(th, 'prefix') else defaults['prefix']
+                    height = th.height if hasattr(th, 'height') else defaults['height']
+                    width = th.width if hasattr(th, 'width') else defaults['width']
+                    if width is None and height is None:
+                        self.logger.error("Both width and height are not set for node [%s]" % node)
+                        continue
+                    thumbs_list = []
+                    for inc in include:
+                        for path in glob.glob(node.path + os.sep + inc):
+                            thumbs_list.append(path)
+                    for resource in node.resources:
+                        if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
+                            self.thumb(resource, width, height, prefix)
