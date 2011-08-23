@@ -212,7 +212,7 @@ class ImageThumbnailsPlugin(Plugin):
 
     def begin_site(self):
         """
-        Find any image resource to add them the thumb() function.
+        Find any image resource that should be thumbnailed and call thumb on it.
         """
         # Grab default values from config
         config = self.site.config
