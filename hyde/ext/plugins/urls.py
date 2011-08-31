@@ -5,7 +5,6 @@ Contains classes and utilities related to hyde urls.
 import re
 
 from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Site, Node, Resource
 
@@ -67,6 +66,9 @@ class UrlCleanerPlugin(Plugin):
                 elif hasattr(settings, 'strip_extensions'):
                     if rep.kind in settings.strip_extensions:
                         url = rep.parent.child(rep.name_without_extension)
+                    if hasattr(settings, 'append_slash') and \
+                        settings.append_slash:
+                        url = url.rstrip('/') + '/'
                 return url or '/'
             return wrapper
 

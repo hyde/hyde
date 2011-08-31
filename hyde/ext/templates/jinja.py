@@ -141,9 +141,8 @@ def syntax(env, value, lexer=None, filename=None):
     if hasattr(env.config, 'syntax'):
         if not getattr(env.config.syntax, 'use_figure', True):
             return Markup(code)
-    return Markup(
-            '<div class="codebox"><figure class="code">%s<figcaption>%s</figcaption></figure></div>\n\n'
-                        % (code, caption))
+    return Markup(code)
+
 
 class Spaceless(Extension):
     """
