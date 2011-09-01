@@ -13,7 +13,7 @@ from hyde.site import Site
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
-class TestTagger(object):
+class TestPaginator(object):
 
     def setUp(self):
         TEST_SITE.make()
@@ -22,10 +22,10 @@ class TestTagger(object):
         self.s = Site(TEST_SITE)
         self.deploy = TEST_SITE.child_folder('deploy')
 
-        gen = Generator(self.s)
-        gen.load_site_if_needed()
-        gen.load_template_if_needed()
-        gen.generate_all()
+        self.gen = Generator(self.s)
+        self.gen.load_site_if_needed()
+        self.gen.load_template_if_needed()
+        self.gen.generate_all()
 
 
     def tearDown(self):
@@ -42,29 +42,40 @@ class TestTagger(object):
         page5 = File(self.deploy.child('page5/pages_of_one.txt'))
         assert not page5.exists
 
+
     def test_pages_of_one_content(self):
         expected_page1_content = dedent('''\
             Another Sad Post
-            page2/pages_of_one.txt
-            ''')
+
+            page2/pages_of_one.txt''')
         expected_page2_content = dedent('''\
             A Happy Post
-            page2/pages_of_one.txt
-            page3/pages_of_one.txt
-            ''')
+            pages_of_one.txt
+            page3/pages_of_one.txt''')
         expected_page3_content = dedent('''\
             An Angry Post
-            page3/pages_of_one.txt
-            page4/pages_of_one.txt
-            ''')
+            page2/pages_of_one.txt
+            page4/pages_of_one.txt''')
         expected_page4_content = dedent('''\
             A Sad Post
-            page4/pages_of_one.txt
+            page3/pages_of_one.txt
             ''')
 
         page1 = self.deploy.child('pages_of_one.txt')
         content = File(page1).read_all()
         assert expected_page1_content == content
+
+        page2 = self.deploy.child('page2/pages_of_one.txt')
+        content = File(page2).read_all()
+        assert expected_page2_content == content
+
+        page3 = self.deploy.child('page3/pages_of_one.txt')
+        content = File(page3).read_all()
+        assert expected_page3_content == content
+
+        page4 = self.deploy.child('page4/pages_of_one.txt')
+        content = File(page4).read_all()
+        assert expected_page4_content == content
 
 
     def test_pages_of_ten(self):
@@ -75,7 +86,18 @@ class TestTagger(object):
         assert not File(page2).exists
 
 
-    def test_pages_of_one_content(self):
+    def test_pages_of_ten_depends(self):
+        depends = self.gen.deps['pages_of_ten.txt']
+
+        assert depends
+        assert len(depends) == 4
+        assert 'blog/sad-post.html' in depends
+        assert 'blog/another-sad-post.html' in depends
+        assert 'blog/angry-post.html' in depends
+        assert 'blog/happy-post.html' in depends
+
+
+    def test_pages_of_ten_content(self):
         expected_content = dedent('''\
             Another Sad Post
             A Happy Post
@@ -88,9 +110,20 @@ class TestTagger(object):
         assert expected_content == content
 
 
-    def text_custom_file_pattern(self):
-        page1 = 'custom_file_pattern.txt'
-        page2 = 'custom_file_pattern-2.txt'
+    def test_pages_of_one_depends(self):
+        depends = self.gen.deps['pages_of_one.txt']
+
+        assert depends
+        assert len(depends) == 4
+        assert 'blog/sad-post.html' in depends
+        assert 'blog/another-sad-post.html' in depends
+        assert 'blog/angry-post.html' in depends
+        assert 'blog/happy-post.html' in depends
+
+
+    def test_custom_file_pattern(self):
+        page1 = self.deploy.child('custom_file_pattern.txt')
+        page2 = self.deploy.child('custom_file_pattern-2.txt')
 
         assert File(page1).exists
         assert File(page2).exists

@@ -2,7 +2,7 @@
 paginator:
     sorter: time
     size: 2
-    file_pattern: $FILE-$PAGE.$EXT
+    file_pattern: $FILE-$PAGE$EXT
 ---
 {% for res in resource.page.posts %}
 {{ res.meta.title }}

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Pagination plugin.  Groups a sorted set of resources into pages and supplies
+Paginator plugin.  Groups a sorted set of resources into pages and supplies
 each page to a copy of the original resource.
 """
 import os
@@ -30,7 +30,7 @@ class Paginator:
     def _relative_url(self, source_path, number, basename, ext):
         """
         Create a new URL for a new page.  The first page keeps the same name;
-        the subsequent pages are formatted according to file_pattern.
+        the subsequent pages are named according to file_pattern.
         """
         path = File(source_path)
         if number != 1:
@@ -40,20 +40,36 @@ class Paginator:
             path = path.parent.child(os.path.normpath(filename))
         return path
 
-    def _new_resource(self, base_resource, node, page):
+    def _new_resource(self, base_resource, node, page_number):
         """
         Create a new resource as a copy of a base_resource, with a page of
         resources associated with it.
         """
         res = Resource(base_resource.source_file, node)
-        res.page = page
-        page.resource = res
         path = self._relative_url(base_resource.relative_path,
-                                page.number,
+                                page_number,
                                 base_resource.source_file.name_without_extension,
                                 base_resource.source_file.extension)
         res.set_relative_deploy_path(path)
         return res
+
+    @staticmethod
+    def _attach_page_to_resource(page, resource):
+        """
+        Hook up a page and a resource.
+        """
+        resource.page = page
+        page.resource = resource
+
+    @staticmethod
+    def _add_dependencies_to_resource(dependencies, resource):
+        """
+        Add a bunch of resources as dependencies to another resource.
+        """
+        if not hasattr(resource, 'depends'):
+            resource.depends = []
+        resource.depends.extend([dep.relative_path for dep in dependencies
+                                if dep.relative_path not in resource.depends])
 
     def _walk_pages_in_node(self, node):
         """
@@ -77,8 +93,16 @@ class Paginator:
         """
         added_resources = []
         pages = list(self._walk_pages_in_node(node))
-        for page in pages:
-            added_resources.append(self._new_resource(resource, node, page))
+        deps = reduce(list.__add__, [page.posts for page in pages], [])
+
+        Paginator._attach_page_to_resource(pages[0], resource)
+        Paginator._add_dependencies_to_resource(deps, resource)
+        for page in pages[1:]:
+            # make new resource
+            new_resource = self._new_resource(resource, node, page.number)
+            Paginator._attach_page_to_resource(page, new_resource)
+            new_resource.depends = resource.depends
+            added_resources.append(new_resource)
 
         for prev, next in pairwalk(pages):
             next.previous = prev
@@ -115,14 +139,10 @@ class PaginatorPlugin(Plugin):
     def begin_site(self):
         for node in self.site.content.walk():
             added_resources = []
-            removed_resources = []
             paged_resources = (res for res in node.resources
                                  if hasattr(res.meta, 'paginator'))
             for resource in paged_resources:
                 paginator = Paginator(resource.meta.paginator)
-                removed_resources.append(resource)
                 added_resources += paginator.walk_paged_resources(node, resource)
 
             node.resources += added_resources
-            for removed in removed_resources:
-                node.resources.remove(removed)
