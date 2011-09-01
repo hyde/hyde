@@ -110,6 +110,16 @@ def markdown(env, value):
 
     return marked.convert(output)
 
+@environmentfilter
+def restructure(env, value):
+    try:
+        import rstdirectives
+        from docutils.core import publish_parts
+    except ImportError:
+        logger.error(u"Cannot load the docutils library.")
+        raise TemplateError("Cannot load the docutils library")
+    return publish_parts(source=value, writer_name='html')['html_body']
+    
 
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
@@ -198,6 +208,32 @@ class Markdown(Extension):
             return ''
         output = caller().strip()
         return markdown(self.environment, output)
+
+
+class Restructure(Extension):
+    """
+    A wrapper around the restructuredtext filter for syntactic sugar
+    """
+    tags = set(['restructure'])
+
+    def parse(self, parser):
+        """
+        Simply extract our content
+        """
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(['name:endrestructure'], drop_needle=True)
+
+        return nodes.CallBlock(self.call_method('_render_rst'), [],  [], body
+                              ).set_lineno(lineno)
+
+    def _render_rst(self, caller=None):
+        """
+        call our restructure filter
+        """
+        if not caller:
+            return ''
+        output = caller().strip()
+        return restructure(self.environment, output)
 
 class YamlVar(Extension):
     """
@@ -527,6 +563,7 @@ class Jinja2Template(Template):
                 Reference,
                 Refer,
                 YamlVar,
+                Restructure,
                 'jinja2.ext.do',
                 'jinja2.ext.loopcontrols',
                 'jinja2.ext.with_'
@@ -571,6 +608,7 @@ class Jinja2Template(Template):
         self.env.globals['engine'] = engine
         self.env.globals['deps'] = {}
         self.env.filters['markdown'] = markdown
+        self.env.filters['restructure'] = restructure
         self.env.filters['syntax'] = syntax
         self.env.filters['date_format'] = date_format
         self.env.filters['xmldatetime'] = xmldatetime
