@@ -118,7 +118,10 @@ def restructure(env, value):
     except ImportError:
         logger.error(u"Cannot load the docutils library.")
         raise TemplateError("Cannot load the docutils library")
-    return publish_parts(source=value, writer_name='html')['html_body']
+
+    extra_setting = {'initial_header_level': '3'}
+    parts = publish_parts(value, writer_name='html', settings_overrides=extra_setting)
+    return parts['body']
     
 
 @environmentfilter
