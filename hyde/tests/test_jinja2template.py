@@ -124,6 +124,42 @@ def test_spaceless():
 """
     assert html.strip() == expected.strip()
 
+def test_asciidoc():
+    source = """
+    {%asciidoc%}
+    == Heading 2 ==
+
+    * test1
+    * test2
+    * test3
+    {%endasciidoc%}
+    """
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    html = t.render(source, {}).strip()
+    expected_output="""
+    <hr>
+    <h2><a name="_heading_2"></a>Heading 2</h2>
+    <ul>
+    <li>
+    <p>
+    test1
+    </p>
+    </li>
+    <li>
+    <p>
+    test2
+    </p>
+    </li>
+    <li>
+    <p>
+    test3
+    </p>
+    </li>
+    </ul>
+    """
+    assert html == expected_output
+
 
 def test_markdown():
     source = """
