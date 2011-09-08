@@ -186,7 +186,7 @@ class Plugin(object):
         Loads plugins based on the configuration. Assigns the plugins to
         'site.plugins'
         """
-        site.plugins = [loader.load_python_object(name)(site)
+        site.plugins = [loader.load_python_object(name, site)(site)
                             for name in site.config.plugins]
 
     @staticmethod
