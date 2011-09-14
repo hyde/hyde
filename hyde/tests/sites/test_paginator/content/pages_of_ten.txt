@@ -1,0 +1,10 @@
+---
+paginator:
+    sorter: time
+    size: 10
+---
+{% for res in resource.page.posts %}
+{{ res.meta.title }}
+{% endfor %}
+{{ resource.page.previous.resource.url -}}
+{{ resource.page.next.resource.url -}}
