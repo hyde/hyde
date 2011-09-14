@@ -416,6 +416,7 @@ class FolderWalker(FSVisitor):
                 self.visit_complete()
 
         for root, dirs, a_files in os.walk(self.folder.path, followlinks=True):
+            dirs[:] = [d for d in dirs if d not in ('.hg', '.git', '.svn')]
             folder = Folder(root)
             if not __visit_folder__(folder):
                 dirs[:] = []
