@@ -136,6 +136,20 @@ def test_markdown():
     html = t.render(source, {}).strip()
     assert html == u'<h3>Heading 3</h3>'
 
+def test_restructuredtext():
+    source = """
+{% restructuredtext %}
+Hello
+=====
+{% endrestructuredtext %}
+    """
+    t = Jinja2Template(JINJA2.path)
+    t.configure(None)
+    html = t.render(source, {}).strip()
+    assert html == u"""<div class="document" id="hello">
+<h1 class="title">Hello</h1>
+</div>""", html
+
 def test_markdown_with_extensions():
     source = """
     {%markdown%}

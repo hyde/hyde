@@ -26,6 +26,7 @@ class AutoExtendPlugin(Plugin):
 
         layout = None
         block = None
+        filter_ = None
         try:
             layout = resource.meta.extends
         except AttributeError:
@@ -33,6 +34,11 @@ class AutoExtendPlugin(Plugin):
 
         try:
             block = resource.meta.default_block
+        except AttributeError:
+            pass
+
+        try:
+            filter_ = resource.meta.filter
         except AttributeError:
             pass
 
@@ -44,12 +50,16 @@ class AutoExtendPlugin(Plugin):
             if not re.search(extends_pattern, text):
                 extended_text = self.template.get_extends_statement(layout)
                 extended_text += '\n'
+                if filter_:
+                    text = ('%s\n%s\n%s' %
+                            (self.t_filter_open_tag(filter_),
+                             text,
+                             self.t_filter_close_tag(filter_)))
                 if block:
-                    extended_text += ('%s\n%s\n%s' %
-                                        (self.t_block_open_tag(block),
-                                            text,
-                                            self.t_block_close_tag(block)))
-                else:
-                    extended_text += text
+                    text = ('%s\n%s\n%s' %
+                            (self.t_block_open_tag(block),
+                             text,
+                             self.t_block_close_tag(block)))
+                extended_text += text
                 return extended_text
         return text
