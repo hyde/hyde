@@ -1,3 +1,8 @@
+Version 0.8.4c3
+===============
+
+* Bug Fix: Fixed uglify-js tests
+
 Version 0.8.4c2
 ===============
 
