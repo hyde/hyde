@@ -1,3 +1,10 @@
+Version 0.8.4c5
+===============
+
+Thanks to @merlinrebrovic
+
+*   Hyde starter kit extended with advanced options   
+
 Version 0.8.4c4
 ===============
 
