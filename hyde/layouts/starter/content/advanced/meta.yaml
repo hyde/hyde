@@ -1,0 +1,3 @@
+extends: base.j2
+default_block: content
+level: advanced

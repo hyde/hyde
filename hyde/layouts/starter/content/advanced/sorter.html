@@ -1,0 +1,53 @@
+---
+index: 2
+title_ending: "| Sorting"
+tags:
+    - sort
+learning_order: 1
+---
+
+Sorting
+=======
+
+There will come a time when you will need to list and sort resources. Hyde
+allows you to walk the site tree and sort the resources by the predefined
+settings in your configuration file.
+
+You can list and sort by name all your content files.
+
+{# With every sorter defined in the configuration file, nodes get a method
+   to call. Notice that in the first and last example the method is called
+   on the whole content of the site, while the second example shows how to
+   invoke it only on one specific node (in this case the current one).
+
+   Also, some new Jinja filters were used to style the output.
+#}
+{% for res in site.content.walk_resources_sorted_by_name() %}
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+    ({{ res.name }})
+{% endfor %}
+
+Or list only those in the current node (folder). In this case that would be
+all advanced topics.
+
+{# Have in mind that using the next example in a content page (like here) or
+   using it in a layout (Jinja template that is extended or include by
+   content pages) will yield very different results.
+
+   In this case it will be called only once, for this resource, and shown
+   only on this page. If it was in a layout, it would be called for EVERY
+   resource that uses that layout. In that case the context would be
+   different, the parent node of the resource could be different and the
+   results will probably be different too.
+#}
+{% for res in resource.node.walk_resources_sorted_by_index() %}
+  {{ loop.index }}. [{{ res.slug|capitalize }}]({{ res.full_url }})
+{% endfor %}
+
+Or sort files by type and then by size.
+
+{% for res in site.content.walk_resources_sorted_by_file_type() %}
+  * [{{ res.source_file.kind|upper }}] {{ res.name }}
+{% endfor %}
+
+{{ macros.render_bottom_article_nav() }}

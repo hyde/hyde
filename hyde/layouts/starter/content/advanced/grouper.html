@@ -1,0 +1,49 @@
+---
+index: 3
+title_ending: "| Grouping"
+tags:
+    - sort
+    - group
+learning_order: 2
+---
+
+Grouping
+========
+
+Content is very often grouped by theme, size, location or any other
+conceivable measure. Groups can be traversed in a few ways in Hyde, and 
+[sorted](sorter.html) at the same time. Here are two common ways:
+
+Walking all groups and subgroups
+--------------------------------
+
+{# Resources are sorted by defining a sorter in the configuration file. #}
+
+{% for grp, res_walker in site.content.walk_level_groups() %}
+*{{ grp.description }}*
+
+{% for res in res_walker %}
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+    ({{ res.name }})
+{% endfor %}
+
+{% endfor %}
+
+{# The above code layout is not arbitrary. Remember that we're building
+   a Markdown page so every space or line ending has a purpose.
+#}
+
+Listing only the specific (sub)group
+------------------------------------
+
+{% for res in site.content.walk_resources_grouped_by_advanced() %}
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+    ({{ res.name }})
+{% endfor %}
+
+{# You can also call the top level group "level" to get all resources that
+   are in the group. Or you can list all resources of the same group in the
+   current node with "resource.node.walk_resource_grouped_by_advanced()".
+#}
+
+{{ macros.render_bottom_article_nav() }}

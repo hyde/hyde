@@ -1,0 +1,44 @@
+---
+index: 1
+title_ending: "| Advanced topics"
+tags:
+    - sort
+    - group
+    - tag
+learning_order: 4
+---
+
+More advanced topics
+====================
+
+If you have read and understood all basic topics covered in
+{% for res in site.content.walk_resources_grouped_by_basic()|reverse %}
+[{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) 
+{% endfor %}
+then you are ready for some more advanced features. They are explained in
+the same way as the basic part, building on the knowledge of the previous,
+so it is recommended that you follow them in the listed order.
+
+
+{# List all resources from a group, sort them by index and list their tags. #}
+
+{% for res in resource.node.walk_resources_sorted_by_learning_order() %}
+{{ loop.index }}. \
+    [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+    {% if res.name == "overview.html" %}*(this file)*{% endif %} \
+{#
+   Sometimes you'll have to add HTML tags to a Markdown file for styling
+   or adding some special features, and Markdown is OK with that.
+#}
+<span class="tags">tags: 
+{% for tag in res.meta.tags %}
+{#
+   After wring the tag name, check if that is the last tag in the list. If
+   it is, don't append the comma at the end.
+#}
+{{ tag }}{% if tag != res.meta.tags[-1] %},{% endif %} 
+{% endfor %}
+</span>
+{% endfor %}
+
+{{ macros.render_bottom_article_nav() }}

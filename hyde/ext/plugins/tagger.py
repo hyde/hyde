@@ -154,7 +154,7 @@ class TaggerPlugin(Plugin):
 
             if not 'template' in config:
                 raise self.template.exception_class(
-                    "No Template sepecified in tagger configuration.")
+                    "No Template specified in tagger configuration.")
             source = content.node_from_relative_path(config.get('source', ''))
             target = self.site.config.deploy_root_path.child_folder(
                             config.get('target', 'tags'))

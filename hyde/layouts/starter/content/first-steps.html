@@ -1,6 +1,6 @@
 ---
 extends: base.j2
-title_ending: "| What next"
+title_ending: "| First steps"
 ---
 {# In-file metadata. Supplements data from the site's configuration file 
    and node (folder) level data in "meta.yaml" files.
@@ -11,8 +11,8 @@ title_ending: "| What next"
 #}
 
 {% block content %}
-There and back again
-====================
+Walk this way if you're a beginner
+==================================
 
 This template was created to look at its code. So you should spend about
 5% of your time looking at the web from the outside and the other 95%
@@ -29,24 +29,24 @@ previous one.
 ----------------------------------------
 
 The site is made of two folders and a [Hyde configuration][hyde_config]
-file. The folders are _content_ and _layout_.
+file. The folders are **content** and **layout**.
 
-_content_ contains all your page content, blog articles, pictures and
+**content** contains all your page content, blog articles, pictures and
 resources like CSS and JavaScript. Everything that is unique is here.
 
-_layout_ contains templates and macros. Everything that you'll want to
+**layout** contains templates and macros. Everything that you'll want to
 reuse is here.
 
 
 2. Jinja2 template
 ------------------
 
-_base.j2_ is a very short and simple Jinja2 template. This way you can
+**base.j2** is a very short and simple Jinja2 template. This way you can
 concentrate on some of the basic features. Notice meta and context
 variables invocation inside curly braces, dynamic media path generation
 and running all content through the Markdown filter.
 
-_macros.j2_ contains a macro for generating the main menu.
+**macros.j2** contains macros for common and repetitive tasks.
 
 For more information or to try something new, visit the extensive [Jinja2
 documentation][jinja2_docs].
@@ -55,19 +55,31 @@ documentation][jinja2_docs].
 3. Content
 ----------
 
-Look at the three files in this order: _index.html_, _what-next.html_
-and _about.html_.
+Look at the three files in this order: [index.html](index.html),
+[first-steps.html](first-steps.html) and [about.html](about.html).
 
-_Index_ extends the base layout in the classic Jinja way and fills the
-content block with some simple Markdown data.
+[Index](index.html) extends the base layout in the classic Jinja way and
+fills the content block with some simple Markdown data.
 
-_What next_ goes a step furher. It introduces the in-file metadata that
-plugins will use to extend and fill the layout. It also uses some new
-Markdown features.
+[First steps](first-steps.html) goes a step furher. It introduces the
+in-file metadata that plugins will use to extend and fill the layout. It
+also uses some new Markdown features.
 
-_About_ has a _default_block_ metadata and mixes Markdown content with
-Jinja templates.
+[About](about.html) has a **default_block** metadata and mixes Markdown
+content with Jinja templates.
 
 [hyde_config]: http://hyde.github.com/config.html "Hyde configuration"
 [jinja2_docs]: http://jinja.pocoo.org/docs/templates/ "Jinja2 documentation"
+
+
+4. Advanced sections
+--------------------
+
+While searching and navigating this template you'll find more files and
+sections than mentioned on this page (something like **meta.yaml**
+files, the **content/advanced** folder or other Jinja templates). They
+are files needed for the [advanced topics](advanced/overview.html) so
+just ignore them at the beginning.  They will start to make sense while
+you're working through the template or will be explicitly explained when
+the right time comes.
 {% endblock %}
