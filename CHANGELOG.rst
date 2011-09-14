@@ -1,3 +1,10 @@
+Version 0.8.4c1
+================
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". 
+
 Version 0.8.3
 ================
 

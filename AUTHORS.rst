@@ -16,6 +16,7 @@ Contributors
 
     *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
     *   Bug Fix: Sorter excludes items that do not have sorting attributes.
+    *   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
 
 -   |merlinrebrovic|_
     
