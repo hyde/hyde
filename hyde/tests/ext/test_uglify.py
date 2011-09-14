@@ -13,7 +13,7 @@ UGLIFY_SOURCE = File(__file__).parent.child_folder('uglify')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
 
-class TestLess(object):
+class TestUglify(object):
 
     def setUp(self):
         TEST_SITE.make()
