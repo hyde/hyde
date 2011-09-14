@@ -46,6 +46,8 @@ Contributors
     *   PyFS publisher with `mtime` and `etags` support
     *   Added PyPI publisher
     *   Bug fix: Made `site.full_url` ignore fully qualified paths
+    *   Added Sphinx Plugin
+    *   Bug fix: PyFS publisher now checks if the pyfs module is installed. 
 
 -   |tinnet|_
 

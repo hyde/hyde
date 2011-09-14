@@ -1,3 +1,11 @@
+Version 0.8.4c2
+===============
+
+Thanks to @rfk
+
+*   Added Sphinx Plugin
+*   Bug fix: PyFS publisher now checks if the pyfs module is installed.
+
 Version 0.8.4c1
 ================
 
