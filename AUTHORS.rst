@@ -7,6 +7,12 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |benallard|_
+
+    *   Added restructuredText plugin
+    *   Added restructuredText filter
+    *   Added traceback support for errors when server is running
+
 -   |stiell|_
     
     *   Bug Fix: Better mime type support in hyde server
@@ -59,16 +65,18 @@ Contributors
 .. _Tero Piirainen: http://cloudpanic.com
 .. _original hyde project: http://github.com/lakshmivyas/hyde
 .. |rfk| replace:: Ryan Kelly
-.. _rfk: http://github.com/rfk
+.. _rfk: https://github.com/rfk
 .. |tinnet| replace:: Tinnet Coronam
-.. _tinnet: http://github.com/tinnet
+.. _tinnet: https://github.com/tinnet
 .. |pestaa| replace:: pestaa
-.. _pestaa: http://github.com/pestaa
+.. _pestaa: https://github.com/pestaa
 .. |vincentbernat| replace:: Vincent Bernat
-.. _vincentbernat: http://github.com/vincentbernat
+.. _vincentbernat: https://github.com/vincentbernat
 .. |merlinrebrovic| replace:: Merlin Rebrović
 .. _merlinrebrovic: https://github.com/merlinrebrovic
 .. |gfuchedzhy| replace:: Grygoriy Fuchedzhy
 .. _gfuchedzhy: https://github.com/gfuchedzhy
 .. |stiell| replace:: Stian Ellingsen
 .. _stiell: https://github.com/stiell
+.. |benallard| replace:: Benoît Allard
+.. _benallard: https://github.com/benallard

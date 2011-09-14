@@ -1,7 +1,18 @@
+Version 0.8.4c4
+===============
+
+*   Added docutils to dev-req.txt
+
+Thanks to @benallard
+
+*   Added restructuredText plugin
+*   Added restructuredText filter
+*   Added traceback support for errors when server is running
+
 Version 0.8.4c3
 ===============
 
-* Bug Fix: Fixed uglify-js tests
+*   Bug Fix: Fixed uglify-js tests
 
 Version 0.8.4c2
 ===============
