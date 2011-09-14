@@ -1,3 +1,10 @@
+Version 0.8.4c6
+===============
+
+Thanks to @gr3dman
+
+* Added paginator plugin and tests
+
 Version 0.8.4c5
 ===============
 

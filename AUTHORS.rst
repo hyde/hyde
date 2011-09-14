@@ -7,6 +7,10 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |gr3dman|_
+    
+    * Added paginator plugin and tests
+
 -   |benallard|_
 
     *   Added restructuredText plugin
@@ -80,3 +84,5 @@ Contributors
 .. _stiell: https://github.com/stiell
 .. |benallard| replace:: Benoît Allard
 .. _benallard: https://github.com/benallard
+.. |gr3dman| replace:: Gareth Redman
+.. _gr3dman: https://github.com/gr3dman
