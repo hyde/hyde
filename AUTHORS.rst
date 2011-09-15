@@ -7,6 +7,10 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 
+-   |tcheneau|_
+    
+    * Added support for AsciiDoc.
+
 -   |gr3dman|_
     
     * Added paginator plugin and tests
@@ -86,3 +90,5 @@ Contributors
 .. _benallard: https://github.com/benallard
 .. |gr3dman| replace:: Gareth Redman
 .. _gr3dman: https://github.com/gr3dman
+.. |tcheneau| replace:: Tony (tcheneau)
+.. _tcheneau: https://github.com/tcheneau/

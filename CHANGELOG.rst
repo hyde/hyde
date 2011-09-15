@@ -1,3 +1,10 @@
+Version 0.8.4c7
+===============
+
+Thanks to @tcheneau
+
+* Added support for AsciiDoc.
+
 Version 0.8.4c6
 ===============
 
