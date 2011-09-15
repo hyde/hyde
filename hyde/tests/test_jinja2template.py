@@ -158,8 +158,14 @@ def test_asciidoc():
     </li>
     </ul>
     """
-    assert html == expected_output
 
+    assert html
+    q = PyQuery(html)
+    assert q
+    assert q("li").length == 3
+    assert q("li:eq(0)").text().strip() == "test1"
+    assert q("li:eq(1)").text().strip() == "test2"
+    assert q("li:eq(2)").text().strip() == "test3"
 
 def test_markdown():
     source = """
