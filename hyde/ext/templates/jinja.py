@@ -88,6 +88,25 @@ def xmldatetime(dt):
         zprefix = tz[:3] + ":" + tz[3:]
     return dt.strftime("%Y-%m-%dT%H:%M:%S") + zprefix
 
+@environmentfilter
+def asciidoc(env, value):
+    """
+    (simple) Asciidoc filter
+    """
+    try:
+        from asciidocapi import AsciiDocAPI
+    except ImportError:
+        print u"Requires AsciiDoc library to use AsciiDoc tag."
+        raise
+
+    import StringIO
+    output = value
+
+    asciidoc = AsciiDocAPI()
+    asciidoc.options('--no-header-footer')
+    result = StringIO.StringIO()
+    asciidoc.execute(StringIO.StringIO(output.encode('utf-8')), result, backend='html4')
+    return unicode(result.getvalue(), "utf-8")
 
 @environmentfilter
 def markdown(env, value):
@@ -185,6 +204,31 @@ class Spaceless(Extension):
             return ''
         return re.sub(r'>\s+<', '><', unicode(caller().strip()))
 
+class Asciidoc(Extension):
+    """
+    A wrapper around the asciidoc filter for syntactic sugar.
+    """
+    tags = set(['asciidoc'])
+
+    def parse(self, parser):
+        """
+        Parses the statements and defers to the callback for asciidoc processing.
+        """
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(['name:endasciidoc'], drop_needle=True)
+
+        return nodes.CallBlock(
+                    self.call_method('_render_asciidoc'),
+                        [], [], body).set_lineno(lineno)
+
+    def _render_asciidoc(self, caller=None):
+        """
+        Calls the asciidoc filter to transform the output.
+        """
+        if not caller:
+            return ''
+        output = caller().strip()
+        return asciidoc(self.environment, output)
 
 class Markdown(Extension):
     """
@@ -560,6 +604,7 @@ class Jinja2Template(Template):
         default_extensions = [
                 IncludeText,
                 Spaceless,
+                Asciidoc,
                 Markdown,
                 restructuredText,
                 Syntax,
@@ -609,6 +654,7 @@ class Jinja2Template(Template):
         self.env.globals['full_url'] = full_url
         self.env.globals['engine'] = engine
         self.env.globals['deps'] = {}
+        self.env.filters['asciidoc'] = asciidoc
         self.env.filters['markdown'] = markdown
         self.env.filters['restructuredtext'] = restructuredtext
         self.env.filters['syntax'] = syntax
