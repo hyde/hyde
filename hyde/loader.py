@@ -13,10 +13,15 @@ plugins = {}
 templates = {}
 
 
-def load_python_object(name):
+def load_python_object(name, site=None):
     """
     Loads a python module from string
     """
+
+    if (site!=None):
+         #Inject the site-path into module search-path
+         sys.path.insert(0, site.config.sitepath.fully_expanded_path)
+
     (module_name, _, object_name) = name.rpartition(".")
     if module_name == '':
         (module_name, object_name) = (object_name, module_name)

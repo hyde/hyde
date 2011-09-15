@@ -45,5 +45,5 @@ class Publisher(object):
             logger.error(
                 "Publisher type not specified: %s" % publisher)
             raise Exception("Please specify the publisher type in config.")
-        pub_class = load_python_object(settings.type)
+        pub_class = load_python_object(settings.type, site)
         return pub_class(site, settings, message)
