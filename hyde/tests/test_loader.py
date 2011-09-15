@@ -10,6 +10,10 @@ from nose.tools import raises
 import os
 
 from hyde.exceptions import HydeException
+from hyde.fs import File, Folder
+from hyde.generator import Generator
+from hyde.site import Site
+
 
 
 def test_can_load_locals():
@@ -42,6 +46,29 @@ def test_can_load_module_without_dot():
     assert abc['d'] == 'efg'
     assert abc['l'] == 'mno'
 
+def test_can_load_site_specific_plugins():
+    
+    TEST_SITE = File(__file__).parent.child_folder('_test')
+    TEST_SITE.make()
+    TEST_SITE.parent.child_folder(
+                  'sites/test_jinja').copy_contents_to(TEST_SITE)
+    TEST_SITE.parent.child_folder(
+                  'ssp').copy_contents_to(TEST_SITE)
+    s = Site(TEST_SITE)
+    gen = Generator(s)
+    gen.generate_all()
+    banner = """
+<!--
+This file was produced with infinite love, care & sweat.
+Please dont copy. If you have to, please drop me a note.
+-->
+"""
+    with TEST_SITE.child_folder('deploy').get_walker('*.html') as walker:
+        
+        @walker.file_visitor
+        def visit_file(f):
+            text = f.read_all()
+            assert text.strip().startswith(banner.strip())
 
 @raises(HydeException)
 def test_exception_raised_for_invalid_module():

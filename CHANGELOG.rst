@@ -1,16 +1,22 @@
+Version 0.8.4c8
+===============
+
+*   Added support for loading modules from the site path. Thanks to 
+    @theomega for the idea (Issue #78 & #79)
+
 Version 0.8.4c7
 ===============
 
 Thanks to @tcheneau
 
-* Added support for AsciiDoc.
+*   Added support for AsciiDoc.
 
 Version 0.8.4c6
 ===============
 
 Thanks to @gr3dman
 
-* Added paginator plugin and tests
+*   Added paginator plugin and tests
 
 Version 0.8.4c5
 ===============

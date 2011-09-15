@@ -4,7 +4,7 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 
-Code borrowed from rwbench.py from the jinja2 examples
+Some code borrowed from rwbench.py from the jinja2 examples
 """
 from datetime import datetime
 from hyde.ext.templates.jinja import Jinja2Template
@@ -33,7 +33,8 @@ class Article(object):
         self.title = generate_lorem_ipsum(1, False, 5, 10)
         self.user = choice(users)
         self.body = generate_lorem_ipsum()
-        self.pub_date = datetime.utcfromtimestamp(randrange(10 ** 9, 2 * 10 ** 9))
+        self.pub_date = datetime.utcfromtimestamp(
+                            randrange(10 ** 9, 2 * 10 ** 9))
         self.published = True
 
 def dateformat(x):

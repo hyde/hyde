@@ -591,18 +591,28 @@ class Folder(FS):
         dir_util.copy_tree(self.path, str(target))
         return target
 
-    @property
-    def walker(self, pattern=None):
+    def get_walker(self, pattern=None):
         """
-        Return a `FolderWalker` object
+        Return a `FolderWalker` object with a set pattern.
         """
-
         return FolderWalker(self, pattern)
 
     @property
-    def lister(self, pattern=None):
+    def walker(self):
+        """
+        Return a `FolderWalker` object
+        """
+        return FolderWalker(self)
+
+    def get_lister(self, pattern=None):
+        """
+        Return a `FolderLister` object with a set pattern.
+        """
+        return FolderLister(self, pattern)
+
+    @property
+    def lister(self):
         """
         Return a `FolderLister` object
         """
-
-        return FolderLister(self, pattern)
+        return FolderLister(self)

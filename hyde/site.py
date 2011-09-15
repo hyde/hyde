@@ -4,6 +4,7 @@ Parses & holds information about the site to be generated.
 """
 import os
 import fnmatch
+import sys
 import urlparse
 from functools import wraps
 
@@ -368,6 +369,10 @@ class Site(object):
     def __init__(self, sitepath=None, config=None):
         super(Site, self).__init__()
         self.sitepath = Folder(Folder(sitepath).fully_expanded_path)
+        # Add sitepath to the list of module search paths so that
+        # local plugins can be included.
+        sys.path.insert(0, self.sitepath.fully_expanded_path)
+
         self.config = config if config else Config(self.sitepath)
         self.content = RootNode(self.config.content_root_path, self)
         self.plugins = []

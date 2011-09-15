@@ -13,6 +13,7 @@ from hyde.util import getLoggerWithConsoleHandler
 
 import codecs
 import os
+import sys
 import yaml
 
 HYDE_LAYOUTS = "HYDE_LAYOUTS"
@@ -61,6 +62,9 @@ class Engine(Application):
             import logging
             logger.setLevel(logging.DEBUG)
 
+        sitepath = Folder(args.sitepath).fully_expanded_path
+        return Folder(sitepath)
+
     @subcommand('create', help='Create a new hyde site.')
     @store('-l', '--layout', default='basic', help='Layout for the new site')
     @true('-f', '--force', default=False, dest='overwrite',
@@ -70,8 +74,7 @@ class Engine(Application):
         The create command. Creates a new site from the template at the given
         sitepath.
         """
-        self.main(args)
-        sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
+        sitepath = self.main(args)
         markers = ['content', 'layout', 'site.yaml']
         exists = any((FS(sitepath.child(item)).exists for item in markers))
 
@@ -103,8 +106,8 @@ class Engine(Application):
         The generate command. Generates the site at the given
         deployment directory.
         """
-        self.main(args)
-        site = self.make_site(args.sitepath, args.config, args.deploy)
+        sitepath = self.main(args)
+        site = self.make_site(sitepath, args.config, args.deploy)
         from hyde.generator import Generator
         gen = Generator(site)
         incremental = True
@@ -130,8 +133,7 @@ class Engine(Application):
         deployment directory, address and port. Regenerates
         the entire site or specific files based on ths request.
         """
-        self.main(args)
-        sitepath = Folder(Folder(args.sitepath).fully_expanded_path)
+        sitepath = self.main(args)
         config_file = sitepath.child(args.config)
         site = self.make_site(args.sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
@@ -157,8 +159,8 @@ class Engine(Application):
         Publishes the site based on the configuration from the `target`
         parameter.
         """
-        self.main(args)
-        site = self.make_site(args.sitepath, args.config)
+        sitepath = self.main(args)
+        site = self.make_site(sitepath, args.config)
         from hyde.publisher import Publisher
         publisher = Publisher.load_publisher(site,
                         args.publisher,
@@ -171,7 +173,6 @@ class Engine(Application):
         """
         Creates a site object from the given sitepath and the config file.
         """
-        sitepath = Folder(Folder(sitepath).fully_expanded_path)
         config = Config(sitepath, config_file=config)
         if deploy:
             config.deploy_root = deploy
