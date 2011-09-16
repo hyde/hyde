@@ -6,14 +6,17 @@ This version would not exist without the contributions from the
 
 Contributors
 ------------
+-   |theevocater|_
+    
+    *   Fixed Authors link in README
 
 -   |tcheneau|_
     
-    * Added support for AsciiDoc.
+    *   Added support for AsciiDoc.
 
 -   |gr3dman|_
     
-    * Added paginator plugin and tests
+    *   Added paginator plugin and tests
 
 -   |benallard|_
 
@@ -71,7 +74,7 @@ Contributors
 .. _Lakshmi Vyasarajan: http://twitter.com/lakshmivyas
 .. _Flowplayer: http://flowplayer.org
 .. _Tero Piirainen: http://cloudpanic.com
-.. _original hyde project: http://github.com/lakshmivyas/hyde
+.. _original hyde project: https://github.com/lakshmivyas/hyde
 .. |rfk| replace:: Ryan Kelly
 .. _rfk: https://github.com/rfk
 .. |tinnet| replace:: Tinnet Coronam
@@ -90,5 +93,7 @@ Contributors
 .. _benallard: https://github.com/benallard
 .. |gr3dman| replace:: Gareth Redman
 .. _gr3dman: https://github.com/gr3dman
-.. |tcheneau| replace:: Tony (tcheneau)
+.. |tcheneau| replace:: Tony Cheneau
 .. _tcheneau: https://github.com/tcheneau/
+.. |theevocater| replace:: Jacob Kaufman
+.. _theevocater: https://github.com/theevocater
