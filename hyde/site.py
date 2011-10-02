@@ -16,7 +16,7 @@ from hyde.util import getLoggerWithNullHandler
 def path_normalized(f):
     @wraps(f)
     def wrapper(self, path):
-        return f(self, str(path).replace('/', os.sep))
+        return f(self, unicode(path).replace('/', os.sep))
     return wrapper
 
 logger = getLoggerWithNullHandler('hyde.engine')
@@ -119,7 +119,7 @@ class Node(Processable):
         self.root = self
         self.module = None
         self.site = None
-        self.source_folder = Folder(str(source_folder))
+        self.source_folder = Folder(unicode(source_folder))
         self.parent = parent
         if parent:
             self.root = self.parent.root
@@ -227,7 +227,7 @@ class RootNode(Node):
         """
         if Folder(path) == self.source_folder:
             return self
-        return self.node_map.get(str(Folder(path)), None)
+        return self.node_map.get(unicode(Folder(path)), None)
 
     @path_normalized
     def node_from_relative_path(self, relative_path):
@@ -236,7 +236,7 @@ class RootNode(Node):
         If no match is found it returns None.
         """
         return self.node_from_path(
-                    self.source_folder.child(str(relative_path)))
+                    self.source_folder.child(unicode(relative_path)))
 
     @path_normalized
     def resource_from_path(self, path):
@@ -244,7 +244,7 @@ class RootNode(Node):
         Gets the resource that maps to the given path.
         If no match is found it returns None.
         """
-        return self.resource_map.get(str(File(path)), None)
+        return self.resource_map.get(unicode(File(path)), None)
 
     @path_normalized
     def resource_from_relative_path(self, relative_path):
@@ -253,14 +253,14 @@ class RootNode(Node):
         If no match is found it returns None.
         """
         return self.resource_from_path(
-                    self.source_folder.child(str(relative_path)))
+                    self.source_folder.child(relative_path))
 
     def resource_deploy_path_changed(self, resource):
         """
         Handles the case where the relative deploy path of a
         resource has changed.
         """
-        self.resource_deploy_map[str(resource.relative_deploy_path)] = resource
+        self.resource_deploy_map[unicode(resource.relative_deploy_path)] = resource
 
     @path_normalized
     def resource_from_relative_deploy_path(self, relative_deploy_path):
@@ -301,7 +301,7 @@ class RootNode(Node):
         node = parent if parent else self
         for h_folder in hierarchy:
             node = node.add_child_node(h_folder)
-            self.node_map[str(h_folder)] = node
+            self.node_map[unicode(h_folder)] = node
             logger.debug("Added node [%s] to [%s]" % (
                             node.relative_path, self.source_folder))
 
@@ -331,7 +331,7 @@ class RootNode(Node):
             node = self.add_node(afile.parent)
 
         resource = node.add_child_resource(afile)
-        self.resource_map[str(afile)] = resource
+        self.resource_map[unicode(afile)] = resource
         logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
         return resource

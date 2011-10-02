@@ -45,7 +45,7 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, str(key).encode('utf-8'), self.transform(value))
+        setattr(self, unicode(key).encode('utf-8'), self.transform(value))
 
 
     def transform(self, primitive):
@@ -62,7 +62,7 @@ class Expando(object):
             return primitive
 
     def __repr__(self):
-        return str(self.to_dict())
+        return unicode(self.to_dict())
 
     def to_dict(self):
         """

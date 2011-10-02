@@ -104,9 +104,9 @@ class StylusPlugin(CLTransformer):
         target = source
         supported = [("compress", "c"), ("include", "I")]
 
-        args = [str(stylus)]
+        args = [unicode(stylus)]
         args.extend(self.process_args(supported))
-        args.append(str(source))
+        args.append(unicode(source))
         try:
             self.call_app(args)
         except subprocess.CalledProcessError, e:

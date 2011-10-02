@@ -470,11 +470,11 @@ class HydeLoader(FileSystemLoader):
         config = site.config if hasattr(site, 'config') else None
         if config:
             super(HydeLoader, self).__init__([
-                            str(config.content_root_path),
-                            str(config.layout_root_path),
+                            unicode(config.content_root_path),
+                            unicode(config.layout_root_path),
                         ])
         else:
-            super(HydeLoader, self).__init__(str(sitepath))
+            super(HydeLoader, self).__init__(unicode(sitepath))
 
         self.site = site
         self.preprocessor = preprocessor
