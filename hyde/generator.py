@@ -13,6 +13,7 @@ from hyde.site import Node, Resource
 from contextlib import contextmanager
 from datetime import datetime
 
+from shutil import copymode
 from hyde.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -334,6 +335,7 @@ class Generator(object):
                                     resource.relative_deploy_path))
                 target.parent.make()
                 target.write(text)
+                copymode(resource.source_file.path, target.path)
             else:
                 logger.debug("Copying binary file [%s]", resource)
                 self.events.begin_binary_resource(resource)
