@@ -72,6 +72,10 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
                     res = site.content.resource_from_relative_deploy_path(path + '.' + ext)
                     if res:
                         break
+                for ext in site.config.urlcleaner.strip_extensions:
+                    new_path = site.config.deploy_root_path.child(path + '.' + ext)
+                    if File(new_path).exists:
+                        return new_path
         else:
             res = site.content.resource_from_relative_deploy_path(path)
 
