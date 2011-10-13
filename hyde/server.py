@@ -55,9 +55,8 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         Finds the absolute path of the requested file by
         referring to the `site` variable in the server.
         """
-        path = SimpleHTTPRequestHandler.translate_path(self, path)
         site = self.server.site
-        result = urlparse.urlparse(self.path)
+        result = urlparse.urlparse(urllib.unquote(self.path).decode('utf-8'))
         logger.debug("Trying to load file based on request: [%s]" % result.path)
         path = result.path.lstrip('/')
         res = None

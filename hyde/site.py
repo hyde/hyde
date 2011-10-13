@@ -6,6 +6,7 @@ import os
 import fnmatch
 import urlparse
 from functools import wraps
+from urllib import quote
 
 from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
@@ -403,14 +404,14 @@ class Site(object):
         Returns the content url by appending the base url from the config
         with the given path.
         """
-        return Folder(self.config.base_url).child(path).replace(os.sep, '/')
+        return quote(Folder(self.config.base_url).child(path).replace(os.sep, '/').encode("utf-8"))
 
     def media_url(self, path):
         """
         Returns the media url by appending the media base url from the config
         with the given path.
         """
-        return Folder(self.config.media_url).child(path).replace(os.sep, '/')
+        return quote(Folder(self.config.media_url).child(path).replace(os.sep, '/').encode("utf-8"))
 
     def full_url(self, path):
         """
