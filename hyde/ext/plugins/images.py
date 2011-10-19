@@ -175,6 +175,8 @@ class ImageThumbnailsPlugin(Plugin):
     which means - make from every picture two thumbnails with different prefixes
     and sizes
 
+    If both width and height defined, crops image.
+
     Currently, only supports PNG and JPG.
     """
 
@@ -197,14 +199,22 @@ class ImageThumbnailsPlugin(Plugin):
         im = Image.open(resource.path)
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
-        # Convert to a thumbnail
-        if width is None:
-            # height is not None
-            width = im.size[0]*height/im.size[1] + 1
-        elif height is None:
-            # width is not None
-            height = im.size[1]*width/im.size[0] + 1
-        im.thumbnail((width, height), Image.ANTIALIAS)
+        resize_width = width
+        resize_height = height
+        if resize_width is None:
+            resize_width = im.size[0]*height/im.size[1] + 1
+        elif resize_height is None:
+            resize_height = im.size[1]*width/im.size[0] + 1
+        elif im.size[0]*height >= im.size[1]*width:
+            resize_width = im.size[0]*height/im.size[1]
+        else:
+            resize_height = im.size[1]*width/im.size[0]
+
+        im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
+        if width is not None and height is not None:
+            im = im.crop((0, 0, width, height))
+            im.load()
+
         if resource.name.endswith(".jpg"):
             im.save(target.path, "JPEG", optimize=True, quality=75)
         else:
