@@ -175,7 +175,9 @@ class ImageThumbnailsPlugin(Plugin):
     which means - make from every picture two thumbnails with different prefixes
     and sizes
 
-    If both width and height defined, crops image.
+    If both width and height defined, image would be cropped, you can define
+    crop_type as one of these values: "topleft", "center" and "bottomright".
+    "topleft" is default.
 
     Currently, only supports PNG and JPG.
     """
@@ -183,7 +185,7 @@ class ImageThumbnailsPlugin(Plugin):
     def __init__(self, site):
         super(ImageThumbnailsPlugin, self).__init__(site)
 
-    def thumb(self, resource, width, height, prefix):
+    def thumb(self, resource, width, height, prefix, crop_type):
         """
         Generate a thumbnail for the given image
         """
@@ -212,7 +214,14 @@ class ImageThumbnailsPlugin(Plugin):
 
         im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
         if width is not None and height is not None:
-            im = im.crop((0, 0, width, height))
+            shiftx = shifty = 0
+            if crop_type == "center":
+                shiftx = (im.size[0] - width)/2
+                shifty = (im.size[1] - height)/2
+            elif crop_type == "bottomright":
+                shiftx = (im.size[0] - width)
+                shifty = (im.size[1] - height)
+            im = im.crop((shiftx, shifty, width + shiftx, height + shifty))
             im.load()
 
         if resource.name.endswith(".jpg"):
@@ -228,6 +237,7 @@ class ImageThumbnailsPlugin(Plugin):
         config = self.site.config
         defaults = { "width": None,
                      "height": None,
+                     "crop_type": "topleft",
                      "prefix": 'thumb_'}
         if hasattr(config, 'thumbnails'):
             defaults.update(config.thumbnails)
@@ -242,6 +252,10 @@ class ImageThumbnailsPlugin(Plugin):
                     prefix = th.prefix if hasattr(th, 'prefix') else defaults['prefix']
                     height = th.height if hasattr(th, 'height') else defaults['height']
                     width = th.width if hasattr(th, 'width') else defaults['width']
+                    crop_type = th.crop_type if hasattr(th, 'crop_type') else defaults['crop_type']
+                    if crop_type not in ["topleft", "center", "bottomright"]:
+                        self.logger.error("Unknown crop_type defined for node [%s]" % node)
+                        continue
                     if width is None and height is None:
                         self.logger.error("Both width and height are not set for node [%s]" % node)
                         continue
@@ -251,4 +265,4 @@ class ImageThumbnailsPlugin(Plugin):
                             thumbs_list.append(path)
                     for resource in node.resources:
                         if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
-                            self.thumb(resource, width, height, prefix)
+                            self.thumb(resource, width, height, prefix, crop_type)
