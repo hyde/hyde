@@ -30,7 +30,7 @@ class TestLess(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus', '~/local/bin/stylus',
-                 '~/bin/stylus']
+                 '~/bin/stylus', '/opt/local/bin/stylus']
         stylus = [path for path in paths if File(path).exists]
         if not stylus:
             assert False, "Cannot find the stylus executable"
@@ -52,7 +52,7 @@ class TestLess(object):
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus', '~/local/bin/stylus',
-                 '~/bin/stylus']
+                 '~/bin/stylus', '/opt/local/bin/stylus']
         stylus = [path for path in paths if File(path).exists]
         if not stylus:
             assert False, "Cannot find the stylus executable"
