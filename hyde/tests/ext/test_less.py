@@ -30,7 +30,7 @@ class TestLess(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.less.LessCSSPlugin']
         paths = ['/usr/local/share/npm/bin/lessc', '~/local/bin/lessc',
-                 '/usr/bin/lessc', '~/bin/lessc']
+                 '/usr/bin/lessc', '~/bin/lessc', '/opt/local/bin/lessc']
         less = [path for path in paths if File(path).exists]
         if not less:
             assert False, "Cannot find the lessc executable"
