@@ -4,7 +4,7 @@
 }
 
 html, body {
-    color: #fafafa;
+    color: #ddd;
     background-color: black;
 }
 
@@ -20,6 +20,10 @@ body {
     font-family: Tahoma, sans-serif;
 }
 
+strong {
+    color: white;
+}
+
 a {
     color: #f1ee00;
 }
@@ -28,11 +32,11 @@ a:hover, a:focus {
     text-decoration: none;
 }
 
-p, ul {
+p, ul, ol {
     margin-bottom: 1.6em;
 }
 
-ul {
+ul, ol {
     margin-left: 2em;
 }
 
@@ -49,6 +53,7 @@ header h1 {
     font-size: 50px;
     font-weight: normal;
     text-shadow: -1px 2px 1px black;
+    color: white;
 }
 
 header h1 span {
@@ -60,13 +65,14 @@ header h2 {
     font-weight: normal;
     letter-spacing: 11px;
     text-shadow: -1px 2px 1px black;
+    color: white;
 }
 
 nav {
     position: absolute;
     top: 340px;
     right: 120px;
-    width: 200px;
+    width: 250px;
     text-align: right;
     font-family: Anton, Tahoma, sans-serif;
 }
@@ -74,7 +80,7 @@ nav {
 nav a,
 nav a:visited {
     text-decoration: none;
-    color: #fafafa;
+    color: white;
     text-transform: uppercase;
     font-size: 2.8em;
 }
@@ -121,6 +127,7 @@ nav, aside {
     font-family: Anton, Tahoma, sans-serif;
     text-transform: uppercase;
     margin-bottom: 0.8em;
+    color: white;
 }
 
 #content h2 {
@@ -128,6 +135,8 @@ nav, aside {
     font-size: 1.2em;
     font-family: Tahoma, sans-serif;
     margin-bottom: 1.33em;
+    color: white;
+    border-bottom: 1px dashed #888;
 }
 
 #content code {
@@ -141,4 +150,20 @@ nav, aside {
     border-right: 1px solid #333;
     border-bottom: 1px solid #222;
     border-left: 1px solid #111;
+}
+
+#content .tags {
+    font-size: 0.8em;
+    color: #888;
+}
+
+#content .bottom_article_nav {
+    border-top: 1px dashed #888;
+    overflow: hidden;
+    margin-top: 40px;
+    padding-top: 10px;
+}
+
+#content .bottom_article_nav .next {
+    float: right;
 }

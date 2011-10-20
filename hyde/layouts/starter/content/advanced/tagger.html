@@ -1,0 +1,51 @@
+---
+index: 4
+title_ending: "| Tagging"
+tags:
+    - sort
+    - tag
+learning_order: 3
+---
+
+Tagging
+=======
+
+It seems that human beings want to tag everything. You can do it with
+Hyde also. In this example **tags** are used to represent technologies
+used to build a particular advanced page. So you can see that the
+**sorting** was needed for all advanced topics, but **grouping** was
+used only for overview and grouping pages.
+
+Listing by tags
+---------------
+
+{# You can grab the list of all tags ... #}
+{% for tag, meta in site.tagger.tags %}
+*{{ tag }}*
+
+{# ... and get all resurces tagged with that node. #}
+{% for res in resource.node.walk_resources_tagged_with(tag) %}
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+    ({{ res.name }})
+{% endfor %}
+
+{% endfor %}
+
+{# Another way to walk through resources tagged with a specific tag is
+   to use a method that contains that tag's name.
+
+{% for res in resource.node.walk_resources_tagged_with_sort() %}
+{% endfor %}
+#}
+
+Tag combination
+---------------
+
+You can also search for combination of tags. If you search for a
+resource that has **sort**, **tag** and **group** tags, only an
+{% for res in resource.node.walk_resources_tagged_with('sort+tag+group') -%}
+[{{ res.slug }}]({{ res.full_url }})
+{%- endfor %} 
+will be returned.
+
+{{ macros.render_bottom_article_nav() }}

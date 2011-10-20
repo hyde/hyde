@@ -1,11 +1,20 @@
 mode: learning
 media_root: media
-media_url: media # will use relative path, prepend "/" for absolute path
+media_url: /media
+base_url: /
+# If your site is nested inside of a bigger one, you can use media_url and
+# base_url to properly generate links on your site. For example, if your URL
+# will be some.domain.com/starter/, use:
+#   media_url: /starter/media
+#   base_url: /starter/
 template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
     - hyde.ext.plugins.auto_extend.AutoExtendPlugin
-    - hyde.ext.plugins.syntext.SyntextPlugin
+    # Plugins needed for the advances section.
+    - hyde.ext.plugins.sorter.SorterPlugin
+    - hyde.ext.plugins.grouper.GrouperPlugin
+    - hyde.ext.plugins.tagger.TaggerPlugin
 context:
     data:
         author:
@@ -21,7 +30,65 @@ context:
         menu:
           - title: Home
             url: index.html
-          - title: What next
-            url: what-next.html
+          - title: First steps
+            url: first-steps.html
+          - title: Advanced topics
+            url: advanced/overview.html
           - title: About
             url: about.html
+
+### Advanced part ###
+
+# This defines meta data on the whole site.
+meta:
+    # 'nodemeta' will tell Hyde what file to look for inside a folder from
+    # which to apply meta data to all files (resources) inside it. This is
+    # a great way of simply adding or modifying properties of a very large
+    # number of files.
+    nodemeta: meta.yaml
+    ga_tracking_code: XX-XXXXXXXX-X
+
+sorter:
+    name: # the name of the sorter (no pun intended)
+        attr: name # by which attributes will resources be sorted
+        filters:
+            source_file.kind: html
+            # You can include only files from a certain folder.
+            #resource.node: (name of the folder)
+        #reverse: True # if you need the list backwards
+    file_type:
+        attr: 
+            - source_file.kind
+            - source_file.size
+    index:
+        attr: meta.index
+        filters:
+            source_file.kind: html
+    learning_order:
+        attr: meta.learning_order
+        filters:
+            source_file.kind: html
+
+grouper:
+    level:
+        sorter: name
+        description: Difficulty levels
+        groups:
+            - name: basic
+              description: Basic
+            - name: advanced
+              description: Advanced
+    # You can have more than one group section, depending on your needs.
+    # For example: "categories", "menu sections", etc.
+    #category:
+    #    description: To which category a blog post belongs to.
+    #    groups:
+    #        - name: software
+    #          description: Software engineering
+    #        - name: web
+    #          description: Web technologies
+    #        - name: seo
+    #          description: Search Engine Optimization
+
+tagger:
+    sorter: name
