@@ -6,11 +6,11 @@
 #}
 <ul>
 {% for menu_item in menu -%}
-    <li><a {% if (menu_item.url == resource.full_url) or
+    <li><a {% if (menu_item.url == resource.url) or
                  (menu_item.title == "Advanced topics"
                   and resource.node.name == "advanced")
-            %}class="selected"{% endif %}
-            href="{{ menu_item.url }}">{{ menu_item.title }}</a></li>
+            %}class="selected"{% endif -%}
+            href="{{ content_url(menu_item.url) }}">{{ menu_item.title }}</a></li>
 {%- endfor %}
 </ul>
 {%- endmacro %}

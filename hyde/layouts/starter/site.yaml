@@ -1,6 +1,12 @@
 mode: learning
 media_root: media
 media_url: /media
+base_url: /
+# If your site is nested inside of a bigger one, you can use media_url and
+# base_url to properly generate links on your site. For example, if your URL
+# will be some.domain.com/starter/, use:
+#   media_url: /starter/media
+#   base_url: /starter/
 template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
@@ -23,13 +29,13 @@ context:
             install: "http://hyde.github.com/install.html"
         menu:
           - title: Home
-            url: /index.html
+            url: index.html
           - title: First steps
-            url: /first-steps.html
+            url: first-steps.html
           - title: Advanced topics
-            url: /advanced/overview.html
+            url: advanced/overview.html
           - title: About
-            url: /about.html
+            url: about.html
 
 ### Advanced part ###
 
