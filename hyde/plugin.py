@@ -8,11 +8,12 @@ from hyde import loader
 
 from hyde.exceptions import HydeException
 from hyde.fs import File
-from hyde.util import getLoggerWithNullHandler, first_match
+from hyde.util import getLoggerWithNullHandler, first_match, discover_executable
 from hyde.model import Expando
 
 from functools import partial
 
+import os
 import re
 import subprocess
 import traceback
@@ -254,6 +255,13 @@ class CLTransformer(Plugin):
         except AttributeError:
             raise self.template.exception_class(
                     self.executable_not_found_message)
+
+        # Honour the PATH environment variable.
+        if not os.path.isabs(app_path):
+            app_path = discover_executable(app_path)
+            if app_path is None:
+                raise self.template.exception_class(
+                        self.executable_not_found_message)
 
         app = File(app_path)
 
