@@ -221,6 +221,14 @@ class CLTransformer(Plugin):
         return {}
 
     @property
+    def default_app_path(self):
+        """
+        Default command line application path. Can be overridden
+        by specifying it in config.
+        """
+        return self.plugin_name
+
+    @property
     def executable_not_found_message(self):
         """
         Message to be displayed if the command line application
@@ -253,15 +261,15 @@ class CLTransformer(Plugin):
         try:
             app_path = getattr(self.settings, 'app')
         except AttributeError:
-            raise self.template.exception_class(
-                    self.executable_not_found_message)
+            app_path = self.default_app_path
 
         # Honour the PATH environment variable.
-        if not os.path.isabs(app_path):
+        if app_path is not None and not os.path.isabs(app_path):
             app_path = discover_executable(app_path)
-            if app_path is None:
-                raise self.template.exception_class(
-                        self.executable_not_found_message)
+
+        if app_path is None:
+            raise self.template.exception_class(
+                    self.executable_not_found_message)
 
         app = File(app_path)
 
