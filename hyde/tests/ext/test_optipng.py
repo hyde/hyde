@@ -31,12 +31,7 @@ class TestOptipng(object):
         s = Site(TEST_SITE)
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.optipng.OptiPNGPlugin']
-        paths = ['/usr/local/bin/optipng', '/usr/bin/optipng']
-        optipng = [path for path in paths if File(path).exists]
-        if not optipng:
-            assert False, "Cannot find the optipng executable"
-        optipng = optipng[0]
-        s.config.optipng = Expando(dict(app=optipng, args=dict(quiet="")))
+        s.config.optipng = Expando(dict(args=dict(quiet="")))
         source =File(TEST_SITE.child('content/media/images/hyde-lt-b.png'))
         target = File(Folder(s.config.deploy_root_path).child('media/images/hyde-lt-b.png'))
         gen = Generator(s)
