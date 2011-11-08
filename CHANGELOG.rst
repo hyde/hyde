@@ -1,3 +1,10 @@
+Version 0.8.4c10
+================
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: All occurrences of `str` replaced with `unicode`. (Issue #87)
+
 Version 0.8.4c9
 ===============
 
@@ -5,7 +12,7 @@ Version 0.8.4c9
 
 Thanks to @merlinrebrovic
 
-*   Hyde Starter Kit patches.
+*   Hyde Starter Kit patches. (Issue #68)
 
 Version 0.8.4c8
 ===============
@@ -18,21 +25,21 @@ Version 0.8.4c7
 
 Thanks to @tcheneau
 
-*   Added support for AsciiDoc.
+*   Added support for AsciiDoc. (Issue #76)
 
 Version 0.8.4c6
 ===============
 
 Thanks to @gr3dman
 
-*   Added paginator plugin and tests
+*   Added paginator plugin and tests (Issue #73)
 
 Version 0.8.4c5
 ===============
 
 Thanks to @merlinrebrovic
 
-*   Hyde starter kit extended with advanced options
+*   Hyde starter kit extended with advanced options (Issue #68)
 
 Version 0.8.4c4
 ===============
@@ -41,9 +48,9 @@ Version 0.8.4c4
 
 Thanks to @benallard
 
-*   Added restructuredText plugin
-*   Added restructuredText filter
-*   Added traceback support for errors when server is running
+*   Added restructuredText plugin (Issue #63)
+*   Added restructuredText filter (Issue #63)
+*   Added traceback support for errors when server is running (Issue #63)
 
 Version 0.8.4c3
 ===============
@@ -55,15 +62,15 @@ Version 0.8.4c2
 
 Thanks to @rfk
 
-*   Added Sphinx Plugin
-*   Bug fix: PyFS publisher now checks if the pyfs module is installed.
+*   Added Sphinx Plugin (Issue #62)
+*   Bug fix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
 
 Version 0.8.4c1
 ================
 
 Thanks to @gfuchedzhy
 
-*   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
+*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
 
 Version 0.8.3
 ================

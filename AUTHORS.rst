@@ -7,15 +7,15 @@ This version would not exist without the contributions from the
 Contributors
 ------------
 -   |theevocater|_
-    
+
     *   Fixed Authors link in README
 
 -   |tcheneau|_
-    
+
     *   Added support for AsciiDoc.
 
 -   |gr3dman|_
-    
+
     *   Added paginator plugin and tests
 
 -   |benallard|_
@@ -25,7 +25,7 @@ Contributors
     *   Added traceback support for errors when server is running
 
 -   |stiell|_
-    
+
     *   Bug Fix: Better mime type support in hyde server
     *   Bug Fix: Support empty extension in tagger archives
 
@@ -34,9 +34,10 @@ Contributors
     *   Bug Fix: Hyde server now takes the url cleaner plugin into account.
     *   Bug Fix: Sorter excludes items that do not have sorting attributes.
     *   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
+    *   Bug Fix: All occurrences of `str` replaced with `unicode`.
 
 -   |merlinrebrovic|_
-    
+
     * Hyde starter kit
 
 -   |vincentbernat|_
@@ -64,7 +65,7 @@ Contributors
     *   Added PyPI publisher
     *   Bug fix: Made `site.full_url` ignore fully qualified paths
     *   Added Sphinx Plugin
-    *   Bug fix: PyFS publisher now checks if the pyfs module is installed. 
+    *   Bug fix: PyFS publisher now checks if the pyfs module is installed.
 
 -   |tinnet|_
 
