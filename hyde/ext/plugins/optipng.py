@@ -64,7 +64,7 @@ class OptiPNGPlugin(CLTransformer):
         target = File(self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path))
         optipng = self.app
-        args = [str(optipng)]
+        args = [unicode(optipng)]
         args.extend(self.process_args(supported))
-        args.extend([str(target)])
+        args.extend([unicode(target)])
         self.call_app(args)

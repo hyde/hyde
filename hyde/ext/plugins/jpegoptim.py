@@ -51,7 +51,7 @@ class JPEGOptimPlugin(CLTransformer):
         target = File(self.site.config.deploy_root_path.child(
                                 resource.relative_deploy_path))
         jpegoptim = self.app
-        args = [str(jpegoptim)]
+        args = [unicode(jpegoptim)]
         args.extend(self.process_args(supported))
-        args.extend(["-q", str(target)])
+        args.extend(["-q", unicode(target)])
         self.call_app(args)

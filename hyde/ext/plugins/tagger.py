@@ -55,7 +55,7 @@ def get_tagger_sort_method(site):
     return walker
 
 def walk_resources_tagged_with(node, tag):
-    tags = set(str(tag).split('+'))
+    tags = set(unicode(tag).split('+'))
     walker = get_tagger_sort_method(node.site)
     for resource in walker():
         try:
