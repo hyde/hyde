@@ -15,7 +15,7 @@ from nose.tools import raises, with_setup, nottest
 def test_representation():
     f = FS(__file__)
     assert f.path == __file__
-    assert str(f) == __file__
+    assert unicode(f) == __file__
     assert repr(f) == __file__
 
 def test_name():
@@ -81,7 +81,7 @@ def test_parent():
     f = File(__file__)
     p = f.parent
     assert hasattr(p, 'child_folder')
-    assert str(p) == os.path.dirname(__file__)
+    assert unicode(p) == os.path.dirname(__file__)
 
 def test_child():
     p = File(__file__).parent
@@ -92,7 +92,7 @@ def test_child_folder():
     p = File(__file__).parent
     c = p.child_folder('data')
     assert hasattr(c, 'child_folder')
-    assert str(c) == os.path.join(os.path.dirname(__file__), 'data')
+    assert unicode(c) == os.path.join(os.path.dirname(__file__), 'data')
 
 def test_exists():
     p = FS(__file__)
@@ -113,7 +113,7 @@ def test_create_folder():
     assert not c.exists
     c.make()
     assert c.exists
-    shutil.rmtree(str(c))
+    shutil.rmtree(unicode(c))
     assert not c.exists
 
 def test_remove_folder():

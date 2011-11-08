@@ -59,7 +59,7 @@ class Git(DVCS):
 
     def add(self, path="."):
         cmd = Popen('git add "%s"' % path,
-                        cwd=str(self.path), stdout=PIPE, shell=True)
+                        cwd=unicode(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
@@ -67,7 +67,7 @@ class Git(DVCS):
     def pull(self):
         self.switch(self.branch)
         cmd = Popen("git pull origin %s" % self.branch,
-                    cwd=str(self.path),
+                    cwd=unicode(self.path),
                     stdout=PIPE,
                     shell=True)
         cmdresult = cmd.communicate()[0]
@@ -76,7 +76,7 @@ class Git(DVCS):
 
     def push(self):
         cmd = Popen("git push origin %s" % self.branch,
-                    cwd=str(self.path), stdout=PIPE,
+                    cwd=unicode(self.path), stdout=PIPE,
                     shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
@@ -85,7 +85,7 @@ class Git(DVCS):
 
     def commit(self, message):
         cmd = Popen('git commit -a -m"%s"' % message,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+                    cwd=unicode(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
@@ -93,14 +93,14 @@ class Git(DVCS):
     def switch(self, branch):
         self.branch = branch
         cmd = Popen('git checkout %s' % branch,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+                    cwd=unicode(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def merge(self, branch):
         cmd = Popen('git merge %s' % branch,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+                    cwd=unicode(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)

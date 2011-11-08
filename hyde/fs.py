@@ -36,7 +36,7 @@ class FS(object):
             self.path = path
         else:
             self.path = os.path.expandvars(os.path.expanduser(
-                        str(path).strip().rstrip(os.sep)))
+                        unicode(path).strip().rstrip(os.sep)))
 
     def __str__(self):
         return self.path
@@ -45,10 +45,10 @@ class FS(object):
         return self.path
 
     def __eq__(self, other):
-        return str(self) == str(other)
+        return unicode(self) == unicode(other)
 
     def __ne__(self, other):
-        return str(self) != str(other)
+        return unicode(self) != unicode(other)
 
     @property
     def fully_expanded_path(self):
@@ -144,7 +144,7 @@ class FS(object):
         """
         Returns a File or Folder object that would represent the given path.
         """
-        target = str(path)
+        target = unicode(path)
         return Folder(target) if os.path.isdir(target) else File(target)
 
     def __get_destination__(self, destination):
@@ -152,7 +152,7 @@ class FS(object):
         Returns a File or Folder object that would represent this entity
         if it were copied or moved to `destination`.
         """
-        if isinstance(destination, File) or os.path.isfile(str(destination)):
+        if isinstance(destination, File) or os.path.isfile(unicode(destination)):
             return destination
         else:
             return FS.file_or_folder(Folder(destination).child(self.name))
@@ -251,7 +251,7 @@ class File(FS):
         determine age.
 
         """
-        return self.last_modified < File(str(another_file)).last_modified
+        return self.last_modified < File(unicode(another_file)).last_modified
 
     @staticmethod
     def make_temp(text):
@@ -290,7 +290,7 @@ class File(FS):
         """
         target = self.__get_destination__(destination)
         logger.info("Copying %s to %s" % (self, target))
-        shutil.copy(self.path, str(destination))
+        shutil.copy(self.path, unicode(destination))
         return target
 
     def delete(self):
@@ -539,7 +539,7 @@ class Folder(FS):
         """
         target = self.__get_destination__(destination)
         logger.info("Copying %s to %s" % (self, target))
-        shutil.copytree(self.path, str(target))
+        shutil.copytree(self.path, unicode(target))
         return target
 
     def move_to(self, destination):
@@ -549,7 +549,7 @@ class Folder(FS):
         """
         target = self.__get_destination__(destination)
         logger.info("Move %s to %s" % (self, target))
-        shutil.move(self.path, str(target))
+        shutil.move(self.path, unicode(target))
         return target
 
     def rename_to(self, destination_name):
@@ -559,7 +559,7 @@ class Folder(FS):
         """
         target = self.parent.child_folder(destination_name)
         logger.info("Rename %s to %s" % (self, target))
-        shutil.move(self.path, str(target))
+        shutil.move(self.path, unicode(target))
         return target
 
     def _create_target_tree(self, target):
@@ -588,7 +588,7 @@ class Folder(FS):
         target = Folder(destination)
         target.make()
         self._create_target_tree(target)
-        dir_util.copy_tree(self.path, str(target))
+        dir_util.copy_tree(self.path, unicode(target))
         return target
 
     @property
