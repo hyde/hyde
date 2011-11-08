@@ -50,7 +50,6 @@ class TestGrouperSingleLevel(object):
                       name: plugins
                       description: Plugins
 
-
         """
         self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
         self.s.load()
@@ -176,6 +175,7 @@ class TestGrouperSingleLevel(object):
             index += 1
 
     def test_nav_with_grouper(self):
+
         text ="""
 {% for group, resources in site.content.walk_section_groups() %}
 <ul>
@@ -224,6 +224,99 @@ class TestGrouperSingleLevel(object):
 
 """
 
+        gen = Generator(self.s)
+        gen.load_site_if_needed()
+        gen.load_template_if_needed()
+        out = gen.template.render(text, {'site':self.s})
+        assert_html_equals(out, expected)
+
+    def test_nav_with_grouper_sorted(self):
+
+        cfg = """
+        nodemeta: meta.yaml
+        plugins:
+          - hyde.ext.plugins.meta.MetaPlugin
+          - hyde.ext.plugins.sorter.SorterPlugin
+          - hyde.ext.plugins.grouper.GrouperPlugin
+        sorter:
+          kind:
+              attr:
+                  - source_file.kind
+              filters:
+                  is_processable: True
+        grouper:
+          section:
+              description: Sections in the site
+              sorter: kind
+              groups:
+                  -
+                      name: start
+                      description: Getting Started
+                  -
+                      name: awesome
+                      description: Awesome
+                  -
+                      name: plugins
+                      description: Plugins
+
+        """
+        self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        self.s.load()
+        MetaPlugin(self.s).begin_site()
+        SorterPlugin(self.s).begin_site()
+        GrouperPlugin(self.s).begin_site()
+
+        text ="""
+{% set sorted = site.grouper['section'].groups|sort(attribute='name') %}
+{% for group in sorted %}
+<ul>
+    <li>
+        <h2>{{ group.name|title }}</h2>
+        <h3>{{ group.description }}</h3>
+        <ul class="links">
+            {% for resource in group.walk_resources_in_node(site.content) %}
+            <li>{{resource.name}}</li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>
+{% endfor %}
+
+"""
+        expected = """
+<ul>
+    <li>
+        <h2>Awesome</h2>
+        <h3>Awesome</h3>
+        <ul class="links">
+        </ul>
+    </li>
+</ul>
+<ul>
+    <li>
+        <h2>Plugins</h2>
+        <h3>Plugins</h3>
+        <ul class="links">
+            <li>plugins.html</li>
+            <li>tags.html</li>
+        </ul>
+    </li>
+</ul>
+<ul>
+    <li>
+        <h2>Start</h2>
+        <h3>Getting Started</h3>
+        <ul class="links">
+            <li>installation.html</li>
+            <li>overview.html</li>
+            <li>templating.html</li>
+        </ul>
+    </li>
+</ul>
+
+
+"""
+        self.s.config.grouper.section.groups.append(Expando({"name": "awesome", "description": "Aweesoome"}));
         gen = Generator(self.s)
         gen.load_site_if_needed()
         gen.load_template_if_needed()
