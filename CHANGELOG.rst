@@ -1,7 +1,16 @@
+Version 0.8.4c9
+===============
+
+* Added tests for sorting groups
+
+Thanks to @merlinrebrovic
+
+*   Hyde Starter Kit patches.
+
 Version 0.8.4c8
 ===============
 
-*   Added support for loading modules from the site path. Thanks to 
+*   Added support for loading modules from the site path. Thanks to
     @theomega for the idea (Issue #78 & #79)
 
 Version 0.8.4c7
@@ -23,7 +32,7 @@ Version 0.8.4c5
 
 Thanks to @merlinrebrovic
 
-*   Hyde starter kit extended with advanced options   
+*   Hyde starter kit extended with advanced options
 
 Version 0.8.4c4
 ===============
@@ -54,7 +63,7 @@ Version 0.8.4c1
 
 Thanks to @gfuchedzhy
 
-*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". 
+*   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
 
 Version 0.8.3
 ================
