@@ -95,13 +95,22 @@ class Context(object):
         context = {}
         try:
             context.update(ctx.data.__dict__)
-            for provider_name, resource_name in ctx.providers.__dict__.items():
-                res = File(Folder(sitepath).child(resource_name))
-                if res.exists:
-                    context[provider_name] = Expando(yaml.load(res.read_all()))
         except AttributeError:
             # No context data found
             pass
+
+        providers = {}
+        try:
+            providers.update(ctx.providers.__dict__)
+        except AttributeError:
+            # No providers found
+            pass
+
+        for provider_name, resource_name in providers.items():
+            res = File(Folder(sitepath).child(resource_name))
+            if res.exists:
+                context[provider_name] = Expando(yaml.load(res.read_all()))
+
         return context
 
 class Dependents(IterableUserDict):

@@ -162,6 +162,47 @@ main:
         assert "articles" in out
         assert "projects" in out
 
+    def test_context_providers_no_data(self):
+        site = Site(TEST_SITE, Config(TEST_SITE, config_dict={
+            "context": {
+                "providers": {
+                    "nav": "nav.yaml"
+                }
+            }
+        }))
+        nav = """
+main:
+    - home
+    - articles
+    - projects
+"""
+        text = """
+{% extends "base.html" %}
+
+{% block main %}
+    {{nav}}
+    {% for item in nav.main %}
+    {{item}}
+    {% endfor %}
+    abc = {{ abc }}
+    Hi!
+
+    I am a test template to make sure jinja2 generation works well with hyde.
+    {{resource.name}}
+{% endblock %}
+"""
+        File(TEST_SITE.child('nav.yaml')).write(nav)
+        site.load()
+        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        gen = Generator(site)
+        resource.source_file.write(text)
+        gen.generate_all()
+        target = File(site.config.deploy_root_path.child(resource.name))
+        out = target.read_all()
+        assert "home" in out
+        assert "articles" in out
+        assert "projects" in out
+
     def test_context_providers_equivalence(self):
         import yaml
         events = """
