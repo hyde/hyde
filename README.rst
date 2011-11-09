@@ -1,4 +1,4 @@
-Version 0.8.4c22
+Version 0.8.4
 
 A brand new **hyde**
 ====================
@@ -8,6 +8,9 @@ This is the new version of `hyde`_ under active development.
 
 `Hyde starter kit`_ by `merlinrebrovic`_ is a really nice way to get started
 with hyde.
+
+`Hyde layout for bootstrap`_ by `auzigog`_ is also a good alternative if you
+like Twitter's `bootstrap framework`_.
 
 Installation
 ------------
@@ -157,3 +160,6 @@ Links
 .. _merlinrebrovic: https://github.com/merlinrebrovic
 .. _rfk: https://github.com/rfk
 .. _PyFS library: http://packages.python.org/fs/
+.. _Hyde layout for bootstrap: https://github.com/auzigog/hyde-bootstrap
+.. _auzigog: https://github.com/auzigog
+.. _bootstrap framework: http://twitter.github.com/bootstrap/

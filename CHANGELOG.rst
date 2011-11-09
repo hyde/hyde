@@ -1,128 +1,52 @@
-Version 0.8.4c22
+Version 0.8.4
 ============================================================
 
 *   Bug Fix: Configuration now gets reloaded when server regenerates (Issue #70)
 *   Bug Fix: Added styles for codebox (Issue #69)
-
-Version 0.8.4c21
-============================================================
-
 *   Tagger now generates archives upfront in begin_site (Issue #72)
 *   **Breaking**: The default nodemeta file has been changed to meta.yaml
-
-Version 0.8.4c20
-============================================================
-
 *   Added test for codehilite markdown extension (Issue #82)
 *   Added rst_directive.py from the pygments repository (Issue #82)
-
-Version 0.8.4c19
-============================================================
-
 *   Added support for ignoring nodes (Issue #80)
 *   Hyde now ignores .hg, .svn and .git by default (Issue #80)
-
-Version 0.8.4c18
-============================================================
-
 *   Added support for default publisher (Issue #83)
-
-Version 0.8.4c17
-============================================================
+*   Added `urlencode` and `urldecode` filters. (Issue #102)
+*   Bug Fix: Fixed tests for Issue #88
+*   Added tests for sorting groups
+*   Added support for loading modules from the site path. Thanks to
+    @theomega for the idea (Issue #78 & #79)
+*   Added docutils to dev-req.txt
+*   Bug Fix: Fixed uglify-js tests
 
 Thanks to @nud
 
 *   `$PATH` based executable discovery for `CLTransformer` plugins. (Issue #100)
-
-Version 0.8.4c16
-============================================================
-
-Thanks to @nud
-
 *   Bug Fix: Fix class name of `test_stylus` (Issue #97)
-
-Version 0.8.4c15
-============================================================
 
 Thanks to @gfuchedzhy
 
 *   Bug Fix: Textlinks plugin: do nothing if resource doesn't use template (Issue #96)
-
-Version 0.8.4c14
-============================================================
-
-Thanks to @gfuchedzhy
-
 *   Bug Fix: Retain permissions in text files during generation (Issue #90)
-
-Version 0.8.4c13
-============================================================
+*   Bug Fix: Added support for encoded urls to hyde server. (Issue #88)
+*   Bug Fix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
+*   Bug Fix: All occurrences of `str` replaced with `unicode`. (Issue #87)
+*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
 
 Thanks to @vincentbernat
 
 *   Support for `output_format` configuration in markdown (Issue #89)
 
-Version 0.8.4c12
-============================================================
-
-*   Added `urlencode` and `urldecode` filters. (Issue #102)
-*   Bug Fix: Fixed tests for Issue #88
-
-Version 0.8.4c11
-============================================================
-
-Thanks to @gfuchedzhy
-
-*   Bug Fix: Added support for encoded urls to hyde server. (Issue #88)
-*   Bug Fix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
-
-Version 0.8.4c10
-============================================================
-
-Thanks to @gfuchedzhy
-
-*   Bug Fix: All occurrences of `str` replaced with `unicode`. (Issue #87)
-
-Version 0.8.4c9
-============================================================
-
-*   Added tests for sorting groups
-
 Thanks to @merlinrebrovic
 
-*   Hyde Starter Kit patches. (Issue #68)
-
-Version 0.8.4c8
-============================================================
-
-*   Added support for loading modules from the site path. Thanks to
-    @theomega for the idea (Issue #78 & #79)
-
-Version 0.8.4c7
-============================================================
+*   Hyde starter kit extended with advanced options (Issue #68)
 
 Thanks to @tcheneau
 
 *   Added support for AsciiDoc. (Issue #76)
 
-Version 0.8.4c6
-============================================================
-
 Thanks to @gr3dman
 
 *   Added paginator plugin and tests (Issue #73)
-
-Version 0.8.4c5
-============================================================
-
-Thanks to @merlinrebrovic
-
-*   Hyde starter kit extended with advanced options (Issue #68)
-
-Version 0.8.4c4
-============================================================
-
-*   Added docutils to dev-req.txt
 
 Thanks to @benallard
 
@@ -130,25 +54,10 @@ Thanks to @benallard
 *   Added restructuredText filter (Issue #63)
 *   Added traceback support for errors when server is running (Issue #63)
 
-Version 0.8.4c3
-============================================================
-
-*   Bug Fix: Fixed uglify-js tests
-
-Version 0.8.4c2
-============================================================
-
 Thanks to @rfk
 
 *   Added Sphinx Plugin (Issue #62)
 *   Bug fix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
-
-Version 0.8.4c1
-============================================================
-
-Thanks to @gfuchedzhy
-
-*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
 
 Version 0.8.3
 ============================================================
