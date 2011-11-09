@@ -1,3 +1,10 @@
+Version 0.8.4c14
+============================================================
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: Retain permissions in text files during generation (Issue #90)
+
 Version 0.8.4c13
 ============================================================
 

@@ -37,6 +37,7 @@ Contributors
     *   Bug Fix: All occurrences of `str` replaced with `unicode`.
     *   Bug Fix: Support for encoded urls.
     *   Bug Fix: Converted `content_url` and `media_url` to encoded urls
+    *   Bug Fix: Retain permissions in text files during generation (Issue #90)
 
 -   |merlinrebrovic|_
 
