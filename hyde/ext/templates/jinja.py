@@ -7,6 +7,7 @@ from datetime import datetime, date
 import os
 import re
 import itertools
+from urllib import quote, unquote
 
 from hyde.fs import File, Folder
 from hyde.model import Expando
@@ -55,6 +56,13 @@ def full_url(context, path):
     """
     return context['site'].full_url(path)
 
+@contextfilter
+def urlencode(ctx, url):
+    return quote(url.encode('utf8'))
+
+@contextfilter
+def urldecode(ctx, url):
+    return unquote(url).decode('utf8')
 
 @contextfilter
 def date_format(ctx, dt, fmt=None):
@@ -654,6 +662,8 @@ class Jinja2Template(Template):
         self.env.globals['full_url'] = full_url
         self.env.globals['engine'] = engine
         self.env.globals['deps'] = {}
+        self.env.filters['urlencode'] = urlencode
+        self.env.filters['urldecode'] = urldecode
         self.env.filters['asciidoc'] = asciidoc
         self.env.filters['markdown'] = markdown
         self.env.filters['restructuredtext'] = restructuredtext

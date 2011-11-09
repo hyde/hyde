@@ -689,5 +689,30 @@ item_list:
         html = t.render(text, {}).strip()
         assert html.strip() == expected.strip()
 
+    def test_urlencode_filter(self):
+        text= u"""
+<a href="{{ 'фотография.jpg'|urlencode }}">фотография</a>
+<a href="{{ 'http://localhost:8080/"abc.jpg'|urlencode }}">quoted</a>
+"""
+        expected = u"""
+<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография</a>
+<a href="http%3A//localhost%3A8080/%22abc.jpg">quoted</a>
+"""
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        assert html.strip() == expected.strip()
 
+    def test_urldecode_filter(self):
+        text= u"""
+<a href="{{ 'фотография.jpg'|urlencode }}">{{ "%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg"|urldecode }}</a>
+"""
+        expected = u"""
+<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография.jpg</a>
+"""
+        t = Jinja2Template(JINJA2.path)
+        t.configure(None)
+        html = t.render(text, {}).strip()
+        print html
+        assert html.strip() == expected.strip()
 
