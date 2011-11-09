@@ -37,7 +37,8 @@ Contributors
     *   Bug Fix: All occurrences of `str` replaced with `unicode`.
     *   Bug Fix: Support for encoded urls.
     *   Bug Fix: Converted `content_url` and `media_url` to encoded urls
-    *   Bug Fix: Retain permissions in text files during generation (Issue #90)
+    *   Bug Fix: Retain permissions in text files during generation
+    *   Bug Fix: Textlinks plugin: do nothing if resource doesn't use template
 
 -   |merlinrebrovic|_
 
@@ -55,7 +56,7 @@ Contributors
     *   Added support for parameters with `=` to `CLTransformer`
     *   Added JPEGOptim plugin
     *   Bug Fix: Ensure image sizer plugin handles external urls properly.
-    *   Support for `output_format` configuration in markdown (Issue #89)
+    *   Support for `output_format` configuration in markdown
 
 -   |pestaa|_
 

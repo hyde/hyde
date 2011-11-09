@@ -1,3 +1,10 @@
+Version 0.8.4c15
+============================================================
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: Textlinks plugin: do nothing if resource doesn't use template (Issue #96)
+
 Version 0.8.4c14
 ============================================================
 
