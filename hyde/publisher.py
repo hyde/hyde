@@ -38,12 +38,14 @@ class Publisher(object):
         try:
             settings = attrgetter("publisher.%s" % publisher)(site.config)
         except AttributeError:
-            # Find the first configured publisher
             settings = False
 
         if not settings:
+            # Find the first configured publisher
             try:
-                settings = site.config.publisher.__dict__.itervalues().next()
+                publisher = site.config.publisher.__dict__.iterkeys().next()
+                logger.warning("No default publisher configured. Using: %s" % publisher)
+                settings = attrgetter("publisher.%s" % publisher)(site.config)
             except (AttributeError, StopIteration):
                 logger.error(
                     "Cannot find the publisher configuration: %s" % publisher)

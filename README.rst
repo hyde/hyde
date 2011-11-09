@@ -1,4 +1,4 @@
-Version 0.8.4c17
+Version 0.8.4c18
 
 A brand new **hyde**
 ====================
@@ -61,7 +61,11 @@ Publishing the website
         hyde publish -p github
 
 
-Hyde supports extensible publishers. Right now only github is implemented.
+Hyde supports extensible publishers.
+
+Github
+~~~~~~~
+
 The hyde documentation is published to github pages using this command with
 the following configuration:
 
@@ -76,6 +80,42 @@ the following configuration:
 .. Note:: Currently, the initial path must have clone of the repository
           already in place for this command to work.
 
+PyFS
+~~~~~~~
+
+Hyde also has a publisher that acts as a frontend to the awesome
+`PyFS library`_ (thanks to `rfk`_). Here are a few configuration
+options for some PyFS backends:
+
+::
+
+        publisher:
+            zip:
+                type: hyde.ext.publishers.pyfs.PyFS
+                url: zip://~/deploy/hyde/docs.zip
+            s3:
+                type: hyde.ext.publishers.pyfs.PyFS
+                url: s3://hyde/docs
+            sftp:
+                type: hyde.ext.publishers.pyfs.PyFS
+                url: sftp:hydeuser:hydepassword@hydedocs.org
+
+.. Note:: PyFS is not installed with hyde. In order to use the
+          PyFS publisher, you need to install pyfs seprately.
+
+          Any PyFS dependencies (Example: `boto` for S3 publishing)
+          need to be installed seprately as well.
+
+          ::
+                pip install fs
+                pip install boto
+
+          To get additional help on PyFS backends, you can run the following
+          command once PyFS is installed:
+
+          ::
+                fsls --listopeners
+
 Examples
 --------
 
@@ -84,36 +124,18 @@ Examples
 3. `Ringce`_
 
 A brief list of features
-------------------------
+--------------------------
 
-1. Support for multiple templates (although only ``Jinja2`` is currently
-   implemented)
-2. The different processor modules in the previous version are now
-   replaced by a plugin object. This allows plugins to listen to events
+1. Evented Plugins: The Plugin hooks allow plugins to listen to events
    that occur during different times in the lifecycle and respond
    accordingly.
-3. Metadata: Hyde now supports hierarchical metadata. You can specify
+2. Metadata: Hyde now supports hierarchical metadata. You can specify
    and override variables at the site, node or the page level and access
    them in the templates.
-4. Organization: The sorter, grouper and tagger plugins provide rich
+3. Organization: The sorter, grouper and tagger plugins provide rich
    meta-data driven organizational capabilities to hyde sites.
-5. Syntactic Sugar: Because of the richness of the plugin
-   infrastructure, hyde can now provide additional syntactic sugar to
-   make the content more readable. See ``blockdown`` and ``syntext``
-   plugin for examples.
-
-Next Steps
-----------
-
-1. Documentation
-2. Default Layouts ✓
-3. Django Support
-4. Plugins:
-
-   -  Tags ✓
-   -  Atom / RSS ✓
-   -  Text Compressor (CSS, JS, HTML) ✓
-   -  Image optimizer ✓
+4. Publishing: Hyde sites can be published to variety of targets including:
+    github pages, Amazon S3 & SFTP.
 
 Links
 -----
@@ -131,3 +153,5 @@ Links
 .. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
 .. _Hyde starter kit: http://merlin.rebrovic.net/hyde-starter-kit/about.html
 .. _merlinrebrovic: https://github.com/merlinrebrovic
+.. _rfk: https://github.com/rfk
+.. _PyFS library: http://packages.python.org/fs/
