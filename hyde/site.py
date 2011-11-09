@@ -351,16 +351,24 @@ class RootNode(Node):
 
         with self.source_folder.walker as walker:
 
+            def dont_ignore(name):
+                for pattern in self.site.config.ignore:
+                    if fnmatch.fnmatch(name, pattern):
+                        return False
+                return True
+
             @walker.folder_visitor
             def visit_folder(folder):
-                self.add_node(folder)
+                if dont_ignore(folder.name):
+                    self.add_node(folder)
+                else:
+                    logger.debug("Ignoring node: %s" % folder.name)
+                    return False
 
             @walker.file_visitor
             def visit_file(afile):
-                for pattern in self.site.config.ignore:
-                    if fnmatch.fnmatch(afile.name, pattern):
-                        return
-                self.add_resource(afile)
+                if dont_ignore(afile.name):
+                    self.add_resource(afile)
 
 class Site(object):
     """

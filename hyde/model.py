@@ -150,7 +150,7 @@ class Config(Expando):
             base_url="/",
             not_found='404.html',
             plugins = [],
-            ignore = [ "*~", "*.bak" ]
+            ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"]
         )
         self.config_file = config_file
         self.config_dict = config_dict

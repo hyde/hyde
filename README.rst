@@ -134,8 +134,8 @@ A brief list of features
    them in the templates.
 3. Organization: The sorter, grouper and tagger plugins provide rich
    meta-data driven organizational capabilities to hyde sites.
-4. Publishing: Hyde sites can be published to variety of targets including:
-    github pages, Amazon S3 & SFTP.
+4. Publishing: Hyde sites can be published to variety of targets including
+   github pages, Amazon S3 & SFTP.
 
 Links
 -----

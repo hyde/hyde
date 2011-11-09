@@ -236,13 +236,32 @@ class TestSiteWithConfig(object):
         assert resource.full_url == "/media/" + path
 
     def test_config_ignore(self):
-        s = Site(self.SITE_PATH, config=self.config)
+        c = Config(self.SITE_PATH, config_dict=self.config.to_dict())
+        s = Site(self.SITE_PATH, config=c)
         s.load()
         path = 'apple-touch-icon.png'
         resource = s.content.resource_from_relative_path(path)
         assert resource
         assert resource.full_url ==  "/" + path
-        s = Site(self.SITE_PATH, config=self.config)
+        s = Site(self.SITE_PATH, config=c)
         s.config.ignore.append('*.png')
         resource = s.content.resource_from_relative_path(path)
         assert not resource
+
+    def test_config_ignore_nodes(self):
+        c = Config(self.SITE_PATH, config_dict=self.config.to_dict())
+        git = self.SITE_PATH.child_folder('.git')
+        git.make()
+        s = Site(self.SITE_PATH, config=c)
+        s.load()
+        git_node = s.content.node_from_relative_path('.git')
+        assert not git_node
+        blog_node = s.content.node_from_relative_path('blog')
+        assert blog_node
+        assert blog_node.full_url ==  "/blog"
+        s = Site(self.SITE_PATH, config=c)
+        s.config.ignore.append('blog')
+        blog_node = s.content.node_from_relative_path('blog')
+        assert not blog_node
+        git_node = s.content.node_from_relative_path('.git')
+        assert not git_node
