@@ -1,55 +1,69 @@
+Version 0.8.4c13
+============================================================
+
+Thanks to @vincentbernat
+
+*   Support for `output_format` configuration in markdown (Issue #89)
+
+Version 0.8.4c12
+============================================================
+
+*   Added `urlencode` and `urldecode` filters. (Issue #102)
+*   Bug Fix: Fixed tests for Issue #88
+
 Version 0.8.4c11
-================
+============================================================
 
 Thanks to @gfuchedzhy
 
 *   Bug Fix: Added support for encoded urls to hyde server. (Issue #88)
+*   Bug Fix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
 
 Version 0.8.4c10
-================
+============================================================
 
 Thanks to @gfuchedzhy
 
 *   Bug Fix: All occurrences of `str` replaced with `unicode`. (Issue #87)
 
 Version 0.8.4c9
-===============
+============================================================
 
-* Added tests for sorting groups
+*   Added tests for sorting groups
 
 Thanks to @merlinrebrovic
 
 *   Hyde Starter Kit patches. (Issue #68)
 
 Version 0.8.4c8
-===============
+============================================================
 
 *   Added support for loading modules from the site path. Thanks to
     @theomega for the idea (Issue #78 & #79)
 
 Version 0.8.4c7
-===============
+============================================================
 
 Thanks to @tcheneau
 
 *   Added support for AsciiDoc. (Issue #76)
 
 Version 0.8.4c6
-===============
+============================================================
 
 Thanks to @gr3dman
 
 *   Added paginator plugin and tests (Issue #73)
 
 Version 0.8.4c5
-===============
+============================================================
 
 Thanks to @merlinrebrovic
 
 *   Hyde starter kit extended with advanced options (Issue #68)
 
 Version 0.8.4c4
-===============
+============================================================
 
 *   Added docutils to dev-req.txt
 
@@ -60,12 +74,12 @@ Thanks to @benallard
 *   Added traceback support for errors when server is running (Issue #63)
 
 Version 0.8.4c3
-===============
+============================================================
 
 *   Bug Fix: Fixed uglify-js tests
 
 Version 0.8.4c2
-===============
+============================================================
 
 Thanks to @rfk
 
@@ -73,14 +87,14 @@ Thanks to @rfk
 *   Bug fix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
 
 Version 0.8.4c1
-================
+============================================================
 
 Thanks to @gfuchedzhy
 
 *   Bug Fix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
 
 Version 0.8.3
-================
+============================================================
 
 *   Bug Fix: A bad bug in Expando that modified the `__dict__` has been fixed.
     (Issue #53)
@@ -130,7 +144,7 @@ Thanks to @vincentbernat
 *   Fixes to CLTransformer (Issue #47)
 
 Version 0.8.2
-=============
+============================================================
 
 Thanks to @merlinrebrovic
 
@@ -156,7 +170,7 @@ Thanks to @pestaa
 
 
 Version 0.8.1
-=============
+============================================================
 
 Thanks to @rfk.
 
@@ -166,12 +180,12 @@ Thanks to @rfk.
 *   PyFS publisher with mtime and etags support. (Issue #28)
 
 Version 0.8
-==============
+============================================================
 
 *   Relative path bugs in windows generation have been fixed.
 
 Version 0.8rc3
-==============
+============================================================
 
 *   Fixed a jinja2 loader path issue that prevented site generation in windows
 *   Fixed tests for stylus plugin to account for more accurate color

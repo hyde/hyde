@@ -5,7 +5,7 @@ This version would not exist without the contributions from the
 `original hyde project`_.
 
 Contributors
-------------
+================================================================================
 -   |theevocater|_
 
     *   Fixed Authors link in README
@@ -36,6 +36,7 @@ Contributors
     *   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
     *   Bug Fix: All occurrences of `str` replaced with `unicode`.
     *   Bug Fix: Support for encoded urls.
+    *   Bug Fix: Converted `content_url` and `media_url` to encoded urls
 
 -   |merlinrebrovic|_
 
@@ -53,6 +54,7 @@ Contributors
     *   Added support for parameters with `=` to `CLTransformer`
     *   Added JPEGOptim plugin
     *   Bug Fix: Ensure image sizer plugin handles external urls properly.
+    *   Support for `output_format` configuration in markdown (Issue #89)
 
 -   |pestaa|_
 
