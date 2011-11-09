@@ -103,18 +103,18 @@ options for some PyFS backends:
 .. Note:: PyFS is not installed with hyde. In order to use the
           PyFS publisher, you need to install pyfs seprately.
 
-          Any PyFS dependencies (Example: `boto` for S3 publishing)
-          need to be installed seprately as well.
+Any PyFS dependencies (Example: `boto` for S3 publishing)
+need to be installed seprately as well.
 
-          ::
-                pip install fs
-                pip install boto
+::
+      pip install fs
+      pip install boto
 
-          To get additional help on PyFS backends, you can run the following
-          command once PyFS is installed:
+To get additional help on PyFS backends, you can run the following
+command once PyFS is installed:
 
-          ::
-                fsls --listopeners
+::
+      fsls --listopeners
 
 Examples
 --------
