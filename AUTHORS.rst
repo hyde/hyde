@@ -6,6 +6,10 @@ This version would not exist without the contributions from the
 
 Contributors
 ================================================================================
+-   |nud|_
+
+    *   Bug Fix: Fix class name of `test_stylus` (Issue #97)
+
 -   |theevocater|_
 
     *   Fixed Authors link in README
@@ -42,7 +46,7 @@ Contributors
 
 -   |merlinrebrovic|_
 
-    * Hyde starter kit
+    *   Hyde starter kit
 
 -   |vincentbernat|_
 
@@ -103,3 +107,5 @@ Contributors
 .. _tcheneau: https://github.com/tcheneau/
 .. |theevocater| replace:: Jacob Kaufman
 .. _theevocater: https://github.com/theevocater
+.. |nud| replace:: Steve Frécinaux
+.. _nud: https://github.com/nud
