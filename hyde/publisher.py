@@ -34,16 +34,25 @@ class Publisher(object):
 
     @staticmethod
     def load_publisher(site, publisher, message):
+        logger = getLoggerWithNullHandler('hyde.engine.publisher')
         try:
             settings = attrgetter("publisher.%s" % publisher)(site.config)
         except AttributeError:
-            logger = getLoggerWithNullHandler('hyde.engine.publisher')
-            logger.error(
-                "Cannot find the publisher configuration: %s" % publisher)
-            raise
+            # Find the first configured publisher
+            settings = False
+
+        if not settings:
+            try:
+                settings = site.config.publisher.__dict__.itervalues().next()
+            except (AttributeError, StopIteration):
+                logger.error(
+                    "Cannot find the publisher configuration: %s" % publisher)
+                raise
+
         if not hasattr(settings, 'type'):
             logger.error(
                 "Publisher type not specified: %s" % publisher)
             raise Exception("Please specify the publisher type in config.")
+
         pub_class = load_python_object(settings.type)
         return pub_class(site, settings, message)

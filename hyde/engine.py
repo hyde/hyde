@@ -150,7 +150,7 @@ class Engine(Application):
     @subcommand('publish', help='Publish the website')
     @store('-c', '--config-path', default='site.yaml', dest='config',
             help='The configuration used to generate the site')
-    @store('-p', '--publisher', dest='publisher', required=True,
+    @store('-p', '--publisher', dest='publisher', default='default',
             help='Points to the publisher configuration.')
     @store('-m', '--message', dest='message',
             help='Optional message.')
