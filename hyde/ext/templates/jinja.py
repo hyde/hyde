@@ -125,7 +125,7 @@ def markdown(env, value):
         import markdown as md
     except ImportError:
         logger.error(u"Cannot load the markdown library.")
-        raise TemplateError("Cannot load the markdown library")
+        raise TemplateError(u"Cannot load the markdown library")
     output = value
     d = {}
     if hasattr(env.config, 'markdown'):
@@ -147,8 +147,16 @@ def restructuredtext(env, value):
     try:
         from docutils.core import publish_parts
     except ImportError:
-        print u"Requires docutils library to use restructuredtext tag."
-        raise
+        logger.error(u"Cannot load the docutils library.")
+        raise TemplateError(u"Cannot load the docutils library.")
+
+    highlight_source = False
+    if hasattr(env.config, 'restructuredtext'):
+        highlight_source = getattr(env.config.restructuredtext, 'highlight_source', False)
+
+    if highlight_source:
+        import hyde.lib.pygments.rst_directive
+
     parts = publish_parts(source=value, writer_name="html")
     return parts['html_body']
 

@@ -1,3 +1,9 @@
+Version 0.8.4c20
+============================================================
+
+*   Added test for codehilite markdown extension (Issue #82)
+*   Added rst_directive.py from the pygments repository (Issue #82)
+
 Version 0.8.4c19
 ============================================================
 
@@ -8,7 +14,6 @@ Version 0.8.4c18
 ============================================================
 
 *   Added support for default publisher (Issue #83)
-
 
 Version 0.8.4c17
 ============================================================

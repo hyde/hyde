@@ -193,6 +193,41 @@ Hello
 <h1 class="title">Hello</h1>
 </div>""", html
 
+def test_restructuredtext_with_sourcecode():
+    source = """
+{% restructuredtext %}
+Code
+====
+.. sourcecode:: python
+
+    def add(a, b):
+        return a + b
+
+See `Example`_
+
+.. _Example: example.html
+
+{% endrestructuredtext %}
+"""
+
+    expected = """
+<div class="document" id="code">
+<h1 class="title">Code</h1>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+<p>See <a class="reference external" href="example.html">Example</a></p>
+</div>
+"""
+    t = Jinja2Template(JINJA2.path)
+    s = Site(JINJA2.path)
+    c = Config(JINJA2.path, config_dict=dict(
+                    restructuredtext=dict(highlight_source=True)))
+    s.config = c
+    t.configure(s)
+    html = t.render(source, {}).strip()
+    assert html.strip() == expected.strip()
+
 def test_markdown_with_extensions():
     source = """
     {%markdown%}

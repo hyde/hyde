@@ -1,4 +1,4 @@
-Version 0.8.4c19
+Version 0.8.4c20
 
 A brand new **hyde**
 ====================
