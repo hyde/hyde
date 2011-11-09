@@ -15,10 +15,12 @@ class LessCSSPlugin(CLTransformer):
     The plugin class for less css
     """
 
-    default_app_path = "lessc"
-
     def __init__(self, site):
         super(LessCSSPlugin, self).__init__(site)
+
+    @property
+    def executable_name(self):
+        return "lessc"
 
     def begin_site(self):
         """

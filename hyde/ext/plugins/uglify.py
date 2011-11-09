@@ -11,10 +11,12 @@ class UglifyPlugin(CLTransformer):
     The plugin class for Uglify JS
     """
 
-    default_app_path = "uglifyjs"
-
     def __init__(self, site):
         super(UglifyPlugin, self).__init__(site)
+
+    @property
+    def executable_name(self):
+        return "uglifyjs"
 
     @property
     def plugin_name(self):

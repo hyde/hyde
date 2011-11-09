@@ -18,7 +18,6 @@ import re
 import subprocess
 import traceback
 
-
 logger = getLoggerWithNullHandler('hyde.engine')
 
 class PluginProxy(object):
@@ -207,6 +206,8 @@ class CLTransformer(Plugin):
     def plugin_name(self):
         """
         The name of the plugin. Makes an intelligent guess.
+
+        This is used to lookup the settings for the plugin.
         """
 
         return self.__class__.__name__.replace('Plugin', '').lower()
@@ -221,10 +222,11 @@ class CLTransformer(Plugin):
         return {}
 
     @property
-    def default_app_path(self):
+    def executable_name(self):
         """
-        Default command line application path. Can be overridden
-        by specifying it in config.
+        The executable name for the plugin. This can be overridden in the
+        config. If a configuration option is not provided, this is used
+        to guess the complete path of the executable.
         """
         return self.plugin_name
 
@@ -237,7 +239,10 @@ class CLTransformer(Plugin):
 
         return ("%(name)s executable path not configured properly. "
         "This plugin expects `%(name)s.app` to point "
-        "to the `%(name)s` executable." % {"name": self.plugin_name})
+        "to the full path of the `%(exec)s` executable." %
+        {
+            "name":self.plugin_name, "exec": self.executable_name
+        })
 
     @property
     def settings(self):
@@ -256,12 +261,15 @@ class CLTransformer(Plugin):
     def app(self):
         """
         Gets the application path from the site configuration.
+
+        If the path is not configured, attempts to guess the path
+        from the sytem path environment variable.
         """
 
         try:
             app_path = getattr(self.settings, 'app')
         except AttributeError:
-            app_path = self.default_app_path
+            app_path = self.executable_name
 
         # Honour the PATH environment variable.
         if app_path is not None and not os.path.isabs(app_path):
