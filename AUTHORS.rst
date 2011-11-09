@@ -5,10 +5,11 @@ This version would not exist without the contributions from the
 `original hyde project`_.
 
 Contributors
-================================================================================
+===============================================================================
 -   |nud|_
 
-    *   Bug Fix: Fix class name of `test_stylus` (Issue #97)
+    *   Bug Fix: Fix class name of `test_stylus`
+    *   `$PATH` based executable discovery for `CLTransformer` plugins.
 
 -   |theevocater|_
 
@@ -104,7 +105,7 @@ Contributors
 .. |gr3dman| replace:: Gareth Redman
 .. _gr3dman: https://github.com/gr3dman
 .. |tcheneau| replace:: Tony Cheneau
-.. _tcheneau: https://github.com/tcheneau/
+.. _tcheneau: https://github.com/tcheneau
 .. |theevocater| replace:: Jacob Kaufman
 .. _theevocater: https://github.com/theevocater
 .. |nud| replace:: Steve Frécinaux

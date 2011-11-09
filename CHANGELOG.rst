@@ -1,3 +1,10 @@
+Version 0.8.4c17
+============================================================
+
+Thanks to @nud
+
+*   `$PATH` based executable discovery for `CLTransformer` plugins. (Issue #100)
+
 Version 0.8.4c16
 ============================================================
 
