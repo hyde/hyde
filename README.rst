@@ -107,14 +107,16 @@ Any PyFS dependencies (Example: `boto` for S3 publishing)
 need to be installed seprately as well.
 
 ::
-      pip install fs
-      pip install boto
+
+        pip install fs
+        pip install boto
 
 To get additional help on PyFS backends, you can run the following
 command once PyFS is installed:
 
 ::
-      fsls --listopeners
+
+        fsls --listopeners
 
 Examples
 --------

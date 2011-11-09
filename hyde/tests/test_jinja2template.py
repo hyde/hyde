@@ -209,6 +209,39 @@ def test_markdown_with_extensions():
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading_3">Heading 3</h3>'
 
+def test_markdown_with_sourcecode():
+    source = """
+{%markdown%}
+# Code
+
+    :::python
+    def add(a, b):
+        return a + b
+
+See [Example][]
+[Example]: example.html
+
+{%endmarkdown%}
+"""
+
+    expected = """
+    <h1>Code</h1>
+<div class="codehilite"><pre><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+
+
+<p>See <a href="example.html">Example</a></p>
+    """
+    t = Jinja2Template(JINJA2.path)
+    s = Site(JINJA2.path)
+    c = Config(JINJA2.path, config_dict=dict(
+                    markdown=dict(extensions=['codehilite'])))
+    s.config = c
+    t.configure(s)
+    html = t.render(source, {}).strip()
+    assert html.strip() == expected.strip()
+
 
 def test_line_statements():
     source = """
@@ -713,6 +746,5 @@ item_list:
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
         html = t.render(text, {}).strip()
-        print html
         assert html.strip() == expected.strip()
 
