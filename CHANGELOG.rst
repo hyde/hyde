@@ -1,3 +1,10 @@
+Version 0.8.4c11
+================
+
+Thanks to @gfuchedzhy
+
+*   Bug Fix: Added support for encoded urls to hyde server. (Issue #88)
+
 Version 0.8.4c10
 ================
 

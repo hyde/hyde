@@ -35,6 +35,7 @@ Contributors
     *   Bug Fix: Sorter excludes items that do not have sorting attributes.
     *   Bug Fix: CLTransformer now gracefully handles arguments that have "=".
     *   Bug Fix: All occurrences of `str` replaced with `unicode`.
+    *   Bug Fix: Support for encoded urls.
 
 -   |merlinrebrovic|_
 
