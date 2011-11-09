@@ -93,7 +93,6 @@ class TaggerPlugin(Plugin):
         Initialize plugin. Add tag to the site context variable
         and methods for walking tagged resources.
         """
-        self.logger.debug("*************************************")
         self.logger.debug("Adding tags from metadata")
         config = self.site.config
         content = self.site.content
@@ -106,7 +105,6 @@ class TaggerPlugin(Plugin):
         self._process_tag_metadata(tags)
         self.site.tagger = Expando(dict(tags=tags))
         self._generate_archives()
-        self.logger.debug("*************************************")
 
     def _process_tag_metadata(self, tags):
         """
