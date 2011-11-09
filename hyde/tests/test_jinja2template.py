@@ -782,4 +782,3 @@ item_list:
         t.configure(None)
         html = t.render(text, {}).strip()
         assert html.strip() == expected.strip()
-

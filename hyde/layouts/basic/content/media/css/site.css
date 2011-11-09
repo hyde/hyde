@@ -442,3 +442,30 @@ a.backlink:hover, a.prev:hover, a.next:hover{
     float: right;
     margin-bottom:0;
 }
+
+
+.codebox {
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+.code {
+  position: relative;
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  -o-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  background-color: #F0F3F3;
+}
+.code figcaption {
+  font-size: 10px;
+  position: absolute;
+  bottom: 3px;
+  right: 12px;
+  color: rgba(0, 0, 0, 0.5);
+}
+.highlight pre {
+  font-size: 12px;
+  padding: 16px 12px 12px;
+  line-height: 24px;
+  margin-bottom: 8px;
+}
