@@ -2,6 +2,7 @@
 Module for python 2.6 compatibility.
 """
 import logging
+import os
 import sys
 from itertools import ifilter, izip, tee
 
@@ -121,4 +122,15 @@ def first_match(predicate, iterable):
     for item in iterable:
         if predicate(item):
             return item
+    return None
+
+def discover_executable(name):
+    """
+    Finds an executable in the path list provided by the PATH
+    environment variable.
+    """
+    for path in os.environ['PATH'].split(os.pathsep):
+        full_name = os.path.join(path, name)
+        if os.path.exists(full_name):
+            return full_name
     return None

@@ -31,14 +31,10 @@ class TestUglify(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
         s.config.mode = "production"
-        paths = ['/usr/local/share/npm/bin/uglifyjs', '~/local/bin/uglifyjs',
-                 '/usr/bin/uglifyjs', '~/bin/uglifyjs']
-        uglify = [path for path in paths if File(path).exists]
-        if not uglify:
-            assert False, "Cannot find the uglify executable"
-
-        uglify = uglify[0]
-        s.config.uglify = Expando(dict(app=uglify))
+        paths = ['/usr/local/share/npm/bin/uglifyjs']
+        for path in paths:
+            if File(path).exists:
+                s.config.uglify = Expando(dict(app=path))
         source = TEST_SITE.child('content/media/js/jquery.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)

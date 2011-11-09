@@ -29,14 +29,10 @@ class TestStylus(object):
     def test_can_execute_stylus(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
-        paths = ['/usr/local/share/npm/bin/stylus', '~/local/bin/stylus',
-                 '~/bin/stylus']
-        stylus = [path for path in paths if File(path).exists]
-        if not stylus:
-            assert False, "Cannot find the stylus executable"
-
-        stylus = stylus[0]
-        s.config.stylus = Expando(dict(app=stylus))
+        paths = ['/usr/local/share/npm/bin/stylus']
+        for path in paths:
+            if File(path).exists:
+                s.config.stylus = Expando(dict(app=path))
         source = TEST_SITE.child('content/media/css/site.styl')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
         gen = Generator(s)
@@ -51,14 +47,10 @@ class TestStylus(object):
         s = Site(TEST_SITE)
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
-        paths = ['/usr/local/share/npm/bin/stylus', '~/local/bin/stylus',
-                 '~/bin/stylus']
-        stylus = [path for path in paths if File(path).exists]
-        if not stylus:
-            assert False, "Cannot find the stylus executable"
-
-        stylus = stylus[0]
-        s.config.stylus = Expando(dict(app=stylus))
+        paths = ['/usr/local/share/npm/bin/stylus']
+        for path in paths:
+            if File(path).exists:
+                s.config.stylus = Expando(dict(app=path))
         source = TEST_SITE.child('content/media/css/site.styl')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
         gen = Generator(s)

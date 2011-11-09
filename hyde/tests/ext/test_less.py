@@ -29,13 +29,10 @@ class TestLess(object):
     def test_can_execute_less(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.less.LessCSSPlugin']
-        paths = ['/usr/local/share/npm/bin/lessc', '~/local/bin/lessc',
-                 '/usr/bin/lessc', '~/bin/lessc']
-        less = [path for path in paths if File(path).exists]
-        if not less:
-            assert False, "Cannot find the lessc executable"
-        less = less[0]
-        s.config.less = Expando(dict(app=less))
+        paths = ['/usr/local/share/npm/bin/lessc']
+        for path in paths:
+            if File(path).exists:
+                s.config.less = Expando(dict(app=path))
         source = TEST_SITE.child('content/media/css/site.less')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
         gen = Generator(s)

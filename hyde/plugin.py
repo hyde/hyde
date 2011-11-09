@@ -8,11 +8,12 @@ from hyde import loader
 
 from hyde.exceptions import HydeException
 from hyde.fs import File
-from hyde.util import getLoggerWithNullHandler, first_match
+from hyde.util import getLoggerWithNullHandler, first_match, discover_executable
 from hyde.model import Expando
 
 from functools import partial
 
+import os
 import re
 import subprocess
 import traceback
@@ -220,6 +221,14 @@ class CLTransformer(Plugin):
         return {}
 
     @property
+    def default_app_path(self):
+        """
+        Default command line application path. Can be overridden
+        by specifying it in config.
+        """
+        return self.plugin_name
+
+    @property
     def executable_not_found_message(self):
         """
         Message to be displayed if the command line application
@@ -252,6 +261,13 @@ class CLTransformer(Plugin):
         try:
             app_path = getattr(self.settings, 'app')
         except AttributeError:
+            app_path = self.default_app_path
+
+        # Honour the PATH environment variable.
+        if app_path is not None and not os.path.isabs(app_path):
+            app_path = discover_executable(app_path)
+
+        if app_path is None:
             raise self.template.exception_class(
                     self.executable_not_found_message)
 
