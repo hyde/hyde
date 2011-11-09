@@ -1,3 +1,8 @@
+Version 0.8.4c21
+============================================================
+*   Tagger now generates archives upfront in begin_site (Issue #72)
+*   **Breaking**: The default nodemeta file has been changed to meta.yaml
+
 Version 0.8.4c20
 ============================================================
 
