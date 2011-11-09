@@ -57,3 +57,5 @@ tagger:
             target: blog/tags
             template: tagged_posts.j2
             archive_extension: html
+            meta:
+                listable: false

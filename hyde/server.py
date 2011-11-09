@@ -191,6 +191,8 @@ class HydeWebServer(HTTPServer):
         try:
             logger.info('Regenerating the entire site')
             self.regeneration_time = datetime.now()
+            if self.site.config.needs_refresh():
+                self.site.config.reload()
             self.site.load()
             self.generator.generate_all(incremental=False)
         except Exception, exception:
