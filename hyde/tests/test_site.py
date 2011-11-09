@@ -5,6 +5,7 @@ Use nose
 `$ nosetests`
 """
 import yaml
+from urllib import quote
 
 from hyde.fs import File, Folder
 from hyde.model import Config, Expando
@@ -60,9 +61,9 @@ def test_node_full_url():
     r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)
     assert not r.module
     n = r.add_node(TEST_SITE_ROOT.child_folder('content/blog'))
-    assert n.full_url == 'http://localhost/blog'
+    assert n.full_url == quote('http://localhost/blog')
     c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
-    assert c.full_url == 'http://localhost/blog/2010/december'
+    assert c.full_url == quote('http://localhost/blog/2010/december')
 
 def test_node_relative_path():
     s = Site(TEST_SITE_ROOT)

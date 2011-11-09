@@ -7,6 +7,7 @@ Use nose
 from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
+from urllib import quote
 
 from pyquery import PyQuery
 
@@ -56,5 +57,5 @@ class TestTextlinks(object):
         html = f.read_all()
         assert html
         for name, path in d.items():
-            assert site.config.base_url + path in html
+            assert quote(site.config.base_url + path) in html
         assert '/media/img/hyde-logo.png' in html
