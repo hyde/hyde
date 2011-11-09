@@ -1,5 +1,11 @@
+Version 0.8.4c22
+============================================================
+
+*   Configuration now gets reloaded when server regenerates (Issue #70)
+
 Version 0.8.4c21
 ============================================================
+
 *   Tagger now generates archives upfront in begin_site (Issue #72)
 *   **Breaking**: The default nodemeta file has been changed to meta.yaml
 
