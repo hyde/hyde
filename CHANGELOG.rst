@@ -1,3 +1,9 @@
+Version 0.8.4c19
+============================================================
+
+*   Added support for ignoring nodes (Issue #80)
+*   Hyde now ignores .hg, .svn and .git by default (Issue #80)
+
 Version 0.8.4c18
 ============================================================
 
