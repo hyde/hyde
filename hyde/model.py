@@ -150,7 +150,10 @@ class Config(Expando):
             base_url="/",
             not_found='404.html',
             plugins = [],
-            ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"]
+            ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"],
+            meta = {
+                "nodemeta": 'meta.yaml'
+            }
         )
         self.config_file = config_file
         self.config_dict = config_dict

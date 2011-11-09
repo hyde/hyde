@@ -138,7 +138,7 @@ title: Even nicer title
 """
         about2 = File(TEST_SITE.child('content/about2.html'))
         about2.write(text % d)
-        meta = File(TEST_SITE.child('content/nodemeta.yaml'))
+        meta = File(TEST_SITE.child('content/meta.yaml'))
         meta.write(yaml.dump(d))
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']

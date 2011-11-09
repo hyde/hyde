@@ -114,6 +114,7 @@ class TestConfig(object):
         assert c.ignore == ["*~", "*.bak", ".hg", ".git", ".svn"]
         assert c.deploy_root_path == TEST_SITE.child_folder('deploy')
         assert c.not_found == '404.html'
+        assert c.meta.nodemeta == 'meta.yaml'
 
     def test_conf1(self):
         c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf1))

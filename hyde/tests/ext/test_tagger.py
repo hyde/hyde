@@ -27,7 +27,6 @@ class TestTagger(object):
     def tearDown(self):
         TEST_SITE.delete()
 
-
     def test_tagger_walker(self):
         gen = Generator(self.s)
         gen.load_site_if_needed()
@@ -85,7 +84,6 @@ class TestTagger(object):
 
         q = PyQuery(File(tags_folder.child('sad.html')).read_all())
         assert q
-
 
         assert q('li').length == 2
         assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
@@ -165,7 +163,10 @@ class TestTagger(object):
                         "template": "emotions.j2",
                         "source": "blog",
                         "target": "blog/tags",
-                        "extension": "html"
+                        "extension": "html",
+                        "meta": {
+                            "author": "Tagger Plugin"
+                        }
                     }
                },
                "tags": {
@@ -180,13 +181,14 @@ class TestTagger(object):
         }
 
         text = """
+<div id="author">{{ resource.meta.author }}</div>
 <h1>Posts tagged: {{ tag }} in {{ node.name|title }}</h1>
 Emotions:
 <ul>
 {% for emotion in tag.emotions %}
 <li class="emotion">
 {{ emotion }}
-</li>'
+</li>
 {% endfor %}
 <ul>
 {% for resource in walker() -%}
@@ -215,7 +217,9 @@ Emotions:
         from pyquery import PyQuery
 
         q = PyQuery(archives['sad'].read_all())
+        print q
         assert len(q("li.emotion")) == 2
+        assert q("#author").text() == "Tagger Plugin"
 
         q = PyQuery(archives['angry'].read_all())
         assert len(q("li.emotion")) == 3

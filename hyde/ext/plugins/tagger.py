@@ -93,7 +93,7 @@ class TaggerPlugin(Plugin):
         Initialize plugin. Add tag to the site context variable
         and methods for walking tagged resources.
         """
-
+        self.logger.debug("*************************************")
         self.logger.debug("Adding tags from metadata")
         config = self.site.config
         content = self.site.content
@@ -102,24 +102,17 @@ class TaggerPlugin(Plugin):
             'walk_resources_tagged_with', walk_resources_tagged_with)
         walker = get_tagger_sort_method(self.site)
         for resource in walker():
-            try:
-                taglist = attrgetter("meta.tags")(resource)
-            except AttributeError:
-                continue
-            for tagname in taglist:
-                if not tagname in tags:
-                    tag = Tag(tagname)
-                    tags[tagname] = tag
-                    tag.resources.append(resource)
-                    add_method(Node,
-                        'walk_resources_tagged_with_%s' % tagname,
-                        walk_resources_tagged_with,
-                        tag=tag)
-                else:
-                    tags[tagname].resources.append(resource)
-                if not hasattr(resource, 'tags'):
-                    setattr(resource, 'tags', [])
-                resource.tags.append(tags[tagname])
+            self._process_tags_in_resource(resource, tags)
+        self._process_tag_metadata(tags)
+        self.site.tagger = Expando(dict(tags=tags))
+        self._generate_archives()
+        self.logger.debug("*************************************")
+
+    def _process_tag_metadata(self, tags):
+        """
+        Parses and adds metadata to the tagger object, if the tagger
+        configuration contains metadata.
+        """
         try:
             tag_meta = self.site.config.tagger.tags.to_dict()
         except AttributeError:
@@ -133,14 +126,36 @@ class TaggerPlugin(Plugin):
                 del(meta['name'])
             if tagname in tags:
                 tags[tagname].update(meta)
-        self.site.tagger = Expando(dict(tags=tags))
 
-    def site_complete(self):
+    def _process_tags_in_resource(self, resource, tags):
         """
-        Generate archives.
+        Reads the tags associated with this resource and
+        adds them to the tag list if needed.
         """
+        try:
+            taglist = attrgetter("meta.tags")(resource)
+        except AttributeError:
+            return
 
-        content = self.site.content
+        for tagname in taglist:
+            if not tagname in tags:
+                tag = Tag(tagname)
+                tags[tagname] = tag
+                tag.resources.append(resource)
+                add_method(Node,
+                    'walk_resources_tagged_with_%s' % tagname,
+                    walk_resources_tagged_with,
+                    tag=tag)
+            else:
+                tags[tagname].resources.append(resource)
+            if not hasattr(resource, 'tags'):
+                setattr(resource, 'tags', [])
+            resource.tags.append(tags[tagname])
+
+    def _generate_archives(self):
+        """
+        Generates archives if the configuration demands.
+        """
         archive_config = None
 
         try:
@@ -151,33 +166,52 @@ class TaggerPlugin(Plugin):
         self.logger.debug("Generating archives for tags")
 
         for name, config in archive_config.to_dict().iteritems():
+            self._create_tag_archive(config)
 
-            if not 'template' in config:
-                raise self.template.exception_class(
-                    "No Template specified in tagger configuration.")
-            source = content.node_from_relative_path(config.get('source', ''))
-            target = self.site.config.deploy_root_path.child_folder(
-                            config.get('target', 'tags'))
-            extension = config.get('extension', 'html')
 
-            if not target.exists:
-                target.make()
+    def _create_tag_archive(self, config):
+        """
+        Generates archives for each tag based on the given configuration.
+        """
+        if not 'template' in config:
+            raise self.template.exception_class(
+                "No Template specified in tagger configuration.")
+        content = self.site.content.source_folder
+        source = Folder(config.get('source', ''))
+        target = content.child_folder(config.get('target', 'tags'))
+        if not target.exists:
+            target.make()
 
-            template = config['template']
-            text = "{%% extends \"%s\" %%}" % template
+        # Write meta data for the configuration
+        meta = config.get('meta', {})
+        meta_text = u''
+        if meta:
+            import yaml
+            meta_text = yaml.dump(meta, default_flow_style=False)
 
-            for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
-                context = {}
-                context.update(self.site.context)
-                context.update(dict(
-                                    time_now=datetime.now(),
-                                    site=self.site,
-                                    node=source,
-                                    tag=tag,
-                                    walker=getattr(source,
-                                        "walk_resources_tagged_with_%s" % tagname)
-                                ))
-                archive_text = self.template.render(text, context)
-                archive_file = File(target.child("%s.%s" % (tagname, extension)
-                    if extension is not None else tagname))
-                archive_file.write(archive_text)
+        extension = config.get('extension', 'html')
+        template = config['template']
+
+        archive_text = u"""
+---
+extends: false
+%(meta)s
+---
+
+{%% set tag = site.tagger.tags['%(tag)s'] %%}
+{%% set source = site.content.node_from_relative_path('%(node)s') %%}
+{%% set walker = source.walk_resources_tagged_with_%(tag)s %%}
+{%% extends "%(template)s" %%}
+"""
+        for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
+            tag_data = {
+                "tag": tagname,
+                "node": source.name,
+                "template": template,
+                "meta": meta_text
+            }
+            text = archive_text % tag_data
+            archive_file = File(target.child("%s.%s" % (tagname, extension)))
+            archive_file.delete()
+            archive_file.write(text.strip())
+            self.site.content.add_resource(archive_file)
