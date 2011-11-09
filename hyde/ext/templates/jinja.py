@@ -133,6 +133,8 @@ def markdown(env, value):
         d['extension_configs'] = getattr(env.config.markdown,
                                         'extension_configs',
                                         Expando({})).to_dict()
+        if hasattr(env.config.markdown, 'output_format'):
+            d['output_format'] = env.config.markdown.output_format
     marked = md.Markdown(**d)
 
     return marked.convert(output)
