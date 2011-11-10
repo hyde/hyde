@@ -53,8 +53,8 @@ class UrlCleanerPlugin(Plugin):
 
         def clean_url(urlgetter):
             @wraps(urlgetter)
-            def wrapper(site, path):
-                url = urlgetter(site, path)
+            def wrapper(site, path, safe=None):
+                url = urlgetter(site, path, safe)
                 index_file_names = getattr(settings,
                                         'index_file_names',
                                         ['index.html'])

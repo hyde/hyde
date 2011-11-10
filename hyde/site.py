@@ -51,7 +51,6 @@ class Processable(object):
         """
         return self.source.path
 
-
 class Resource(Processable):
     """
     Represents any file that is processed by hyde
@@ -412,33 +411,46 @@ class Site(object):
         """
         self.content.load()
 
-    def content_url(self, path):
+    def content_url(self, path, safe=None):
         """
         Returns the content url by appending the base url from the config
-        with the given path.
+        with the given path. The return value is url encoded.
         """
-        return quote(Folder(self.config.base_url).child(path).replace(os.sep, '/').encode("utf-8"))
+        fpath = Folder(self.config.base_url) \
+                        .child(path) \
+                        .replace(os.sep, '/').encode("utf-8")
+        if safe is not None:
+            return quote(fpath, safe)
+        else:
+            return quote(fpath)
 
-    def media_url(self, path):
+    def media_url(self, path, safe=None):
         """
         Returns the media url by appending the media base url from the config
-        with the given path.
+        with the given path. The return value is url encoded.
         """
-        return quote(Folder(self.config.media_url).child(path).replace(os.sep, '/').encode("utf-8"))
+        fpath = Folder(self.config.media_url) \
+                        .child(path) \
+                        .replace(os.sep, '/').encode("utf-8")
+        if safe is not None:
+            return quote(fpath, safe)
+        else:
+            return quote(fpath)
 
-    def full_url(self, path):
+    def full_url(self, path, safe=None):
         """
         Determines if the given path is media or content based on the
-        configuration and returns the appropriate url.
+        configuration and returns the appropriate url. The return value
+        is url encoded.
         """
         if urlparse.urlparse(path)[:2] != ("",""):
             return path
         if self.is_media(path):
             relative_path = File(path).get_relative_path(
                                 Folder(self.config.media_root))
-            return self.media_url(relative_path)
+            return self.media_url(relative_path, safe)
         else:
-            return self.content_url(path)
+            return self.content_url(path, safe)
 
     def is_media(self, path):
         """

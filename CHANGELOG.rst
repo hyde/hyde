@@ -1,3 +1,9 @@
+Version 0.8.5a1
+============================================================
+
+*   Added ability to specify safe characters in `content_url`,
+    `media_url` functions and `urlencode` filter. (Issue #103)
+
 Version 0.8.4
 ============================================================
 

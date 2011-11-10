@@ -197,6 +197,18 @@ class TestSiteWithConfig(object):
         path = 'blog/2010/december'
         assert s.content_url(path) == "/" + path
 
+    def test_content_url_encoding(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = '".jpg'
+        assert s.content_url(path) == quote("/" + path)
+
+    def test_content_url_encoding_safe(self):
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        path = '".jpg/abc'
+        assert s.content_url(path, "") == quote("/" + path, "")
+
     def test_media_url(self):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
