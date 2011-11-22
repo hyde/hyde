@@ -1,3 +1,8 @@
+Version 0.8.5a2
+============================================================
+
+*   Modified combined plugin to support relative paths and recursion. (Issue #108)
+
 Version 0.8.5a1
 ============================================================
 
