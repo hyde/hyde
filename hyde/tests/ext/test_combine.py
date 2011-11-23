@@ -65,7 +65,6 @@ combine:
 ---
 
 First line
-
 """)
         expected = """First line
 var a = 1 + 2;
@@ -73,7 +72,7 @@ var b = a + 3;
 var c = a + 5;
 """
 
-        assert text == expected
+        assert text.strip() == expected.strip()
         return
 
     def test_combine_remove(self):
@@ -119,7 +118,6 @@ combine:
 ---
 
 Last line""")
-        print text
         assert text == """var a = 1 + 2;
 var b = a + 3;
 var c = a + 5;

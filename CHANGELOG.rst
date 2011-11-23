@@ -1,3 +1,8 @@
+Version 0.8.5a3
+============================================================
+
+*   Bug Fix:  Modified combined plugin to process during `begin_text_resource`. (Issue #110)
+
 Version 0.8.5a2
 ============================================================
 

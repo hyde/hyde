@@ -1,1 +1,2 @@
-var c = a + 5;
+{% set five = 5 %}
+var c = a + {{ five }};

@@ -96,7 +96,7 @@ class CombinePlugin(Plugin):
                             "Resource [%s] removed because combined" % r)
                         r.is_processable = False
 
-    def text_resource_complete(self, resource, text):
+    def begin_text_resource(self, resource, text):
         """
         When generating a resource, add combined file if needed.
         """
