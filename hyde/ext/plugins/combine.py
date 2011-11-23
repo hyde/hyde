@@ -74,8 +74,8 @@ class CombinePlugin(Plugin):
             resources = sorted([r for r in walker if any(fnmatch(r.name, f) for f in files)],
                                                     key=operator.attrgetter('name'))
         else:
-            resources = dict([(f, r) for f in files for r in walker if fnmatch(r.name, f)])
-            resources = [resources[f] for f in files if f in resources]
+            resources = [(f, r) for r in walker for f in files if fnmatch(r.name, f)]
+            resources = [r[1] for f in files for r in resources if f in r]
 
         if not resources:
             self.logger.debug("No resources to combine for [%s]" % resource)
