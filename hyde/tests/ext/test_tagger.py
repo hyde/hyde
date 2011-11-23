@@ -217,7 +217,6 @@ Emotions:
         from pyquery import PyQuery
 
         q = PyQuery(archives['sad'].read_all())
-        print q
         assert len(q("li.emotion")) == 2
         assert q("#author").text() == "Tagger Plugin"
 

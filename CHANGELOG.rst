@@ -1,3 +1,13 @@
+Version 0.8.5a6
+============================================================
+
+*   Plugins now support inclusion filters. (Issue #112)
+    -   `include_file_patterns` property accepts globs to filter by file name.
+    -   `include_paths` accepts paths relative to content.
+    -   `begin_node` and `node_complete` honor `include_paths`
+    -   `begin_text_resource`, `text_resource_complete`, `begin_binary_resource`
+        and `binary_resource_complete` honor both.
+
 Version 0.8.5a5
 ============================================================
 
