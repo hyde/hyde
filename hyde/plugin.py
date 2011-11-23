@@ -94,6 +94,30 @@ class Plugin(object):
 
         return super(Plugin, self).__getattribute__(name)
 
+    @property
+    def settings(self):
+        """
+        The settings for this plugin the site config.
+        """
+
+        opts = Expando({})
+        try:
+            opts = getattr(self.site.config, self.plugin_name)
+        except AttributeError:
+            pass
+        return opts
+
+
+    @property
+    def plugin_name(self):
+        """
+        The name of the plugin. Makes an intelligent guess.
+
+        This is used to lookup the settings for the plugin.
+        """
+
+        return self.__class__.__name__.replace('Plugin', '').lower()
+
     def begin_generation(self):
         """
         Called when generation is about to take place.
@@ -201,17 +225,6 @@ class CLTransformer(Plugin):
     Handy class for plugins that simply call a command line app to
     transform resources.
     """
-
-    @property
-    def plugin_name(self):
-        """
-        The name of the plugin. Makes an intelligent guess.
-
-        This is used to lookup the settings for the plugin.
-        """
-
-        return self.__class__.__name__.replace('Plugin', '').lower()
-
     @property
     def defaults(self):
         """
@@ -243,19 +256,6 @@ class CLTransformer(Plugin):
         {
             "name":self.plugin_name, "exec": self.executable_name
         })
-
-    @property
-    def settings(self):
-        """
-        The settings for this plugin the site config.
-        """
-
-        opts = Expando({})
-        try:
-            opts = getattr(self.site.config, self.plugin_name)
-        except AttributeError:
-            pass
-        return opts
 
     @property
     def app(self):
