@@ -14,6 +14,7 @@ class CombinePlugin(Plugin):
     To use this combine, the following configuration should be added
     to meta data::
          combine:
+            sort: false #Optional. Defaults to true.
             root: content/media #Optional. Path must be relative to content folder - default current folder
             recurse: true #Optional. Default false.
             files:
@@ -63,13 +64,24 @@ class CombinePlugin(Plugin):
 
         walker = root.walk_resources() if recurse else root.resources
 
-        resources = [r for r in walker if any(fnmatch(r.name, f) for f in files)]
+        # Must we sort?
+        try:
+            sort = resource.meta.combine.sort
+        except AttributeError:
+            sort = True
+
+        if sort:
+            resources = sorted([r for r in walker if any(fnmatch(r.name, f) for f in files)],
+                                                    key=operator.attrgetter('name'))
+        else:
+            resources = dict([(f, r) for f in files for r in walker if fnmatch(r.name, f)])
+            resources = [resources[f] for f in files if f in resources]
 
         if not resources:
             self.logger.debug("No resources to combine for [%s]" % resource)
             return []
 
-        return sorted(resources, key=operator.attrgetter('name'))
+        return resources
 
     def begin_site(self):
         """

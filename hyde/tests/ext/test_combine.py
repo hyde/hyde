@@ -75,6 +75,29 @@ var c = a + 5;
         assert text.strip() == expected.strip()
         return
 
+    def test_combine_bottom_unsorted(self):
+        text, _ = self._test_combine("""
+---
+combine:
+   sort: false
+   files:
+        - script.3.js
+        - script.1.js
+        - script.2.js
+   where: bottom
+---
+
+First line
+""")
+        expected = """First line
+var c = a + 5;
+var a = 1 + 2;
+var b = a + 3;
+"""
+
+        assert text.strip() == expected.strip()
+        return
+
     def test_combine_remove(self):
         _, s = self._test_combine("""
 ---
