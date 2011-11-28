@@ -46,9 +46,10 @@ class StylusPlugin(CLTransformer):
             if not match.lastindex:
                 return ''
             path = match.groups(1)[0]
-            afile = File(resource.source_file.parent.child(path))
+            afile = File(File(resource.source_file.parent.child(path)).fully_expanded_path)
             if len(afile.kind.strip()) == 0:
                 afile = File(afile.path + '.styl')
+
             ref = self.site.content.resource_from_path(afile.path)
 
             if not ref:
