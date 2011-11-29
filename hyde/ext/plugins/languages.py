@@ -65,16 +65,16 @@ class LanguagePlugin(Plugin):
                     language = resource.meta.language
                 except AttributeError:
                     try:
-                        i = resource.name.index('_')
+                        i = resource.source.name_without_extension.rindex('.')
                     except ValueError:
                         continue
-                    language = resource.name[:i]
-                    name_without_prefix = resource.name[i+1:]
+                    language = resource.source.name_without_extension[i+1:]
+                    name_without_suffix = resource.source.name_without_extension[:i] + resource.source.extension
                     if not len(language) == 2 or not language.isalpha():
                         continue
                     if hasattr(settings, 'modify_path') and settings.modify_path:
-                        resource.set_relative_deploy_path(language + os.sep + (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_prefix)
-                    uuid = (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_prefix
+                        resource.set_relative_deploy_path(language + os.sep + (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_suffix)
+                    uuid = (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_suffix
                     resource.meta.language = language
                     resource.meta.uuid = uuid
                 if uuid not in self.languages:
