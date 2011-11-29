@@ -8,6 +8,7 @@ from hyde.plugin import Plugin
 from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.plugin import Plugin
+from hyde.ext.plugins.meta import Metadata
 import hyde.site
 
 from functools import wraps
@@ -72,9 +73,13 @@ class LanguagePlugin(Plugin):
                     name_without_suffix = resource.source.name_without_extension[:i] + resource.source.extension
                     if not len(language) == 2 or not language.isalpha():
                         continue
+                    uuid = os.path.join(os.path.dirname(resource.get_relative_deploy_path()), name_without_suffix)
                     if hasattr(settings, 'modify_path') and settings.modify_path:
-                        resource.set_relative_deploy_path(language + os.sep + (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_suffix)
-                    uuid = (resource.node.relative_path + os.sep if resource.node.relative_path else '') + name_without_suffix
+                        resource.set_relative_deploy_path(os.path.join(language, uuid))
+                    # if resource was created by plugin such as tagger or
+                    # thumbnail plugin it has no metadata
+                    if not hasattr(resource, 'meta'):
+                        resource.meta = Metadata({})
                     resource.meta.language = language
                     resource.meta.uuid = uuid
                 if uuid not in self.languages:
