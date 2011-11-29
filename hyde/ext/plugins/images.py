@@ -189,10 +189,20 @@ class ImageThumbnailsPlugin(Plugin):
         """
         Generate a thumbnail for the given image
         """
-        # Prepare path
-        path = os.path.join(os.path.dirname(resource.get_relative_deploy_path()),
-                            "%s%s" % (prefix, os.path.basename(resource.get_relative_deploy_path())))
-        target = File(Folder(resource.site.config.deploy_root_path).child(path))
+        name = os.path.basename(resource.get_relative_deploy_path())
+        # don't make thumbnails for thumbnails
+        if name.startswith(prefix):
+            return
+        # Prepare path, make all thumnails in single place(content/.thumbnails)
+        # for simple maintenance but keep original deploy path to preserve
+        # naming logic in generated site
+        path = os.path.join(".thumbnails",
+                            os.path.dirname(resource.get_relative_deploy_path()),
+                            "%s%s" % (prefix, name))
+        target = File(Folder(resource.site.config.content_root_path).child(path))
+        res = self.site.content.add_resource(target)
+        res.set_relative_deploy_path(res.get_relative_deploy_path().replace('.thumbnails/', '', 1))
+
         target.parent.make()
         if os.path.exists(target.path) and os.path.getmtime(resource.path) <= os.path.getmtime(target.path):
             return
