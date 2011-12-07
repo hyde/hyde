@@ -1,3 +1,7 @@
+Version 0.8.5a7
+============================================================
+*   Bug Fix: Relative path was used in the server as the sitepath (Issue #119)
+
 Version 0.8.5a6
 ============================================================
 
