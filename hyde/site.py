@@ -330,9 +330,11 @@ class RootNode(Node):
 
         if not node:
             node = self.add_node(afile.parent)
-
         resource = node.add_child_resource(afile)
         self.resource_map[unicode(afile)] = resource
+        relative_path = resource.relative_path
+        resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern) for pattern in self.site.config.simple_copy)
+
         logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
         return resource
