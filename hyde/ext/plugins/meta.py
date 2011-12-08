@@ -67,7 +67,7 @@ class MetaPlugin(Plugin):
             for resource in node.resources:
                 if not hasattr(resource, 'meta'):
                     resource.meta = Metadata({}, node.meta)
-                if resource.source_file.is_text:
+                if resource.source_file.is_text and not resource.simple_copy:
                     self.__read_resource__(resource, resource.source_file.read_all())
 
     def __read_resource__(self, resource, text):
