@@ -81,6 +81,12 @@ class Expando(object):
                 result[k] = v
         return result
 
+    def get(self, key, default=None):
+        """
+        Dict like get helper method
+        """
+        return self.__dict__.get(key, default)
+
 
 class Context(object):
     """
