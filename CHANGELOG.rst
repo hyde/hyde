@@ -1,3 +1,9 @@
+Version 0.8.5a8
+============================================================
+
+*   Added `simple_copy` feature to account for unprocessable files that
+    are nonetheless required to be deployed (Issue #121)
+
 Version 0.8.5a7
 ============================================================
 *   Bug Fix: Relative path was used in the server as the sitepath (Issue #119)

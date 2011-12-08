@@ -67,6 +67,7 @@ class Resource(Processable):
         self.node = node
         self.site = node.site
         self._relative_deploy_path = None
+        self.simple_copy = False
 
     @property
     def relative_path(self):
@@ -333,7 +334,9 @@ class RootNode(Node):
         resource = node.add_child_resource(afile)
         self.resource_map[unicode(afile)] = resource
         relative_path = resource.relative_path
-        resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern) for pattern in self.site.config.simple_copy)
+        resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
+                                        for pattern
+                                        in self.site.config.simple_copy)
 
         logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
