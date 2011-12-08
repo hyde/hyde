@@ -306,3 +306,33 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('about.html')
         assert res
         assert res.simple_copy
+
+    def test_simple_copy_directory(self):
+        self.setup_config([
+            '**/*.html'
+        ])
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        res = s.content.resource_from_relative_path('about.html')
+        assert res
+        assert not res.simple_copy
+        res = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
+        assert res
+        assert res.simple_copy
+
+    def test_simple_copy_multiple(self):
+        self.setup_config([
+            '**/*.html',
+            'media/css/*.css'
+        ])
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        res = s.content.resource_from_relative_path('about.html')
+        assert res
+        assert not res.simple_copy
+        res = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
+        assert res
+        assert res.simple_copy
+        res = s.content.resource_from_relative_path('media/css/site.css')
+        assert res
+        assert res.simple_copy
