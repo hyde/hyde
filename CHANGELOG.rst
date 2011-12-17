@@ -1,3 +1,12 @@
+Version 0.8.5a9
+============================================================
+
+Thanks to @vinilios
+
+*	Added a helper method in Expando class to ease up non existing keys handling. (Issue #117)
+*	Some improvements in LessCSSPlugin to be able to build complex less projects (such as twitter bootstrap) (Issue #117)
+
+
 Version 0.8.5a8
 ============================================================
 

@@ -6,6 +6,11 @@ This version would not exist without the contributions from the
 
 Contributors
 ===============================================================================
+-	|vinilios|
+	
+	*	Added a helper method in Expando class to ease up non existing keys handling.
+	*	Some improvements in LessCSSPlugin to be able to build complex less projects (such as twitter bootstrap)
+	
 -   |nud|_
 
     *   Bug Fix: Fix class name of `test_stylus`
@@ -110,3 +115,5 @@ Contributors
 .. _theevocater: https://github.com/theevocater
 .. |nud| replace:: Steve Frécinaux
 .. _nud: https://github.com/nud
+.. |vinilios| replace:: Kostas Papadimitriou
+.. _vinilios: https://github.com/vinilios
