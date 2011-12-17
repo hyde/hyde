@@ -6,6 +6,10 @@ This version would not exist without the contributions from the
 
 Contributors
 ===============================================================================
+-	|jd|
+
+	*	Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy` files.
+
 -	|vinilios|
 	
 	*	Added a helper method in Expando class to ease up non existing keys handling.
@@ -117,3 +121,5 @@ Contributors
 .. _nud: https://github.com/nud
 .. |vinilios| replace:: Kostas Papadimitriou
 .. _vinilios: https://github.com/vinilios
+.. |jd| replace:: Julien Danjou
+.. _jd: https://github.com/jd

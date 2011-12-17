@@ -1,3 +1,11 @@
+Version 0.8.5a10
+============================================================
+
+Thanks to @jd
+
+*	Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy` files. (Issue #124, Issue #121)
+
+
 Version 0.8.5a9
 ============================================================
 
