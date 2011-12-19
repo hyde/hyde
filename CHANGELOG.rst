@@ -1,3 +1,9 @@
+Version 0.8.5a11
+============================================================
+
+*	Bug Fix: Folder Flattener updates node's `relative_deploy_path` & `url` attributes as well. (Issue #126)
+*	BREAKING: As part of the above fix, `resource.url` is prefixed with a `/`. (Issue #126)
+
 Version 0.8.5a10
 ============================================================
 
