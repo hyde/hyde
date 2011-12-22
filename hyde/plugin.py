@@ -12,6 +12,7 @@ from hyde.util import getLoggerWithNullHandler, first_match, discover_executable
 from hyde.model import Expando
 
 from functools import partial
+import fnmatch
 
 import os
 import re
@@ -40,14 +41,16 @@ class PluginProxy(object):
                             # logger.debug(
                             #    "\tCalling plugin [%s]",
                             #   plugin.__class__.__name__)
-                            function = getattr(plugin, method_name)
-                            res = function(*args)
-                            targs = list(args)
-                            if len(targs):
-                                last = targs.pop()
-                                res = res if res else last
-                                targs.append(res)
-                                args = tuple(targs)
+                            checker = getattr(plugin, 'should_call__' + method_name)
+                            if checker(*args):
+                                function = getattr(plugin, method_name)
+                                res = function(*args)
+                                targs = list(args)
+                                if len(targs):
+                                    last = targs.pop()
+                                    res = res if res else last
+                                    targs.append(res)
+                                    args = tuple(targs)
                 return res
 
             return __call_plugins__
@@ -81,18 +84,54 @@ class Plugin(object):
         """
         Syntactic sugar for template methods
         """
+        result = None
         if name.startswith('t_') and self.template:
             attr = name[2:]
             if hasattr(self.template, attr):
-                return self.template[attr]
+                result = self.template[attr]
             elif attr.endswith('_close_tag'):
                 tag = attr.replace('_close_tag', '')
-                return partial(self.template.get_close_tag, tag)
+                result = partial(self.template.get_close_tag, tag)
             elif attr.endswith('_open_tag'):
                 tag = attr.replace('_open_tag', '')
-                return partial(self.template.get_open_tag, tag)
+                result = partial(self.template.get_open_tag, tag)
+        elif name.startswith('should_call__'):
+            (_, _, method) = name.rpartition('__')
+            if (method in ('begin_text_resource', 'text_resource_complete',
+                            'begin_binary_resource', 'binary_resource_complete')):
+                result = self._file_filter
+            elif (method in ('begin_node', 'node_complete')):
+                result = self._dir_filter
+            else:
+                def always_true(*args, **kwargs):
+                    return True
+                result = always_true
 
-        return super(Plugin, self).__getattribute__(name)
+        return  result if result else super(Plugin, self).__getattribute__(name)
+
+    @property
+    def settings(self):
+        """
+        The settings for this plugin the site config.
+        """
+
+        opts = Expando({})
+        try:
+            opts = getattr(self.site.config, self.plugin_name)
+        except AttributeError:
+            pass
+        return opts
+
+
+    @property
+    def plugin_name(self):
+        """
+        The name of the plugin. Makes an intelligent guess.
+
+        This is used to lookup the settings for the plugin.
+        """
+
+        return self.__class__.__name__.replace('Plugin', '').lower()
 
     def begin_generation(self):
         """
@@ -114,6 +153,44 @@ class Plugin(object):
         This method is called only when the entire node is generated.
         """
         pass
+
+    def _file_filter(self, resource, *args, **kwargs):
+        """
+        Returns True if the resource path matches the filter property in
+        plugin settings.
+        """
+
+        if not self._dir_filter(resource.node, *args, **kwargs):
+            return False
+
+        try:
+            filters = self.settings.include_file_pattern
+            if not isinstance(filters, list):
+                filters = [filters]
+        except AttributeError:
+            filters = None
+        result = any(fnmatch.fnmatch(resource.path, f)
+                                        for f in filters) if filters else True
+        return result
+
+    def _dir_filter(self, node, *args, **kwargs):
+        """
+        Returns True if the node path is a descendant of the include_paths property in
+        plugin settings.
+        """
+        try:
+            node_filters = self.settings.include_paths
+            if not isinstance(node_filters, list):
+                node_filters = [node_filters]
+            node_filters = [self.site.content.node_from_relative_path(f)
+                                        for f in node_filters]
+        except AttributeError:
+            node_filters = None
+        result = any(node.source == f.source or
+                        node.source.is_descendant_of(f.source)
+                                        for f in node_filters if f) \
+                                        if node_filters else True
+        return result
 
     def begin_text_resource(self, resource, text):
         """
@@ -201,17 +278,6 @@ class CLTransformer(Plugin):
     Handy class for plugins that simply call a command line app to
     transform resources.
     """
-
-    @property
-    def plugin_name(self):
-        """
-        The name of the plugin. Makes an intelligent guess.
-
-        This is used to lookup the settings for the plugin.
-        """
-
-        return self.__class__.__name__.replace('Plugin', '').lower()
-
     @property
     def defaults(self):
         """
@@ -243,19 +309,6 @@ class CLTransformer(Plugin):
         {
             "name":self.plugin_name, "exec": self.executable_name
         })
-
-    @property
-    def settings(self):
-        """
-        The settings for this plugin the site config.
-        """
-
-        opts = Expando({})
-        try:
-            opts = getattr(self.site.config, self.plugin_name)
-        except AttributeError:
-            pass
-        return opts
 
     @property
     def app(self):

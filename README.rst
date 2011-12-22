@@ -1,4 +1,4 @@
-Version 0.8.5a1
+Version 0.8.5a11
 
 A brand new **hyde**
 ====================
@@ -11,6 +11,8 @@ with hyde.
 
 `Hyde layout for bootstrap`_ by `auzigog`_ is also a good alternative if you
 like Twitter's `bootstrap framework`_.
+
+You can also take a look at `Hyde Powered Websites`_ for inspiration and reference.
 
 Installation
 ------------
@@ -163,3 +165,4 @@ Links
 .. _Hyde layout for bootstrap: https://github.com/auzigog/hyde-bootstrap
 .. _auzigog: https://github.com/auzigog
 .. _bootstrap framework: http://twitter.github.com/bootstrap/
+.. _Hyde Powered Websites: https://github.com/hyde/hyde/wiki/Hyde-Powered

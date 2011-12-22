@@ -314,7 +314,13 @@ class Generator(object):
             return
         logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
-            if resource.source_file.is_text:
+            target = File(self.site.config.deploy_root_path.child(
+                                    resource.relative_deploy_path))
+            target.parent.make()
+            if resource.simple_copy:
+                logger.debug("Simply Copying [%s]", resource)
+                resource.source_file.copy_to(target)
+            elif resource.source_file.is_text:
                 self.update_deps(resource)
                 if resource.uses_template:
                     logger.debug("Rendering [%s]", resource)
@@ -331,16 +337,10 @@ class Generator(object):
 
                 text = self.events.text_resource_complete(
                                         resource, text) or text
-                target = File(self.site.config.deploy_root_path.child(
-                                    resource.relative_deploy_path))
-                target.parent.make()
                 target.write(text)
                 copymode(resource.source_file.path, target.path)
             else:
                 logger.debug("Copying binary file [%s]", resource)
                 self.events.begin_binary_resource(resource)
-                target = File(self.site.config.deploy_root_path.child(
-                                    resource.relative_deploy_path))
-                target.parent.make()
                 resource.source_file.copy_to(target)
                 self.events.binary_resource_complete(resource)

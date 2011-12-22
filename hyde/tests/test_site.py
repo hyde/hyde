@@ -149,7 +149,7 @@ def test_relative_deploy_path():
     s.load()
     for page in s.content.walk_resources():
         assert page.relative_deploy_path == Folder(page.relative_path)
-        assert page.url == page.relative_deploy_path
+        assert page.url == '/' + page.relative_deploy_path
 
 def test_relative_deploy_path_override():
     s = Site(TEST_SITE_ROOT)

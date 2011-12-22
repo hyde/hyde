@@ -7,12 +7,16 @@ from fnmatch import fnmatch
 
 from hyde.model import Expando
 from hyde.plugin import Plugin
+import operator
 
 class CombinePlugin(Plugin):
     """
     To use this combine, the following configuration should be added
     to meta data::
          combine:
+            sort: false #Optional. Defaults to true.
+            root: content/media #Optional. Path must be relative to content folder - default current folder
+            recurse: true #Optional. Default false.
             files:
                 - ns1.*.js
                 - ns2.*.js
@@ -45,17 +49,39 @@ class CombinePlugin(Plugin):
             files = [ files ]
 
         # Grab resources to combine
-        resources = []
-        for r in resource.node.resources:
-            for f in files:
-                if fnmatch(r.name, f):
-                    resources.append(r)
-                    break
+
+        # select site root
+        try:
+            root = self.site.content.node_from_relative_path(resource.meta.combine.root)
+        except AttributeError:
+            root = resource.node
+
+        # select walker
+        try:
+            recurse = resource.meta.combine.recurse
+        except AttributeError:
+            recurse = False
+
+        walker = root.walk_resources() if recurse else root.resources
+
+        # Must we sort?
+        try:
+            sort = resource.meta.combine.sort
+        except AttributeError:
+            sort = True
+
+        if sort:
+            resources = sorted([r for r in walker if any(fnmatch(r.name, f) for f in files)],
+                                                    key=operator.attrgetter('name'))
+        else:
+            resources = [(f, r) for r in walker for f in files if fnmatch(r.name, f)]
+            resources = [r[1] for f in files for r in resources if f in r]
+
         if not resources:
             self.logger.debug("No resources to combine for [%s]" % resource)
             return []
 
-        return sorted(resources, key=lambda r: r.name)
+        return resources
 
     def begin_site(self):
         """
@@ -82,7 +108,7 @@ class CombinePlugin(Plugin):
                             "Resource [%s] removed because combined" % r)
                         r.is_processable = False
 
-    def text_resource_complete(self, resource, text):
+    def begin_text_resource(self, resource, text):
         """
         When generating a resource, add combined file if needed.
         """

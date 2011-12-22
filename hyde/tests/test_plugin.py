@@ -10,8 +10,9 @@ from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.plugin import Plugin
 from hyde.site import Site
+from hyde.model import Expando
 
-from mock import patch
+from mock import patch, Mock
 from nose.tools import raises, nottest, with_setup
 
 
@@ -329,3 +330,43 @@ class TestPlugins(object):
          about = File(Folder(
                     self.site.config.deploy_root_path).child('about.html'))
          assert about.read_all() == "Jam"
+
+    def test_plugin_filters_begin_text_resource(self):
+        def empty_return(self, resource, text=''):
+            return text
+        with patch.object(ConstantReturnPlugin, 'begin_text_resource', new=Mock(wraps=empty_return)) as mock1:
+            with patch.object(NoReturnPlugin, 'begin_text_resource', new=Mock(wraps=empty_return)) as mock2:
+                self.site.config.plugins = [
+                    'hyde.tests.test_plugin.ConstantReturnPlugin',
+                    'hyde.tests.test_plugin.NoReturnPlugin'
+                 ]
+                self.site.config.constantreturn = Expando(dict(include_file_pattern="*.css"))
+                self.site.config.noreturn = Expando(dict(include_file_pattern=["*.html", "*.txt"]))
+                gen = Generator(self.site)
+                gen.generate_all()
+                mock1_args = sorted(set([arg[0][0].name for arg in mock1.call_args_list]))
+                mock2_args = sorted(set([arg[0][0].name for arg in mock2.call_args_list]))
+                assert len(mock1_args) == 1
+                assert len(mock2_args) == 4
+                assert mock1_args == ["site.css"]
+                assert mock2_args == ["404.html", "about.html", "merry-christmas.html", "robots.txt"]
+
+    def test_plugin_node_filters_begin_text_resource(self):
+        def empty_return(*args, **kwargs):
+            return None
+        with patch.object(ConstantReturnPlugin, 'begin_text_resource', new=Mock(wraps=empty_return)) as mock1:
+            with patch.object(NoReturnPlugin, 'begin_text_resource', new=Mock(wraps=empty_return)) as mock2:
+                self.site.config.plugins = [
+                    'hyde.tests.test_plugin.ConstantReturnPlugin',
+                    'hyde.tests.test_plugin.NoReturnPlugin'
+                 ]
+                self.site.config.constantreturn = Expando(dict(include_paths="media"))
+                self.site.config.noreturn = Expando(dict(include_file_pattern="*.html", include_paths=["blog"]))
+                gen = Generator(self.site)
+                gen.generate_all()
+                mock1_args = sorted(set([arg[0][0].name for arg in mock1.call_args_list]))
+                mock2_args = sorted(set([arg[0][0].name for arg in mock2.call_args_list]))
+                assert len(mock1_args) == 1
+                assert len(mock2_args) == 1
+                assert mock1_args == ["site.css"]
+                assert mock2_args == ["merry-christmas.html"]

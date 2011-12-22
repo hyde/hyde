@@ -1,3 +1,66 @@
+Version 0.8.5a11
+============================================================
+
+*	Bug Fix: Folder Flattener updates node's `relative_deploy_path` & `url` attributes as well. (Issue #126)
+*	BREAKING: As part of the above fix, `resource.url` is prefixed with a `/`. (Issue #126)
+
+Version 0.8.5a10
+============================================================
+
+Thanks to @jd
+
+*	Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy` files. (Issue #124, Issue #121)
+
+
+Version 0.8.5a9
+============================================================
+
+Thanks to @vinilios
+
+*	Added a helper method in Expando class to ease up non existing keys handling. (Issue #117)
+*	Some improvements in LessCSSPlugin to be able to build complex less projects (such as twitter bootstrap) (Issue #117)
+
+
+Version 0.8.5a8
+============================================================
+
+*   Added `simple_copy` feature to account for unprocessable files that
+    are nonetheless required to be deployed (Issue #121)
+
+Version 0.8.5a7
+============================================================
+*   Bug Fix: Relative path was used in the server as the sitepath (Issue #119)
+
+Version 0.8.5a6
+============================================================
+
+*   Plugins now support inclusion filters. (Issue #112)
+    -   `include_file_patterns` property accepts globs to filter by file name.
+    -   `include_paths` accepts paths relative to content.
+    -   `begin_node` and `node_complete` honor `include_paths`
+    -   `begin_text_resource`, `text_resource_complete`, `begin_binary_resource`
+        and `binary_resource_complete` honor both.
+
+Version 0.8.5a5
+============================================================
+
+*   Bug Fix: Unsorted combine files fixed. (Issue #111)
+
+Version 0.8.5a4
+============================================================
+
+*   Added an optional sorting parameter. (Issue #111)
+
+Version 0.8.5a3
+============================================================
+
+*   Bug Fix:  Modified combined plugin to process during `begin_text_resource`. (Issue #110)
+
+Version 0.8.5a2
+============================================================
+
+*   Modified combined plugin to support relative paths and recursion. (Issue #108)
+
 Version 0.8.5a1
 ============================================================
 

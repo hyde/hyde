@@ -33,6 +33,7 @@ class Processable(object):
         self.source = FS.file_or_folder(source)
         self.is_processable = True
         self.uses_template = True
+        self._relative_deploy_path = None
 
     @property
     def name(self):
@@ -50,6 +51,40 @@ class Processable(object):
         Gets the source path of this node.
         """
         return self.source.path
+        
+    def get_relative_deploy_path(self):
+        """
+        Gets the path where the file will be created
+        after its been processed.
+        """
+        return self._relative_deploy_path \
+                    if self._relative_deploy_path is not None \
+                    else self.relative_path
+
+    def set_relative_deploy_path(self, path):
+        """
+        Sets the path where the file ought to be created
+        after its been processed.
+        """
+        self._relative_deploy_path = path
+        self.site.content.deploy_path_changed(self)
+
+    relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
+
+    @property
+    def url(self):
+        """
+        Returns the relative url for the processable
+        """
+        return '/' + self.relative_deploy_path
+
+    @property
+    def full_url(self):
+        """
+        Returns the full url for the processable.
+        """
+        return self.site.full_url(self.relative_deploy_path)
+
 
 class Resource(Processable):
     """
@@ -66,7 +101,7 @@ class Resource(Processable):
                                 " to instantiate a resource")
         self.node = node
         self.site = node.site
-        self._relative_deploy_path = None
+        self.simple_copy = False
 
     @property
     def relative_path(self):
@@ -74,38 +109,11 @@ class Resource(Processable):
         Gets the path relative to the root folder (Content)
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
-
+    
     @property
     def slug(self):
         #TODO: Add a more sophisticated slugify method
         return self.source.name_without_extension
-
-    def get_relative_deploy_path(self):
-        """
-        Gets the path where the file will be created
-        after its been processed.
-        """
-        return self._relative_deploy_path \
-                    if self._relative_deploy_path \
-                    else self.relative_path
-
-    def set_relative_deploy_path(self, path):
-        """
-        Sets the path where the file ought to be created
-        after its been processed.
-        """
-        self._relative_deploy_path = path
-        self.site.content.resource_deploy_path_changed(self)
-
-    relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
-    url = relative_deploy_path
-
-    @property
-    def full_url(self):
-        """
-        Returns the full url for the resource.
-        """
-        return self.site.full_url(self.relative_path)
 
 class Node(Processable):
     """
@@ -199,14 +207,6 @@ class Node(Processable):
         """
         return self.source_folder.get_relative_path(self.root.source_folder)
 
-    @property
-    def url(self):
-        return '/' + self.relative_path
-
-    @property
-    def full_url(self):
-        return self.site.full_url(self.relative_path)
-
 class RootNode(Node):
     """
     Represents one of the roots of site: Content, Media or Layout
@@ -256,12 +256,12 @@ class RootNode(Node):
         return self.resource_from_path(
                     self.source_folder.child(relative_path))
 
-    def resource_deploy_path_changed(self, resource):
+    def deploy_path_changed(self, item):
         """
         Handles the case where the relative deploy path of a
         resource has changed.
         """
-        self.resource_deploy_map[unicode(resource.relative_deploy_path)] = resource
+        self.resource_deploy_map[unicode(item.relative_deploy_path)] = item
 
     @path_normalized
     def resource_from_relative_deploy_path(self, relative_deploy_path):
@@ -330,9 +330,13 @@ class RootNode(Node):
 
         if not node:
             node = self.add_node(afile.parent)
-
         resource = node.add_child_resource(afile)
         self.resource_map[unicode(afile)] = resource
+        relative_path = resource.relative_path
+        resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
+                                        for pattern
+                                        in self.site.config.simple_copy)
+
         logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
         return resource

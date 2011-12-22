@@ -47,18 +47,18 @@ class TestPaginator(object):
         expected_page1_content = dedent('''\
             Another Sad Post
 
-            page2/pages_of_one.txt''')
+            /page2/pages_of_one.txt''')
         expected_page2_content = dedent('''\
             A Happy Post
-            pages_of_one.txt
-            page3/pages_of_one.txt''')
+            /pages_of_one.txt
+            /page3/pages_of_one.txt''')
         expected_page3_content = dedent('''\
             An Angry Post
-            page2/pages_of_one.txt
-            page4/pages_of_one.txt''')
+            /page2/pages_of_one.txt
+            /page4/pages_of_one.txt''')
         expected_page4_content = dedent('''\
             A Sad Post
-            page3/pages_of_one.txt
+            /page3/pages_of_one.txt
             ''')
 
         page1 = self.deploy.child('pages_of_one.txt')

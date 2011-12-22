@@ -135,7 +135,7 @@ class Engine(Application):
         """
         sitepath = self.main(args)
         config_file = sitepath.child(args.config)
-        site = self.make_site(args.sitepath, args.config, args.deploy)
+        site = self.make_site(sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
         server = HydeWebServer(site, args.address, args.port)
         logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)

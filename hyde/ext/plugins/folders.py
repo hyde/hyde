@@ -39,5 +39,6 @@ class FlattenerPlugin(Plugin):
                         'Flattening resource path [%s] to [%s]' %
                             (resource, target_path))
                     resource.relative_deploy_path = target_path
-
+                for child in node.walk():
+                    child.relative_deploy_path = target.path
 
