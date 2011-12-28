@@ -91,7 +91,7 @@ def top(iterable, count=3):
     return islice(iterable, stop=count)
 
 def xmldatetime(dt):
-    if not dt:
+    if not isinstance(dt, datetime):
         dt = datetime.now()
     zprefix = "Z"
     tz = dt.strftime("%z")
