@@ -18,3 +18,4 @@ PYSMELLTAGS
 *.tar.gz
 .hyde_deps
 src
+.tm_properties
