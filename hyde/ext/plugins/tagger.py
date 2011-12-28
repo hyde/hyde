@@ -198,7 +198,7 @@ extends: false
 
 {%% set tag = site.tagger.tags['%(tag)s'] %%}
 {%% set source = site.content.node_from_relative_path('%(node)s') %%}
-{%% set walker = source.walk_resources_tagged_with_%(tag)s %%}
+{%% set walker = source['walk_resources_tagged_with_%(tag)s'] %%}
 {%% extends "%(template)s" %%}
 """
         for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
