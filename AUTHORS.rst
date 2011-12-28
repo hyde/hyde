@@ -9,6 +9,7 @@ Contributors
 -   |idank|_
 
     *   Bug Fix: Tag archive generator uses subscript syntax to avoid failure when tags contain '-' or space.
+    *   Bug Fix: Use `check_output` to avoid a traceback when subprocess command fails.
 
 -   |jd|_
 
@@ -127,3 +128,5 @@ Contributors
 .. _vinilios: https://github.com/vinilios
 .. |jd| replace:: Julien Danjou
 .. _jd: https://github.com/jd
+.. |idank| replace:: idank
+.. _idank: https://github.com/idank

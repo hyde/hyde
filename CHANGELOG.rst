@@ -1,10 +1,17 @@
+Version 0.8.5a13
+============================================================
+
+Thanks to @idank
+
+*   Bug Fix: Use `check_output` to avoid a traceback when subprocess command fails.
+
+
 Version 0.8.5a12
 ============================================================
 
 Thanks to @idank
 
 *   Bug Fix: Tag archive generator uses subscript syntax to avoid failure when tags contain '-' or space. (Issue #130)
-
 
 Version 0.8.5a11
 ============================================================
@@ -19,7 +26,6 @@ Thanks to @jd
 
 *   Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy` files. (Issue #124, Issue #121)
 
-
 Version 0.8.5a9
 ============================================================
 
@@ -27,7 +33,6 @@ Thanks to @vinilios
 
 *   Added a helper method in Expando class to ease up non existing keys handling. (Issue #117)
 *   Some improvements in LessCSSPlugin to be able to build complex less projects (such as twitter bootstrap) (Issue #117)
-
 
 Version 0.8.5a8
 ============================================================
