@@ -25,7 +25,7 @@ from hyde.model import Config, Expando
 from hyde.site import Node, RootNode, Site
 from hyde.generator import Generator
 
-from nose.tools import raises, with_setup, nottest
+from nose.tools import eq_, raises, with_setup, nottest
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 
@@ -41,11 +41,12 @@ class TestSimpleCopy(object):
         cls.SITE_PATH.delete()
 
     @nottest
-    def setup_config(self, passthru):
+    def setup_config(self, passthru_glob=None, passthru_re=None):
         self.config_file = File(self.SITE_PATH.child('site.yaml'))
         with open(self.config_file.path) as config:
             conf = yaml.load(config)
-            conf['simple_copy'] = passthru
+            conf['simple_copy'] = passthru_glob if passthru_glob else []
+            conf['simple_copy_re'] = passthru_re if passthru_re else []
             self.config = Config(sitepath=self.SITE_PATH, config_dict=conf)
 
     def test_simple_copy_basic(self):
@@ -87,6 +88,34 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('media/css/site.css')
         assert res
         assert res.simple_copy
+
+    def test_simple_copy_re_basic(self):
+        self.setup_config(passthru_re=[
+            'about.html'
+        ])
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+        res = s.content.resource_from_relative_path('about.html')
+        assert res
+        assert res.simple_copy
+
+    def test_simple_copy_re_directory(self):
+        self.setup_config(passthru_re=[
+            'blog/.*\.png',
+            '\.css$'
+        ])
+        s = Site(self.SITE_PATH, config=self.config)
+        s.load()
+
+        test_files = [
+            ('blog/2010/december/star.png', True),
+            ('media/css/site.css', True),
+            ('blog/2010/december/merry-christmas.html', False),
+            ]
+        for test_file, is_simple in test_files:
+            res = s.content.resource_from_relative_path(test_file)
+            assert res, test_file
+            eq_(res.simple_copy, is_simple)
 
     def test_generator(self):
         self.setup_config([

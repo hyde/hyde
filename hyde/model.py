@@ -149,6 +149,7 @@ class Config(Expando):
         self.default_config = dict(
             mode='production',
             simple_copy = [],
+            simple_copy_re = [],
             content_root='content',
             deploy_root='deploy',
             media_root='media',

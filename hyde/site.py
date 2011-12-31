@@ -4,6 +4,7 @@ Parses & holds information about the site to be generated.
 """
 import os
 import fnmatch
+import re
 import sys
 import urlparse
 from functools import wraps
@@ -333,9 +334,17 @@ class RootNode(Node):
         resource = node.add_child_resource(afile)
         self.resource_map[unicode(afile)] = resource
         relative_path = resource.relative_path
-        resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
-                                        for pattern
-                                        in self.site.config.simple_copy)
+
+        # Should this be a simple copy? Use regex if provided,
+        # otherwise use globbing.
+        if self.site.config.simple_copy_re:
+            resource.simple_copy = any(re.search(pattern, relative_path)
+                                       for pattern
+                                       in self.site.config.simple_copy_re)
+        else:
+            resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
+                                            for pattern
+                                            in self.site.config.simple_copy)
 
         logger.debug("Added resource [%s] to [%s]" %
                     (resource.relative_path, self.source_folder))
