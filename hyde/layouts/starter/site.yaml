@@ -32,8 +32,6 @@ context:
             url: index.html
           - title: First steps
             url: first-steps.html
-          - title: Advanced topics
-            url: advanced/overview.html
           - title: About
             url: about.html
 

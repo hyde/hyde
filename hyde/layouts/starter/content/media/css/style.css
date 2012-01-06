@@ -13,10 +13,8 @@ body {
     width: 980px;
     min-height: 700px;
     background: url('../img/background.jpg') top left no-repeat;
-    font-size: 14px;
     position: relative;
-
-    font-size: 62.5%;
+    font-size: 14px;
     font-family: Tahoma, sans-serif;
 }
 
@@ -33,11 +31,11 @@ a:hover, a:focus {
 }
 
 p, ul, ol {
-    margin-bottom: 1.6em;
+    margin-bottom: 22px;
 }
 
 ul, ol {
-    margin-left: 2em;
+    margin-left: 28px;
 }
 
 header {
@@ -82,7 +80,7 @@ nav a:visited {
     text-decoration: none;
     color: white;
     text-transform: uppercase;
-    font-size: 2.8em;
+    font-size: 28px;
 }
 
 nav a.selected {
@@ -97,23 +95,14 @@ nav ul li {
     list-style-type: none;
 }
 
-aside {
-    position: absolute;
-    top: 550px;
-    right: 120px;
-    width: 140px;
-    text-align: right;
-    font-size: 1em;
-}
-
 nav, aside {
     /* to line up with the header */
     padding-right: 5px;
 }
 
 #content {
-    font-size: 1.4em;
-    line-height: 1.6em;
+    /*font-size: 14px;*/
+    line-height: 22px;
     position: absolute;
     top: 350px;
     left: 180px;
@@ -123,18 +112,18 @@ nav, aside {
 
 #content h1 {
     font-weight: normal;
-    font-size: 2em;
+    font-size: 28px;
     font-family: Anton, Tahoma, sans-serif;
     text-transform: uppercase;
-    margin-bottom: 0.8em;
+    margin-bottom: 22px;
     color: white;
 }
 
 #content h2 {
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 17px;
     font-family: Tahoma, sans-serif;
-    margin-bottom: 1.33em;
+    margin-bottom: 22px;
     color: white;
     border-bottom: 1px dashed #888;
 }
@@ -142,10 +131,10 @@ nav, aside {
 #content code {
     display: block;
     font-family: 'DejaVu Sans Mono', 'Liberation Mono', 'Courier New';
-    font-size: 1.2em;
+    font-size: 12px;
     background-color: #222;
     padding: 5px 10px;
-    margin-bottom: 1.33em;
+    margin-bottom: 20px;
     border-top: 1px solid #444;
     border-right: 1px solid #333;
     border-bottom: 1px solid #222;
@@ -153,7 +142,7 @@ nav, aside {
 }
 
 #content .tags {
-    font-size: 0.8em;
+    font-size: 8px;
     color: #888;
 }
 
