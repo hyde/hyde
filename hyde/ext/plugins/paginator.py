@@ -95,18 +95,19 @@ class Paginator:
         pages = list(self._walk_pages_in_node(node))
         deps = reduce(list.__add__, [page.posts for page in pages], [])
 
-        Paginator._attach_page_to_resource(pages[0], resource)
-        Paginator._add_dependencies_to_resource(deps, resource)
-        for page in pages[1:]:
-            # make new resource
-            new_resource = self._new_resource(resource, node, page.number)
-            Paginator._attach_page_to_resource(page, new_resource)
-            new_resource.depends = resource.depends
-            added_resources.append(new_resource)
+        if len(pages):
+            Paginator._attach_page_to_resource(pages[0], resource)
+            Paginator._add_dependencies_to_resource(deps, resource)
+            for page in pages[1:]:
+                # make new resource
+                new_resource = self._new_resource(resource, node, page.number)
+                Paginator._attach_page_to_resource(page, new_resource)
+                new_resource.depends = resource.depends
+                added_resources.append(new_resource)
 
-        for prev, next in pairwalk(pages):
-            next.previous = prev
-            prev.next = next
+            for prev, next in pairwalk(pages):
+                next.previous = prev
+                prev.next = next
 
         return added_resources
 
