@@ -28,6 +28,7 @@ class Tag(Expando):
         """
         self.name = name
         self.resources = []
+        self.weight = 0.0
 
     def __repr__(self):
         return self.name
@@ -102,9 +103,23 @@ class TaggerPlugin(Plugin):
         walker = get_tagger_sort_method(self.site)
         for resource in walker():
             self._process_tags_in_resource(resource, tags)
+        self._calculate_tag_weights(tags)
         self._process_tag_metadata(tags)
         self.site.tagger = Expando(dict(tags=tags))
         self._generate_archives()
+
+    def _calculate_tag_weights(self, tags):
+        # Find most used tag
+        largest_tag = None
+        for tagname in tags:
+            tag = tags[tagname]
+            if not largest_tag or len(tag.resources) > len(largest_tag.resources):
+                largest_tag = tag
+
+        # Use it to find weights
+        for tagname in tags:
+            tag = tags[tagname]
+            tag.weight = float(len(tag.resources))/float(len(largest_tag.resources))
 
     def _process_tag_metadata(self, tags):
         """
