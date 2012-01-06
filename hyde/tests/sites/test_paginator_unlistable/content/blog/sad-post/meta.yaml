@@ -1,0 +1,8 @@
+title: A Sad Post
+description: >
+    Something sad happened.
+created: !!timestamp '2010-12-01 10:00:00'
+tags:
+    - sad
+    - thoughts
+listable: true

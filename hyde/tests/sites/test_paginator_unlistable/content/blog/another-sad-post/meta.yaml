@@ -1,0 +1,8 @@
+title: Another Sad Post
+description: >
+    Something else sad happened.
+created: !!timestamp '2011-03-01 10:00:00'
+tags:
+    - sad
+    - events
+listable: true
