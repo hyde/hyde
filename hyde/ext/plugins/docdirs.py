@@ -41,7 +41,7 @@ from hyde.ext.plugins.meta import  Metadata
 
 from hyde.util import getLoggerWithNullHandler
 
-logger = getLoggerWithNullHandler('hyde.ext.plugins.sphinx')
+logger = getLoggerWithNullHandler('hyde.ext.plugins.docdirs')
 
 try:
     from sphinx.application import Sphinx
@@ -63,6 +63,9 @@ class SphinxGenerator(object):
 
     def node(self):
         return self.__node
+
+    def update_meta(self):
+        self.__node.meta.update({"sphinx_project_name": self.config().get("project")})
 
     def config(self):
         if self.__config is None:
@@ -94,19 +97,19 @@ class SphinxGenerator(object):
         if self.__build_dir is None:
             self.__run_sphinx()
 
-        output = [
-            "---\n",
-            "extends: {0}\n".format(self.__layout),
-            "doc_root_url: {0}\n".format(self.node().get_relative_deploy_path()),
-            "---\n\n"
-        ]
+        output = []
         sphinx_output = self.__get_sphinx_output(resource)
         for name, content in sphinx_output.iteritems():
             if name in ("body", "toc"):
                 output.append("{{% block {0} %}}{{% raw %}}".format(name))
                 output.append(content)
                 output.append("{% endraw %}{% endblock %}")
-        self.__update_metadata(resource, {"sphinx": sphinx_output})
+        self.__update_metadata(resource, {
+            "sphinx": sphinx_output,
+            "extends": self.__layout,
+            "doc_root_url": self.node().get_relative_deploy_path(),
+            "sphinx_project_name": self.config().get("project")
+        })
         return "".join(output)
 
     def clean(self):
@@ -166,6 +169,7 @@ class DocdirsPlugin(Plugin):
         settings = self.settings
         if File(node.relative_path).parent.path == self.docsroot:
             generator = SphinxGenerator(node, settings)
+            generator.update_meta()
             generator.fix_generated_filenames()
             self.generators[node.name] = generator
 
