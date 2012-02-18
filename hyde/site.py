@@ -425,6 +425,8 @@ class Site(object):
                         .replace(os.sep, '/').encode("utf-8")
         if safe is not None:
             return quote(fpath, safe)
+        elif self.config.encode_safe is not None:
+            return quote(fpath, self.config.encode_safe)
         else:
             return quote(fpath)
 
@@ -438,6 +440,8 @@ class Site(object):
                         .replace(os.sep, '/').encode("utf-8")
         if safe is not None:
             return quote(fpath, safe)
+        elif self.config.encode_safe is not None:
+            return quote(fpath, self.config.encode_safe)
         else:
             return quote(fpath)
 
@@ -447,6 +451,9 @@ class Site(object):
         configuration and returns the appropriate url. The return value
         is url encoded.
         """
+        if safe is None and self.config.encode_safe is not None:
+            safe = self.config.encode_safe
+            
         if urlparse.urlparse(path)[:2] != ("",""):
             return path
         if self.is_media(path):
