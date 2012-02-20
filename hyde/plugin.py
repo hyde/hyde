@@ -326,7 +326,7 @@ class CLTransformer(Plugin):
 
         # Honour the PATH environment variable.
         if app_path is not None and not os.path.isabs(app_path):
-            app_path = discover_executable(app_path)
+            app_path = discover_executable(app_path, self.site.sitepath)
 
         if app_path is None:
             raise self.template.exception_class(

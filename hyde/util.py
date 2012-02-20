@@ -124,12 +124,17 @@ def first_match(predicate, iterable):
             return item
     return None
 
-def discover_executable(name):
+def discover_executable(name, sitepath):
     """
-    Finds an executable in the path list provided by the PATH
-    environment variable.
+    Finds an executable in the given sitepath or in the
+    path list provided by the PATH environment variable.
     """
-    for path in os.environ['PATH'].split(os.pathsep):
+
+    # Check if an executable can be found in the site path first.
+    # If not check the os $PATH for its presence.
+
+    paths = [unicode(sitepath)] + os.environ['PATH'].split(os.pathsep)
+    for path in paths:
         full_name = os.path.join(path, name)
         if os.path.exists(full_name):
             return full_name
