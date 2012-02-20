@@ -391,7 +391,7 @@ class CLTransformer(Plugin):
                     (args[0], unicode(args[1:])))
             try:
                 subprocess.check_output(args)
-            except NameError:
+            except AttributeError:
                 # prior python 2.7 there is no ``check_output``
                 self.logger.debug("output: %s", 
                         subprocess.Popen(args, 
