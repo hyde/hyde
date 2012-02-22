@@ -1,0 +1,7 @@
+mode: development
+content_root: stuff # Relative path from site root
+media_root: media # Relative path from site root
+media_url: /media
+widgets:
+plugins:
+aggregators:
