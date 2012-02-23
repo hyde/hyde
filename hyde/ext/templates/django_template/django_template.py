@@ -53,11 +53,11 @@ class DjangoTemplate(hyde.template.Template):
            settings.configure(**defaults)
            add_to_builtins('hyde.ext.templates.django_template.templatetags.hydetags')
         except Exception, err:
-              print "Site settings are not defined properly"
-              print err
+              logger.error("Site settings are not defined properly")
+              logger.error(err)
               raise ValueError(
                        "The given site_path [%s] has invalid settings. "
-                       "Give a valid path or run -init to create a new site."
+                       "Give a valid path or run create to create a new site."
                %  self.sitepath
               )
         return 
