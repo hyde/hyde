@@ -28,7 +28,7 @@ table {
 }
 
 /* clearfix */
-.clear:after {
+.clearfix:after {
     content: ".";
     display: block;
     clear: both;
@@ -37,12 +37,12 @@ table {
     height: 0;
 }
 
-.clear {
+.clearfix {
     display: block;
 }
 
 
-* html .clear {
+* html .clearfix {
     height: 1%;
 }
 
