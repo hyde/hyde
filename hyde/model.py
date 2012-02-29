@@ -45,10 +45,10 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, unicode(key).encode('utf-8'), self.transform(value))
+        setattr(self, unicode(key).encode('utf-8'), self._transform(value))
 
 
-    def transform(self, primitive):
+    def _transform(self, primitive):
         """
         Creates an expando object, a sequence of expando objects or just
         returns the primitive based on the primitive's type.
@@ -57,7 +57,7 @@ class Expando(object):
             return Expando(primitive)
         elif isinstance(primitive, (tuple, list, set, frozenset)):
             seq = type(primitive)
-            return seq(self.transform(attr) for attr in primitive)
+            return seq(self._transform(attr) for attr in primitive)
         else:
             return primitive
 
