@@ -37,7 +37,7 @@ class TestTagger(object):
         assert self.s.tagger.tags
         tags = self.s.tagger.tags.to_dict()
 
-        assert len(tags) == 5
+        assert len(tags) == 6
 
         for tag in ['sad', 'happy', 'angry', 'thoughts', 'events']:
             assert tag in tags
