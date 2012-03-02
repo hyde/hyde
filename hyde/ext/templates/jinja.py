@@ -694,6 +694,7 @@ class Jinja2Template(Template):
         self.env.filters['xmldatetime'] = xmldatetime
         self.env.filters['islice'] = islice
         self.env.filters['top'] = top
+        self.env.filters.update(conf.get('filters', dict()))
 
         config = {}
         if hasattr(site, 'config'):
