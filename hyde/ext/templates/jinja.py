@@ -646,6 +646,7 @@ class Jinja2Template(Template):
         settings.update(defaults)
         settings['extensions'] = list()
         settings['extensions'].extend(default_extensions)
+        settings['filters'] = {}
 
         conf = {}
 
@@ -662,6 +663,15 @@ class Jinja2Template(Template):
             settings['extensions'].extend(extensions)
         else:
             settings['extensions'].append(extensions)
+        
+        filters = conf.get('filters', {})
+        if isinstance(filters, dict):
+            for name, value in filters.items():
+                parts = value.split('.')
+                module_name = '.'.join(parts[:-1])
+                function_name = parts[-1]
+                module = __import__(module_name, fromlist=[function_name])
+                settings['filters'][name] = getattr(module, function_name)
 
         self.env = Environment(
                     loader=self.loader,
@@ -685,7 +695,7 @@ class Jinja2Template(Template):
         self.env.filters['xmldatetime'] = xmldatetime
         self.env.filters['islice'] = islice
         self.env.filters['top'] = top
-        self.env.filters.update(conf.get('filters', dict()))
+        self.env.filters.update(settings['filters'])
 
         config = {}
         if hasattr(site, 'config'):
