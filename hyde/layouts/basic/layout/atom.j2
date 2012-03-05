@@ -34,7 +34,7 @@
             {% endfor %}
 
             <content type="html">
-                {% refer to res.url as article -%}
+                {% refer to res.relative_deploy_path as article -%}
                 {% filter forceescape -%}
                 {% if resource.meta.excerpts_only -%}
                 {{ article.image|markdown|typogrify }}
