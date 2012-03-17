@@ -74,7 +74,7 @@ class LanguagePlugin(Plugin):
                     if not len(language) == 2 or not language.isalpha():
                         continue
                     uuid = os.path.join(os.path.dirname(resource.get_relative_deploy_path()), name_without_suffix)
-                    if hasattr(settings, 'modify_path') and settings.modify_path:
+                    if hasattr(settings, 'smart_urls') and settings.smart_urls:
                         resource.set_relative_deploy_path(os.path.join(language, uuid))
                     # if resource was created by plugin such as tagger or
                     # thumbnail plugin it has no metadata
@@ -113,6 +113,6 @@ class LanguagePlugin(Plugin):
                 return urlgetter(context, localized_path if res_localized else path, safe)
             return wrapper
 
-        if hasattr(settings, 'modify_path') and settings.modify_path:
+        if hasattr(settings, 'smart_urls') and settings.smart_urls:
             hyde.site.content_url = get_url(hyde.site.content_url)
             hyde.site.media_url = get_url(hyde.site.media_url)
