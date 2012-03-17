@@ -109,8 +109,18 @@ class LanguagePlugin(Plugin):
                     localized_path = res.meta.language + os.sep + path
                 except AttributeError:
                     return urlgetter(context, path, safe)
-                res_localized = res.site.content.resource_from_relative_deploy_path(localized_path)
-                return urlgetter(context, localized_path if res_localized else path, safe)
+                if res.site.content.resource_from_relative_deploy_path(localized_path):
+                    return urlgetter(context, localized_path, safe)
+                elif hasattr(self.site.config, 'urlcleaner'):
+                    settings = self.site.config.urlcleaner
+                    for ind in getattr(settings, 'index_file_names', ['index.html']):
+                        if res.site.content.resource_from_relative_deploy_path(localized_path + '/' + ind):
+                            return urlgetter(context, localized_path + '.' + ind, safe)
+                    if hasattr(settings, 'strip_extensions'):
+                        for ext in settings.strip_extensions:
+                            if res.site.content.resource_from_relative_deploy_path(localized_path + '.' + ext):
+                                return urlgetter(context, localized_path + '.' + ext, safe)
+                return urlgetter(context, path, safe)
             return wrapper
 
         if hasattr(settings, 'smart_urls') and settings.smart_urls:
