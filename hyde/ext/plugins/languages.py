@@ -52,12 +52,6 @@ class LanguagePlugin(Plugin):
         """
         Initialize plugin. Build the language tree for each node
         """
-
-        if hasattr(self.site.config, 'languages'):
-            settings = self.site.config.languages
-        else:
-            settings = None
-
         # Build association between UUID and list of resources
         for node in self.site.content.walk():
             for resource in node.resources:
@@ -74,8 +68,6 @@ class LanguagePlugin(Plugin):
                     if not len(language) == 2 or not language.isalpha():
                         continue
                     uuid = os.path.join(os.path.dirname(resource.get_relative_deploy_path()), name_without_suffix)
-                    if hasattr(settings, 'smart_urls') and settings.smart_urls:
-                        resource.set_relative_deploy_path(os.path.join(language, uuid))
                     # if resource was created by plugin such as tagger or
                     # thumbnail plugin it has no metadata
                     if not hasattr(resource, 'meta'):
@@ -97,32 +89,3 @@ class LanguagePlugin(Plugin):
                     "Adding translations for resource [%s] from %s to %s" % (resource,
                                                                              language,
                                                                              translations))
-
-        def get_url(urlgetter):
-            @wraps(urlgetter)
-            def wrapper(context, path, safe=None):
-                f = File(path)
-                if isinstance(context, hyde.site.Site):
-                    return urlgetter(context, path, safe)
-                res = context['resource']
-                try:
-                    localized_path = res.meta.language + os.sep + path
-                except AttributeError:
-                    return urlgetter(context, path, safe)
-                if res.site.content.resource_from_relative_deploy_path(localized_path):
-                    return urlgetter(context, localized_path, safe)
-                elif hasattr(self.site.config, 'urlcleaner'):
-                    settings = self.site.config.urlcleaner
-                    for ind in getattr(settings, 'index_file_names', ['index.html']):
-                        if res.site.content.resource_from_relative_deploy_path(localized_path + '/' + ind):
-                            return urlgetter(context, localized_path + '.' + ind, safe)
-                    if hasattr(settings, 'strip_extensions'):
-                        for ext in settings.strip_extensions:
-                            if res.site.content.resource_from_relative_deploy_path(localized_path + '.' + ext):
-                                return urlgetter(context, localized_path + '.' + ext, safe)
-                return urlgetter(context, path, safe)
-            return wrapper
-
-        if hasattr(settings, 'smart_urls') and settings.smart_urls:
-            hyde.site.content_url = get_url(hyde.site.content_url)
-            hyde.site.media_url = get_url(hyde.site.media_url)
