@@ -5,6 +5,16 @@ Contains classes to help manage multi-language pages.
 
 from hyde.plugin import Plugin
 
+from hyde.fs import File, Folder
+from hyde.model import Expando
+from hyde.plugin import Plugin
+from hyde.ext.plugins.meta import Metadata
+import hyde.site
+
+from functools import wraps
+
+import os
+
 class LanguagePlugin(Plugin):
     """
     Each page should be tagged with a language using `language` meta
@@ -49,7 +59,21 @@ class LanguagePlugin(Plugin):
                     uuid = resource.meta.uuid
                     language = resource.meta.language
                 except AttributeError:
-                    continue
+                    try:
+                        i = resource.source.name_without_extension.rindex('.')
+                    except ValueError:
+                        continue
+                    language = resource.source.name_without_extension[i+1:]
+                    name_without_suffix = resource.source.name_without_extension[:i] + resource.source.extension
+                    if not len(language) == 2 or not language.isalpha():
+                        continue
+                    uuid = os.path.join(os.path.dirname(resource.get_relative_deploy_path()), name_without_suffix)
+                    # if resource was created by plugin such as tagger or
+                    # thumbnail plugin it has no metadata
+                    if not hasattr(resource, 'meta'):
+                        resource.meta = Metadata({})
+                    resource.meta.language = language
+                    resource.meta.uuid = uuid
                 if uuid not in self.languages:
                     self.languages[uuid] = []
                 self.languages[uuid].append(resource)
