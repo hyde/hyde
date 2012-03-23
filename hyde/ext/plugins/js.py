@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Uglify plugin
+JavaScript plugins
 """
 
 from hyde.plugin import CLTransformer
