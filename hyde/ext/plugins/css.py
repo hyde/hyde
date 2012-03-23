@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Less css plugin
+CSS plugins
 """
 
 from hyde.plugin import CLTransformer

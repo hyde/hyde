@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Contains classes and utilities to extract information from git repository
+Contains classes and utilities to extract information from repositories
 """
 
 from hyde.plugin import Plugin
@@ -60,3 +60,4 @@ class GitDatesPlugin(Plugin):
                         modified = datetime.utcfromtimestamp(os.path.getmtime(resource.path))
                     modified = modified.replace(tzinfo=None)
                     resource.meta.modified = modified
+
