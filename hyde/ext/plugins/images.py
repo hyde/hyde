@@ -5,11 +5,14 @@ Contains classes to handle images related things
 # Requires PIL or pillow
 """
 
-from hyde.plugin import Plugin
+from hyde.plugin import CLTransformer, Plugin
+
 
 import re
 import glob
 import os
+
+from fswrap import File
 
 try:
     from PIL import Image
@@ -333,3 +336,117 @@ class ImageThumbnailsPlugin(Plugin):
                     for resource in node.resources:
                         if match_includes(resource.path):
                             self.thumb(resource, dim1, dim2, prefix, crop_type, preserve_orientation)
+
+class JPEGOptimPlugin(CLTransformer):
+    """
+    The plugin class for JPEGOptim
+    """
+
+    def __init__(self, site):
+        super(JPEGOptimPlugin, self).__init__(site)
+
+    @property
+    def plugin_name(self):
+        """
+        The name of the plugin.
+        """
+        return "jpegoptim"
+
+    def binary_resource_complete(self, resource):
+        """
+        If the site is in development mode, just return.
+        Otherwise, run jpegoptim to compress the jpg file.
+        """
+
+        try:
+            mode = self.site.config.mode
+        except AttributeError:
+            mode = "production"
+
+        if not resource.source_file.kind == 'jpg':
+            return
+
+        if mode.startswith('dev'):
+            self.logger.debug("Skipping jpegoptim in development mode.")
+            return
+
+        supported = [
+            "force",
+            "max=",
+            "strip-all",
+            "strip-com",
+            "strip-exif",
+            "strip-iptc",
+            "strip-icc",
+        ]
+        target = File(self.site.config.deploy_root_path.child(
+                                resource.relative_deploy_path))
+        jpegoptim = self.app
+        args = [unicode(jpegoptim)]
+        args.extend(self.process_args(supported))
+        args.extend(["-q", unicode(target)])
+        self.call_app(args)
+
+
+class OptiPNGPlugin(CLTransformer):
+    """
+    The plugin class for OptiPNG
+    """
+
+    def __init__(self, site):
+        super(OptiPNGPlugin, self).__init__(site)
+
+    @property
+    def plugin_name(self):
+        """
+        The name of the plugin.
+        """
+        return "optipng"
+
+    def option_prefix(self, option):
+        return "-"
+
+    def binary_resource_complete(self, resource):
+        """
+        If the site is in development mode, just return.
+        Otherwise, run optipng to compress the png file.
+        """
+
+        try:
+            mode = self.site.config.mode
+        except AttributeError:
+            mode = "production"
+
+        if not resource.source_file.kind == 'png':
+            return
+
+        if mode.startswith('dev'):
+            self.logger.debug("Skipping optipng in development mode.")
+            return
+
+        supported = [
+            "o",
+            "fix",
+            "force",
+            "preserve",
+            "quiet",
+            "log",
+            "f",
+            "i",
+            "zc",
+            "zm",
+            "zs",
+            "zw",
+            "full",
+            "nb",
+            "nc",
+            "np",
+            "nz"
+        ]
+        target = File(self.site.config.deploy_root_path.child(
+                                resource.relative_deploy_path))
+        optipng = self.app
+        args = [unicode(optipng)]
+        args.extend(self.process_args(supported))
+        args.extend([unicode(target)])
+        self.call_app(args)

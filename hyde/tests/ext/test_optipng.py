@@ -31,7 +31,7 @@ class TestOptipng(object):
     def test_can_execute_optipng(self):
         s = Site(TEST_SITE)
         s.config.mode = "production"
-        s.config.plugins = ['hyde.ext.plugins.optipng.OptiPNGPlugin']
+        s.config.plugins = ['hyde.ext.plugins.images.OptiPNGPlugin']
         s.config.optipng = Expando(dict(args=dict(quiet="")))
         source =File(TEST_SITE.child('content/media/images/hyde-lt-b.png'))
         target = File(Folder(s.config.deploy_root_path).child('media/images/hyde-lt-b.png'))
