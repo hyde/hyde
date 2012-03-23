@@ -1,25 +1,31 @@
 # -*- coding: utf-8 -*-
 """
 Contains classes to handle images related things
-
-# Requires PIL
 """
 
 from hyde.plugin import CLTransformer,Plugin
 from hyde.fs import File
+from hyde.exceptions import HydeException
 
 import re
-import Image
 
 class ImageSizerPlugin(Plugin):
     """
     Each HTML page is modified to add width and height for images if
     they are not already specified.
+
+    # Requires PIL
     """
 
     def __init__(self, site):
         super(ImageSizerPlugin, self).__init__(site)
         self.cache = {}
+        try:
+            import Image
+        except ImportError, e:
+            raise HydeException('Unable to load PIL: ' + e.message)
+        else:
+            self.Image = Image
 
     def _handle_img(self, resource, src, width, height):
         """Determine what should be added to an img tag"""
@@ -54,7 +60,7 @@ class ImageSizerPlugin(Plugin):
                 return ""       # Nothing
             # Now, get the size of the image
             try:
-                self.cache[src] = Image.open(image.path).size
+                self.cache[src] = self.Image.open(image.path).size
             except IOError:
                 self.logger.warn(
                     "Unable to process image [%s]" % image)
