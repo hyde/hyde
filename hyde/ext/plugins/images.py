@@ -8,27 +8,43 @@ Contains classes to handle images related things
 from hyde.plugin import CLTransformer, Plugin
 
 
-import re
 import glob
 import os
+import re
 
 from fswrap import File
 
-try:
-    from PIL import Image
-except ImportError:
-    # No pillow
-    import Image
+from hyde.exceptions import HydeException
 
-class ImageSizerPlugin(Plugin):
+
+class PILPlugin(Plugin):
+
+    def __init__(self, site):
+        super(PILPlugin, self).__init__(site)
+        try:
+            from PIL import Image
+        except ImportError:
+            # No pillow
+            try:
+                import Image
+            except ImportError, e:
+                raise HydeException('Unable to load PIL: ' + e.message)
+
+        self.Image = Image
+
+
+class ImageSizerPlugin(PILPlugin):
     """
     Each HTML page is modified to add width and height for images if
     they are not already specified.
+
+    # Requires PIL
     """
 
     def __init__(self, site):
         super(ImageSizerPlugin, self).__init__(site)
         self.cache = {}
+
 
     def _handle_img(self, resource, src, width, height):
         """Determine what should be added to an img tag"""
@@ -63,7 +79,7 @@ class ImageSizerPlugin(Plugin):
                 return ""       # Nothing
             # Now, get the size of the image
             try:
-                self.cache[src] = Image.open(image.path).size
+                self.cache[src] = self.Image.open(image.path).size
             except IOError:
                 self.logger.warn(
                     "Unable to process image [%s]" % image)
@@ -184,7 +200,7 @@ def thumb_scale_size(orig_width, orig_height, width, height):
     return width, height
 
 
-class ImageThumbnailsPlugin(Plugin):
+class ImageThumbnailsPlugin(PILPlugin):
     """
     Provide a function to get thumbnail for any image resource.
 
@@ -255,7 +271,7 @@ class ImageThumbnailsPlugin(Plugin):
             return
         self.logger.debug("Making thumbnail for [%s]" % resource)
 
-        im = Image.open(resource.path)
+        im = self.Image.open(resource.path)
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
         format = im.format
@@ -266,7 +282,7 @@ class ImageThumbnailsPlugin(Plugin):
         resize_width, resize_height = thumb_scale_size(im.size[0], im.size[1], width, height)
 
         self.logger.debug("Resize to: %d,%d" % (resize_width, resize_height))
-        im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
+        im = im.resize((resize_width, resize_height), self.Image.ANTIALIAS)
         if width is not None and height is not None:
             shiftx = shifty = 0
             if crop_type == "center":
