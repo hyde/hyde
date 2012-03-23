@@ -28,7 +28,7 @@ class TestStylus(object):
 
     def test_can_execute_stylus(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
+        s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:
@@ -46,7 +46,7 @@ class TestStylus(object):
     def test_can_compress_with_stylus(self):
         s = Site(TEST_SITE)
         s.config.mode = "production"
-        s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
+        s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:
