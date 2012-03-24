@@ -26,7 +26,8 @@ class LessCSSPlugin(CLTransformer):
         """
         Check user defined
         """
-        return getattr(resource, 'meta', {}).get('parse', True)
+        return resource.source_file.kind == 'less' and \
+               getattr(resource, 'meta', {}).get('parse', True)
 
     def _should_replace_imports(self, resource):
         return getattr(resource, 'meta', {}).get('uses_template', True)
@@ -36,8 +37,7 @@ class LessCSSPlugin(CLTransformer):
         Find all the less css files and set their relative deploy path.
         """
         for resource in self.site.content.walk_resources():
-            if resource.source_file.kind == 'less' and \
-                self._should_parse_resource(resource):
+            if self._should_parse_resource(resource):
                 new_name = resource.source_file.name_without_extension + ".css"
                 target_folder = File(resource.relative_deploy_path).parent
                 resource.relative_deploy_path = target_folder.child(new_name)
@@ -47,9 +47,8 @@ class LessCSSPlugin(CLTransformer):
         Replace @import statements with {% include %} statements.
         """
 
-        if not resource.source_file.kind == 'less' or not \
-            self._should_parse_resource(resource) or not \
-            self._should_replace_imports(resource):
+        if not self._should_parse_resource(resource) or \
+           not self._should_replace_imports(resource):
             return text
 
         import_finder = re.compile(
@@ -86,8 +85,7 @@ class LessCSSPlugin(CLTransformer):
         Read the generated file and return the text as output.
         Set the target path to have a css extension.
         """
-        if not resource.source_file.kind == 'less' or not \
-            self._should_parse_resource(resource):
+        if not self._should_parse_resource(resource):
             return
 
         supported = [
