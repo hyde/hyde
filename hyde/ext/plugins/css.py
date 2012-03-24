@@ -331,9 +331,6 @@ class SassyCSSPlugin(Plugin):
         return resource.source_file.kind == 'scss' and \
                getattr(resource, 'meta', {}).get('parse', True)
 
-    def _should_replace_imports(self, resource):
-        return getattr(resource, 'meta', {}).get('uses_template', True)
-
     def begin_site(self):
         """
         Find all the sassycss files and set their relative deploy path.
@@ -350,35 +347,6 @@ class SassyCSSPlugin(Plugin):
                 new_name = resource.source_file.name_without_extension + ".css"
                 target_folder = File(resource.relative_deploy_path).parent
                 resource.relative_deploy_path = target_folder.child(new_name)
-
-    def begin_text_resource(self, resource, text):
-        """
-        Replace @import statements with {% include %} statements.
-        """
-
-        if not self._should_parse_resource(resource) or \
-           not self._should_replace_imports(resource):
-            return text
-
-        import_finder = re.compile(
-                            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
-                            re.MULTILINE)
-
-        def import_to_include(match):
-            if not match.lastindex:
-                return ''
-            path = match.groups(1)[0]
-            afile = File(resource.source_file.parent.child(path))
-            if len(afile.kind.strip()) == 0:
-                afile = File(afile.path + '.scss')
-            ref = self.site.content.resource_from_path(afile.path)
-            if not ref:
-                raise self.template.exception_class(
-                        "Cannot import from path [%s]" % afile.path)
-            ref.is_processable = False
-            return self.template.get_include_statement(ref.relative_path)
-        text = import_finder.sub(import_to_include, text)
-        return text
 
     def text_resource_complete(self, resource, text):
         """
