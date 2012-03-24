@@ -340,7 +340,10 @@ class SassyCSSPlugin(Plugin):
         self.scss.ASSETS_URL = self.site.media_url('/')
         self.scss.ASSETS_ROOT = self.site.config.deploy_root_path.child(
                                     self.site.config.media_root)
-        self.scss.LOAD_PATHS = self.settings.get('load_paths')
+        if hasattr(self.scss, 'VERSION') and self.scss.VERSION > '1.1.3':
+            self.scss.LOAD_PATHS = self.settings.get('load-paths')
+        else:
+            self.scss.LOAD_PATHS = ','.join(self.settings.get('load-paths'))
 
         for resource in self.site.content.walk_resources():
             if self._should_parse_resource(resource):
