@@ -305,3 +305,88 @@ class CleverCSSPlugin(Plugin):
 
         return self.clevercss.convert(text, self.settings)
 
+
+#
+# Sassy CSS
+#
+
+class SassyCSSPlugin(Plugin):
+    """
+    The plugin class for SassyCSS
+    """
+
+    def __init__(self, site):
+        super(SassyCSSPlugin, self).__init__(site)
+        try:
+            import scss
+        except ImportError, e:
+            raise HydeException('Unable to import pyScss: ' + e.message)
+        else:
+            self.scss = scss
+
+    def _should_parse_resource(self, resource):
+        """
+        Check user defined
+        """
+        return resource.source_file.kind == 'scss' and \
+               getattr(resource, 'meta', {}).get('parse', True)
+
+    def _should_replace_imports(self, resource):
+        return getattr(resource, 'meta', {}).get('uses_template', True)
+
+    def begin_site(self):
+        """
+        Find all the sassycss files and set their relative deploy path.
+        """
+        self.scss.STATIC_URL = self.site.content_url('/')
+        self.scss.STATIC_ROOT = self.site.config.content_root_path.path
+        self.scss.ASSETS_URL = self.site.media_url('/')
+        self.scss.ASSETS_ROOT = self.site.config.deploy_root_path.child(
+                                    self.site.config.media_root)
+        self.scss.LOAD_PATHS = self.settings.get('load_paths')
+
+        for resource in self.site.content.walk_resources():
+            if self._should_parse_resource(resource):
+                new_name = resource.source_file.name_without_extension + ".css"
+                target_folder = File(resource.relative_deploy_path).parent
+                resource.relative_deploy_path = target_folder.child(new_name)
+
+    def begin_text_resource(self, resource, text):
+        """
+        Replace @import statements with {% include %} statements.
+        """
+
+        if not self._should_parse_resource(resource) or \
+           not self._should_replace_imports(resource):
+            return text
+
+        import_finder = re.compile(
+                            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
+                            re.MULTILINE)
+
+        def import_to_include(match):
+            if not match.lastindex:
+                return ''
+            path = match.groups(1)[0]
+            afile = File(resource.source_file.parent.child(path))
+            if len(afile.kind.strip()) == 0:
+                afile = File(afile.path + '.scss')
+            ref = self.site.content.resource_from_path(afile.path)
+            if not ref:
+                raise self.template.exception_class(
+                        "Cannot import from path [%s]" % afile.path)
+            ref.is_processable = False
+            return self.template.get_include_statement(ref.relative_path)
+        text = import_finder.sub(import_to_include, text)
+        return text
+
+    def text_resource_complete(self, resource, text):
+        """
+        Run sassycss compiler on text.
+        """
+        if not self._should_parse_resource(resource):
+            return
+
+        scss = self.scss.Scss(scss_opts=self.settings.get('options'))
+        return scss.compile(text)
+
