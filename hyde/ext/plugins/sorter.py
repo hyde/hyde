@@ -3,8 +3,7 @@
 Contains classes and utilities related to sorting
 resources and nodes in hyde.
 """
-import re
-from hyde.model import Expando
+
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
 from hyde.util import add_method, pairwalk

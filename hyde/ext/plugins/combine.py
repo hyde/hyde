@@ -5,7 +5,6 @@ Contains classes to combine files into one
 
 from fnmatch import fnmatch
 
-from hyde.model import Expando
 from hyde.plugin import Plugin
 import operator
 

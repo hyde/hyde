@@ -3,6 +3,7 @@
 Paginator plugin.  Groups a sorted set of resources into pages and supplies
 each page to a copy of the original resource.
 """
+
 import os
 
 from hyde.fs import File
