@@ -2,7 +2,6 @@
 """
 Contains classes and utilities related to hyde urls.
 """
-
 from hyde.plugin import Plugin
 from hyde.site import Site
 

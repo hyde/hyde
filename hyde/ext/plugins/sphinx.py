@@ -56,7 +56,6 @@ logger = getLoggerWithNullHandler('hyde.ext.plugins.sphinx')
 try:
     import sphinx
     from sphinx.builders.html import JSONHTMLBuilder
-    from sphinx.util.osutil import SEP
 except ImportError:
     logger.error("The sphinx plugin requires sphinx.")
     logger.error("`pip install -U sphinx` to get it.")

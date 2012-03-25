@@ -2,6 +2,7 @@
 """
 Contains classes and utilities related to meta data in hyde.
 """
+
 import re
 from hyde.model import Expando
 from hyde.plugin import Plugin

@@ -3,7 +3,6 @@
 Contains classes and utilities related to tagging
 resources in hyde.
 """
-
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node
