@@ -17,6 +17,10 @@ class LessCSSPlugin(CLTransformer):
 
     def __init__(self, site):
         super(LessCSSPlugin, self).__init__(site)
+        self.import_finder = \
+            re.compile('^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
+                       re.MULTILINE)
+
 
     @property
     def executable_name(self):
@@ -51,10 +55,6 @@ class LessCSSPlugin(CLTransformer):
            not self._should_replace_imports(resource):
             return text
 
-        import_finder = re.compile(
-                            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
-                            re.MULTILINE)
-
         def import_to_include(match):
             if not match.lastindex:
                 return ''
@@ -68,7 +68,7 @@ class LessCSSPlugin(CLTransformer):
                         "Cannot import from path [%s]" % afile.path)
             ref.is_processable = False
             return self.template.get_include_statement(ref.relative_path)
-        text = import_finder.sub(import_to_include, text)
+        text = self.import_finder.sub(import_to_include, text)
         return text
 
 
@@ -120,6 +120,9 @@ class StylusPlugin(CLTransformer):
 
     def __init__(self, site):
         super(StylusPlugin, self).__init__(site)
+        self.import_finder = \
+            re.compile('^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;?\s*$',
+                       re.MULTILINE)
 
     def begin_site(self):
         """
@@ -138,9 +141,6 @@ class StylusPlugin(CLTransformer):
 
         if not resource.source_file.kind == 'styl':
             return
-        import_finder = re.compile(
-                    '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;?\s*$',
-                    re.MULTILINE)
 
         def import_to_include(match):
             """
@@ -170,7 +170,7 @@ class StylusPlugin(CLTransformer):
                         "\n"
             return '@import "' + path + '"\n'
 
-        text = import_finder.sub(import_to_include, text)
+        text = self.import_finder.sub(import_to_include, text)
         return text
 
     @property

@@ -178,14 +178,17 @@ class SyntextPlugin(TextyPlugin):
         return super(SyntextPlugin, self).text_to_tag(match, start)
 
 
-import re
-
 class TextlinksPlugin(Plugin):
     """
     The plugin class for syntax text replacement.
     """
     def __init__(self, site):
         super(TextlinksPlugin, self).__init__(site)
+        import re
+        self.content_link = re.compile('\[\[([^\]^!][^\]]*)\]\]',
+                                       re.UNICODE|re.MULTILINE)
+        self.media_link = re.compile('\[\[\!\!([^\]]*)\]\]',
+                                     re.UNICODE|re.MULTILINE)
 
     def begin_text_resource(self, resource, text):
         """
@@ -198,13 +201,11 @@ class TextlinksPlugin(Plugin):
         """
         if not resource.uses_template:
             return text
-        content_link = re.compile('\[\[([^\]^!][^\]]*)\]\]', re.UNICODE|re.MULTILINE)
-        media_link = re.compile('\[\[\!\!([^\]]*)\]\]', re.UNICODE|re.MULTILINE)
         def replace_content(match):
             return self.template.get_content_url_statement(match.groups(1)[0])
         def replace_media(match):
             return self.template.get_media_url_statement(match.groups(1)[0])
-        text = content_link.sub(replace_content, text)
-        text = media_link.sub(replace_media, text)
+        text = self.content_link.sub(replace_content, text)
+        text = self.media_link.sub(replace_media, text)
         return text
 
