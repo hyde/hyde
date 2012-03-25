@@ -331,6 +331,23 @@ class SassyCSSPlugin(Plugin):
         return resource.source_file.kind == 'scss' and \
                getattr(resource, 'meta', {}).get('parse', True)
 
+    @property
+    def options(self):
+        """
+        Returns options depending on development mode
+        """
+        try:
+            mode = self.site.config.mode
+        except AttributeError:
+            mode = "production"
+
+        opts = {'compress': not mode.startswith('dev')}
+        site_opts = self.settings.get('options')
+        if site_opts:
+            opts.update(site_opts)
+
+        return opts
+
     def begin_site(self):
         """
         Find all the sassycss files and set their relative deploy path.
@@ -361,6 +378,6 @@ class SassyCSSPlugin(Plugin):
         else:
             self.scss.LOAD_PATHS = ','.join(load_paths)
 
-        scss = self.scss.Scss(scss_opts=self.settings.get('options'))
+        scss = self.scss.Scss(scss_opts=self.options)
         return scss.compile(text)
 
