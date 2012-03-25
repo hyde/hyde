@@ -379,5 +379,5 @@ class SassyCSSPlugin(Plugin):
             self.scss.LOAD_PATHS = ','.join(load_paths)
 
         scss = self.scss.Scss(scss_opts=self.options)
-        return scss.compile(text)
+        return scss.compile(text.encode('utf8')).decode('utf8')
 
