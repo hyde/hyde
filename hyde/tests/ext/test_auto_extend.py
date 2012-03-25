@@ -43,7 +43,7 @@ class TestAutoExtend(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin',
                             'hyde.ext.plugins.auto_extend.AutoExtendPlugin',
-                            'hyde.ext.plugins.blockdown.BlockdownPlugin']
+                            'hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 ---
@@ -60,7 +60,7 @@ extends: base.html
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin',
                             'hyde.ext.plugins.auto_extend.AutoExtendPlugin',
-                            'hyde.ext.plugins.blockdown.BlockdownPlugin']
+                            'hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 ---
