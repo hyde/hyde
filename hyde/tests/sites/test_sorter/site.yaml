@@ -6,7 +6,7 @@ plugins:
     - hyde.ext.plugins.meta.MetaPlugin
     - hyde.ext.plugins.auto_extend.AutoExtendPlugin
     - hyde.ext.plugins.sorter.SorterPlugin
-    - hyde.ext.plugins.textlinks.TextlinksPlugin
+    - hyde.ext.plugins.text.TextlinksPlugin
 meta:
     nodemeta: meta.yaml
     created: !!timestamp 2010-01-01 00:00:00
