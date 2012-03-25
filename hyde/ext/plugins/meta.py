@@ -48,6 +48,9 @@ class MetaPlugin(Plugin):
 
     def __init__(self, site):
         super(MetaPlugin, self).__init__(site)
+        self.yaml_finder = re.compile(
+                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n*",
+                    re.MULTILINE)
 
     def begin_site(self):
         """
@@ -77,10 +80,7 @@ class MetaPlugin(Plugin):
         Once loaded, remove the meta area from the text.
         """
         self.logger.debug("Trying to load metadata from resource [%s]" % resource)
-        yaml_finder = re.compile(
-                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n*",
-                    re.MULTILINE)
-        match = re.match(yaml_finder, text)
+        match = re.match(self.yaml_finder, text)
         if not match:
             self.logger.debug("No metadata found in resource [%s]" % resource)
             data = {}
