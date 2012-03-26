@@ -181,42 +181,6 @@ class TestImageThumbSize(object):
         assert nw == 100
         assert nh == 50
 
-    def test_larger_only_portrait(self):
-        ow, oh = 100, 200
-        nw, nh = thumb_scale_size(ow, oh, 50, None, True)
-        assert nw == 25
-        assert nh == 50
-
-    def test_larger_only_landscape(self):
-        ow, oh = 200, 100
-        nw, nh = thumb_scale_size(ow, oh, 50, None, True)
-        assert nw == 50
-        assert nh == 25
-
-    def test_smaller_only_portrait(self):
-        ow, oh = 100, 200
-        nw, nh = thumb_scale_size(ow, oh, None, 50, True)
-        assert nw == 50
-        assert nh == 100
-
-    def test_smaller_only_landscape(self):
-        ow, oh = 200, 100
-        nw, nh = thumb_scale_size(ow, oh, None, 50, True)
-        assert nw == 100
-        assert nh == 50
-
-    def test_larger_and_smaller_portrait(self):
-        ow, oh = 100, 200
-        nw, nh = thumb_scale_size(ow, oh, 100, 50, True)
-        assert nw == 50
-        assert nh == 100
-
-    def test_larger_and_smaller_landscape(self):
-        ow, oh = 200, 100
-        nw, nh = thumb_scale_size(ow, oh, 100, 50, True)
-        assert nw == 100
-        assert nh == 50
-
 class TestImageThumbnails(object):
 
     def setUp(self):
