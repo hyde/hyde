@@ -182,6 +182,7 @@ class TestImageThumbSize(object):
         assert nh == 50
 
 class TestImageThumbnails(object):
+    # TODO: add tests for cropping? (not easy currently)
 
     def setUp(self):
         TEST_SITE.make()
@@ -267,7 +268,6 @@ class TestImageThumbnails(object):
 
         im = Image.open(self._deployed_image(prefix, LANDSCAPE_IMAGE))
         assert im.size[1] == 50
-
 
     def test_larger_and_smaller(self):
         prefix='thumb_'
