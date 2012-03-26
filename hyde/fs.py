@@ -36,7 +36,7 @@ class FS(object):
             self.path = path
         else:
             self.path = os.path.expandvars(os.path.expanduser(
-                        unicode(path).strip().rstrip(os.sep)))
+                        os.path.normpath(unicode(path).strip().rstrip(os.sep))))
 
     def __str__(self):
         return self.path
