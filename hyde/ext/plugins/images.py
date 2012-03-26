@@ -149,6 +149,44 @@ class ImageSizerPlugin(Plugin):
 
         return text
 
+def scale_aspect(a, b1, b2):
+  from math import ceil
+  """
+  Scales a by b2/b1 rounding up to nearest integer
+  """
+  return int(ceil(a * b2 / float(b1)))
+
+
+def thumb_scale_size(orig_width, orig_height, dim1, dim2, preserve_orientation=False):
+    """
+    Determine thumbnail size
+
+    Params:
+      orig_width, orig_height: original image dimensions
+      dim1, dim2: thumbnail dimensions
+      preserve_orientatin: whether to preserve original image's orientation
+
+    If `preserve_orientation` is True and the original image is portrait, then
+    dim1 corresponds to the height and dim2 corresponds to the width
+    Otherwise, dim1 is width and dim2 is height.
+    """
+    if preserve_orientation and orig_height > orig_width:
+        width, height = dim2, dim1
+    else:
+        width, height = dim1, dim2
+
+    if width is None:
+        width = scale_aspect(orig_width, orig_height, height)
+    elif height is None:
+        height = scale_aspect(orig_height, orig_width, width)
+    elif orig_width*height >= orig_height*width:
+        width = scale_aspect(orig_width, orig_height, height)
+    else:
+        height = scale_aspect(orig_height, orig_width, width)
+
+    return width, height
+
+
 class ImageThumbnailsPlugin(Plugin):
     """
     Provide a function to get thumbnail for any image resource.
@@ -172,12 +210,18 @@ class ImageThumbnailsPlugin(Plugin):
             include:
             - '*.png'
             - '*.jpg'
-    which means - make from every picture two thumbnails with different prefixes
+          - lfrom every picture arger: 100
+            prefix: thumbs3_
+            include:
+            - '*.jpg'
+    which means - make three thumbnails from every picture with different prefixes
     and sizes
 
     If both width and height defined, image would be cropped, you can define
     crop_type as one of these values: "topleft", "center" and "bottomright".
     "topleft" is default.
+
+    XXX fix docs for larger/smaller
 
     Currently, only supports PNG and JPG.
     """
@@ -185,7 +229,7 @@ class ImageThumbnailsPlugin(Plugin):
     def __init__(self, site):
         super(ImageThumbnailsPlugin, self).__init__(site)
 
-    def thumb(self, resource, width, height, prefix, crop_type):
+    def thumb(self, resource, width, height, prefix, crop_type, preserve_orientation=False):
         """
         Generate a thumbnail for the given image
         """
@@ -211,17 +255,13 @@ class ImageThumbnailsPlugin(Plugin):
         im = Image.open(resource.path)
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
-        resize_width = width
-        resize_height = height
-        if resize_width is None:
-            resize_width = im.size[0]*height/im.size[1] + 1
-        elif resize_height is None:
-            resize_height = im.size[1]*width/im.size[0] + 1
-        elif im.size[0]*height >= im.size[1]*width:
-            resize_width = im.size[0]*height/im.size[1]
-        else:
-            resize_height = im.size[1]*width/im.size[0]
 
+        resize_width, resize_height = thumb_scale_size(im.size[0], im.size[1], width, height, preserve_orientation)
+
+        if preserve_orientation and im.size[1] > im.size[0]:
+          width, height = height, width
+
+        self.logger.debug("Resize to: %d,%d" % (resize_width, resize_height))
         im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
         if width is not None and height is not None:
             shiftx = shifty = 0
@@ -247,6 +287,8 @@ class ImageThumbnailsPlugin(Plugin):
         config = self.site.config
         defaults = { "width": None,
                      "height": None,
+                     "larger": None,
+                     "smaller": None,
                      "crop_type": "topleft",
                      "prefix": 'thumb_'}
         if hasattr(config, 'thumbnails'):
@@ -262,17 +304,32 @@ class ImageThumbnailsPlugin(Plugin):
                     prefix = th.prefix if hasattr(th, 'prefix') else defaults['prefix']
                     height = th.height if hasattr(th, 'height') else defaults['height']
                     width = th.width if hasattr(th, 'width') else defaults['width']
+                    larger = th.larger if hasattr(th, 'larger') else defaults['larger']
+                    smaller = th.smaller if hasattr(th, 'smaller') else defaults['smaller']
                     crop_type = th.crop_type if hasattr(th, 'crop_type') else defaults['crop_type']
                     if crop_type not in ["topleft", "center", "bottomright"]:
                         self.logger.error("Unknown crop_type defined for node [%s]" % node)
                         continue
-                    if width is None and height is None:
-                        self.logger.error("Both width and height are not set for node [%s]" % node)
+                    if width is None and height is None and larger is None and smaller is None:
+                        self.logger.error("At least one of width, height, larger, or smaller must be set for node [%s]" % node)
                         continue
+
+                    if ((larger is not None or smaller is not None) and
+                        (width is not None or height is not None)):
+                        self.logger.error("It is not valid to specify both one of width/height and one of larger/smaller for node [%s]" % node)
+                        continue
+
+                    if larger is None and smaller is None:
+                      preserve_orientation = False
+                      dim1, dim2 = width, height
+                    else:
+                      preserve_orientation = True
+                      dim1, dim2 = larger, smaller
+
                     thumbs_list = []
                     for inc in include:
                         for path in glob.glob(node.path + os.sep + inc):
                             thumbs_list.append(path)
                     for resource in node.resources:
                         if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
-                            self.thumb(resource, width, height, prefix, crop_type)
+                            self.thumb(resource, dim1, dim2, prefix, crop_type, preserve_orientation)
