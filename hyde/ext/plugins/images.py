@@ -157,24 +157,14 @@ def scale_aspect(a, b1, b2):
   return int(ceil(a * b2 / float(b1)))
 
 
-def thumb_scale_size(orig_width, orig_height, dim1, dim2, preserve_orientation=False):
+def thumb_scale_size(orig_width, orig_height, width, height):
     """
-    Determine thumbnail size
+    Determine size to scale to scale for thumbnailst Params
 
     Params:
       orig_width, orig_height: original image dimensions
-      dim1, dim2: thumbnail dimensions
-      preserve_orientatin: whether to preserve original image's orientation
-
-    If `preserve_orientation` is True and the original image is portrait, then
-    dim1 corresponds to the height and dim2 corresponds to the width
-    Otherwise, dim1 is width and dim2 is height.
+      width, height: thumbnail dimensions
     """
-    if preserve_orientation and orig_height > orig_width:
-        width, height = dim2, dim1
-    else:
-        width, height = dim1, dim2
-
     if width is None:
         width = scale_aspect(orig_width, orig_height, height)
     elif height is None:
@@ -256,10 +246,10 @@ class ImageThumbnailsPlugin(Plugin):
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
 
-        resize_width, resize_height = thumb_scale_size(im.size[0], im.size[1], width, height, preserve_orientation)
-
         if preserve_orientation and im.size[1] > im.size[0]:
           width, height = height, width
+
+        resize_width, resize_height = thumb_scale_size(im.size[0], im.size[1], width, height)
 
         self.logger.debug("Resize to: %d,%d" % (resize_width, resize_height))
         im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
