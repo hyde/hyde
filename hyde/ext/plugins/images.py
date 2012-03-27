@@ -220,8 +220,6 @@ class ImageThumbnailsPlugin(Plugin):
     If both width and height (or both larger and smaller) are defined, the
     image is cropped. You can define crop_type as one of these values:
     "topleft", "center" and "bottomright".  "topleft" is default.
-
-    Currently, only supports PNG and JPG.
     """
 
     def __init__(self, site):
@@ -326,10 +324,8 @@ class ImageThumbnailsPlugin(Plugin):
                       preserve_orientation = True
                       dim1, dim2 = larger, smaller
 
-                    thumbs_list = []
-                    for inc in include:
-                        for path in glob.glob(os.path.join(node.path, inc)):
-                            thumbs_list.append(path)
+                    match_includes = lambda s: any([glob.fnmatch.fnmatch(s, inc) for inc in include])
+
                     for resource in node.resources:
-                        if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
+                        if match_includes(resource.path):
                             self.thumb(resource, dim1, dim2, prefix, crop_type, preserve_orientation)
