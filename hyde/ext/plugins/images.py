@@ -200,18 +200,26 @@ class ImageThumbnailsPlugin(Plugin):
             include:
             - '*.png'
             - '*.jpg'
-          - lfrom every picture arger: 100
+          - larger: 100
             prefix: thumbs3_
             include:
             - '*.jpg'
-    which means - make three thumbnails from every picture with different prefixes
+          - smaller: 50
+            prefix: thumbs4_
+            include:
+            - '*.jpg'
+    which means - make four thumbnails from every picture with different prefixes
     and sizes
 
-    If both width and height defined, image would be cropped, you can define
-    crop_type as one of these values: "topleft", "center" and "bottomright".
-    "topleft" is default.
+    It is only valid to specify either width/height or larger/smaller, but not to
+    mix the two types.
 
-    XXX fix docs for larger/smaller
+    If larger/smaller are specified, then the orientation (i.e., landscape or
+    portrait) is preserved while thumbnailing.
+
+    If both width and height (or both larger and smaller) are defined, the
+    image is cropped. You can define crop_type as one of these values:
+    "topleft", "center" and "bottomright".  "topleft" is default.
 
     Currently, only supports PNG and JPG.
     """
