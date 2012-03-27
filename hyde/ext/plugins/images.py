@@ -328,7 +328,7 @@ class ImageThumbnailsPlugin(Plugin):
 
                     thumbs_list = []
                     for inc in include:
-                        for path in glob.glob(node.path + os.sep + inc):
+                        for path in glob.glob(os.path.join(node.path, inc)):
                             thumbs_list.append(path)
                     for resource in node.resources:
                         if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
