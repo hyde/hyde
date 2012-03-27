@@ -323,6 +323,8 @@ class SassyCSSPlugin(Plugin):
             raise HydeException('Unable to import pyScss: ' + e.message)
         else:
             self.scss = scss
+        from hyde.util import getLoggerWithConsoleHandler
+        getLoggerWithConsoleHandler('scss')
 
     def _should_parse_resource(self, resource):
         """
