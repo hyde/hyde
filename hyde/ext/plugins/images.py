@@ -253,6 +253,7 @@ class ImageThumbnailsPlugin(Plugin):
         im = Image.open(resource.path)
         if im.mode != 'RGBA':
             im = im.convert('RGBA')
+        format = im.format
 
         if preserve_orientation and im.size[1] > im.size[0]:
           width, height = height, width
@@ -272,10 +273,11 @@ class ImageThumbnailsPlugin(Plugin):
             im = im.crop((shiftx, shifty, width + shiftx, height + shifty))
             im.load()
 
-        if resource.name.endswith(".jpg"):
-            im.save(target.path, "JPEG", optimize=True, quality=75)
-        else:
-            im.save(target.path, "PNG", optimize=True)
+        options = dict(optimize=True)
+        if format == "JPEG":
+          options['quality'] = 75
+
+        im.save(target.path, **options)
 
     def begin_site(self):
         """
