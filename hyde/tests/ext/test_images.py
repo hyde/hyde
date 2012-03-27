@@ -6,13 +6,11 @@ Use nose
 
 Requires PIL
 """
-from hyde.fs import File, Folder
+from hyde.fs import File
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.ext.plugins.images import thumb_scale_size
 import yaml
-
-from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 IMAGE_SOURCE = File(__file__).parent.child_folder('images')
