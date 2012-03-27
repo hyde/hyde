@@ -341,7 +341,8 @@ class SassyCSSPlugin(Plugin):
         except AttributeError:
             mode = "production"
 
-        opts = {'compress': not mode.startswith('dev')}
+        debug = mode.startswith('dev')
+        opts = {'compress': not debug, 'debug_info': debug}
         site_opts = self.settings.get('options')
         if site_opts:
             opts.update(site_opts)
