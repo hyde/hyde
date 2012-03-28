@@ -382,5 +382,9 @@ class SassyCSSPlugin(Plugin):
             self.scss.LOAD_PATHS = ','.join(load_paths)
 
         scss = self.scss.Scss(scss_opts=self.options)
-        return scss.compile(text)
+        text = scss.compile(text)
+
+        resource.update_deps([d for d in scss.dependencies if not d.startswith('<string')])
+
+        return text
 
