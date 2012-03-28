@@ -103,6 +103,11 @@ class Resource(Processable):
         self.site = node.site
         self.simple_copy = False
 
+    def update_deps(self, deps):
+        self.depends = deps
+        if hasattr(self.site, 'generator'):
+            self.site.generator.update_deps(self)
+
     @property
     def relative_path(self):
         """
