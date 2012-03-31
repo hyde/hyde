@@ -10,7 +10,7 @@ base_url: /
 template: hyde.ext.templates.jinja.Jinja2Template
 plugins:
     - hyde.ext.plugins.meta.MetaPlugin
-    - hyde.ext.plugins.auto_extend.AutoExtendPlugin
+    - hyde.ext.plugins.meta.AutoExtendPlugin
     # Plugins needed for the advances section.
     - hyde.ext.plugins.sorter.SorterPlugin
     - hyde.ext.plugins.grouper.GrouperPlugin
