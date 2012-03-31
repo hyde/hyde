@@ -7,8 +7,8 @@ plugins:
     - hyde.ext.plugins.meta.AutoExtendPlugin
     - hyde.ext.plugins.sorter.SorterPlugin
     - hyde.ext.plugins.tagger.TaggerPlugin
-    - hyde.ext.plugins.syntext.SyntextPlugin
-    - hyde.ext.plugins.textlinks.TextlinksPlugin
+    - hyde.ext.plugins.text.SyntextPlugin
+    - hyde.ext.plugins.text.TextlinksPlugin
 context:
     data:
         tweet_via: ringce
