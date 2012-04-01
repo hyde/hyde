@@ -14,7 +14,7 @@ plugins:
     # Plugins needed for the advances section.
     - hyde.ext.plugins.sorter.SorterPlugin
     - hyde.ext.plugins.grouper.GrouperPlugin
-    - hyde.ext.plugins.tagger.TaggerPlugin
+    - hyde.ext.plugins.meta.TaggerPlugin
 context:
     data:
         author:
