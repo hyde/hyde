@@ -6,6 +6,10 @@ Text processing plugins
 from hyde.plugin import Plugin,TextyPlugin
 
 
+#
+# Blockdown
+#
+
 class BlockdownPlugin(TextyPlugin):
     """
     The plugin class for block text replacement.
@@ -45,6 +49,10 @@ class BlockdownPlugin(TextyPlugin):
         """
         return super(BlockdownPlugin, self).text_to_tag(match, start)
 
+
+#
+# Mark Text
+#
 
 class MarkingsPlugin(TextyPlugin):
     """
@@ -86,6 +94,10 @@ class MarkingsPlugin(TextyPlugin):
         return super(MarkingsPlugin, self).text_to_tag(match, start)
 
 
+#
+# Reference Text
+#
+
 class ReferencePlugin(TextyPlugin):
     """
     The plugin class for reference text replacement.
@@ -125,6 +137,10 @@ class ReferencePlugin(TextyPlugin):
         params = '"%s" as %s' % (match.groups(1)[0], match.groups(1)[1])
         return self.template.get_open_tag(self.tag_name, params)
 
+
+#
+# Syntax Text
+#
 
 class SyntextPlugin(TextyPlugin):
     """
@@ -178,9 +194,13 @@ class SyntextPlugin(TextyPlugin):
         return super(SyntextPlugin, self).text_to_tag(match, start)
 
 
+#
+# Text Links
+#
+
 class TextlinksPlugin(Plugin):
     """
-    The plugin class for syntax text replacement.
+    The plugin class for text link replacement.
     """
     def __init__(self, site):
         super(TextlinksPlugin, self).__init__(site)

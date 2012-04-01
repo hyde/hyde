@@ -8,6 +8,11 @@ from hyde.plugin import Plugin
 import subprocess
 from dateutil.parser import parse
 
+
+#
+# Git Dates
+#
+
 class GitDatesPlugin(Plugin):
     """
     Extract creation and last modification date from git and include

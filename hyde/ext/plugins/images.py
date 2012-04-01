@@ -9,6 +9,10 @@ from hyde.exceptions import HydeException
 
 import re
 
+#
+# Image Sizer
+#
+
 class ImageSizerPlugin(Plugin):
     """
     Each HTML page is modified to add width and height for images if
@@ -154,6 +158,10 @@ class ImageSizerPlugin(Plugin):
         return text
 
 
+#
+# JPEG Optimization
+#
+
 class JPEGOptimPlugin(CLTransformer):
     """
     The plugin class for JPEGOptim
@@ -204,6 +212,10 @@ class JPEGOptimPlugin(CLTransformer):
         args.extend(["-q", unicode(target)])
         self.call_app(args)
 
+
+#
+# PNG Optimization
+#
 
 class OptiPNGPlugin(CLTransformer):
     """

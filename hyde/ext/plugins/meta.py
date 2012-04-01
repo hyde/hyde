@@ -16,6 +16,10 @@ from hyde.util import add_method, add_property, pairwalk
 import yaml
 
 
+#
+# Metadata
+#
+
 class Metadata(Expando):
     """
     Container class for yaml meta data.
@@ -151,6 +155,10 @@ class MetaPlugin(Plugin):
         return self.__read_resource__(resource, text)
 
 
+#
+# Auto Extend
+#
+
 class AutoExtendPlugin(Plugin):
     """
     The plugin class for extending templates using metadata.
@@ -199,6 +207,10 @@ class AutoExtendPlugin(Plugin):
                 return extended_text
         return text
 
+
+#
+# Tagging
+#
 
 class Tag(Expando):
     """
@@ -398,6 +410,10 @@ extends: false
             self.site.content.add_resource(archive_file)
 
 
+#
+# Sorting
+#
+
 def filter_method(item, settings=None):
     """
     Returns true if all the filters in the
@@ -514,6 +530,10 @@ class SorterPlugin(Plugin):
                 setattr(prev, next_att, next)
                 setattr(next, prev_att, prev)
 
+
+#
+# Grouping
+#
 
 Grouper = namedtuple('Grouper', 'group resources')
 

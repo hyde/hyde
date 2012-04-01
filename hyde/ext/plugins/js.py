@@ -6,6 +6,11 @@ JavaScript plugins
 from hyde.plugin import CLTransformer
 from hyde.fs import File
 
+
+#
+# Uglify JavaScript
+#
+
 class UglifyPlugin(CLTransformer):
     """
     The plugin class for Uglify JS
@@ -73,3 +78,4 @@ class UglifyPlugin(CLTransformer):
         self.call_app(args)
         out = target.read_all()
         return out
+
