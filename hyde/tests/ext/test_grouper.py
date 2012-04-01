@@ -6,7 +6,7 @@ Use nose
 """
 from hyde.ext.plugins.meta import MetaPlugin
 from hyde.ext.plugins.meta import SorterPlugin
-from hyde.ext.plugins.grouper import GrouperPlugin
+from hyde.ext.plugins.meta import GrouperPlugin
 from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
@@ -31,7 +31,7 @@ class TestGrouperSingleLevel(object):
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
           - hyde.ext.plugins.meta.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:
@@ -237,7 +237,7 @@ class TestGrouperSingleLevel(object):
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
           - hyde.ext.plugins.meta.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:
