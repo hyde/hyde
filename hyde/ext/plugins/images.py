@@ -33,6 +33,11 @@ class PILPlugin(Plugin):
         self.Image = Image
 
 
+#
+# Image sizer
+#
+
+
 class ImageSizerPlugin(PILPlugin):
     """
     Each HTML page is modified to add width and height for images if
@@ -199,6 +204,9 @@ def thumb_scale_size(orig_width, orig_height, width, height):
 
     return width, height
 
+#
+# Image Thumbnails
+#
 
 class ImageThumbnailsPlugin(PILPlugin):
     """
@@ -353,6 +361,10 @@ class ImageThumbnailsPlugin(PILPlugin):
                         if match_includes(resource.path):
                             self.thumb(resource, dim1, dim2, prefix, crop_type, preserve_orientation)
 
+#
+# JPEG Optimization
+#
+
 class JPEGOptimPlugin(CLTransformer):
     """
     The plugin class for JPEGOptim
@@ -403,6 +415,10 @@ class JPEGOptimPlugin(CLTransformer):
         args.extend(["-q", unicode(target)])
         self.call_app(args)
 
+
+#
+# PNG Optimization
+#
 
 class OptiPNGPlugin(CLTransformer):
     """

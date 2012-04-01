@@ -14,6 +14,11 @@ import os
 from fnmatch import fnmatch
 import operator
 
+
+#
+# Folder Flattening
+#
+
 class FlattenerPlugin(Plugin):
     """
     The plugin class for flattening nested folders.
@@ -50,6 +55,10 @@ class FlattenerPlugin(Plugin):
                 for child in node.walk():
                     child.relative_deploy_path = target.path
 
+
+#
+# Combine
+#
 
 class CombinePlugin(Plugin):
     """
@@ -175,6 +184,10 @@ class CombinePlugin(Plugin):
         else:
             return "".join([text] + [r.source.read_all() for r in resources])
 
+
+#
+# Pagination
+#
 
 class Page:
     def __init__(self, posts, number):

@@ -10,6 +10,10 @@ import subprocess
 
 from fswrap import File
 
+#
+# Less CSS
+#
+
 class LessCSSPlugin(CLTransformer):
     """
     The plugin class for less css
@@ -112,6 +116,10 @@ class LessCSSPlugin(CLTransformer):
                     "processing [%s]" % (self.app.name, resource.source_file))
         return target.read_all()
 
+
+#
+# Stylus CSS
+#
 
 class StylusPlugin(CLTransformer):
     """
