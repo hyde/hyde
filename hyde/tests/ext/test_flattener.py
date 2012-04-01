@@ -28,7 +28,7 @@ class TestFlattner(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.plugins.folders.FlattenerPlugin
+            - hyde.ext.plugins.structure.FlattenerPlugin
         flattener:
             items:
                 -
@@ -48,7 +48,7 @@ class TestFlattner(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.plugins.folders.FlattenerPlugin
+            - hyde.ext.plugins.structure.FlattenerPlugin
         flattener:
             items:
                 -
