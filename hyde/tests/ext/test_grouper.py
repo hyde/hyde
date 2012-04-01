@@ -6,7 +6,12 @@ Use nose
 """
 from hyde.ext.plugins.meta import MetaPlugin
 from hyde.ext.plugins.meta import SorterPlugin
+<<<<<<< HEAD
 from hyde.ext.plugins.grouper import GrouperPlugin
+=======
+from hyde.ext.plugins.meta import GrouperPlugin
+from hyde.fs import File, Folder
+>>>>>>> Move the grouper plugin into meta module.
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
@@ -31,7 +36,7 @@ class TestGrouperSingleLevel(object):
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
           - hyde.ext.plugins.meta.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:
@@ -237,7 +242,7 @@ class TestGrouperSingleLevel(object):
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
           - hyde.ext.plugins.meta.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:
