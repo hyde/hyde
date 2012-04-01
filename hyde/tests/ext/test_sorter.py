@@ -5,7 +5,12 @@ Use nose
 `$ nosetests`
 """
 from hyde.ext.plugins.meta import MetaPlugin
+<<<<<<< HEAD
 from hyde.ext.plugins.sorter import SorterPlugin
+=======
+from hyde.ext.plugins.meta import SorterPlugin
+from hyde.fs import File, Folder
+>>>>>>> Move the sorter plugin into the meta module.
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
@@ -30,7 +35,7 @@ class TestSorter(object):
     def test_walk_resources_sorted(self):
         s = Site(TEST_SITE)
         s.load()
-        s.config.plugins = ['hyde.ext.sorter.SorterPlugin']
+        s.config.plugins = ['hyde.ext.meta.SorterPlugin']
         s.config.sorter = Expando(dict(kind=dict(attr=['source_file.kind', 'name'])))
 
         SorterPlugin(s).begin_site()
@@ -54,7 +59,7 @@ class TestSorter(object):
     def test_walk_resources_sorted_reverse(self):
         s = Site(TEST_SITE)
         s.load()
-        s.config.plugins = ['hyde.ext.sorter.SorterPlugin']
+        s.config.plugins = ['hyde.ext.meta.SorterPlugin']
         s.config.sorter = Expando(dict(kind=dict(attr=['source_file.kind', 'name'], reverse=True)))
 
         SorterPlugin(s).begin_site()
@@ -80,7 +85,7 @@ class TestSorter(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.sorter.SorterPlugin
+            - hyde.ext.meta.SorterPlugin
         sorter:
             kind2:
                 filters:
@@ -104,7 +109,7 @@ class TestSorter(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.sorter.SorterPlugin
+            - hyde.ext.meta.SorterPlugin
         sorter:
             multi:
                 attr:
@@ -142,7 +147,7 @@ class TestSorter(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.sorter.SorterPlugin
+            - hyde.ext.meta.SorterPlugin
         sorter:
             kind2:
                 filters:
@@ -167,7 +172,7 @@ class TestSorter(object):
         s = Site(TEST_SITE)
         cfg = """
         plugins:
-            - hyde.ext.sorter.SorterPlugin
+            - hyde.ext.meta.SorterPlugin
         sorter:
             kind2:
                 filters:
@@ -203,7 +208,7 @@ class TestSorter(object):
           s = Site(TEST_SITE)
           cfg = """
           plugins:
-              - hyde.ext.sorter.SorterPlugin
+              - hyde.ext.meta.SorterPlugin
           sorter:
               folder_name:
                   attr:
@@ -244,7 +249,7 @@ class TestSorter(object):
                title: NahNahNah
            plugins:
                - hyde.ext.plugins.meta.MetaPlugin
-               - hyde.ext.plugins.sorter.SorterPlugin
+               - hyde.ext.plugins.meta.SorterPlugin
            sorter:
                time:
                    attr: meta.time
@@ -290,7 +295,7 @@ class TestSorterMeta(object):
    def test_attribute_checker_no_meta(self):
        s = Site(TEST_SITE)
        s.load()
-       from hyde.ext.plugins.sorter import attributes_checker
+       from hyde.ext.plugins.meta import attributes_checker
        for r in s.content.walk_resources():
            assert not attributes_checker(r, ['meta.index'])
 
@@ -298,7 +303,7 @@ class TestSorterMeta(object):
        s = Site(TEST_SITE)
        s.load()
        MetaPlugin(s).begin_site()
-       from hyde.ext.plugins.sorter import attributes_checker
+       from hyde.ext.plugins.meta import attributes_checker
        have_index = ["angry-post.html",
                    "another-sad-post.html",
                    "happy-post.html"]
