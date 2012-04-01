@@ -5,7 +5,7 @@ Use nose
 `$ nosetests`
 """
 from hyde.ext.plugins.meta import MetaPlugin
-from hyde.ext.plugins.sorter import SorterPlugin
+from hyde.ext.plugins.meta import SorterPlugin
 from hyde.ext.plugins.grouper import GrouperPlugin
 from hyde.fs import File, Folder
 from hyde.generator import Generator
@@ -30,7 +30,7 @@ class TestGrouperSingleLevel(object):
         nodemeta: meta.yaml
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
-          - hyde.ext.plugins.sorter.SorterPlugin
+          - hyde.ext.plugins.meta.SorterPlugin
           - hyde.ext.plugins.grouper.GrouperPlugin
         sorter:
           kind:
@@ -236,7 +236,7 @@ class TestGrouperSingleLevel(object):
         nodemeta: meta.yaml
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
-          - hyde.ext.plugins.sorter.SorterPlugin
+          - hyde.ext.plugins.meta.SorterPlugin
           - hyde.ext.plugins.grouper.GrouperPlugin
         sorter:
           kind:

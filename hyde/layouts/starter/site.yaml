@@ -12,7 +12,7 @@ plugins:
     - hyde.ext.plugins.meta.MetaPlugin
     - hyde.ext.plugins.meta.AutoExtendPlugin
     # Plugins needed for the advances section.
-    - hyde.ext.plugins.sorter.SorterPlugin
+    - hyde.ext.plugins.meta.SorterPlugin
     - hyde.ext.plugins.grouper.GrouperPlugin
     - hyde.ext.plugins.meta.TaggerPlugin
 context:
