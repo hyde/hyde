@@ -62,6 +62,7 @@ def oembed(context, url):
         ('http://flickr.com/*', 'http://www.flickr.com/services/oembed/'),
         ('http://vimeo.com/*', 'http://www.vimeo.com/api/oembed.%(format)s'),
         ('http://youtube.com/watch*', 'http://www.youtube.com/oembed'),
+        ('http://slideshare.net/*', 'http://www.slideshare.net/api/oembed/2'),
     ]
 
     try:
