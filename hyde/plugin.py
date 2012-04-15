@@ -387,7 +387,7 @@ class CLTransformer(Plugin):
             self.logger.debug(
                 "Calling executable [%s] with arguments %s" %
                     (args[0], unicode(args[1:])))
-            subprocess.check_output(args)
+            return subprocess.check_output(args)
         except subprocess.CalledProcessError, error:
             self.logger.error(traceback.format_exc())
             self.logger.error(error.output)
