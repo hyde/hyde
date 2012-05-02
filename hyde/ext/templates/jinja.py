@@ -79,7 +79,7 @@ def oembed(context, url):
         raise TemplateError(
                 u"OEmbed endpoint not supported: {0}".format(output))
 
-    if data['type'] == 'video':
+    if 'html' in data:
         return data['html']
     elif data['type'] == 'photo':
         return '<img src="{0}" alt="{1}" />'.format(
