@@ -51,6 +51,7 @@ class Paginator:
                                 base_resource.source_file.name_without_extension,
                                 base_resource.source_file.extension)
         res.set_relative_deploy_path(path)
+        res.meta = base_resource.meta
         return res
 
     @staticmethod

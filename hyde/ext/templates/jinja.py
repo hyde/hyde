@@ -56,6 +56,37 @@ def full_url(context, path, safe=None):
     """
     return context['site'].full_url(path, safe)
 
+@contextfunction
+def oembed(context, url):
+    consumer_list = [
+        ('http://flickr.com/*', 'http://www.flickr.com/services/oembed/'),
+        ('http://vimeo.com/*', 'http://www.vimeo.com/api/oembed.%(format)s'),
+        ('http://youtube.com/watch*', 'http://www.youtube.com/oembed'),
+        ('http://slideshare.net/*', 'http://www.slideshare.net/api/oembed/2'),
+    ]
+
+    try:
+        import oembed
+    except ImportError:
+        logger.error(u"Cannot load the oEmbed library.")
+        raise TemplateError(u"Cannot load the oEmbed library")
+
+    consumer = oembed.Consumer(consumer_list)
+
+    try:
+        data = consumer.lookup(url)
+    except oembed.NoEndpointError:
+        raise TemplateError(
+                u"OEmbed endpoint not supported: {0}".format(output))
+
+    if 'html' in data:
+        return data['html']
+    elif data['type'] == 'photo':
+        return '<img src="{0}" alt="{1}" />'.format(
+                data['url'], data['title'])
+    else:
+        return url
+
 @contextfilter
 def urlencode(ctx, url, safe=None):
     if safe is not None:
@@ -82,7 +113,6 @@ def date_format(ctx, dt, fmt=None):
         if not isinstance(global_format, Undefined):
             format = global_format
     return dt.strftime(format)
-
 
 def islice(iterable, start=0, stop=3, step=1):
     return itertools.islice(iterable, start, stop, step)
@@ -674,6 +704,7 @@ class Jinja2Template(Template):
         self.env.globals['content_url'] = content_url
         self.env.globals['full_url'] = full_url
         self.env.globals['engine'] = engine
+        self.env.globals['oembed'] = oembed
         self.env.globals['deps'] = {}
         self.env.filters['urlencode'] = urlencode
         self.env.filters['urldecode'] = urldecode

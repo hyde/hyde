@@ -6,3 +6,4 @@ MarkupSafe
 smartypants
 -e git://github.com/hyde/typogrify.git#egg=typogrify
 Jinja2
+oEmbed
