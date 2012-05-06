@@ -23,9 +23,9 @@ def load_python_object(name):
     try:
         logger.debug('Loading module [%s]' % module_name)
         module = __import__(module_name)
-    except ImportError:
-        raise HydeException("The given module name [%s] is invalid." %
-                            module_name)
+    except ImportError, exception:
+        raise HydeException("The given module name [%s] is invalid: %s" %
+                            (module_name, exception.message))
 
     if object_name == '':
         return module
