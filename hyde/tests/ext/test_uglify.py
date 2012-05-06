@@ -29,7 +29,7 @@ class TestUglify(object):
 
     def test_can_uglify(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
+        s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "production"
         source = TEST_SITE.child('content/media/js/jquery.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
@@ -43,7 +43,7 @@ class TestUglify(object):
 
     def test_uglify_with_extra_options(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
+        s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "production"
         s.config.uglify = Expando(dict(args={"nc":""}))
         source = TEST_SITE.child('content/media/js/jquery.js')
@@ -59,7 +59,7 @@ class TestUglify(object):
 
     def test_no_uglify_in_dev_mode(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.uglify.UglifyPlugin']
+        s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "dev"
         source = TEST_SITE.child('content/media/js/jquery.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))

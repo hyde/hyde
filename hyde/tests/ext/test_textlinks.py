@@ -45,7 +45,7 @@ class TestTextlinks(object):
 {%% endmarkdown %%}
 """
         site = Site(TEST_SITE)
-        site.config.plugins = ['hyde.ext.plugins.textlinks.TextlinksPlugin']
+        site.config.plugins = ['hyde.ext.plugins.text.TextlinksPlugin']
         site.config.base_url = 'http://example.com/'
         site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))

@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-Uglify plugin
+JavaScript plugins
 """
 
 from hyde.plugin import CLTransformer
 from hyde.fs import File
+
+
+#
+# Uglify JavaScript
+#
 
 class UglifyPlugin(CLTransformer):
     """
@@ -73,3 +78,4 @@ class UglifyPlugin(CLTransformer):
         self.call_app(args)
         out = target.read_all()
         return out
+
