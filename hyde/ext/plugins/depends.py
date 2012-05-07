@@ -6,7 +6,6 @@ Depends plugin
 """
 
 from hyde.plugin import Plugin
-import re
 
 class DependsPlugin(Plugin):
     """

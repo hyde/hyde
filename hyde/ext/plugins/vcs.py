@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Contains classes and utilities to extract information from git repository
+Contains classes and utilities to extract information from repositories
 """
 
 from hyde.plugin import Plugin
 
 import subprocess
-import traceback
 from dateutil.parser import parse
+
+
+#
+# Git Dates
+#
 
 class GitDatesPlugin(Plugin):
     """
@@ -52,3 +56,4 @@ class GitDatesPlugin(Plugin):
                 if modified == "git":
                     modified = parse(commits[0].strip())
                     resource.meta.modified = modified
+

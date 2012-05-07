@@ -25,7 +25,7 @@ class TestBlockdown(object):
 
     def test_can_parse_blockdown(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.blockdown.BlockdownPlugin']
+        s.config.plugins = ['hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 {%% extends "base.html" %%}
