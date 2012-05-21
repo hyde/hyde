@@ -13,7 +13,7 @@ from datetime import datetime
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
 from hyde.fs import File, Folder
-from hyde.site import Site
+from hyde.site import make_site
 from hyde.generator import Generator
 from hyde.exceptions import HydeException
 
@@ -115,18 +115,75 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-class HydeWebServer(HTTPServer):
+class HydeServer(object):
+    def setup(self, site):
+        self.site = site
+        self.site.load()
+        self.generator = Generator(self.site)
+        self.request_time = datetime.strptime('1-1-1999', '%m-%d-%Y')
+        self.regeneration_time = datetime.strptime('1-1-1998', '%m-%d-%Y')
+
+    def regenerate(self):
+        """
+        Regenerates the entire site.
+        """
+        try:
+            logger.info('Regenerating the entire site')
+            self.regeneration_time = datetime.now()
+            if self.site.config.needs_refresh():
+                self.site.config.reload()
+            self.site.load()
+            self.generator.generate_all(incremental=False)
+        except Exception, exception:
+            logger.error('Error occured when regenerating the site [%s]'
+                            % exception.message)
+            logger.error(traceback.format_exc())
+
+    def generate_node(self, node):
+        """
+        Generates the given node.
+        """
+
+        deploy = self.site.config.deploy_root_path
+        if not deploy.exists:
+            return self.regenerate()
+
+        try:
+            logger.debug('Serving node [%s]' % node)
+            self.generator.generate_node(node, incremental=True)
+        except Exception, exception:
+            logger.error(
+                'Error [%s] occured when generating the node [%s]'
+                        % (repr(exception), node))
+            logger.error(traceback.format_exc())
+
+    def generate_resource(self, resource):
+        """
+        Regenerates the given resource.
+        """
+        deploy = self.site.config.deploy_root_path
+        if not deploy.exists:
+            return self.regenerate()
+        dest = deploy.child_folder(resource.node.relative_path)
+        if not dest.exists:
+            return self.generate_node(resource.node)
+        try:
+            logger.debug('Serving resource [%s]' % resource)
+            self.generator.generate_resource(resource, incremental=True)
+        except Exception, exception:
+            logger.error(
+                'Error [%s] occured when serving the resource [%s]'
+                        % (repr(exception), resource))
+            logger.error(traceback.format_exc())
+
+class HydeWebServer(HTTPServer, HydeServer):
     """
     The hyde web server that regenerates the resource, node or site when
     a request is issued.
     """
 
     def __init__(self, site, address, port):
-        self.site = site
-        self.site.load()
-        self.generator = Generator(self.site)
-        self.request_time = datetime.strptime('1-1-1999', '%m-%d-%Y')
-        self.regeneration_time = datetime.strptime('1-1-1998', '%m-%d-%Y')
+        self.setup(site)
         self.__is_shut_down = threading.Event()
         self.__shutdown_request = False
         self.map_extensions()
@@ -184,55 +241,100 @@ class HydeWebServer(HTTPServer):
 
 ############## Duplication End.
 
-    def regenerate(self):
-        """
-        Regenerates the entire site.
-        """
+import mimetypes
+class HydeWSGIServer(HydeServer):
+    """
+    The hyde WSGI server that regenerates the resource, node or site when
+    a request is issued.
+    """
+
+    def __init__(self, site):
+        self.setup(site)
+
+        if not mimetypes.inited:
+            mimetypes.init()
+
+        self.extensions_map = {}
         try:
-            logger.info('Regenerating the entire site')
-            self.regeneration_time = datetime.now()
-            if self.site.config.needs_refresh():
-                self.site.config.reload()
-            self.site.load()
-            self.generator.generate_all(incremental=False)
-        except Exception, exception:
-            logger.error('Error occured when regenerating the site [%s]'
-                            % exception.message)
-            logger.error(traceback.format_exc())
+            extensions = self.site.config.server.extensions.to_dict()
+        except AttributeError:
+            extensions = {}
 
-    def generate_node(self, node):
-        """
-        Generates the given node.
-        """
+        for extension, type in extensions.iteritems():
+            ext = "." + extension if not extension == 'default' else ''
+            self.extensions_map[ext] = type
+ 
 
-        deploy = self.site.config.deploy_root_path
-        if not deploy.exists:
-            return self.regenerate()
+    def __call__(self, environ, start_response):
+        import wsgiref.util
+        def redirect(location):
+            start_response(
+                    '301 Redirect', 
+                    [('Location', location)])
+            return ["Redirecting to: %s" % (location, )]
 
-        try:
-            logger.debug('Serving node [%s]' % node)
-            self.generator.generate_node(node, incremental=True)
-        except Exception, exception:
-            logger.error(
-                'Error [%s] occured when generating the node [%s]'
-                        % (repr(exception), node))
-            logger.error(traceback.format_exc())
+        self.request_time = datetime.now()
+        path = wsgiref.util.request_uri(environ)
+        logger.debug("Processing request: [%s]" % path)
+        result = urlparse.urlparse(path)
+        query = urlparse.parse_qs(result.query)
+        if 'refresh' in query or result.query=='refresh':
+            self.regenerate()
+            if 'refresh' in query:
+                del query['refresh']
+            parts = list(tuple(result))
+            parts[4] = urllib.urlencode(query)
+            parts = tuple(parts)
+            new_url = urlparse.urlunparse(parts)
+            logger.info('Redirecting... [%s]' % new_url)
+            return redirect(new_url)
 
-    def generate_resource(self, resource):
-        """
-        Regenerates the given resource.
-        """
-        deploy = self.site.config.deploy_root_path
-        if not deploy.exists:
-            return self.regenerate()
-        dest = deploy.child_folder(resource.node.relative_path)
-        if not dest.exists:
-            return self.generate_node(resource.node)
-        try:
-            logger.debug('Serving resource [%s]' % resource)
-            self.generator.generate_resource(resource, incremental=True)
-        except Exception, exception:
-            logger.error(
-                'Error [%s] occured when serving the resource [%s]'
-                        % (repr(exception), resource))
-            logger.error(traceback.format_exc())
+
+        site = self.site
+        result = urlparse.urlparse(urllib.unquote(path).decode('utf-8'))
+        logger.debug("Trying to load file based on request: [%s]" % result.path)
+        path = result.path.lstrip('/')
+        res = None
+        if path.strip() == "" or File(path).kind.strip() == "":
+            deployed = site.config.deploy_root_path.child(path)
+            deployed = Folder.file_or_folder(deployed)
+            if isinstance(deployed, Folder):
+                node = site.content.node_from_relative_path(path)
+                res = node.get_resource('index.html')
+            elif hasattr(site.config, 'urlcleaner') and hasattr(site.config.urlcleaner, 'strip_extensions'):
+                for ext in site.config.urlcleaner.strip_extensions:
+                    res = site.content.resource_from_relative_deploy_path(path + '.' + ext)
+                    if res:
+                        break
+        else:
+            res = site.content.resource_from_relative_deploy_path(path)
+
+        if not res:
+            logger.error("Cannot load file: [%s]" % path)
+            status = '404 Not Found'
+            headers = [('Content-type', 'text/plain')]
+            start_response(status, headers)
+            return ['Not found: %s' % (path)]
+        else:
+            self.generate_resource(res)
+        new_path = site.config.deploy_root_path.child(
+                    res.relative_deploy_path)
+
+        (_, ext) = os.path.splitext(new_path)
+        content_type = self.extensions_map.get(ext, None)
+        if not content_type:
+            (content_type, _) = mimetypes.guess_type(new_path)
+        if not content_type:
+            content_type = 'application/octet-stream'
+
+        status = '200 OK'
+        headers = [('Content-type', content_type)]
+
+        start_response(status, headers)
+        return wsgiref.util.FileWrapper(open(new_path, 'r'))
+
+
+
+def make_wsgi_app(global_config, **local_conf):
+    site = make_site(local_conf['site'], local_conf.get('deploy', None))
+    return HydeWSGIServer(site)
