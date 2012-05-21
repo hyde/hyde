@@ -142,6 +142,9 @@ setup(name=PROJECT,
       entry_points={
           'console_scripts': [
               'hyde = hyde.main:main'
+          ],
+          'paste.app_factory': [
+              'main = hyde.server:make_wsgi_app'
           ]
       },
       license='MIT',

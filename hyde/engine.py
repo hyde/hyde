@@ -7,7 +7,7 @@ from hyde.exceptions import HydeException
 from hyde.fs import FS, File, Folder
 from hyde.layout import Layout, HYDE_DATA
 from hyde.model import Config
-from hyde.site import Site
+from hyde.site import Site, make_site
 from hyde.version import __version__
 from hyde.util import getLoggerWithConsoleHandler
 
@@ -107,7 +107,7 @@ class Engine(Application):
         deployment directory.
         """
         sitepath = self.main(args)
-        site = self.make_site(sitepath, args.config, args.deploy)
+        site = make_site(sitepath, args.config, args.deploy)
         from hyde.generator import Generator
         gen = Generator(site)
         incremental = True
@@ -135,7 +135,7 @@ class Engine(Application):
         """
         sitepath = self.main(args)
         config_file = sitepath.child(args.config)
-        site = self.make_site(sitepath, args.config, args.deploy)
+        site = make_site(sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
         server = HydeWebServer(site, args.address, args.port)
         logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
@@ -160,20 +160,9 @@ class Engine(Application):
         parameter.
         """
         sitepath = self.main(args)
-        site = self.make_site(sitepath, args.config)
+        site = make_site(sitepath, args.config)
         from hyde.publisher import Publisher
         publisher = Publisher.load_publisher(site,
                         args.publisher,
                         args.message)
         publisher.publish()
-
-
-
-    def make_site(self, sitepath, config, deploy=None):
-        """
-        Creates a site object from the given sitepath and the config file.
-        """
-        config = Config(sitepath, config_file=config)
-        if deploy:
-            config.deploy_root = deploy
-        return Site(sitepath, config)
