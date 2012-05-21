@@ -462,3 +462,12 @@ class Site(object):
         """
         folder = self.content.source.child_folder(path)
         return folder.is_descendant_of(self.config.media_root_path)
+
+def make_site(sitepath, config, deploy=None):
+    """
+    Creates a site object from the given sitepath and the config file.
+    """
+    config = Config(sitepath, config_file=config)
+    if deploy:
+        config.deploy_root = deploy
+    return Site(sitepath, config)
