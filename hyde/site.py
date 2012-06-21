@@ -192,6 +192,16 @@ class Node(Processable):
             for node in child.walk():
                 yield node
 
+    def rwalk(self):
+        """
+        Walk the node upward, first yielding itself then
+        yielding its parents.
+        """
+        x = self
+        while x:
+            yield x
+            x = x.parent
+
     def walk_resources(self):
         """
         Walks the resources in this hierarchy.
