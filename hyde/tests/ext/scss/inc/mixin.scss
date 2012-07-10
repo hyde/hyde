@@ -1,0 +1,6 @@
+@mixin rounded ($radius: 5px){
+    -webkit-border-radius: $radius;
+       -moz-border-radius: $radius;
+            border-radius: $radius;
+}
+

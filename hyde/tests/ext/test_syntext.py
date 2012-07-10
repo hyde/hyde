@@ -36,7 +36,7 @@ class TestSyntext(object):
         site = Site(TEST_SITE)
         site.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.syntext.SyntextPlugin']
+            'hyde.ext.plugins.text.SyntextPlugin']
         syn = File(site.content.source_folder.child('syn.html'))
         syn.write(text)
         gen = Generator(site)

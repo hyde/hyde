@@ -110,6 +110,7 @@ class Engine(Application):
         site = self.make_site(sitepath, args.config, args.deploy)
         from hyde.generator import Generator
         gen = Generator(site)
+        site.generator = gen
         incremental = True
         if args.regen:
             logger.info("Regenerating the site...")

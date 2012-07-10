@@ -125,6 +125,7 @@ class HydeWebServer(HTTPServer):
         self.site = site
         self.site.load()
         self.generator = Generator(self.site)
+        self.site.generator = self.generator
         self.request_time = datetime.strptime('1-1-1999', '%m-%d-%Y')
         self.regeneration_time = datetime.strptime('1-1-1998', '%m-%d-%Y')
         self.__is_shut_down = threading.Event()

@@ -17,7 +17,7 @@ class CombineTester(object):
         s = Site(TEST_SITE)
         s.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.combine.CombinePlugin']
+            'hyde.ext.plugins.structure.CombinePlugin']
         source = TEST_SITE.child('content/media/js/script.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/script.js'))
         File(source).write(content)

@@ -2,12 +2,10 @@
 """
 Contains classes and utilities related to hyde urls.
 """
-import re
 
-from hyde.fs import File, Folder
-from hyde.model import Expando
+from hyde.fs import File
 from hyde.plugin import Plugin
-from hyde.site import Site, Node, Resource
+from hyde.site import Site
 
 from functools import wraps
 
