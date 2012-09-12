@@ -5,6 +5,7 @@ Abstract classes and utilities for template engines
 """
 from hyde.exceptions import HydeException
 from hyde.util import getLoggerWithNullHandler
+from hyde import loader
 
 import abc
 
@@ -157,7 +158,9 @@ class Template(object):
         """
         Reads the configuration to find the appropriate template.
         """
-        # TODO: Find the appropriate template environment
-        from hyde.ext.templates.jinja import Jinja2Template
-        template = Jinja2Template(site.sitepath)
+        #Find the appropriate template environment
+        if site.config.template:
+                 template = loader.load_python_object(site.config.template)(site.sitepath)
+        else:
+                 template = Jinja2Template(site.sitepath) 
         return template
