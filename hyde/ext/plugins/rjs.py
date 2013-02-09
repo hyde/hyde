@@ -27,11 +27,11 @@ class RequireJSPlugin(CLTransformer):
 
     def begin_site(self):
         """
-        Find all the less css files and set their relative deploy path.
+        Find the rjs conf file and set their relative deploy path.
         """
         for resource in self.site.content.walk_resources():
-            if resource.source_file.name_without_extension == "main" and resource.source_file.kind == "js":
-                new_name = resource.source_file.name_without_extension + "-bin.js"
+            if resource.source_file.name_without_extension == "rjs" and resource.source_file.kind == "conf":
+                new_name = "app.js"
                 target_folder = File(resource.relative_deploy_path).parent
                 resource.relative_deploy_path = target_folder.child(new_name)
 
@@ -48,15 +48,14 @@ class RequireJSPlugin(CLTransformer):
         Read the generated file and return the text as output.
         Set the target path to have a css extension.
         """
-        if not resource.source_file.kind == 'js' and not resource.source_file.name_without_extension == "main":
+        if not resource.source_file.kind == 'conf' and not resource.source_file.name_without_extension == "rjs":
             return
 
         rjs = self.app
-        source = File.make_temp(text)
         target = File.make_temp('')
         args = [unicode(rjs)]
         args.extend(['-o'])
-        args.extend([unicode(source)])
+        args.extend([unicode(resource)])
         args.extend([("out=" + target.fully_expanded_path)])
         try:
             self.call_app(args)
