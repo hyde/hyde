@@ -48,7 +48,9 @@ class GitDatesPlugin(Plugin):
                     continue
                 if created == "git":
                     created = parse(commits[-1].strip())
+                    created = created.replace(tzinfo=None)
                     resource.meta.created = created
                 if modified == "git":
                     modified = parse(commits[0].strip())
+                    modified = modified.replace(tzinfo=None)
                     resource.meta.modified = modified
