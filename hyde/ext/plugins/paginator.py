@@ -8,6 +8,7 @@ import os
 from hyde.plugin import Plugin
 from hyde.site import Resource
 from hyde.util import pairwalk
+from hyde.ext.plugins.meta import Metadata
 
 from fswrap import File
 
@@ -47,6 +48,9 @@ class Paginator:
         resources associated with it.
         """
         res = Resource(base_resource.source_file, node)
+        res.node.meta = Metadata(node.meta)
+        res.meta = Metadata(base_resource.meta, res.node.meta)
+
         path = self._relative_url(base_resource.relative_path,
                                 page_number,
                                 base_resource.source_file.name_without_extension,
