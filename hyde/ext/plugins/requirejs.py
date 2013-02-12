@@ -1,6 +1,20 @@
 # -*- coding: utf-8 -*-
 """
 requirejs plugin
+
+Calls r.js optimizer in order to proces javascript files,
+bundle them into one single file and compress it.
+
+The call to r.js is being made with options -o and out. Example:
+
+    r.js -o rjs.conf out=app.js
+
+whereas rjs.conf is the require.js configuration file pointing
+to the main javascript file as well as passing options to r.js.
+The bundled and compressed result is written to 'app.js' file
+within the deployment structure.
+
+Please see the homepage of requirejs for usage details.
 """
 
 from hyde.plugin import CLTransformer
@@ -8,7 +22,6 @@ from hyde.fs import File
 
 import re
 import subprocess
-
 
 class RequireJSPlugin(CLTransformer):
 
@@ -19,22 +32,12 @@ class RequireJSPlugin(CLTransformer):
     def executable_name(self):
         return "r.js"
 
-    def _should_replace_imports(self, resource):
-        return getattr(resource, 'meta', {}).get('uses_template', True)
-
     def begin_site(self):
-        """
-        Find the rjs conf file and set their relative deploy path.
-        """
         for resource in self.site.content.walk_resources():
             if resource.source_file.name == "rjs.conf":
                 new_name = "app.js"
                 target_folder = File(resource.relative_deploy_path).parent
                 resource.relative_deploy_path = target_folder.child(new_name)
-
-    @property
-    def plugin_name(self):
-        return "requirejs"
 
     def text_resource_complete(self, resource, text):
         if not resource.source_file.name == 'rjs.conf':
