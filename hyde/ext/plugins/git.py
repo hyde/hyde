@@ -39,9 +39,8 @@ class GitDatesPlugin(Plugin):
                     continue
                 # Run git log --pretty=%ai
                 try:
-                    commits = subprocess.check_output(["git", "log", "--pretty=%ai",
-                                                       resource.path]).split("\n")
-                    commits = commits[:-1]
+                    commits = subprocess.Popen(["git", "log", "--pretty=%ai", resource.path], stdout=subprocess.PIPE).communicate()
+                    commits = commits[0].split("\n")
                     if not commits:
                         self.logger.warning("No git history for [%s]" % resource)
                 except subprocess.CalledProcessError:
