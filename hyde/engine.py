@@ -2,50 +2,26 @@
 """
 Implements the hyde entry point commands
 """
-from commando import *
+from commando import (
+    Application,
+    command,
+    store,
+    subcommand,
+    true,
+    version
+)
 from hyde.exceptions import HydeException
-from hyde.fs import FS, File, Folder
+from hyde.fs import FS, Folder
 from hyde.layout import Layout, HYDE_DATA
 from hyde.model import Config
 from hyde.site import Site
 from hyde.version import __version__
 from hyde.util import getLoggerWithConsoleHandler
 
-import codecs
-import os
-import sys
-import yaml
-
 HYDE_LAYOUTS = "HYDE_LAYOUTS"
 
-logger = getLoggerWithConsoleHandler('hyde')
 
 class Engine(Application):
-    """
-    The Hyde Application
-    """
-    def __init__(self, raise_exceptions=False):
-        self.raise_exceptions = raise_exceptions
-        super(Engine, self).__init__()
-
-    def run(self, args=None):
-        """
-        The engine entry point.
-        """
-
-        # Catch any errors thrown and log the message.
-
-        try:
-            super(Engine, self).run(args)
-        except HydeException, he:
-            if self.raise_exceptions:
-                raise
-            elif self.__parser__:
-                self.__parser__.error(he.message)
-            else:
-                logger.error(he.message)
-                return -1
-
 
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
@@ -60,7 +36,7 @@ class Engine(Application):
         """
         if args.verbose:
             import logging
-            logger.setLevel(logging.DEBUG)
+            self.logger.setLevel(logging.DEBUG)
 
         sitepath = Folder(args.sitepath).fully_expanded_path
         return Folder(sitepath)
@@ -83,7 +59,7 @@ class Engine(Application):
                     "The given site path [%s] already contains a hyde site."
                     " Use -f to overwrite." % sitepath)
         layout = Layout.find_layout(args.layout)
-        logger.info(
+        self.logger.info(
             "Creating site at [%s] with layout [%s]" % (sitepath, layout))
         if not layout or not layout.exists:
             raise HydeException(
@@ -92,7 +68,7 @@ class Engine(Application):
             " has been setup properly if you are using custom path for"
             " layouts" % HYDE_DATA)
         layout.copy_contents_to(args.sitepath)
-        logger.info("Site creation complete")
+        self.logger.info("Site creation complete")
 
     @subcommand('gen', help='Generate the site')
     @store('-c', '--config-path', default='site.yaml', dest='config',
@@ -112,11 +88,11 @@ class Engine(Application):
         gen = Generator(site)
         incremental = True
         if args.regen:
-            logger.info("Regenerating the site...")
+            self.logger.info("Regenerating the site...")
             incremental = False
 
         gen.generate_all(incremental=incremental)
-        logger.info("Generation complete.")
+        self.logger.info("Generation complete.")
 
     @subcommand('serve', help='Serve the website')
     @store('-a', '--address', default='localhost', dest='address',
@@ -134,17 +110,16 @@ class Engine(Application):
         the entire site or specific files based on ths request.
         """
         sitepath = self.main(args)
-        config_file = sitepath.child(args.config)
         site = self.make_site(sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
         server = HydeWebServer(site, args.address, args.port)
-        logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
+        self.logger.info("Starting webserver at [%s]:[%d]", args.address, args.port)
         try:
             server.serve_forever()
-        except KeyboardInterrupt, SystemExit:
-            logger.info("Received shutdown request. Shutting down...")
+        except (KeyboardInterrupt, SystemExit):
+            self.logger.info("Received shutdown request. Shutting down...")
             server.shutdown()
-            logger.info("Server successfully stopped")
+            self.logger.info("Server successfully stopped")
             exit()
 
     @subcommand('publish', help='Publish the website')

@@ -4,13 +4,11 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
+from hyde.fs import File
 from hyde.generator import Generator
-from hyde.model import Expando
 from hyde.site import Site
 
-from hyde.tests.util import assert_html_equals
-import yaml
+
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -86,8 +84,8 @@ class TestTagger(object):
         assert q
 
         assert q('li').length == 2
-        assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
-        assert q('li a:eq(1)').attr('href') == '/blog/sad-post.html'
+        assert q('li:nth-child(1) a').attr('href') == '/blog/another-sad-post.html'
+        assert q('li:nth-child(2) a').attr('href') == '/blog/sad-post.html'
 
         q = PyQuery(File(tags_folder.child('happy.html')).read_all())
         assert q
@@ -105,9 +103,9 @@ class TestTagger(object):
         assert q
 
         assert q('li').length == 3
-        assert q('li a:eq(0)').attr('href') == '/blog/happy-post.html'
-        assert q('li a:eq(1)').attr('href') == '/blog/angry-post.html'
-        assert q('li a:eq(2)').attr('href') == '/blog/sad-post.html'
+        assert q('li:nth-child(1) a').attr('href') == '/blog/happy-post.html'
+        assert q('li:nth-child(2) a').attr('href') == '/blog/angry-post.html'
+        assert q('li:nth-child(3) a').attr('href') == '/blog/sad-post.html'
 
         q = PyQuery(File(tags_folder.child('events.html')).read_all())
         assert q

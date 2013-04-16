@@ -1,4 +1,10 @@
-Version 0.8.5a14
+Version 0.8.5a16
+============================================================
+
+*   Upgrade dependencies and setup for 0.8.5
+*   Bug fix: Use the released version of typogrify. (Issue #193)
+
+Version 0.8.5a15
 ============================================================
 
 *   Bug Fix: Fixed stylus `indent` issues with empty files. (Issue #161)

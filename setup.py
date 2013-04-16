@@ -114,21 +114,18 @@ setup(name=PROJECT,
       author_email='lakshmi.vyas@gmail.com',
       url='http://hyde.github.com',
       packages=find_packages(),
-      dependency_links=[
-        "https://github.com/hyde/typogrify/tarball/hyde-setup#egg=typogrify-hyde"
-      ],
+      requires=['python (>= 2.7)'],
       install_requires=(
-          'argparse',
-          'commando',
-          'jinja2',
-          'pyYAML',
-          'markdown',
-          'smartypants',
-          'pygments',
-          'typogrify-hyde'
+          'commando==0.3.2a',
+          'PyYAML==3.10',
+          'Markdown==2.3.1',
+          'MarkupSafe==0.15',
+          'Pygments==1.6',
+          'typogrify==2.0.0',
+          'Jinja2==2.6'
       ),
       tests_require=(
-        'nose',
+        'nose', 'mock'
       ),
       test_suite='nose.collector',
       include_package_data = True,

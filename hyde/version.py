@@ -3,4 +3,4 @@
 Handles hyde version
 TODO: Use fabric like versioning scheme
 """
-__version__ = '0.8.5a15'
+__version__ = '0.8.5a16'

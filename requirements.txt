@@ -1,8 +1,7 @@
-argparse
-commando
-PyYAML
-Markdown
-MarkupSafe
-smartypants
--e git://github.com/hyde/typogrify.git#egg=typogrify
-Jinja2
+commando==0.3.2a
+PyYAML==3.10
+Markdown==2.3.1
+MarkupSafe==0.15
+Pygments==1.6
+typogrify==2.0.0
+Jinja2==2.6

@@ -9,7 +9,6 @@ import re
 import itertools
 from urllib import quote, unquote
 
-from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
 from hyde.util import getLoggerWithNullHandler
@@ -693,12 +692,12 @@ class Jinja2Template(Template):
         self.env.extend(config=config)
 
         try:
-            from typogrify.templatetags import jinja2_filters
+            from typogrify.templatetags import jinja_filters
         except ImportError:
-            jinja2_filters = False
+            jinja_filters = False
 
-        if jinja2_filters:
-            jinja2_filters.register(self.env)
+        if jinja_filters:
+            jinja_filters.register(self.env)
 
     def clear_caches(self):
         """

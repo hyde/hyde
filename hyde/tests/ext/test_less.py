@@ -5,7 +5,6 @@ Use nose
 `$ nosetests`
 """
 from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.generator import Generator
 from hyde.site import Site
 

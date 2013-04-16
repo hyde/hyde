@@ -8,7 +8,7 @@ Use nose
 
 from hyde.engine import Engine
 from hyde.exceptions import HydeException
-from hyde.fs import FS, File, Folder
+from hyde.fs import File, Folder
 from hyde.layout import Layout
 from nose.tools import raises, with_setup, nottest
 
