@@ -4,13 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
-from pyquery import PyQuery
-
-from nose.tools import nottest
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 

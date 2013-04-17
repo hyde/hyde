@@ -4,11 +4,12 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
+
 from hyde.generator import Generator
 from hyde.site import Site
-from hyde.model import Expando, Config
+from hyde.model import Config
 
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -60,7 +61,7 @@ class TestFlattner(object):
         gen = Generator(s)
         gen.generate_all()
         blog_node = s.content.node_from_relative_path('blog')
-        
+
         assert blog_node
         assert blog_node.url == '/'
 

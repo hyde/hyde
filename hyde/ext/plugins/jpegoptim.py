@@ -4,7 +4,8 @@ jpegoptim plugin
 """
 
 from hyde.plugin import CLTransformer
-from hyde.fs import File
+
+from fswrap import File
 
 class JPEGOptimPlugin(CLTransformer):
     """

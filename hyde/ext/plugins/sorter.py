@@ -3,8 +3,6 @@
 Contains classes and utilities related to sorting
 resources and nodes in hyde.
 """
-import re
-from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
 from hyde.util import add_method, pairwalk
@@ -40,7 +38,7 @@ def attributes_checker(item, attributes=None):
     Checks if the given list of attributes exist.
     """
     try:
-      x = attrgetter(*attributes)(item)
+      attrgetter(*attributes)(item)
       return True
     except AttributeError:
       return False

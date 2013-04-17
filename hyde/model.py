@@ -2,14 +2,14 @@
 """
 Contains data structures and utilities for hyde.
 """
-from hyde.fs import File, Folder
-
 import codecs
 import yaml
 from datetime import datetime
 from UserDict import IterableUserDict
 
-from hyde.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler
+from fswrap import File, Folder
+
 logger = getLoggerWithNullHandler('hyde.engine')
 
 class Expando(object):

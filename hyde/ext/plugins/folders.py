@@ -4,7 +4,8 @@ Plugins related to folders and paths
 """
 
 from hyde.plugin import Plugin
-from hyde.fs import Folder
+
+from fswrap import Folder
 
 class FlattenerPlugin(Plugin):
     """

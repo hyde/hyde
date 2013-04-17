@@ -5,10 +5,11 @@ each page to a copy of the original resource.
 """
 import os
 
-from hyde.fs import File
 from hyde.plugin import Plugin
 from hyde.site import Resource
 from hyde.util import pairwalk
+
+from fswrap import File
 
 class Page:
     def __init__(self, posts, number):

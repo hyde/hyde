@@ -4,9 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
+
+from fswrap import File, Folder
 
 LESS_SOURCE = File(__file__).parent.child_folder('less')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')

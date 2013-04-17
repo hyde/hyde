@@ -13,10 +13,9 @@ import urlparse
 from base64 import standard_b64encode
 import ConfigParser
 
-from hyde.fs import File, Folder
 from hyde.publisher import Publisher
 
-from hyde.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.ext.publishers.pypi')
 
 
@@ -136,5 +135,5 @@ class PyPI(Publisher):
                 con.close()
         finally:
             tf.close()
- 
+
 

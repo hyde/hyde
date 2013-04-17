@@ -10,10 +10,10 @@ from functools import wraps
 from urllib import quote
 
 from hyde.exceptions import HydeException
-from hyde.fs import FS, File, Folder
 from hyde.model import Config
-from hyde.util import getLoggerWithNullHandler
 
+from commando.util import getLoggerWithNullHandler
+from fswrap import FS, File, Folder
 
 def path_normalized(f):
     @wraps(f)
@@ -51,7 +51,7 @@ class Processable(object):
         Gets the source path of this node.
         """
         return self.source.path
-        
+
     def get_relative_deploy_path(self):
         """
         Gets the path where the file will be created
@@ -109,7 +109,7 @@ class Resource(Processable):
         Gets the path relative to the root folder (Content)
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
-    
+
     @property
     def slug(self):
         #TODO: Add a more sophisticated slugify method

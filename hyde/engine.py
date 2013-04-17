@@ -2,6 +2,12 @@
 """
 Implements the hyde entry point commands
 """
+from hyde.exceptions import HydeException
+from hyde.layout import Layout, HYDE_DATA
+from hyde.model import Config
+from hyde.site import Site
+from hyde.version import __version__
+
 from commando import (
     Application,
     command,
@@ -10,18 +16,20 @@ from commando import (
     true,
     version
 )
-from hyde.exceptions import HydeException
-from hyde.fs import FS, Folder
-from hyde.layout import Layout, HYDE_DATA
-from hyde.model import Config
-from hyde.site import Site
-from hyde.version import __version__
-from hyde.util import getLoggerWithConsoleHandler
+from commando.util import getLoggerWithConsoleHandler
+from fswrap import FS, Folder
 
 HYDE_LAYOUTS = "HYDE_LAYOUTS"
 
 
 class Engine(Application):
+
+    def __init__(self, raise_exceptions=True):
+        logger = getLoggerWithConsoleHandler('hyde')
+        super(Engine, self).__init__(
+            raise_exceptions=raise_exceptions,
+            logger=logger
+        )
 
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
@@ -34,10 +42,6 @@ class Engine(Application):
         to provide common parameters for the subcommands and some generic stuff
         like version and metadata
         """
-        if args.verbose:
-            import logging
-            self.logger.setLevel(logging.DEBUG)
-
         sitepath = Folder(args.sitepath).fully_expanded_path
         return Folder(sitepath)
 

@@ -3,12 +3,9 @@ Contains classes and utilities that help publishing a hyde website to
 distributed version control systems.
 """
 
-import sys
-import abc
-
-from hyde.fs import File, Folder
 from hyde.publisher import Publisher
 
+import abc
 from subprocess import Popen, PIPE
 
 class DVCS(Publisher):

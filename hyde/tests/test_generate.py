@@ -6,12 +6,12 @@ Use nose
 """
 
 from hyde.generator import Generator
-from hyde.fs import FS, File, Folder
 from hyde.model import Config
 from hyde.site import Site
 
-from nose.tools import raises, with_setup, nottest
 from pyquery import PyQuery
+
+from fswrap import File, Folder
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
 

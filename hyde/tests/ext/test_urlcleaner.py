@@ -4,13 +4,12 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
+from hyde.model import Config
 from hyde.site import Site
 
+from fswrap import File, Folder
 import yaml
-
-from hyde.model import Config
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 

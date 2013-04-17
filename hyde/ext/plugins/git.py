@@ -6,7 +6,6 @@ Contains classes and utilities to extract information from git repository
 from hyde.plugin import Plugin
 
 import subprocess
-import traceback
 from dateutil.parser import parse
 
 class GitDatesPlugin(Plugin):

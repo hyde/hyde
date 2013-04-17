@@ -4,11 +4,12 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-
-from hyde.fs import File, Folder
-from hyde.layout import Layout, HYDE_DATA, LAYOUTS
-from nose.tools import raises, with_setup, nottest
 import os
+
+from hyde.layout import Layout, HYDE_DATA, LAYOUTS
+
+from fswrap import File
+from nose.tools import nottest, with_setup
 
 DATA_ROOT = File(__file__).parent.child_folder('data')
 LAYOUT_ROOT = DATA_ROOT.child_folder(LAYOUTS)

@@ -7,18 +7,19 @@ Use nose
 Some code borrowed from rwbench.py from the jinja2 examples
 """
 from datetime import datetime
+from random import choice, randrange
+
 from hyde.ext.templates.jinja import Jinja2Template
-from hyde.fs import File
 from hyde.site import Site
 from hyde.generator import Generator
 from hyde.model import Config
 
+from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
-from random import choice, randrange
-import yaml
-
-from pyquery import PyQuery
 from nose.tools import nottest
+from pyquery import PyQuery
+
+import yaml
 
 ROOT = File(__file__).parent
 JINJA2 = ROOT.child_folder('templates/jinja2')
@@ -623,7 +624,7 @@ Hyde & Jinja.
         assert "reference" not in html
 
 
-    def test_yaml_tag(salf):
+    def test_yaml_tag(self):
 
         text = """
 {% yaml test %}

@@ -116,6 +116,7 @@ setup(name=PROJECT,
       packages=find_packages(),
       requires=['python (>= 2.7)'],
       install_requires=(
+          'fswrap==0.1.1',
           'commando==0.3.2a',
           'PyYAML==3.10',
           'Markdown==2.3.1',

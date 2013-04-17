@@ -1,3 +1,4 @@
+fswrap==0.1.1
 commando==0.3.2a
 PyYAML==3.10
 Markdown==2.3.1

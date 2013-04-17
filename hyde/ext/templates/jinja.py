@@ -11,14 +11,19 @@ from urllib import quote, unquote
 
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
-from hyde.util import getLoggerWithNullHandler
 from operator import attrgetter
 
-from jinja2 import contextfunction, Environment
-from jinja2 import FileSystemLoader, FileSystemBytecodeCache
+from jinja2 import (
+    contextfunction,
+    Environment,
+    FileSystemLoader,
+    FileSystemBytecodeCache
+)
 from jinja2 import contextfilter, environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
+
+from commando.util import getLoggerWithNullHandler
 
 logger = getLoggerWithNullHandler('hyde.engine.Jinja2')
 

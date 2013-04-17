@@ -6,11 +6,11 @@ Use nose
 
 Requires PIL
 """
-from hyde.fs import File, Folder
+
 from hyde.generator import Generator
 from hyde.site import Site
 
-from pyquery import PyQuery
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 IMAGE_SOURCE = File(__file__).parent.child_folder('optipng')
@@ -87,8 +87,7 @@ class TestImageSizer(object):
 
     def test_size_image_multiline(self):
         text = u"""
-     <img 
-src="/media/img/%s">
+     <img src="/media/img/%s">
 """ % IMAGE_NAME
         html = self._generic_test_image(text)
         assert ' width="%d"' % IMAGE_SIZE[0] in html

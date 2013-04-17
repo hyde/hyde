@@ -7,11 +7,11 @@ Use nose
 from hyde.ext.plugins.meta import MetaPlugin
 from hyde.ext.plugins.sorter import SorterPlugin
 from hyde.ext.plugins.grouper import GrouperPlugin
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
 
+from fswrap import File
 from hyde.tests.util import assert_html_equals
 import yaml
 

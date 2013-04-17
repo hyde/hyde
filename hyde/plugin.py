@@ -2,22 +2,20 @@
 """
 Contains definition for a plugin protocol and other utiltities.
 """
-import abc
-
-from hyde import loader
-
 from hyde.exceptions import HydeException
-from hyde.fs import File
-from hyde.util import getLoggerWithNullHandler, first_match, discover_executable
+from hyde.util import first_match, discover_executable
 from hyde.model import Expando
 
+import abc
 from functools import partial
 import fnmatch
-
 import os
 import re
 import subprocess
 import traceback
+
+from commando.util import getLoggerWithNullHandler, load_python_object
+from fswrap import File
 
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -263,7 +261,7 @@ class Plugin(object):
         Loads plugins based on the configuration. Assigns the plugins to
         'site.plugins'
         """
-        site.plugins = [loader.load_python_object(name)(site)
+        site.plugins = [load_python_object(name)(site)
                             for name in site.config.plugins]
 
     @staticmethod

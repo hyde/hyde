@@ -2,6 +2,9 @@ Version 0.8.5a16
 ============================================================
 
 *   Upgrade dependencies and setup for 0.8.5
+*   Remove `hyde.fs` use `fswrap` package instead.
+*   Remove logging functions from `hyde.util`. Use `commando.util` instead.
+*   Remove `hyde.loader`. Use `commando.util.load_python_object` instead.
 *   Bug fix: Use the released version of typogrify. (Issue #193)
 
 Version 0.8.5a15

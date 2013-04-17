@@ -3,19 +3,15 @@
 Contains classes and utilities related to tagging
 resources in hyde.
 """
-import re
-from hyde.fs import File, Folder
+
 from hyde.model import Expando
 from hyde.plugin import Plugin
-from hyde.site import Node, Resource
-from hyde.util import add_method, add_property, pairwalk
+from hyde.site import Node
+from hyde.util import add_method
 
-from collections import namedtuple
-from datetime import datetime
-from functools import partial
-from itertools import ifilter, izip, tee, product
 from operator import attrgetter
 
+from fswrap import File, Folder
 
 class Tag(Expando):
     """

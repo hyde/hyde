@@ -4,11 +4,11 @@ Less css plugin
 """
 
 from hyde.plugin import CLTransformer
-from hyde.fs import File
 
 import re
 import subprocess
 
+from fswrap import File
 
 class StylusPlugin(CLTransformer):
     """

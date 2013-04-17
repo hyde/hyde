@@ -4,11 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File
 from hyde.generator import Generator
 from hyde.site import Site
 
-
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -152,7 +151,7 @@ class TestTagger(object):
             assert tag
             assert not hasattr(tag, "emotions")
 
-    def test_tagger_metadata(self):
+    def test_tagger_sorted(self):
         conf = {
            "tagger":{
                "sorter": "time",

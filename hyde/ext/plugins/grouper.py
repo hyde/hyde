@@ -3,16 +3,12 @@
 Contains classes and utilities related to grouping
 resources and nodes in hyde.
 """
-import re
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
 from hyde.util import add_method, add_property, pairwalk
 
 from collections import namedtuple
-from functools import partial
-from itertools import ifilter, izip, tee, product
-from operator import attrgetter
 
 
 Grouper = namedtuple('Grouper', 'group resources')
