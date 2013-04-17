@@ -106,10 +106,10 @@ options for some PyFS backends:
                 url: sftp:hydeuser:hydepassword@hydedocs.org
 
 .. Note:: PyFS is not installed with hyde. In order to use the
-          PyFS publisher, you need to install pyfs seprately.
+          PyFS publisher, you need to install pyfs separately.
 
 Any PyFS dependencies (Example: `boto` for S3 publishing)
-need to be installed seprately as well.
+need to be installed separately as well.
 
 ::
 
