@@ -155,6 +155,7 @@ class Config(Expando):
             layout_root='layout',
             media_url='/media',
             base_url="/",
+            encode_safe=None,
             not_found='404.html',
             plugins = [],
             ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"],
