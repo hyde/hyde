@@ -28,6 +28,7 @@ class Generator(object):
         self.site = site
         self.generated_once = False
         self.deps = Dependents(site.sitepath)
+        self.waiting_deps = {}
         self.create_context()
         self.template = None
         Plugin.load_all(site)
@@ -132,6 +133,7 @@ class Generator(object):
         if not resource.source_file.is_text:
             return []
         rel_path = resource.relative_path
+        self.waiting_deps[rel_path] = []
         deps = []
         if hasattr(resource, 'depends'):
             user_deps = resource.depends
@@ -139,13 +141,18 @@ class Generator(object):
                 deps.append(dep)
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
-                    deps.extend(self.get_dependencies(dep_res))
+                    if dep_res.relative_path in self.waiting_deps.keys():
+                        self.waiting_deps[dep_res.relative_path].append(rel_path)
+                    else:
+                        deps.extend(self.get_dependencies(dep_res))
         if resource.uses_template:
             deps.extend(self.template.get_dependencies(rel_path))
         deps = list(set(deps))
         if None in deps:
             deps.remove(None)
         self.deps[rel_path] = deps
+        for path in self.waiting_deps[rel_path]:
+            self.deps[path].extend(deps)
         return deps
 
     def has_resource_changed(self, resource):
