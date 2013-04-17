@@ -1,0 +1,9 @@
+One post per page below:
+
+{% for res in resource.page.posts %}
+{% refer to res.url as post %}
+{{ post }}
+{% endfor %}
+
+{{ resource.page.previous }}
+{{ resource.page.next }}

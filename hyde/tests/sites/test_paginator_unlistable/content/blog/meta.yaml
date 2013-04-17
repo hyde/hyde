@@ -1,0 +1,5 @@
+title: "One post per page"
+paginator:
+    sorter: time
+    size: 1
+    file_pattern: page$PAGE/$FILE$EXT   # optional
