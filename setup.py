@@ -115,7 +115,7 @@ setup(name=PROJECT,
       url='http://hyde.github.com',
       packages=find_packages(),
       dependency_links=[
-        "https://github.com/hyde/typogrify/tarball/hyde-setup#egg=typogrify-hyde"
+        "https://github.com/hyde/typogrify/tarball/hyde-setup#egg=typogrify"
       ],
       install_requires=(
           'argparse',
@@ -125,7 +125,7 @@ setup(name=PROJECT,
           'markdown',
           'smartypants',
           'pygments',
-          'typogrify-hyde'
+          'typogrify'
       ),
       tests_require=(
         'nose',
