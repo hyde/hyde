@@ -1,34 +1,45 @@
-{% macro render_main_menu() -%}
-
-{# Set menu item selected if the current resource matches the item in the
-   site's config file or set "Advanced topics" selected for any resources
-   that have the "advanced" folder as their parent.
+{# Generates the main and basic menu from context data in the site's
+   configuration file.
 #}
-<ul>
+{% macro render_basic_menu() -%}
+<ul class="basic">
 {% for menu_item in menu -%}
-    <li><a {% if (menu_item.url == resource.url) or
-                 (menu_item.title == "Advanced topics"
-                  and resource.node.name == "advanced")
-            %}class="selected"{% endif -%}
-            href="{{ content_url(menu_item.url) }}">{{ menu_item.title }}</a></li>
+    <li><a {% if (menu_item.url == resource.url) %}class="selected"{% endif -%}
+        href="{{ content_url(menu_item.url) }}">{{ menu_item.title }}</a></li>
 {%- endfor %}
 </ul>
 {%- endmacro %}
 
 
-{# Advanced topics macro. Renders navigation at the end of the article. #}
+{# Generates the advanced menu from all files located in the content/advanced
+   folder. Only advanced section files have 'index' metadata, so we can be
+   certain that no other files will creep in.
+#}
+{% macro render_advanced_menu() -%}
+<ul class="advanced">
+{% for res in site.content.walk_resources_sorted_by_index() %}
+    <li><a {% if (res.url == resource.url) %}class="selected"{% endif -%}
+        href="{{ res.full_url }}">{{ res.meta.title }}
+        </a></li>
+{% endfor %}
+</ul>
+{%- endmacro %}
 
+
+{# Advanced topics macro. Renders navigation at the end of an advanced
+   article. It also depends on 'index' metadata.
+#}
 {% macro render_bottom_article_nav() %}
 <div class="bottom_article_nav">
 {% if resource.next_by_index is not none -%}
     <div class="next"><a href="{{ resource.next_by_index.full_url }}">
-    {{ resource.next_by_index.meta.title_ending|replace("| ", "") }}</a>
+    {{ resource.next_by_index.meta.title }}</a>
     &gt;</div>
 {%- endif %}
 
 {% if resource.prev_by_index is not none -%}
     <div class="prev">&lt; <a href="{{ resource.prev_by_index.full_url }}">
-    {{ resource.prev_by_index.meta.title_ending|replace("| ", "") }}</a>
+    {{ resource.prev_by_index.meta.title }}</a>
     </div>
 {%- endif %}
 </div>

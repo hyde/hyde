@@ -1,8 +1,10 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <link href="http://fonts.googleapis.com/css?family=Anton" rel="stylesheet" type="text/css">
-        <title>Hyde Starter Kit {{ resource.meta.title_ending }}</title>
+        <link href="http://fonts.googleapis.com/css?family=Anton"
+            rel="stylesheet" type="text/css">
+            <title>Hyde Starter Kit {% if resource.meta.title-%}
+                | {{ resource.meta.title}}{%-endif %}</title>
         <meta charset="utf-8" />
         <link rel="stylesheet" href="{{ media_url('css/style.css') }}">
         <!--[if lt IE 9]>
@@ -19,11 +21,12 @@
         </header>
         <nav>
         {# Move main menu rendering away from the base layout. This
-           way it can be used to generate the list many times, in
+           way it can be used to generate the list many times, e.g. in
            a footer, etc.
         #}
             {% import "macros.j2" as macros with context %}
-            {{ macros.render_main_menu() }}
+            {{ macros.render_basic_menu() }}
+            {{ macros.render_advanced_menu() }}
         </nav>
         <article id="content">
         {# Main content block. Notice it has to pass through the
@@ -34,13 +37,9 @@
             {% block content %}{% endblock %}
             {%- endfilter %}
         </article>
-        <aside>
-            <p>Created by <a href="{{ author.url}}">{{ author.name}}</a>
-            for <a href="{{ project.url }}">{{ project.name }}</a></p>
-        </aside>
 
         {# Some parts of the web are not needed for development and can
-           wait for production (ex. analytics). They can be included in
+           wait for production (e.g. analytics). They can be included in
            the final production build. Create a new config file, extend
            the original one and override the "mode" property; then build
            the site with the new "production configuration".
