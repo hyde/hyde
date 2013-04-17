@@ -7,8 +7,7 @@ import re
 from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.plugin import Plugin
-from hyde.site import Site, Node, Resource
-
+import hyde.site
 from functools import wraps
 
 class UrlCleanerPlugin(Plugin):
@@ -46,15 +45,15 @@ class UrlCleanerPlugin(Plugin):
         if not hasattr(config, 'urlcleaner'):
             return
 
-        if (hasattr(Site, '___url_cleaner_patched___')):
+        if (hasattr(hyde.site, '___url_cleaner_patched___')):
             return
 
         settings = config.urlcleaner
 
         def clean_url(urlgetter):
             @wraps(urlgetter)
-            def wrapper(site, path, safe=None):
-                url = urlgetter(site, path, safe)
+            def wrapper(context, path, safe=None):
+                url = urlgetter(context, path, safe)
                 index_file_names = getattr(settings,
                                         'index_file_names',
                                         ['index.html'])
@@ -70,5 +69,5 @@ class UrlCleanerPlugin(Plugin):
                 return url or '/'
             return wrapper
 
-        Site.___url_cleaner_patched___ = True
-        Site.content_url = clean_url(Site.content_url)
+        hyde.site.___url_cleaner_patched___ = True
+        hyde.site.content_url = clean_url(hyde.site.content_url)

@@ -83,7 +83,7 @@ class Processable(object):
         """
         Returns the full url for the processable.
         """
-        return self.site.full_url(self.relative_deploy_path)
+        return full_url(self.site, self.relative_deploy_path)
 
 
 class Resource(Processable):
@@ -425,50 +425,62 @@ class Site(object):
         """
         self.content.load()
 
-    def content_url(self, path, safe=None):
-        """
-        Returns the content url by appending the base url from the config
-        with the given path. The return value is url encoded.
-        """
-        fpath = Folder(self.config.base_url) \
-                        .child(path) \
-                        .replace(os.sep, '/').encode("utf-8")
-        if safe is not None:
-            return quote(fpath, safe)
-        else:
-            return quote(fpath)
-
-    def media_url(self, path, safe=None):
-        """
-        Returns the media url by appending the media base url from the config
-        with the given path. The return value is url encoded.
-        """
-        fpath = Folder(self.config.media_url) \
-                        .child(path) \
-                        .replace(os.sep, '/').encode("utf-8")
-        if safe is not None:
-            return quote(fpath, safe)
-        else:
-            return quote(fpath)
-
-    def full_url(self, path, safe=None):
-        """
-        Determines if the given path is media or content based on the
-        configuration and returns the appropriate url. The return value
-        is url encoded.
-        """
-        if urlparse.urlparse(path)[:2] != ("",""):
-            return path
-        if self.is_media(path):
-            relative_path = File(path).get_relative_path(
-                                Folder(self.config.media_root))
-            return self.media_url(relative_path, safe)
-        else:
-            return self.content_url(path, safe)
-
     def is_media(self, path):
         """
         Given the relative path, determines if it is content or media.
         """
         folder = self.content.source.child_folder(path)
         return folder.is_descendant_of(self.config.media_root_path)
+
+def content_url(context, path, safe=None):
+    """
+    Returns the content url by appending the base url from the config
+    with the given path. The return value is url encoded.
+    """
+    if isinstance(context, Site):
+        site = context
+    else:
+        site = context['site']
+    fpath = Folder(site.config.base_url) \
+                    .child(path) \
+                    .replace(os.sep, '/').encode("utf-8")
+    if safe is not None:
+        return quote(fpath, safe)
+    else:
+        return quote(fpath)
+
+def media_url(context, path, safe=None):
+    """
+    Returns the media url by appending the media base url from the config
+    with the given path. The return value is url encoded.
+    """
+    if isinstance(context, Site):
+        site = context
+    else:
+        site = context['site']
+    fpath = Folder(site.config.media_url) \
+                    .child(path) \
+                    .replace(os.sep, '/').encode("utf-8")
+    if safe is not None:
+        return quote(fpath, safe)
+    else:
+        return quote(fpath)
+
+def full_url(context, path, safe=None):
+    """
+    Determines if the given path is media or content based on the
+    configuration and returns the appropriate url. The return value
+    is url encoded.
+    """
+    if urlparse.urlparse(path)[:2] != ("",""):
+        return path
+    if isinstance(context, Site):
+        site = context
+    else:
+        site = context['site']
+    if site.is_media(path):
+        relative_path = File(path).get_relative_path(
+                            Folder(site.config.media_root))
+        return media_url(site, relative_path, safe)
+    else:
+        return content_url(site, path, safe)
