@@ -389,7 +389,13 @@ class CLTransformer(Plugin):
             self.logger.debug(
                 "Calling executable [%s] with arguments %s" %
                     (args[0], unicode(args[1:])))
-            subprocess.check_output(args)
+            try:
+                subprocess.check_output(args)
+            except AttributeError:
+                # prior python 2.7 there is no ``check_output``
+                self.logger.debug("output: %s", 
+                        subprocess.Popen(args, 
+                            stdout=subprocess.PIPE).communicate())
         except subprocess.CalledProcessError, error:
             self.logger.error(traceback.format_exc())
             self.logger.error(error.output)
