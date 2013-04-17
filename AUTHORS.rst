@@ -6,19 +6,51 @@ This version would not exist without the contributions from the
 
 Contributors
 ===============================================================================
+
+-   |adube|_
+
+    *   Bug Fix: Fix atom.j2 to use `relative_path` instead of `url` when
+        referencing templates. (Issue #155, Issue#203)
+
+-   |davefowler|_
+
+    *   Bug Fix: Infinate recursion error with resource dependencies.
+        (Issue #155, Issue#200)
+
+-   |irrelative|_
+
+    *   Bug Fix: Avoid index error if there aren't pages when iterating
+        for paginator. (Issue #190)
+
+-   |joshgerdes|_
+
+    *   Made urlencoding safe character list configurable. (Issue #150)
+
+
+-   |ErkanYilmaz|_
+
+    *   Fixed typos in README.
+
 -   |idank|_
 
-    *   Bug Fix: Tag archive generator uses subscript syntax to avoid failure when tags contain '-' or space.
-    *   Bug Fix: Use `check_output` to avoid a traceback when subprocess command fails.
+    *   Bug Fix: Tag archive generator uses subscript syntax to avoid failure
+        when tags contain '-' or space.
+    *   Bug Fix: Use `check_output` to avoid a traceback when subprocess
+        command fails.
 
 -   |jd|_
 
-    *   Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy` files.
+    *   Bug Fix: Metadata Plugin: Do not try to read meta data on
+        `simple_copy` files.
+    *   Bug Fix: Force escape on title in Atom feed. (Issue #176)
+    *   Add `node.rwalk` method for traversing the node in reverse. (Issue #176)
 
     |vinilios|_
 
-    *   Added a helper method in Expando class to ease up non existing keys handling.
-    *   Some improvements in LessCSSPlugin to be able to build complex less projects (such as twitter bootstrap)
+    *   Added a helper method in Expando class to ease up non existing keys
+        handling.
+    *   Some improvements in LessCSSPlugin to be able to build complex less
+        projects (such as twitter bootstrap)
 
 -   |nud|_
 
@@ -69,7 +101,8 @@ Contributors
     *   Bug Fix: Added more standard paths for executables
     *   Added Combine files plugin
     *   Added ignore option in site configuration to igore based on wildcards
-    *   Added silent, compress and optimization parameter support for less css plugin
+    *   Added silent, compress and optimization parameter support for less
+        css plugin
     *   Fixed plugin chaining issues
     *   Added Language(translation) plugin
     *   Added support for parameters with `=` to `CLTransformer`
@@ -130,3 +163,13 @@ Contributors
 .. _jd: https://github.com/jd
 .. |idank| replace:: idank
 .. _idank: https://github.com/idank
+.. |ErkanYilmaz| replace:: Erkan Yilmaz
+.. _ErkanYilmaz: https://github.com/Erkan-Yilmaz
+.. |joshgerdes| replace:: Josh Gerdes
+.. _joshgerdes: https://github.com/joshgerdes
+.. |irrelative| replace:: irrelative
+.. _irrelative: https://github.com/irrelative
+.. |davefowler| replace:: Dave Fowler
+.. _davefowler: https://github.com/davefowler
+.. |adube| replace:: Alexandre Dubé
+.. _adube: https://github.com/adube

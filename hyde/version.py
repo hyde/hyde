@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Handles hyde version
-TODO: Use fabric like versioning scheme
+Handles hyde version.
 """
-__version__ = '0.8.5a16'
+__version__ = '0.8.5'
