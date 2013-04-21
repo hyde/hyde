@@ -24,10 +24,10 @@ as follows:
     >$ hyde gen
     >$ hyde publish -p ssh
 
-For the above options, this will lead to execution of the following command,
-assuming the specified deploy directory is ``deploy/``:
+For the above options, this will lead to execution of the following command
+within the ``deploy/`` directory:
 
-    rsync -r -e ssh [deploy/] username@ssh.server.com:/www/username/mysite/
+    rsync -r -e ssh ./ username@ssh.server.com:/www/username/mysite/
 
 """
 from hyde.publisher import Publisher
