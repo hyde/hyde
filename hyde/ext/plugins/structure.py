@@ -307,7 +307,7 @@ class PaginatorPlugin(Plugin):
     then in the resource's content:
 
         {% for res in resource.page.posts %}
-        {% refer to res.url as post %}
+        {% refer to res.relative_path as post %}
         {{ post }}
         {% endfor %}
 

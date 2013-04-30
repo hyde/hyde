@@ -1,4 +1,4 @@
-Version 0.8.6
+Version 0.8.7a1
 
 A brand new **hyde**
 ====================

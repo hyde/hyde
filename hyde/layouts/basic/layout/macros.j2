@@ -1,5 +1,5 @@
 {% macro render_excerpt(res, class=None) %}
-{% refer to res.url as post %}
+{% refer to res.relative_path as post %}
 <article {{'class='~class if class }}>
 <h3><a href="{{ content_url(res.url) }}">{{ res.meta.title }}</a></h3>
 <a href="{{ content_url(res.url) }}">{{ post.image|markdown|typogrify }}</a>

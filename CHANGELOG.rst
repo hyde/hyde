@@ -1,3 +1,9 @@
+Version 0.8.7a1
+============================================================
+*   Bugfix: Use `clearfix` class in `listing.j2`. (Issue #156)
+*   Bugfix: Use `relative_path` instead of url in `macros.j2`. (Issue #180)
+
+
 Version 0.8.6
 ============================================================
 
