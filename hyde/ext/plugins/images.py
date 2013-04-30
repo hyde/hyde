@@ -6,9 +6,12 @@ Contains classes to handle images related things
 """
 
 from hyde.plugin import Plugin
+from hyde.fs import File, Folder
 
 import re
 import Image
+import glob
+import os
 
 class ImageSizerPlugin(Plugin):
     """
@@ -145,3 +148,131 @@ class ImageSizerPlugin(Plugin):
                 continue
 
         return text
+
+class ImageThumbnailsPlugin(Plugin):
+    """
+    Provide a function to get thumbnail for any image resource.
+
+    Example of usage:
+    Setting optional defaults in site.yaml:
+        thumbnails:
+          width: 100
+          height: 120
+          prefix: thumbnail_
+
+    Setting thumbnails options in nodemeta.yaml:
+        thumbnails:
+          - width: 50
+            prefix: thumbs1_
+            include:
+            - '*.png'
+            - '*.jpg'
+          - height: 100
+            prefix: thumbs2_
+            include:
+            - '*.png'
+            - '*.jpg'
+    which means - make from every picture two thumbnails with different prefixes
+    and sizes
+
+    If both width and height defined, image would be cropped, you can define
+    crop_type as one of these values: "topleft", "center" and "bottomright".
+    "topleft" is default.
+
+    Currently, only supports PNG and JPG.
+    """
+
+    def __init__(self, site):
+        super(ImageThumbnailsPlugin, self).__init__(site)
+
+    def thumb(self, resource, width, height, prefix, crop_type):
+        """
+        Generate a thumbnail for the given image
+        """
+        name = os.path.basename(resource.get_relative_deploy_path())
+        # don't make thumbnails for thumbnails
+        if name.startswith(prefix):
+            return
+        # Prepare path, make all thumnails in single place(content/.thumbnails)
+        # for simple maintenance but keep original deploy path to preserve
+        # naming logic in generated site
+        path = os.path.join(".thumbnails",
+                            os.path.dirname(resource.get_relative_deploy_path()),
+                            "%s%s" % (prefix, name))
+        target = File(Folder(resource.site.config.content_root_path).child(path))
+        res = self.site.content.add_resource(target)
+        res.set_relative_deploy_path(res.get_relative_deploy_path().replace('.thumbnails/', '', 1))
+
+        target.parent.make()
+        if os.path.exists(target.path) and os.path.getmtime(resource.path) <= os.path.getmtime(target.path):
+            return
+        self.logger.debug("Making thumbnail for [%s]" % resource)
+
+        im = Image.open(resource.path)
+        if im.mode != 'RGBA':
+            im = im.convert('RGBA')
+        resize_width = width
+        resize_height = height
+        if resize_width is None:
+            resize_width = im.size[0]*height/im.size[1] + 1
+        elif resize_height is None:
+            resize_height = im.size[1]*width/im.size[0] + 1
+        elif im.size[0]*height >= im.size[1]*width:
+            resize_width = im.size[0]*height/im.size[1]
+        else:
+            resize_height = im.size[1]*width/im.size[0]
+
+        im = im.resize((resize_width, resize_height), Image.ANTIALIAS)
+        if width is not None and height is not None:
+            shiftx = shifty = 0
+            if crop_type == "center":
+                shiftx = (im.size[0] - width)/2
+                shifty = (im.size[1] - height)/2
+            elif crop_type == "bottomright":
+                shiftx = (im.size[0] - width)
+                shifty = (im.size[1] - height)
+            im = im.crop((shiftx, shifty, width + shiftx, height + shifty))
+            im.load()
+
+        if resource.name.endswith(".jpg"):
+            im.save(target.path, "JPEG", optimize=True, quality=75)
+        else:
+            im.save(target.path, "PNG", optimize=True)
+
+    def begin_site(self):
+        """
+        Find any image resource that should be thumbnailed and call thumb on it.
+        """
+        # Grab default values from config
+        config = self.site.config
+        defaults = { "width": None,
+                     "height": None,
+                     "crop_type": "topleft",
+                     "prefix": 'thumb_'}
+        if hasattr(config, 'thumbnails'):
+            defaults.update(config.thumbnails)
+
+        for node in self.site.content.walk():
+            if hasattr(node, 'meta') and hasattr(node.meta, 'thumbnails'):
+                for th in node.meta.thumbnails:
+                    if not hasattr(th, 'include'):
+                        self.logger.error("Include is not set for node [%s]" % node)
+                        continue
+                    include = th.include
+                    prefix = th.prefix if hasattr(th, 'prefix') else defaults['prefix']
+                    height = th.height if hasattr(th, 'height') else defaults['height']
+                    width = th.width if hasattr(th, 'width') else defaults['width']
+                    crop_type = th.crop_type if hasattr(th, 'crop_type') else defaults['crop_type']
+                    if crop_type not in ["topleft", "center", "bottomright"]:
+                        self.logger.error("Unknown crop_type defined for node [%s]" % node)
+                        continue
+                    if width is None and height is None:
+                        self.logger.error("Both width and height are not set for node [%s]" % node)
+                        continue
+                    thumbs_list = []
+                    for inc in include:
+                        for path in glob.glob(node.path + os.sep + inc):
+                            thumbs_list.append(path)
+                    for resource in node.resources:
+                        if resource.source_file.kind in ["jpg", "png"] and resource.path in thumbs_list:
+                            self.thumb(resource, width, height, prefix, crop_type)
