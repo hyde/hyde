@@ -164,7 +164,13 @@ def restructuredtext(env, value):
     if highlight_source:
         import hyde.lib.pygments.rst_directive
 
-    parts = publish_parts(source=value, writer_name="html")
+    settings = {
+        'input_encoding': 'utf8',
+        'doctitle_xform': False
+    }
+    if hasattr(env.config, 'restructuredtext'):
+        settings = getattr(env.config.restructuredtext, 'options', Expando(settings)).to_dict()
+    parts = publish_parts(source=value, writer_name="html", settings_overrides=settings)
     return parts['html_body']
 
 @environmentfilter
