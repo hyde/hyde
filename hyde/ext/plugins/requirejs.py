@@ -18,9 +18,8 @@ Please see the homepage of requirejs for usage details.
 """
 
 from hyde.plugin import CLTransformer
-from hyde.fs import File
 
-import re
+from fswrap import File
 import subprocess
 
 class RequireJSPlugin(CLTransformer):
