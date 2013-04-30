@@ -2,16 +2,20 @@
 """
 Contains classes to handle images related things
 
-# Requires PIL
+# Requires PIL or pillow
 """
 
 from hyde.plugin import Plugin
-from hyde.fs import File, Folder
 
 import re
-import Image
 import glob
 import os
+
+try:
+    from PIL import Image
+except ImportError:
+    # No pillow
+    import Image
 
 class ImageSizerPlugin(Plugin):
     """
@@ -239,7 +243,7 @@ class ImageThumbnailsPlugin(Plugin):
         path = os.path.join(".thumbnails",
                             os.path.dirname(resource.get_relative_deploy_path()),
                             "%s%s" % (prefix, name))
-        target = File(Folder(resource.site.config.content_root_path).child(path))
+        target = resource.site.config.content_root_path.child_file(path)
         res = self.site.content.add_resource(target)
         res.set_relative_deploy_path(res.get_relative_deploy_path().replace('.thumbnails/', '', 1))
 

@@ -26,7 +26,11 @@ IMAGES = [PORTRAIT_IMAGE, LANDSCAPE_IMAGE]
 SIZES = [PORTRAIT_SIZE, LANDSCAPE_SIZE]
 
 # PIL requirement
-import Image
+try:
+    from PIL import Image
+except ImportError:
+    # No pillow
+    import Image
 
 class TestImageSizer(object):
 
@@ -91,12 +95,11 @@ class TestImageSizer(object):
         text = u"""
 <img src="/media/img/hyde-logo-no.png">
 """
-        html = self._generic_test_image(text)
+        self._generic_test_image(text)
 
     def test_size_image_multiline(self):
         text = u"""
-     <img
-src="/media/img/%s">
+     <img src="/media/img/%s">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
         assert ' width="%d"' % PORTRAIT_SIZE[0] in html

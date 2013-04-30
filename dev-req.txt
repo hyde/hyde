@@ -3,4 +3,4 @@ pyquery
 docutils
 mock
 nose
-PIL
+pillow
