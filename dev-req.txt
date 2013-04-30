@@ -4,3 +4,4 @@ docutils
 mock
 nose
 pillow
+pyscss

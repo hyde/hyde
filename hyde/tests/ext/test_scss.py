@@ -4,10 +4,11 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.generator import Generator
 from hyde.site import Site
+from hyde.tests.util import assert_no_diff
+
+from fswrap import File, Folder
 
 SCSS_SOURCE = File(__file__).parent.child_folder('scss')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -26,8 +27,10 @@ class TestSassyCSS(object):
     def tearDown(self):
         TEST_SITE.delete()
 
+
     def test_scss(self):
         s = Site(TEST_SITE)
+        s.config.mode = 'prod'
         s.config.plugins = ['hyde.ext.plugins.css.SassyCSSPlugin']
         source = TEST_SITE.child('content/media/css/site.scss')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
@@ -37,7 +40,5 @@ class TestSassyCSS(object):
         assert target.exists
         text = target.read_all()
         expected_text = File(SCSS_SOURCE.child('expected-site.css')).read_all()
-
-        assert text == expected_text
-        return
+        assert_no_diff(expected_text, text)
 
