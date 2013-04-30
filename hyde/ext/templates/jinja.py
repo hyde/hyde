@@ -160,6 +160,11 @@ def restructuredtext(env, value):
     highlight_source = False
     if hasattr(env.config, 'restructuredtext'):
         highlight_source = getattr(env.config.restructuredtext, 'highlight_source', False)
+        extensions = getattr(env.config.restructuredtext, 'extensions', [])
+        import imp
+        for extension in extensions:
+            imp.load_module(extension, *imp.find_module(extension))
+
 
     if highlight_source:
         import hyde.lib.pygments.rst_directive
