@@ -137,7 +137,7 @@ class TaggerPlugin(Plugin):
                 tags[tagname] = tag
                 tag.resources.append(resource)
                 add_method(Node,
-                    'walk_resources_tagged_with_%s' % tagname,
+                    'walk_resources_tagged_with_%s' % tagname.replace(' ','_'),
                     walk_resources_tagged_with,
                     tag=tag)
             else:
@@ -194,12 +194,13 @@ extends: false
 
 {%% set tag = site.tagger.tags['%(tag)s'] %%}
 {%% set source = site.content.node_from_relative_path('%(node)s') %%}
-{%% set walker = source['walk_resources_tagged_with_%(tag)s'] %%}
+{%% set walker = source['walk_resources_tagged_with_%(tag_nospace)s'] %%}
 {%% extends "%(template)s" %%}
 """
         for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
             tag_data = {
                 "tag": tagname,
+                "tag_nospace": tagname.replace(' ','_'),
                 "node": source.name,
                 "template": template,
                 "meta": meta_text
