@@ -88,7 +88,6 @@ class GitDatesPlugin(VCSDatesPlugin):
             self.logger.warning("No git history for [%s]" % resource)
             created, modified = None, None
 
-        self.logger.info("Git dates: %s", (resource, created, modified))
         return created, modified
 
 #

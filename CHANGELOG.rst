@@ -1,3 +1,57 @@
+Version 0.8.6
+============================================================
+
+Thanks to @QuLogic:
+
+*   Refactor: Plugins reorganized by function. (Issue #170)
+*   Add HG Dates Plugin. (Issue #177)
+*   Add Clever CSS Plugin. (Issue #178)
+*   Add Sassy CSS Plugin. (Issue #179)
+
+Thanks to @sirlantis:
+
+*   Add support for custom jinja filters. (Issue #159)
+
+Thanks to @gfuchedzhy
+
+*   Bugfix: Serve files without a resource. (Issue #92)
+
+Thanks to @ilkerde:
+
+*   Add Require JS plugin. (Issue #201)
+
+Thanks to @jakevdp:
+
+*   Add SSH publisher. (Issue #205)
+
+Thanks to @herr-lehmann and @nud:
+
+*   Bugfix: Fix date time comparison in git plugin. (Issue#142, #199, #137)
+
+Thanks to @rephorm, @gfuchedzhy and @vincentbernat:
+
+*   Add thumbnail plugin. (Issue #169, #89)
+
+Thanks to @vincentbernat:
+
+*   Add Coffeescript plugin. (Issue #172)
+*   Add jpegtran plugin. (Issue #171)
+
+Thanks to @jabapyth:
+
+*   Add extension support for restructured text. (Issue #206)
+
+Thanks to @tarajane:
+
+*   Bugfix: Update the .clear styleName to be .clearfix instead.
+    Base.j2 applies the 'clearfix' class to the 'banner' element, and not
+    the 'clear' class. (Issue #156)
+
+Thanks to @pib:
+
+*   Bugfix: Use `_transform` instead of `transform` in Expando.
+    (Issue #152, #153)
+
 Version 0.8.5
 ============================================================
 
@@ -5,25 +59,25 @@ Version 0.8.5
 *   Remove `hyde.fs` use `fswrap` package instead.
 *   Remove logging functions from `hyde.util`. Use `commando.util` instead.
 *   Remove `hyde.loader`. Use `commando.util.load_python_object` instead.
-*   Bug fix: Use the released version of typogrify. (Issue #193)
-*   Bug Fix: Fixed stylus `indent` issues with empty files. (Issue #161)
-*   Bug Fix: Added support for plugin paths relative to site. (Issue #107)
-*   Bug Fix: Folder Flattener updates node's `relative_deploy_path` & `url`
+*   Bugfix: Use the released version of typogrify. (Issue #193)
+*   Bugfix: Fixed stylus `indent` issues with empty files. (Issue #161)
+*   Bugfix: Added support for plugin paths relative to site. (Issue #107)
+*   Bugfix: Folder Flattener updates node's `relative_deploy_path` & `url`
     attributes as well. (Issue #126)
 *   BREAKING: As part of the above fix, `resource.url` is prefixed with a `/`.
     (Issue #126)
 *   Added `simple_copy` feature to account for unprocessable files that
     are nonetheless required to be deployed (Issue #121)
-*   Bug Fix: Relative path was used in the server as the sitepath (Issue #119)
+*   Bugfix: Relative path was used in the server as the sitepath (Issue #119)
 *   Plugins now support inclusion filters. (Issue #112)
     -   `include_file_patterns` property accepts globs to filter by file name.
     -   `include_paths` accepts paths relative to content.
     -   `begin_node` and `node_complete` honor `include_paths`
     -   `begin_text_resource`, `text_resource_complete`, `begin_binary_resource`
         and `binary_resource_complete` honor both.
-*   Bug Fix: Unsorted combine files fixed. (Issue #111)
+*   Bugfix: Unsorted combine files fixed. (Issue #111)
 *   Added an optional sorting parameter. (Issue #111)
-*   Bug Fix:  Modified combine plugin to process during
+*   Bugfix:  Modified combine plugin to process during
     `begin_text_resource`. (Issue #110)
 *   Modified combine plugin to support relative paths and recursion.
     (Issue #108)
@@ -32,16 +86,16 @@ Version 0.8.5
 
 Thanks to @idank
 
-*   Bug Fix: Use `check_output` to avoid a traceback when subprocess
+*   Bugfix: Use `check_output` to avoid a traceback when subprocess
     command fails.
-*   Bug Fix: Tag archive generator uses subscript syntax to avoid failure
+*   Bugfix: Tag archive generator uses subscript syntax to avoid failure
     when tags contain '-' or space. (Issue #130)
 
 Thanks to @jd
 
-*   Bug Fix: Metadata Plugin: Do not try to read meta data on `simple_copy`
+*   Bugfix: Metadata Plugin: Do not try to read meta data on `simple_copy`
     files. (Issue #124, Issue #121)
-*   Bug Fix: Force escape on title in Atom feed. (Issue #176)
+*   Bugfix: Force escape on title in Atom feed. (Issue #176)
 *   Add `node.rwalk` method for traversing the node in reverse. (Issue #176)
 
 Thanks to @vinilios
@@ -72,25 +126,25 @@ Thanks to @joshgerdes:
 
 Thanks to @irrelative:
 
-*   Bug Fix: Avoid index error if there aren't pages when iterating
+*   Bugfix: Avoid index error if there aren't pages when iterating
     for paginator. (Issue #190)
 
 Thanks to @davefowler:
 
-*   Bug Fix: Infinate recursion error with resource dependencies.
+*   Bugfix: Infinate recursion error with resource dependencies.
     (Issue #155, Issue#200)
 
 Thanks to @adube:
 
-*   Bug Fix: Fix atom.j2 to use `relative_path` instead of `url` when
+*   Bugfix: Fix atom.j2 to use `relative_path` instead of `url` when
     referencing templates. (Issue #155, Issue#203)
 
 
 Version 0.8.4
 ============================================================
 
-*   Bug Fix: Configuration now gets reloaded when server regenerates (Issue #70)
-*   Bug Fix: Added styles for codebox (Issue #69)
+*   Bugfix: Configuration now gets reloaded when server regenerates (Issue #70)
+*   Bugfix: Added styles for codebox (Issue #69)
 *   Tagger now generates archives upfront in begin_site (Issue #72)
 *   **Breaking**: The default nodemeta file has been changed to meta.yaml
 *   Added test for codehilite markdown extension (Issue #82)
@@ -99,26 +153,26 @@ Version 0.8.4
 *   Hyde now ignores .hg, .svn and .git by default (Issue #80)
 *   Added support for default publisher (Issue #83)
 *   Added `urlencode` and `urldecode` filters. (Issue #102)
-*   Bug Fix: Fixed tests for Issue #88
+*   Bugfix: Fixed tests for Issue #88
 *   Added tests for sorting groups
 *   Added support for loading modules from the site path. Thanks to
     @theomega for the idea (Issue #78 & #79)
 *   Added docutils to dev-req.txt
-*   Bug Fix: Fixed uglify-js tests
+*   Bugfix: Fixed uglify-js tests
 
 Thanks to @nud
 
 *   `$PATH` based executable discovery for `CLTransformer` plugins. (Issue #100)
-*   Bug Fix: Fix class name of `test_stylus` (Issue #97)
+*   Bugfix: Fix class name of `test_stylus` (Issue #97)
 
 Thanks to @gfuchedzhy
 
-*   Bug Fix: Textlinks plugin: do nothing if resource doesn't use template (Issue #96)
-*   Bug Fix: Retain permissions in text files during generation (Issue #90)
-*   Bug Fix: Added support for encoded urls to hyde server. (Issue #88)
-*   Bug Fix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
-*   Bug Fix: All occurrences of `str` replaced with `unicode`. (Issue #87)
-*   Bug Fix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
+*   Bugfix: Textlinks plugin: do nothing if resource doesn't use template (Issue #96)
+*   Bugfix: Retain permissions in text files during generation (Issue #90)
+*   Bugfix: Added support for encoded urls to hyde server. (Issue #88)
+*   Bugfix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
+*   Bugfix: All occurrences of `str` replaced with `unicode`. (Issue #87)
+*   Bugfix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
 
 Thanks to @vincentbernat
 
@@ -145,12 +199,12 @@ Thanks to @benallard
 Thanks to @rfk
 
 *   Added Sphinx Plugin (Issue #62)
-*   Bug fix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
+*   Bugfix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
 
 Version 0.8.3
 ============================================================
 
-*   Bug Fix: A bad bug in Expando that modified the `__dict__` has been fixed.
+*   Bugfix: A bad bug in Expando that modified the `__dict__` has been fixed.
     (Issue #53)
 *   Tags now support metadata. Metadata can be provided as part of the tagger
     plugin configuration in `site.yaml`
@@ -158,10 +212,10 @@ Version 0.8.3
     get loaded as expandos. (Issue #29)
 *   `hyde serve` now picks up changes in config data automatically.
     (Issue #24)
-*   Bug Fix: `hyde create` only fails when `content`, `layout` or `site.yaml`
+*   Bugfix: `hyde create` only fails when `content`, `layout` or `site.yaml`
     is present in the target directory. (Issue #21)
-*   Bug Fix: Exceptions are now handled with `ArgumentParser.error`.
-*   Bug Fix: Sorter excludes items that do not have sorting attributes.
+*   Bugfix: Exceptions are now handled with `ArgumentParser.error`.
+*   Bugfix: Sorter excludes items that do not have sorting attributes.
     (Issue #18)
 *   Wrapped `<figure>` inside `<div>` to appease markdown. (Issue #17)
 *   Added `display:block` for html5 elements in basic template so that it
@@ -174,23 +228,23 @@ Thanks to Joe Steeve.
 
 Thanks to @stiell
 
-*   Bug Fix: Better mime type support in hyde server (Issue #50)
-*   Bug Fix: Support empty extension in tagger archives (Issue #50)
+*   Bugfix: Better mime type support in hyde server (Issue #50)
+*   Bugfix: Support empty extension in tagger archives (Issue #50)
 
 Thanks to @gfuchedzhy
 
-*   Bug Fix: Hyde server now takes the url cleaner plugin into account.
+*   Bugfix: Hyde server now takes the url cleaner plugin into account.
     (Issue #54)
 
 Thanks to @vincentbernat
 
-*   Bug Fix: Ensure image sizer plugin handles external urls properly.
+*   Bugfix: Ensure image sizer plugin handles external urls properly.
     (Issue #52)
 
 Thanks to @rfk
 
 *   Added PyPI publisher (Issue #49)
-*   Bug Fix: Made `site.full_url` ignore fully qualified paths (Issue #49)
+*   Bugfix: Made `site.full_url` ignore fully qualified paths (Issue #49)
 
 Thanks to @vincentbernat
 
@@ -212,8 +266,8 @@ Thanks to @vincentbernat
     plugin (Issue #40)
 *   Fixed plugin chaining issues (Issue #38)
 *   Added Language(translation) plugin (Issue #37)
-*   Bug Fix: Made sorting tests more predictable (Issue #41)
-*   Bug Fix: Added more standard paths for executables (Issue #41)
+*   Bugfix: Made sorting tests more predictable (Issue #41)
+*   Bugfix: Added more standard paths for executables (Issue #41)
 *   Added Combine files plugin (Issue #39)
 *   Added ignore option in site configuration to igore based on wildcards
     (Issue #32)
@@ -229,7 +283,7 @@ Version 0.8.1
 Thanks to @rfk.
 
 *   Updated to use nose 1.0 (Issue #28)
-*   Bug fix: LessCSSPlugin: return original text if not a .less file
+*   Bugfix: LessCSSPlugin: return original text if not a .less file
     (Issue #28)
 *   PyFS publisher with mtime and etags support. (Issue #28)
 
