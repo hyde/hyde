@@ -19,6 +19,31 @@ from fswrap import File
 
 logger = getLoggerWithNullHandler('hyde.engine')
 
+# Plugins have been reorganized. Map old plugin paths to new.
+PLUGINS_OLD_AND_NEW = {
+    "hyde.ext.plugins.less.LessCSSPlugin" : "hyde.ext.plugins.css.LessCSSPlugin",
+    "hyde.ext.plugins.stylus.StylusPlugin" : "hyde.ext.plugins.css.StylusPlugin",
+    "hyde.ext.plugins.jpegoptim.JPEGOptimPlugin" : "hyde.ext.plugins.images.JPEGOptimPlugin",
+    "hyde.ext.plugins.optipng.OptiPNGPlugin" : "hyde.ext.plugins.images.OptiPNGPlugin",
+    "hyde.ext.plugins.jpegtran.JPEGTranPlugin" : "hyde.ext.plugins.images.JPEGTranPlugin",
+    "hyde.ext.plugins.uglify.UglifyPlugin": "hyde.ext.plugins.js.UglifyPlugin",
+    "hyde.ext.plugins.requirejs.RequireJSPlugin": "hyde.ext.plugins.js.RequireJSPlugin",
+    "hyde.ext.plugins.coffee.CoffeePlugin": "hyde.ext.plugins.js.CoffeePlugin",
+    "hyde.ext.plugins.sorter.SorterPlugin": "hyde.ext.plugins.meta.SorterPlugin",
+    "hyde.ext.plugins.grouper.GrouperPlugin": "hyde.ext.plugins.meta.GrouperPlugin",
+    "hyde.ext.plugins.tagger.TaggerPlugin": "hyde.ext.plugins.meta.TaggerPlugin",
+    "hyde.ext.plugins.auto_extend.AutoExtendPlugin": "hyde.ext.plugins.meta.AutoExtendPlugin",
+    "hyde.ext.plugins.folders.FlattenerPlugin": "hyde.ext.plugins.structure.FlattenerPlugin",
+    "hyde.ext.plugins.combine.CombinePlugin": "hyde.ext.plugins.structure.CombinePlugin",
+    "hyde.ext.plugins.paginator.PaginatorPlugin": "hyde.ext.plugins.structure.PaginatorPlugin",
+    "hyde.ext.plugins.blockdown.BlockdownPlugin": "hyde.ext.plugins.text.BlockdownPlugin",
+    "hyde.ext.plugins.markings.MarkingsPlugin": "hyde.ext.plugins.text.MarkingsPlugin",
+    "hyde.ext.plugins.markings.ReferencePlugin": "hyde.ext.plugins.text.ReferencePlugin",
+    "hyde.ext.plugins.syntext.SyntextPlugin": "hyde.ext.plugins.text.SyntextPlugin",
+    "hyde.ext.plugins.textlinks.TextlinksPlugin": "hyde.ext.plugins.text.TextlinksPlugin",
+    "hyde.ext.plugins.git.GitDatesPlugin": "hyde.ext.plugins.vcs.GitDatesPlugin"
+}
+
 class PluginProxy(object):
     """
     A proxy class to raise events in registered  plugins
@@ -261,7 +286,11 @@ class Plugin(object):
         Loads plugins based on the configuration. Assigns the plugins to
         'site.plugins'
         """
-        site.plugins = [load_python_object(name)(site)
+        def load_plugin(name):
+            plugin_name = PLUGINS_OLD_AND_NEW.get(name, name)
+            return load_python_object(plugin_name)(site)
+
+        site.plugins = [load_plugin(name)
                             for name in site.config.plugins]
 
     @staticmethod

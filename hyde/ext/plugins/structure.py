@@ -3,12 +3,12 @@
 Plugins related to structure
 """
 
+from hyde.ext.plugins.meta import Metadata
 from hyde.plugin import Plugin
-
-from fswrap import File, Folder
-
 from hyde.site import Resource
 from hyde.util import pairwalk
+
+from fswrap import File, Folder
 
 import os
 from fnmatch import fnmatch
@@ -225,6 +225,8 @@ class Paginator:
         resources associated with it.
         """
         res = Resource(base_resource.source_file, node)
+        res.node.meta = Metadata(node.meta)
+        res.meta = Metadata(base_resource.meta, res.node.meta)
         path = self._relative_url(base_resource.relative_path,
                                 page_number,
                                 base_resource.source_file.name_without_extension,
@@ -272,20 +274,21 @@ class Paginator:
         """
         added_resources = []
         pages = list(self._walk_pages_in_node(node))
-        deps = reduce(list.__add__, [page.posts for page in pages], [])
+        if pages:
+            deps = reduce(list.__add__, [page.posts for page in pages], [])
 
-        Paginator._attach_page_to_resource(pages[0], resource)
-        Paginator._add_dependencies_to_resource(deps, resource)
-        for page in pages[1:]:
-            # make new resource
-            new_resource = self._new_resource(resource, node, page.number)
-            Paginator._attach_page_to_resource(page, new_resource)
-            new_resource.depends = resource.depends
-            added_resources.append(new_resource)
+            Paginator._attach_page_to_resource(pages[0], resource)
+            Paginator._add_dependencies_to_resource(deps, resource)
+            for page in pages[1:]:
+                # make new resource
+                new_resource = self._new_resource(resource, node, page.number)
+                Paginator._attach_page_to_resource(page, new_resource)
+                new_resource.depends = resource.depends
+                added_resources.append(new_resource)
 
-        for prev, next in pairwalk(pages):
-            next.previous = prev
-            prev.next = next
+            for prev, next in pairwalk(pages):
+                next.previous = prev
+                prev.next = next
 
         return added_resources
 

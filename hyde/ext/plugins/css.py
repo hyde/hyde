@@ -221,7 +221,7 @@ class StylusPlugin(CLTransformer):
         args.append(unicode(source))
         try:
             self.call_app(args)
-        except subprocess.CalledProcessError, e:
+        except subprocess.CalledProcessError:
             raise self.template.exception_class(
                     "Cannot process %s. Error occurred when "
                     "processing [%s]" % (stylus.name, resource.source_file))

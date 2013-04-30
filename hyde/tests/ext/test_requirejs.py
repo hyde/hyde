@@ -24,7 +24,7 @@ class TestRequireJS(object):
 
     def test_can_execute_rjs(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.requirejs.RequireJSPlugin']
+        s.config.plugins = ['hyde.ext.plugins.js.RequireJSPlugin']
         source = TEST_SITE.child('content/media/js/rjs.conf')
         target = File(Folder(s.config.deploy_root_path).child('media/js/app.js'))
         gen = Generator(s)

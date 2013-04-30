@@ -4,14 +4,7 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.ext.plugins.meta import MetaPlugin
-from hyde.ext.plugins.meta import SorterPlugin
-<<<<<<< HEAD
-from hyde.ext.plugins.grouper import GrouperPlugin
-=======
-from hyde.ext.plugins.meta import GrouperPlugin
-from hyde.fs import File, Folder
->>>>>>> Move the grouper plugin into meta module.
+from hyde.ext.plugins.meta import GrouperPlugin, MetaPlugin, SorterPlugin
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando

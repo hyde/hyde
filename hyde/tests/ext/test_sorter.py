@@ -4,13 +4,7 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.ext.plugins.meta import MetaPlugin
-<<<<<<< HEAD
-from hyde.ext.plugins.sorter import SorterPlugin
-=======
-from hyde.ext.plugins.meta import SorterPlugin
-from hyde.fs import File, Folder
->>>>>>> Move the sorter plugin into the meta module.
+from hyde.ext.plugins.meta import MetaPlugin, SorterPlugin
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
