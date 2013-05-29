@@ -1,3 +1,8 @@
+Version 0.8.7a2
+============================================================
+
+*   Add support for draft blog posts. (Issue #213)
+
 Version 0.8.7a1
 ============================================================
 *   Bugfix: Use `clearfix` class in `listing.j2`. (Issue #156)

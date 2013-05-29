@@ -165,7 +165,6 @@ def restructuredtext(env, value):
         for extension in extensions:
             imp.load_module(extension, *imp.find_module(extension))
 
-
     if highlight_source:
         import hyde.lib.pygments.rst_directive
 
@@ -672,7 +671,7 @@ class Jinja2Template(Template):
             settings['extensions'].extend(extensions)
         else:
             settings['extensions'].append(extensions)
-        
+
         filters = conf.get('filters', {})
         if isinstance(filters, dict):
             for name, value in filters.items():
