@@ -1,6 +1,10 @@
 exclude *.pyc .DS_Store .gitignore .noseids MANIFEST.in
 include setup.py
 include distribute_setup.py
+include LICENSE
+include README.rst
+include AUTHORS.rst
+include CHANGELOG.rst
 recursive-include hyde *.py
 recursive-include hyde/tests *.py
 recursive-include hyde/layouts *.*

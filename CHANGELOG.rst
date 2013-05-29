@@ -1,3 +1,11 @@
+Version 0.8.7a4
+============================================================
+
+*   Include project artifacts in sdist. (Issue #211)
+        - Add LICENSE, AUTHORS and CHANGELOG to MANIFEST.in
+*   Add "Hyde contributors to LICENSE copyright"
+
+
 Version 0.8.7a3
 ============================================================
 
