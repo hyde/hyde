@@ -162,7 +162,7 @@ class HydeWebServer(HTTPServer):
         except Exception, exception:
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())
 
     def generate_node(self, node):
         """
@@ -180,7 +180,7 @@ class HydeWebServer(HTTPServer):
             logger.error(
                 'Error [%s] occured when generating the node [%s]'
                         % (repr(exception), node))
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())
 
     def generate_resource(self, resource):
         """
@@ -199,4 +199,4 @@ class HydeWebServer(HTTPServer):
             logger.error(
                 'Error [%s] occured when serving the resource [%s]'
                         % (repr(exception), resource))
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())

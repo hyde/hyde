@@ -12,6 +12,7 @@ import fnmatch
 import os
 import re
 import subprocess
+import sys
 import traceback
 
 from commando.util import getLoggerWithNullHandler, load_python_object
@@ -56,18 +57,19 @@ class PluginProxy(object):
     def __getattr__(self, method_name):
         if hasattr(Plugin, method_name):
             def __call_plugins__(*args):
-                # logger.debug("Calling plugin method [%s]", method_name)
                 res = None
                 if self.site.plugins:
                     for plugin in self.site.plugins:
                         if hasattr(plugin, method_name):
-                            # logger.debug(
-                            #    "\tCalling plugin [%s]",
-                            #   plugin.__class__.__name__)
                             checker = getattr(plugin, 'should_call__' + method_name)
                             if checker(*args):
                                 function = getattr(plugin, method_name)
-                                res = function(*args)
+                                try:
+                                    res = function(*args)
+                                except:
+                                    HydeException.reraise(
+                                        'Error occured when calling %s' %
+                                        plugin.plugin_name, sys.exc_info())
                                 targs = list(args)
                                 if len(targs):
                                     last = targs.pop()
@@ -356,14 +358,11 @@ class CLTransformer(Plugin):
             app_path = discover_executable(app_path, self.site.sitepath)
 
         if app_path is None:
-            raise self.template.exception_class(
-                    self.executable_not_found_message)
-
+            raise HydeException(self.executable_not_found_message)
         app = File(app_path)
 
         if not app.exists:
-            raise self.template.exception_class(
-                    self.executable_not_found_message)
+            raise HydeException(self.executable_not_found_message)
 
         return app
 
@@ -418,7 +417,6 @@ class CLTransformer(Plugin):
                     (args[0], unicode(args[1:])))
             return subprocess.check_output(args)
         except subprocess.CalledProcessError, error:
-            self.logger.error(traceback.format_exc())
             self.logger.error(error.output)
             raise
 

@@ -1,3 +1,15 @@
+Version 0.8.7a6
+============================================================
+
+*   Better exception handling. (Issue #204)
+    -   Hyde now propagates exceptions
+    -   Hyde does not raise exceptions by default. `-x` flag is required
+        for raising exceptions on error.
+    -   Traceback is available in the `verbose` mode
+*   Upgraded to commando 0.3.4
+*   Upgraded to Jinja 2.7
+
+
 Version 0.8.7a5
 ============================================================
 
@@ -7,7 +19,7 @@ Version 0.8.7a4
 ============================================================
 
 *   Include project artifacts in sdist. (Issue #211)
-        - Add LICENSE, AUTHORS and CHANGELOG to MANIFEST.in
+    -   Add LICENSE, AUTHORS and CHANGELOG to MANIFEST.in
 *   Add "Hyde contributors to LICENSE copyright"
 
 

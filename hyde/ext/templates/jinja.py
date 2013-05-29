@@ -4,11 +4,13 @@ Jinja template utilties
 """
 
 from datetime import datetime, date
+import itertools
 import os
 import re
-import itertools
+import sys
 from urllib import quote, unquote
 
+from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
 from operator import attrgetter
@@ -599,10 +601,20 @@ class HydeLoader(FileSystemLoader):
         #
         template = template.replace(os.sep, '/')
         logger.debug("Loading template [%s] and preprocessing" % template)
-        (contents,
-            filename,
-                date) = super(HydeLoader, self).get_source(
+        try:
+            (contents,
+                filename,
+                    date) = super(HydeLoader, self).get_source(
                                         environment, template)
+        except UnicodeDecodeError:
+            HydeException.reraise(
+                "Unicode error when processing %s" % template, sys.exc_info())
+        except TemplateError, exc:
+            HydeException.reraise('Error when processing %s: %s' % (
+                template,
+                unicode(exc)
+            ), sys.exc_info())
+
         if self.preprocessor:
             resource = self.site.content.resource_from_relative_path(template)
             if resource:
@@ -736,9 +748,11 @@ class Jinja2Template(Template):
         from jinja2.meta import find_referenced_templates
         try:
             ast = self.env.parse(text)
-        except:
-            logger.error("Error parsing[%s]" % path)
-            raise
+        except Exception, e:
+            HydeException.reraise(
+                "Error processing %s: \n%s" % (path, unicode(e)),
+                sys.exc_info())
+
         tpls = find_referenced_templates(ast)
         deps = list(self.env.globals['deps'].get('path', []))
         for dep in tpls:
@@ -818,9 +832,6 @@ class Jinja2Template(Template):
             template = self.env.get_template(resource.relative_path)
             out = template.render(context)
         except:
-            out = ""
-            logger.debug(self.env.loader.get_source(
-                                self.env, resource.relative_path))
             raise
         return out
 

@@ -8,7 +8,9 @@ from functools import partial
 from itertools import ifilter
 from operator import attrgetter
 import re
+import sys
 
+from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.site import Node, Resource
@@ -248,8 +250,9 @@ def get_tagger_sort_method(site):
     try:
         walker = getattr(content, walker)
     except AttributeError:
-        raise self.template.exception_class(
-            "Cannot find the sorter: %s" % sorter)
+        HydeException.reraise(
+            "Cannot find the sorter: %s" % sorter,
+            sys.exc_info())
     return walker
 
 def walk_resources_tagged_with(node, tag):
@@ -370,8 +373,7 @@ class TaggerPlugin(Plugin):
         Generates archives for each tag based on the given configuration.
         """
         if not 'template' in config:
-            raise self.template.exception_class(
-                "No Template specified in tagger configuration.")
+            raise HydeException("No Template specified in tagger configuration.")
         content = self.site.content.source_folder
         source = Folder(config.get('source', ''))
         target = content.child_folder(config.get('target', 'tags'))

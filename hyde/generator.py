@@ -3,8 +3,9 @@
 The generator class and related utility functions.
 """
 
-from hyde.exceptions import HydeException
+from commando.util import getLoggerWithNullHandler
 from fswrap import File, Folder
+from hyde.exceptions import HydeException
 from hyde.model import Context, Dependents
 from hyde.plugin import Plugin
 from hyde.template import Template
@@ -12,9 +13,9 @@ from hyde.site import Resource
 
 from contextlib import contextmanager
 from datetime import datetime
-
 from shutil import copymode
-from commando.util import getLoggerWithNullHandler
+import sys
+
 logger = getLoggerWithNullHandler('hyde.engine')
 
 
@@ -334,10 +335,12 @@ class Generator(object):
                     try:
                         text = self.template.render_resource(resource,
                                         context)
-                    except Exception:
-                        logger.error("Error occurred when"
-                            " processing template: [%s]" % resource)
-                        raise
+                    except Exception, e:
+                        HydeException.reraise("Error occurred when"
+                            " processing template: [%s]: %s" %
+                            (resource, repr(e)),
+                            sys.exc_info()
+                        )
                 else:
                     text = resource.source_file.read_all()
                     text = self.events.begin_text_resource(resource, text) or text

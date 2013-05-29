@@ -24,7 +24,7 @@ HYDE_LAYOUTS = "HYDE_LAYOUTS"
 
 class Engine(Application):
 
-    def __init__(self, raise_exceptions=True):
+    def __init__(self, raise_exceptions=False):
         logger = getLoggerWithConsoleHandler('hyde')
         super(Engine, self).__init__(
             raise_exceptions=raise_exceptions,
@@ -34,6 +34,8 @@ class Engine(Application):
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
     @true('-v', '--verbose', help="Show detailed information in console")
+    @true('-x', '--raise-exceptions', default=False,
+        help="Don't handle exceptions.")
     @version('--version', version='%(prog)s ' + __version__)
     @store('-s', '--sitepath', default='.', help="Location of the hyde site")
     def main(self, args):
@@ -43,6 +45,7 @@ class Engine(Application):
         like version and metadata
         """
         sitepath = Folder(args.sitepath).fully_expanded_path
+        self.raise_exceptions = args.raise_exceptions
         return Folder(sitepath)
 
     @subcommand('create', help='Create a new hyde site.')
@@ -94,7 +97,6 @@ class Engine(Application):
         if args.regen:
             self.logger.info("Regenerating the site...")
             incremental = False
-
         gen.generate_all(incremental=incremental)
         self.logger.info("Generation complete.")
 
@@ -145,7 +147,6 @@ class Engine(Application):
                         args.publisher,
                         args.message)
         publisher.publish()
-
 
 
     def make_site(self, sitepath, config, deploy=None):

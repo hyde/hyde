@@ -117,13 +117,13 @@ setup(name=PROJECT,
       requires=['python (>= 2.7)'],
       install_requires=(
           'fswrap==0.1.1',
-          'commando==0.3.2a',
+          'commando==0.3.4',
           'PyYAML==3.10',
           'Markdown==2.3.1',
-          'MarkupSafe==0.15',
+          'MarkupSafe==0.18',
           'Pygments==1.6',
           'typogrify==2.0.0',
-          'Jinja2==2.6'
+          'Jinja2==2.7'
       ),
       tests_require=(
         'nose', 'mock'

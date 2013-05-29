@@ -3,7 +3,9 @@
 JavaScript plugins
 """
 import subprocess
+import sys
 
+from hyde.exceptions import HydeException
 from hyde.plugin import CLTransformer
 
 from fswrap import File
@@ -127,9 +129,10 @@ class RequireJSPlugin(CLTransformer):
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
-             raise self.template.exception_class(
+             HydeException.reraise(
                     "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (self.app.name, resource.source_file))
+                    "processing [%s]" % (self.app.name, resource.source_file),
+                    sys.exc_info())
 
         return target.read_all()
 

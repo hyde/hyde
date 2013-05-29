@@ -10,6 +10,7 @@ from hyde.exceptions import HydeException
 import os
 import re
 import subprocess
+import sys
 
 from fswrap import File
 
@@ -71,8 +72,7 @@ class LessCSSPlugin(CLTransformer):
                 afile = File(afile.path + '.less')
             ref = self.site.content.resource_from_path(afile.path)
             if not ref:
-                raise self.template.exception_class(
-                        "Cannot import from path [%s]" % afile.path)
+                raise HydeException("Cannot import from path [%s]" % afile.path)
             ref.is_processable = False
             return self.template.get_include_statement(ref.relative_path)
         text = self.import_finder.sub(import_to_include, text)
@@ -114,9 +114,11 @@ class LessCSSPlugin(CLTransformer):
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
-             raise self.template.exception_class(
+             HydeException.reraise(
                     "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (self.app.name, resource.source_file))
+                    "processing [%s]" % (self.app.name, resource.source_file),
+                    sys.exc_info())
+
         return target.read_all()
 
 
@@ -155,7 +157,7 @@ class StylusPlugin(CLTransformer):
 
         def import_to_include(match):
             """
-            Converts a css import statement to include statemnt.
+            Converts a css import statement to include statement.
             """
             if not match.lastindex:
                 return ''
@@ -172,7 +174,7 @@ class StylusPlugin(CLTransformer):
                 except AttributeError:
                     include = False
                 if not include:
-                    raise self.template.exception_class(
+                    raise HydeException(
                         "Cannot import from path [%s]" % afile.path)
             else:
                 ref.is_processable = False
@@ -225,9 +227,10 @@ class StylusPlugin(CLTransformer):
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
-            raise self.template.exception_class(
+            HydeException.reraise(
                     "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (stylus.name, resource.source_file))
+                    "processing [%s]" % (stylus.name, resource.source_file),
+                    sys.exc_info())
         return target.read_all()
 
 
@@ -291,8 +294,7 @@ class CleverCSSPlugin(Plugin):
                 afile = File(afile.path + '.ccss')
             ref = self.site.content.resource_from_path(afile.path)
             if not ref:
-                raise self.template.exception_class(
-                        "Cannot import from path [%s]" % afile.path)
+                raise HydeException("Cannot import from path [%s]" % afile.path)
             ref.is_processable = False
             return self.template.get_include_statement(ref.relative_path)
         text = import_finder.sub(import_to_include, text)
