@@ -529,9 +529,22 @@ class SorterPlugin(Plugin):
             walker = getattr(self.site.content,
                                 sort_method_name,
                                 self.site.content.walk_resources)
+            first, last = None, None
             for prev, next in pairwalk(walker()):
+                if not first:
+                    first = prev
+                last = next
                 setattr(prev, next_att, next)
                 setattr(next, prev_att, prev)
+
+            try:
+                circular = settings.circular
+            except AttributeError:
+                circular = False
+
+            if circular and first:
+                setattr(first, prev_att, last)
+                setattr(last, next_att, first)
 
 
 #

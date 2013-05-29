@@ -2,4 +2,4 @@
 """
 Handles hyde version.
 """
-__version__ = '0.8.7a4'
+__version__ = '0.8.7a5'
