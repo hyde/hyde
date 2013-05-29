@@ -53,21 +53,24 @@ class UglifyPlugin(CLTransformer):
             return
 
         supported = [
+            "source-map",
+            "source-map-root",
+            "source-map-url",
+            "in-source-map",
+            "screw-ie8",
+            "expr",
+            ("prefix", "p"),
             ("beautify", "b"),
-            ("indent", "i"),
-            ("quote-keys", "q"),
-            ("mangle-toplevel", "mt"),
-            ("no-mangle", "nm"),
-            ("no-squeeze", "ns"),
-            "no-seqs",
-            "no-dead-code",
-            ("no-copyright", "nc"),
-            "overwrite",
-            "verbose",
-            "unsafe",
-            "max-line-len",
-            "reserved-names",
-            "ascii"
+            ("mangle", "m"),
+            ("reserved", "r"),
+            ("compress", "c"),
+            ("define", "d"),
+            ("enclose", "e"),
+            "comments",
+            "stats",
+            "wrap",
+            "lint",
+            "verbose"
         ]
 
         uglify = self.app
@@ -76,7 +79,6 @@ class UglifyPlugin(CLTransformer):
         args = [unicode(uglify)]
         args.extend(self.process_args(supported))
         args.extend(["-o", unicode(target), unicode(source)])
-
         self.call_app(args)
         out = target.read_all()
         return out
