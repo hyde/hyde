@@ -1,73 +1,45 @@
-Version 0.8.7a9
+Version 0.8.7 (2013-05-30)
 ============================================================
 
-*   Ensure external urls are encoded properly. (Issue #158).
+*   Bugfix: Ensure dependencies are handled properly when using the
+    combine plugin. (Issue #120).
+*   Bugfix: Ensure external urls are encoded properly. (Issue #158).
 
-    -   BREAKING:  While this change will correct the weird encoding
-        behavior, this also changes the way `xxx_url` macros work.
-    -   Do not encode the url bases (`base_url`, `media_url`). Only
+    -   **BREAKING**:  While this change will correct the weird encoding
+        behavior, this also changes the way ``xxx_url`` macros work.
+    -   Do not encode the url bases (``base_url``, ``media_url``). Only
         the path component needs to be encoded.
 
-Version 0.8.7a8
-============================================================
+*   Bugfix: Fix subfolders for root paths on windows. (Issue #167).
 
-*   Fix subfolders for root paths on windows. (Issue #167).
+    -   Ensure that subfolders for ``layout_root``, ``content_root``,
+        ``media_root`` and ``deploy_root`` works reliably
+        on windows. Use ``fully_expanded_path`` for all path components.
 
-    -   Ensure that subfolders for `layout_root`, `content_root`,
-        `media_root` and `deploy_root` works reliably
-        on windows. Use `fully_expanded_path` for all path components.
-
-
-Version 0.8.7a7
-============================================================
-
-*   Context providers now accept all valid yaml data (Issue #189).
-*   Fixed `raise_exceptions` commandline parameter handling.
-
-
-Version 0.8.7a6
-============================================================
-
+*   Bugfix: Context providers now accept all valid yaml data (Issue #189).
+*   Bugfix: Fixed ``raise_exceptions`` command line parameter handling.
 *   Better exception handling. (Issue #204)
+
     -   Hyde now propagates exceptions
-    -   Hyde does not raise exceptions by default. `-x` flag is required
+    -   Hyde does not raise exceptions by default. ``-x`` flag is required
         for raising exceptions on error.
-    -   Traceback is available in the `verbose` mode
+    -   Traceback is available in the ``verbose`` mode
+
 *   Upgraded to commando 0.3.4
 *   Upgraded to Jinja 2.7
-
-
-Version 0.8.7a5
-============================================================
-
 *   Make sorter's prev/next links circular. (Issue #208)
+*   Bugfix: Include project artifacts in sdist. (Issue #211)
 
-Version 0.8.7a4
-============================================================
-
-*   Include project artifacts in sdist. (Issue #211)
     -   Add LICENSE, AUTHORS and CHANGELOG to MANIFEST.in
-*   Add "Hyde contributors to LICENSE copyright"
 
-
-Version 0.8.7a3
-============================================================
-
-*   Upgrade `UglifyPlugin` to use 2.3.5 version of uglify. (Issue #214)
-
-
-Version 0.8.7a2
-============================================================
-
+*   Add "Hyde contributors" to LICENSE copyright.
+*   Upgrade ``UglifyPlugin`` to use 2.3.5 version of uglify. (Issue #214)
 *   Add support for draft blog posts. (Issue #213)
-
-Version 0.8.7a1
-============================================================
-*   Bugfix: Use `clearfix` class in `listing.j2`. (Issue #156)
-*   Bugfix: Use `relative_path` instead of url in `macros.j2`. (Issue #180)
+*   Bugfix: Use ``clearfix`` class in ``listing.j2``. (Issue #156)
+*   Bugfix: Use ``relative_path`` instead of url in ``macros.j2``. (Issue #180)
 
 
-Version 0.8.6
+Version 0.8.6 (2013-04-30)
 ============================================================
 
 Thanks to @QuLogic:
@@ -118,54 +90,56 @@ Thanks to @tarajane:
 
 Thanks to @pib:
 
-*   Bugfix: Use `_transform` instead of `transform` in Expando.
+*   Bugfix: Use ``_transform`` instead of ``transform`` in Expando.
     (Issue #152, #153)
 
-Version 0.8.5
+Version 0.8.5 (2013-04-17)
 ============================================================
 
 *   Upgrade dependencies and setup for 0.8.5
-*   Remove `hyde.fs` use `fswrap` package instead.
-*   Remove logging functions from `hyde.util`. Use `commando.util` instead.
-*   Remove `hyde.loader`. Use `commando.util.load_python_object` instead.
+*   Remove ``hyde.fs`` use ``fswrap`` package instead.
+*   Remove logging functions from ``hyde.util``. Use ``commando.util`` instead.
+*   Remove ``hyde.loader``. Use ``commando.util.load_python_object`` instead.
 *   Bugfix: Use the released version of typogrify. (Issue #193)
-*   Bugfix: Fixed stylus `indent` issues with empty files. (Issue #161)
+*   Bugfix: Fixed stylus ``indent`` issues with empty files. (Issue #161)
 *   Bugfix: Added support for plugin paths relative to site. (Issue #107)
-*   Bugfix: Folder Flattener updates node's `relative_deploy_path` & `url`
+*   Bugfix: Folder Flattener updates node's ``relative_deploy_path`` & ``url``
     attributes as well. (Issue #126)
-*   BREAKING: As part of the above fix, `resource.url` is prefixed with a `/`.
-    (Issue #126)
-*   Added `simple_copy` feature to account for unprocessable files that
+*   BREAKING: As part of the above fix, ``resource.url`` is
+    prefixed with a ``/``. (Issue #126)
+*   Added ``simple_copy`` feature to account for unprocessable files that
     are nonetheless required to be deployed (Issue #121)
 *   Bugfix: Relative path was used in the server as the sitepath (Issue #119)
 *   Plugins now support inclusion filters. (Issue #112)
-    -   `include_file_patterns` property accepts globs to filter by file name.
-    -   `include_paths` accepts paths relative to content.
-    -   `begin_node` and `node_complete` honor `include_paths`
-    -   `begin_text_resource`, `text_resource_complete`, `begin_binary_resource`
-        and `binary_resource_complete` honor both.
+
+    -   ``include_file_patterns`` property accepts globs to filter by file name.
+    -   ``include_paths`` accepts paths relative to content.
+    -   ``begin_node`` and ``node_complete`` honor ``include_paths``
+    -   ``begin_text_resource``, ``text_resource_complete``,
+        ``begin_binary_resource`` and ``binary_resource_complete`` honor both.
+
 *   Bugfix: Unsorted combine files fixed. (Issue #111)
 *   Added an optional sorting parameter. (Issue #111)
 *   Bugfix:  Modified combine plugin to process during
-    `begin_text_resource`. (Issue #110)
+    ``begin_text_resource``. (Issue #110)
 *   Modified combine plugin to support relative paths and recursion.
     (Issue #108)
-*   Added ability to specify safe characters in `content_url`,
-    `media_url` functions and `urlencode` filter. (Issue #103)
+*   Added ability to specify safe characters in ``content_url``,
+    ``media_url`` functions and ``urlencode`` filter. (Issue #103)
 
 Thanks to @idank
 
-*   Bugfix: Use `check_output` to avoid a traceback when subprocess
+*   Bugfix: Use ``check_output`` to avoid a traceback when subprocess
     command fails.
 *   Bugfix: Tag archive generator uses subscript syntax to avoid failure
     when tags contain '-' or space. (Issue #130)
 
 Thanks to @jd
 
-*   Bugfix: Metadata Plugin: Do not try to read meta data on `simple_copy`
+*   Bugfix: Metadata Plugin: Do not try to read meta data on ``simple_copy``
     files. (Issue #124, Issue #121)
 *   Bugfix: Force escape on title in Atom feed. (Issue #176)
-*   Add `node.rwalk` method for traversing the node in reverse. (Issue #176)
+*   Add ``node.rwalk`` method for traversing the node in reverse. (Issue #176)
 
 Thanks to @vinilios
 
@@ -205,11 +179,11 @@ Thanks to @davefowler:
 
 Thanks to @adube:
 
-*   Bugfix: Fix atom.j2 to use `relative_path` instead of `url` when
+*   Bugfix: Fix atom.j2 to use ``relative_path`` instead of ``url`` when
     referencing templates. (Issue #155, Issue#203)
 
 
-Version 0.8.4
+Version 0.8.4 (2011-11-09)
 ============================================================
 
 *   Bugfix: Configuration now gets reloaded when server regenerates (Issue #70)
@@ -221,7 +195,7 @@ Version 0.8.4
 *   Added support for ignoring nodes (Issue #80)
 *   Hyde now ignores .hg, .svn and .git by default (Issue #80)
 *   Added support for default publisher (Issue #83)
-*   Added `urlencode` and `urldecode` filters. (Issue #102)
+*   Added ``urlencode`` and ``urldecode`` filters. (Issue #102)
 *   Bugfix: Fixed tests for Issue #88
 *   Added tests for sorting groups
 *   Added support for loading modules from the site path. Thanks to
@@ -231,21 +205,26 @@ Version 0.8.4
 
 Thanks to @nud
 
-*   `$PATH` based executable discovery for `CLTransformer` plugins. (Issue #100)
-*   Bugfix: Fix class name of `test_stylus` (Issue #97)
+*   ``$PATH`` based executable discovery for ``CLTransformer`` plugins.
+    (Issue #100)
+*   Bugfix: Fix class name of ``test_stylus`` (Issue #97)
 
 Thanks to @gfuchedzhy
 
-*   Bugfix: Textlinks plugin: do nothing if resource doesn't use template (Issue #96)
+*   Bugfix: Textlinks plugin: do nothing if resource doesn't use template.
+    (Issue #96)
 *   Bugfix: Retain permissions in text files during generation (Issue #90)
 *   Bugfix: Added support for encoded urls to hyde server. (Issue #88)
-*   Bugfix: Converted `content_url` and `media_url` to encoded urls. (Issue #88)
-*   Bugfix: All occurrences of `str` replaced with `unicode`. (Issue #87)
-*   Bugfix: CLTransformer now gracefully handles arguments that have "=". (Issue #58)
+*   Bugfix: Converted ``content_url`` and ``media_url`` to encoded urls.
+    (Issue #88)
+*   Bugfix: All occurrences of ``str`` replaced with ``unicode``.
+    (Issue #87)
+*   Bugfix: CLTransformer now gracefully handles arguments that have "=".
+    (Issue #58)
 
 Thanks to @vincentbernat
 
-*   Support for `output_format` configuration in markdown (Issue #89)
+*   Support for ``output_format`` configuration in markdown (Issue #89)
 
 Thanks to @merlinrebrovic
 
@@ -268,32 +247,33 @@ Thanks to @benallard
 Thanks to @rfk
 
 *   Added Sphinx Plugin (Issue #62)
-*   Bugfix: PyFS publisher now checks if the pyfs module is installed. (Issue #62)
+*   Bugfix: PyFS publisher now checks if the pyfs module is installed.
+    (Issue #62)
 
-Version 0.8.3
+Version 0.8.3 (2011-06-20)
 ============================================================
 
-*   Bugfix: A bad bug in Expando that modified the `__dict__` has been fixed.
+*   Bugfix: A bad bug in Expando that modified the ``__dict__`` has been fixed.
     (Issue #53)
 *   Tags now support metadata. Metadata can be provided as part of the tagger
-    plugin configuration in `site.yaml`
+    plugin configuration in ``site.yaml``
 *   Ensured that the context data & providers behave in the same manner. Both
     get loaded as expandos. (Issue #29)
-*   `hyde serve` now picks up changes in config data automatically.
+*   ``hyde serve`` now picks up changes in config data automatically.
     (Issue #24)
-*   Bugfix: `hyde create` only fails when `content`, `layout` or `site.yaml`
-    is present in the target directory. (Issue #21)
-*   Bugfix: Exceptions are now handled with `ArgumentParser.error`.
+*   Bugfix: ``hyde create`` only fails when ``content``, ``layout`` or
+    ``site.yaml`` is present in the target directory. (Issue #21)
+*   Bugfix: Exceptions are now handled with ``ArgumentParser.error``.
 *   Bugfix: Sorter excludes items that do not have sorting attributes.
     (Issue #18)
-*   Wrapped `<figure>` inside `<div>` to appease markdown. (Issue #17)
-*   Added `display:block` for html5 elements in basic template so that it
+*   Wrapped ``<figure>`` inside ``<div>`` to appease markdown. (Issue #17)
+*   Added ``display:block`` for html5 elements in basic template so that it
     works in not so modern browsers as well. (Issue #17)
 
 Thanks to Joe Steeve.
 
 *   Changed deploy location for main.py and fixed entry point in
-    `setup.py`. (Issue #56)
+    ``setup.py``. (Issue #56)
 
 Thanks to @stiell
 
@@ -313,14 +293,14 @@ Thanks to @vincentbernat
 Thanks to @rfk
 
 *   Added PyPI publisher (Issue #49)
-*   Bugfix: Made `site.full_url` ignore fully qualified paths (Issue #49)
+*   Bugfix: Made ``site.full_url`` ignore fully qualified paths (Issue #49)
 
 Thanks to @vincentbernat
 
 *   Added JPEG Optim plugin (Issue #47)
 *   Fixes to CLTransformer (Issue #47)
 
-Version 0.8.2
+Version 0.8.2 (2011-05-10)
 ============================================================
 
 Thanks to @merlinrebrovic
@@ -343,10 +323,10 @@ Thanks to @vincentbernat
 
 Thanks to @pestaa
 
-*   Added support `UTF8` keys in `metadata` and `config` (Issue #33)
+*   Added support ``UTF8`` keys in ``metadata`` and ``config`` (Issue #33)
 
 
-Version 0.8.1
+Version 0.8.1 (2011-05-09)
 ============================================================
 
 Thanks to @rfk.
@@ -356,12 +336,12 @@ Thanks to @rfk.
     (Issue #28)
 *   PyFS publisher with mtime and etags support. (Issue #28)
 
-Version 0.8
+Version 0.8 (2011-04-13)
 ============================================================
 
 *   Relative path bugs in windows generation have been fixed.
 
-Version 0.8rc3
+Version 0.8rc3 (2011-04-12)
 ============================================================
 
 *   Fixed a jinja2 loader path issue that prevented site generation in windows
