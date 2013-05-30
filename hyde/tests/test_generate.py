@@ -129,17 +129,16 @@ class TestGenerator(object):
             }
         }))
         nav = """
-main:
-    - home
-    - articles
-    - projects
+- home
+- articles
+- projects
 """
         text = """
 {% extends "base.html" %}
 
 {% block main %}
     {{nav}}
-    {% for item in nav.main %}
+    {% for item in nav %}
     {{item}}
     {% endfor %}
     abc = {{ abc }}

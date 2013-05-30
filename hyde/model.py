@@ -12,6 +12,22 @@ from fswrap import File, Folder
 
 logger = getLoggerWithNullHandler('hyde.engine')
 
+SEQS = (tuple, list, set, frozenset)
+
+def make_expando(primitive):
+    """
+    Creates an expando object, a sequence of expando objects or just
+    returns the primitive based on the primitive's type.
+    """
+    if isinstance(primitive, dict):
+        return Expando(primitive)
+    elif isinstance(primitive, SEQS):
+        seq = type(primitive)
+        return seq(make_expando(attr) for attr in primitive)
+    else:
+        return primitive
+
+
 class Expando(object):
     """
     A generic expando class that creates attributes from
@@ -45,21 +61,8 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, unicode(key).encode('utf-8'), self._transform(value))
+        setattr(self, unicode(key).encode('utf-8'), make_expando(value))
 
-
-    def _transform(self, primitive):
-        """
-        Creates an expando object, a sequence of expando objects or just
-        returns the primitive based on the primitive's type.
-        """
-        if isinstance(primitive, dict):
-            return Expando(primitive)
-        elif isinstance(primitive, (tuple, list, set, frozenset)):
-            seq = type(primitive)
-            return seq(self._transform(attr) for attr in primitive)
-        else:
-            return primitive
 
     def __repr__(self):
         return unicode(self.to_dict())
@@ -73,10 +76,12 @@ class Expando(object):
         for k, v in d.items():
             if isinstance(v, Expando):
                 result[k] = v.to_dict()
-            elif isinstance(v, (tuple, list, set, frozenset)):
+            elif isinstance(v, SEQS):
                 seq = type(v)
-                result[k] = seq(item.to_dict() if isinstance(item, Expando)
-                                            else item for item in v)
+                result[k] = seq(item.to_dict()
+                    if isinstance(item, Expando)
+                    else item for item in v
+                )
             else:
                 result[k] = v
         return result
@@ -115,7 +120,8 @@ class Context(object):
         for provider_name, resource_name in providers.items():
             res = File(Folder(sitepath).child(resource_name))
             if res.exists:
-                context[provider_name] = Expando(yaml.load(res.read_all()))
+                data = make_expando(yaml.load(res.read_all()))
+                context[provider_name] = data
 
         return context
 

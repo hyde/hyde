@@ -1,3 +1,11 @@
+Version 0.8.7a7
+============================================================
+
+*   Context providers now accept all valid yaml data (Issue #189).
+*   Fixed `raise_exceptions` commandline parameter handling.
+
+
+
 Version 0.8.7a6
 ============================================================
 

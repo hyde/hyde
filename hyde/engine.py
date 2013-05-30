@@ -34,7 +34,7 @@ class Engine(Application):
     @command(description='hyde - a python static website generator',
         epilog='Use %(prog)s {command} -h to get help on individual commands')
     @true('-v', '--verbose', help="Show detailed information in console")
-    @true('-x', '--raise-exceptions', default=False,
+    @true('-x', '--raise-exceptions', default=None,
         help="Don't handle exceptions.")
     @version('--version', version='%(prog)s ' + __version__)
     @store('-s', '--sitepath', default='.', help="Location of the hyde site")
@@ -45,7 +45,8 @@ class Engine(Application):
         like version and metadata
         """
         sitepath = Folder(args.sitepath).fully_expanded_path
-        self.raise_exceptions = args.raise_exceptions
+        if args.raise_exceptions in (True, False):
+            self.raise_exceptions = args.raise_exceptions
         return Folder(sitepath)
 
     @subcommand('create', help='Create a new hyde site.')
