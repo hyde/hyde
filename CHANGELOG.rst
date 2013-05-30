@@ -1,11 +1,21 @@
+Version 0.8.7a9
+============================================================
+
+*   Ensure external urls are encoded properly. (Issue #158).
+
+    -   BREAKING:  While this change will correct the weird encoding
+        behavior, this also changes the way `xxx_url` macros work.
+    -   Do not encode the url bases (`base_url`, `media_url`). Only
+        the path component needs to be encoded.
+
 Version 0.8.7a8
 ============================================================
 
 *   Fix subfolders for root paths on windows. (Issue #167).
 
-    -   Using subfolders for `layout_root`, `content_root`,
-        `media_root` and `deploy_root` now works reliably
-        on windows.
+    -   Ensure that subfolders for `layout_root`, `content_root`,
+        `media_root` and `deploy_root` works reliably
+        on windows. Use `fully_expanded_path` for all path components.
 
 
 Version 0.8.7a7

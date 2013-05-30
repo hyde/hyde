@@ -383,6 +383,13 @@ class RootNode(Node):
                 if dont_ignore(afile.name):
                     self.add_resource(afile)
 
+
+def _encode_path(base, path, safe):
+    base = base.strip().replace(os.sep, '/').encode('utf-8')
+    path = path.strip().replace(os.sep, '/').encode('utf-8')
+    path = quote(path, safe) if safe is not None else quote(path)
+    return base.rstrip('/') + '/' + path.lstrip('/')
+
 class Site(object):
     """
     Represents the site to be generated.
@@ -425,35 +432,28 @@ class Site(object):
         """
         self.content.load()
 
+    def _safe_chars(self, safe=None):
+        if safe is not None:
+            return safe
+        elif self.config.encode_safe is not None:
+            return self.config.encode_safe
+        else:
+            return None
+
     def content_url(self, path, safe=None):
         """
         Returns the content url by appending the base url from the config
         with the given path. The return value is url encoded.
         """
-        fpath = Folder(self.config.base_url) \
-                        .child(path) \
-                        .replace(os.sep, '/').encode("utf-8")
-        if safe is not None:
-            return quote(fpath, safe)
-        elif self.config.encode_safe is not None:
-            return quote(fpath, self.config.encode_safe)
-        else:
-            return quote(fpath)
+        return _encode_path(self.config.base_url, path, self._safe_chars(safe))
+
 
     def media_url(self, path, safe=None):
         """
         Returns the media url by appending the media base url from the config
         with the given path. The return value is url encoded.
         """
-        fpath = Folder(self.config.media_url) \
-                        .child(path) \
-                        .replace(os.sep, '/').encode("utf-8")
-        if safe is not None:
-            return quote(fpath, safe)
-        elif self.config.encode_safe is not None:
-            return quote(fpath, self.config.encode_safe)
-        else:
-            return quote(fpath)
+        return _encode_path(self.config.media_url, path, self._safe_chars(safe))
 
     def full_url(self, path, safe=None):
         """
@@ -461,11 +461,9 @@ class Site(object):
         configuration and returns the appropriate url. The return value
         is url encoded.
         """
-        if safe is None and self.config.encode_safe is not None:
-            safe = self.config.encode_safe
-            
         if urlparse.urlparse(path)[:2] != ("",""):
             return path
+
         if self.is_media(path):
             relative_path = File(path).get_relative_path(
                                 Folder(self.config.media_root))

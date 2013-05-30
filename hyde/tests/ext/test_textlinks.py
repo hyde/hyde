@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Use nose
 `$ pip install nose`
@@ -49,6 +48,7 @@ class TestTextlinks(object):
         site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))
         tlink.write(text % d)
+        print tlink.read_all()
         gen = Generator(site)
         gen.generate_all()
         f = File(site.config.deploy_root_path.child(tlink.name))
@@ -56,5 +56,6 @@ class TestTextlinks(object):
         html = f.read_all()
         assert html
         for name, path in d.items():
-            assert quote(site.config.base_url + path) in html
+
+            assert site.config.base_url +  quote(path) in html
         assert '/media/img/hyde-logo.png' in html

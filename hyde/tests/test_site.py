@@ -60,9 +60,19 @@ def test_node_full_url():
     r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)
     assert not r.module
     n = r.add_node(TEST_SITE_ROOT.child_folder('content/blog'))
-    assert n.full_url == quote('http://localhost/blog')
+    assert n.full_url == 'http://localhost/blog'
     c = r.add_node(TEST_SITE_ROOT.child_folder('content/blog/2010/december'))
-    assert c.full_url == quote('http://localhost/blog/2010/december')
+    assert c.full_url == 'http://localhost/blog/2010/december'
+
+def test_node_full_url_quoted():
+    s = Site(TEST_SITE_ROOT)
+    s.config.base_url = 'http://localhost'
+    r = RootNode(TEST_SITE_ROOT.child_folder('content'), s)
+    assert not r.module
+    n = r.add_node(TEST_SITE_ROOT.child_folder('content/blo~g'))
+    assert n.full_url == 'http://localhost/' + quote('blo~g')
+    c = r.add_node(TEST_SITE_ROOT.child_folder('content/blo~g/2010/december'))
+    assert c.full_url == 'http://localhost/' + quote('blo~g/2010/december')
 
 def test_node_relative_path():
     s = Site(TEST_SITE_ROOT)
@@ -200,13 +210,15 @@ class TestSiteWithConfig(object):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg'
-        assert s.content_url(path) == quote("/" + path)
+        assert s.content_url(path) == "/" + quote(path)
 
     def test_content_url_encoding_safe(self):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg/abc'
-        assert s.content_url(path, "") == quote("/" + path, "")
+        print s.content_url(path, "")
+        print "/"  + quote(path, "")
+        assert s.content_url(path, "") == "/" + quote(path, "")
 
     def test_media_url(self):
         s = Site(self.SITE_PATH, config=self.config)
