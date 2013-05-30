@@ -146,6 +146,10 @@ class Dependents(IterableUserDict):
         if self.deps_file.parent.exists:
             self.deps_file.write(yaml.dump(self.data))
 
+def _expand_path(sitepath, path):
+    child = sitepath.child_folder(path)
+    return Folder(child.fully_expanded_path)
+
 class Config(Expando):
     """
     Represents the hyde configuration file
@@ -226,25 +230,26 @@ class Config(Expando):
         """
         Derives the deploy root path from the site path
         """
-        return self.sitepath.child_folder(self.deploy_root)
+        return _expand_path(self.sitepath, self.deploy_root)
 
     @property
     def content_root_path(self):
         """
         Derives the content root path from the site path
         """
-        return self.sitepath.child_folder(self.content_root)
+        return _expand_path(self.sitepath, self.content_root)
 
     @property
     def media_root_path(self):
         """
         Derives the media root path from the content path
         """
-        return self.content_root_path.child_folder(self.media_root)
+        path = Folder(self.content_root).child(self.media_root)
+        return _expand_path(self.sitepath, path)
 
     @property
     def layout_root_path(self):
         """
         Derives the layout root path from the site path
         """
-        return self.sitepath.child_folder(self.layout_root)
+        return _expand_path(self.sitepath, self.layout_root)

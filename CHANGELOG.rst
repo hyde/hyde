@@ -1,9 +1,18 @@
+Version 0.8.7a8
+============================================================
+
+*   Fix subfolders for root paths on windows. (Issue #167).
+
+    -   Using subfolders for `layout_root`, `content_root`,
+        `media_root` and `deploy_root` now works reliably
+        on windows.
+
+
 Version 0.8.7a7
 ============================================================
 
 *   Context providers now accept all valid yaml data (Issue #189).
 *   Fixed `raise_exceptions` commandline parameter handling.
-
 
 
 Version 0.8.7a6
