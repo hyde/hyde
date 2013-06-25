@@ -23,7 +23,7 @@ Walking all groups and subgroups
 *{{ grp.description }}*
 
 {% for res in res_walker %}
-  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }})
     ({{ res.name }})
 {% endfor %}
 
@@ -37,7 +37,7 @@ Listing only the specific (sub)group
 ------------------------------------
 
 {% for res in site.content.walk_resources_grouped_by_advanced() %}
-  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }})
     ({{ res.name }})
 {% endfor %}
 

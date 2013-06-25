@@ -14,7 +14,7 @@ body {
     min-height: 700px;
     background: url('../img/background.jpg') top left no-repeat;
     position: relative;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Tahoma, sans-serif;
 }
 
@@ -58,7 +58,7 @@ header h1 span {
     color: #f1ee00;
 }
 
-header h2 {
+header p {
     font-size: 28px;
     font-weight: normal;
     letter-spacing: 11px;
@@ -101,8 +101,7 @@ nav, aside {
 }
 
 #content {
-    /*font-size: 14px;*/
-    line-height: 22px;
+    line-height: 1.5em;
     position: absolute;
     top: 350px;
     left: 180px;
@@ -121,16 +120,15 @@ nav, aside {
 
 #content h2 {
     font-weight: bold;
-    font-size: 17px;
+    font-size: 18px;
     font-family: Tahoma, sans-serif;
     margin-bottom: 22px;
-    color: white;
     border-bottom: 1px dashed #888;
 }
 
 #content code {
     display: block;
-    font-family: 'DejaVu Sans Mono', 'Liberation Mono', 'Courier New';
+    font-family: monospace;
     font-size: 12px;
     background-color: #222;
     padding: 5px 10px;
@@ -142,7 +140,7 @@ nav, aside {
 }
 
 #content .tags {
-    font-size: 8px;
+    font-size: 14px;
     color: #888;
 }
 

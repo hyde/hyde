@@ -23,7 +23,7 @@ You can list and sort by name all your content files.
    Also, some new Jinja filters were used to style the output.
 #}
 {% for res in site.content.walk_resources_sorted_by_name() %}
-  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }})
     ({{ res.name }})
 {% endfor %}
 

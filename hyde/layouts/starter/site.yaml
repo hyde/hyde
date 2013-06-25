@@ -26,7 +26,7 @@ context:
         project:
             name: Hyde
             url: "http://hyde.github.com"
-            install: "http://hyde.github.com/install.html"
+            install: "https://github.com/hyde/hyde#installation"
         menu:
           - title: Home
             url: index.html
