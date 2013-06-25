@@ -3,10 +3,10 @@
 #}
 {% macro render_basic_menu() -%}
 <ul class="basic">
-{% for menu_item in menu -%}
-    <li><a {% if (menu_item.url == resource.url) %}class="selected"{% endif -%}
+{% for menu_item in menu %}
+    <li><a {% if (menu_item.url == resource.relative_path) %}class="selected" {% endif -%}
         href="{{ content_url(menu_item.url) }}">{{ menu_item.title }}</a></li>
-{%- endfor %}
+{% endfor %}
 </ul>
 {%- endmacro %}
 
@@ -18,9 +18,8 @@
 {% macro render_advanced_menu() -%}
 <ul class="advanced">
 {% for res in site.content.walk_resources_sorted_by_index() %}
-    <li><a {% if (res.url == resource.url) %}class="selected"{% endif -%}
-        href="{{ res.full_url }}">{{ res.meta.title }}
-        </a></li>
+    <li><a {% if (res.url == resource.url) %}class="selected" {% endif -%}
+        href="{{ res.full_url }}">{{ res.meta.title }}</a></li>
 {% endfor %}
 </ul>
 {%- endmacro %}

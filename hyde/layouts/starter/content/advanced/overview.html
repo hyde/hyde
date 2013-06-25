@@ -20,16 +20,21 @@ the same way as the basic part, building on the knowledge of the previous,
 so it is recommended that you follow them in the listed order.
 
 
-{# List all resources from a group, sort them by index and list their tags. #}
+{# List all resources from a group, sort them by index and list their tags.
 
-{% for res in resource.node.walk_resources_sorted_by_learning_order() %}
-{{ loop.index }}. \
-    [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
-    {% if res.name == "overview.html" %}*(this file)*{% endif %} \
-{#
-   Sometimes you'll have to add HTML tags to a Markdown file for styling
+   Sometimes you'll have to add HTML to a Markdown file for styling
    or adding some special features, and Markdown is OK with that.
 #}
+<ol>
+{% for res in resource.node.walk_resources_sorted_by_learning_order() %}
+{#
+   res.slug|capitalize|replace("-"," ") is just an example of how different
+   commands can be chained together, but many times it will be much easier
+   just to use meta data if a resource has it, like here -> res.meta.title
+#}
+<li><a href="{{ res.full_url }}">{{ res.meta.title }}</a>
+    {% if res.name == "overview.html" %}(this file) {% endif %}
+
 <span class="tags">tags: 
 {% for tag in res.meta.tags %}
 {#
@@ -39,6 +44,8 @@ so it is recommended that you follow them in the listed order.
 {{ tag }}{% if tag != res.meta.tags[-1] %},{% endif %} 
 {% endfor %}
 </span>
+</li>
 {% endfor %}
+</ol>
 
 {{ macros.render_bottom_article_nav() }}

@@ -25,7 +25,7 @@ Listing by tags
 
 {# ... and get all resurces tagged with that node. #}
 {% for res in resource.node.walk_resources_tagged_with(tag) %}
-  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }}) \
+  * [{{ res.slug|capitalize|replace("-"," ") }}]({{ res.full_url }})
     ({{ res.name }})
 {% endfor %}
 
