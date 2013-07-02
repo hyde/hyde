@@ -18,8 +18,8 @@ In site.yaml, add the following lines
             opts: -r -e ssh
 
 Note that the final two settings (command and opts) are optional, and the
-values shown are the default. With this set, generate and publish the site
-as follows:
+values shown are the default. Username is also optional.
+With this set, generate and publish the site as follows:
 
     >$ hyde gen
     >$ hyde publish -p ssh
@@ -44,10 +44,10 @@ class SSH(Publisher):
         self.opts = getattr(settings, 'opts', '-r -e ssh')
 
     def publish(self):
-        command = "{command} {opts} ./ {username}@{server}:{target}".format(
+        command = "{command} {opts} ./ {username}{server}:{target}".format(
             command=self.command,
             opts=self.opts,
-            username=self.username,
+            username=self.username+'@' if self.username else '',
             server=self.server,
             target=self.target)
         deploy_path = self.site.config.deploy_root_path.path
