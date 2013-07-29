@@ -286,7 +286,7 @@ class RootNode(Node):
     def add_node(self, a_folder):
         """
         Adds a new node to this folder's hierarchy.
-        Also adds to to the hashtable of path to node associations
+        Also adds it to the hashtable of path to node associations
         for quick lookup.
         """
         folder = Folder(a_folder)

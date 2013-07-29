@@ -114,7 +114,7 @@ class Engine(Application):
         """
         The serve command. Serves the site at the given
         deployment directory, address and port. Regenerates
-        the entire site or specific files based on ths request.
+        the entire site or specific files based on the request.
         """
         sitepath = self.main(args)
         site = self.make_site(sitepath, args.config, args.deploy)
