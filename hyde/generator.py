@@ -67,8 +67,8 @@ class Generator(object):
 
     def load_template_if_needed(self):
         """
-        Loads and configures the template environement from the site
-        configuration if its not done already.
+        Loads and configures the template environment from the site
+        configuration if it's not done already.
         """
 
         class GeneratorProxy(object):
@@ -105,7 +105,7 @@ class Generator(object):
 
     def load_site_if_needed(self):
         """
-        Checks if the site requries a reload and loads if
+        Checks if the site requires a reload and loads if
         necessary.
         """
         self.site.reload_if_needed()
@@ -266,7 +266,7 @@ class Generator(object):
                     incremental=False):
         """
         Generates a single resource. If resource_path is non-existent or empty,
-        generats the entire website.
+        generates the entire website.
         """
         if not self.generated_once and not incremental:
             return self.generate_all()
