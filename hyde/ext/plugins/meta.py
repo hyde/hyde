@@ -276,7 +276,7 @@ class TaggerPlugin(Plugin):
     #yaml
     sorter:
         kind:
-            atts: source.kind
+            attr: source.kind
     tagger:
        sorter: kind # How to sort the resources in a tag
        archives:
@@ -704,7 +704,7 @@ class GrouperPlugin(Plugin):
     #yaml
     sorter:
         kind:
-            atts: source.kind
+            attr: source.kind
     grouper:
        hyde:
            # Categorizes the nodes and resources
