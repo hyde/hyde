@@ -84,7 +84,7 @@ class Engine(Application):
     @store('-d', '--deploy-path', dest='deploy', default=None,
                         help='Where should the site be generated?')
     @true('-r', '--regen', dest='regen', default=False,
-                        help='Only process changed files')
+                        help='Regenerate the whole site, including unchanged files')
     def gen(self, args):
         """
         The generate command. Generates the site at the given
