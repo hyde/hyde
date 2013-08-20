@@ -1,3 +1,11 @@
+Version 0.8.8-a1 (2013-08-19)
+===========================================================
+
+*   Bugfix: Fix smartypants to 1.7.x to avoid the breaking
+    changes in 1.8.  (Issue #229)
+*   Bugfix: Upgrade Jinja to 2.7.1 - this fixes
+    mitsuhiko/jinja2#243.
+
 Version 0.8.7 (2013-05-30)
 ============================================================
 
