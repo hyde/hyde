@@ -1,10 +1,28 @@
-Version 0.8.8-a1 (2013-08-19)
+Version 0.8.8 (2013-08-20)
 ===========================================================
 
 *   Bugfix: Fix smartypants to 1.7.x to avoid the breaking
     changes in 1.8.  (Issue #229)
 *   Bugfix: Upgrade Jinja to 2.7.1 - this fixes
     mitsuhiko/jinja2#243.
+
+Thanks to @shym:
+*   Fix various typos in documentation and code. (Issue #227)
+
+Thanks to @maethor:
+*   Make username optional in SSH publisher. (Issue #222)
+
+Thanks to @merlinrebrovic:
+*   Refresh the starter layout: (Issue #220)
+
+    - Conform to changes from the newest Hyde version.
+    - Clean up Markdown and add explanations.
+    - Increase font sizes.
+    - Remove HTML5 shiv and hgroup element (deprecated).
+    - Other minor improvements.
+
+Thanks to @webmaster128:
+*   Bugfix: Add spaces to menu in ``starter`` layout. (Issue #219)
 
 Version 0.8.7 (2013-05-30)
 ============================================================

@@ -1,11 +1,22 @@
-Hyde is developed and maintained by `Lakshmi Vyasarajan`_. The new version of
-Hyde is sponsored by `Flowplayer`_ and `Tero Piirainen`_.
+Hyde is developed and maintained by `Lakshmi Vyasarajan`_. The new
+version of Hyde is sponsored by `Flowplayer`_ and `Tero Piirainen`_.
 
 This version would not exist without the contributions from the
 `original hyde project`_.
 
 Contributors
-===============================================================================
+======================================================================
+-   |shym|_
+
+    *   Fix various typos in documentation and code. (Issue #227)
+
+-   |maethor|_
+
+    *   Make username optional in SSH publisher. (Issue #222)
+
+-   |webmaster128|_
+
+    *   Bugfix: Add spaces to menu in ``starter`` layout. (Issue #219)
 
 -   |QuLogic|_
 
@@ -32,7 +43,8 @@ Contributors
 
 -   |herrlehmann|_
 
-    *   Bugfix: Fix date time comparison in git plugin. (Issue#142, #199, #137)
+    *   Bugfix: Fix date time comparison in git plugin.
+        (Issue#142, #199, #137)
 
 
 -   |rephorm|_
@@ -162,8 +174,7 @@ Contributors
 
 -   |merlinrebrovic|_
 
-    *   Hyde starter kit
-
+    *   Hyde starter kit creation and maintenance.
 
 -   |vincentbernat|_
 
@@ -268,3 +279,9 @@ Contributors
 .. _sirlantis: https://github.com/sirlantis
 .. |QuLogic| replace:: Elliott Sales de Andrade
 .. _QuLogic: https://github.com/QuLogic
+.. |webmaster128| replace:: Simon Warta
+.. _webmaster128: https://github.com/webmaster128
+.. |maethor| replace:: Guillaume Subiron
+.. _maethor: https://github.com/maethor
+.. |shym| replace:: shym
+.. _shym: https://github.com/shym
