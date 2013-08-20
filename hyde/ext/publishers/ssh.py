@@ -37,7 +37,7 @@ from subprocess import Popen, PIPE
 class SSH(Publisher):
     def initialize(self, settings):
         self.settings = settings
-        self.username = settings.username
+        self.username = settings.username if hasattr(settings, 'username') else ''
         self.server = settings.server
         self.target = settings.target
         self.command = getattr(settings, 'command', 'rsync')
