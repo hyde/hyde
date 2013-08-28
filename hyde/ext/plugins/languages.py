@@ -55,28 +55,28 @@ class LanguagePlugin(Plugin):
         # Build association between UUID and list of resources
         for node in self.site.content.walk():
             for resource in node.resources:
-                try:
-                    uuid = resource.meta.uuid
-                    language = resource.meta.language
-                except AttributeError:
-                    try:
-                        i = resource.source.name_without_extension.rindex('.')
-                    except ValueError:
+                # if resource was created by plugin such as tagger or
+                # thumbnail plugin it has no metadata
+                if not hasattr(resource, 'meta'):
+                    resource.meta = Metadata({})
+                uuid = resource.meta.get('uuid', None)
+                language = resource.meta.get('language', None)
+                if None in (uuid, language):
+                    basename = resource.source.name_without_extension
+                    if '.' not in basename:
                         continue
-                    language = resource.source.name_without_extension[i+1:]
-                    name_without_suffix = resource.source.name_without_extension[:i] + resource.source.extension
-                    if not len(language) == 2 or not language.isalpha():
+                    name, dot, language = basename.rpartition('.')
+                    if not ( len(language) == 2 and language.isalpha() ):
                         continue
-                    uuid = os.path.join(os.path.dirname(resource.get_relative_deploy_path()), name_without_suffix)
-                    # if resource was created by plugin such as tagger or
-                    # thumbnail plugin it has no metadata
-                    if not hasattr(resource, 'meta'):
-                        resource.meta = Metadata({})
+                    name += resource.source.extension
+                    uuid = os.path.join(os.path.dirname(
+                        resource.get_relative_deploy_path()), name)
                     resource.meta.language = language
                     resource.meta.uuid = uuid
                 if uuid not in self.languages:
                     self.languages[uuid] = []
                 self.languages[uuid].append(resource)
+
         # Add back the information about other languages
         for uuid, resources in self.languages.items():
             for resource in resources:
