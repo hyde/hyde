@@ -4,10 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
+from fswrap import File
 from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -25,7 +25,7 @@ class TestBlockdown(object):
 
     def test_can_parse_blockdown(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.blockdown.BlockdownPlugin']
+        s.config.plugins = ['hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 {%% extends "base.html" %%}

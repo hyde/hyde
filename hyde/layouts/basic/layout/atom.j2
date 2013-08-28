@@ -21,7 +21,7 @@
 
     {% for res in resource.node.walk_resources_sorted_by_time() %}
         <entry>
-            <title type="html">{{ res.meta.title }}</title>
+            <title type="html">{{ res.meta.title|forceescape }}</title>
             <author><name>{{ res.meta.author }}</name></author>
             <link href="{{ content_url(res.url) }}"/>
             <updated>{{ res.meta.created|xmldatetime }}</updated>
@@ -34,7 +34,7 @@
             {% endfor %}
 
             <content type="html">
-                {% refer to res.url as article -%}
+                {% refer to res.relative_path as article -%}
                 {% filter forceescape -%}
                 {% if resource.meta.excerpts_only -%}
                 {{ article.image|markdown|typogrify }}

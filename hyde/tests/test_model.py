@@ -5,7 +5,8 @@ Use nose
 `$ nosetests`
 """
 from hyde.model import Config, Expando
-from hyde.fs import *
+
+from fswrap import File, Folder
 
 def test_expando_one_level():
     d = {"a": 123, "b": "abc"}

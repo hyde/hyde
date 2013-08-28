@@ -4,13 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
-from hyde.model import Expando
 from hyde.site import Site
 
-from hyde.tests.util import assert_html_equals
-import yaml
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -37,7 +34,7 @@ class TestTagger(object):
         assert self.s.tagger.tags
         tags = self.s.tagger.tags.to_dict()
 
-        assert len(tags) == 5
+        assert len(tags) == 6
 
         for tag in ['sad', 'happy', 'angry', 'thoughts', 'events']:
             assert tag in tags
@@ -86,8 +83,8 @@ class TestTagger(object):
         assert q
 
         assert q('li').length == 2
-        assert q('li a:first-child').attr('href') == '/blog/another-sad-post.html'
-        assert q('li a:eq(1)').attr('href') == '/blog/sad-post.html'
+        assert q('li:nth-child(1) a').attr('href') == '/blog/another-sad-post.html'
+        assert q('li:nth-child(2) a').attr('href') == '/blog/sad-post.html'
 
         q = PyQuery(File(tags_folder.child('happy.html')).read_all())
         assert q
@@ -105,9 +102,9 @@ class TestTagger(object):
         assert q
 
         assert q('li').length == 3
-        assert q('li a:eq(0)').attr('href') == '/blog/happy-post.html'
-        assert q('li a:eq(1)').attr('href') == '/blog/angry-post.html'
-        assert q('li a:eq(2)').attr('href') == '/blog/sad-post.html'
+        assert q('li:nth-child(1) a').attr('href') == '/blog/happy-post.html'
+        assert q('li:nth-child(2) a').attr('href') == '/blog/angry-post.html'
+        assert q('li:nth-child(3) a').attr('href') == '/blog/sad-post.html'
 
         q = PyQuery(File(tags_folder.child('events.html')).read_all())
         assert q
@@ -154,7 +151,7 @@ class TestTagger(object):
             assert tag
             assert not hasattr(tag, "emotions")
 
-    def test_tagger_metadata(self):
+    def test_tagger_sorted(self):
         conf = {
            "tagger":{
                "sorter": "time",

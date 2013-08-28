@@ -4,14 +4,14 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.generator import Generator
 from hyde.site import Site
 
+from fswrap import File, Folder
+
 STYLUS_SOURCE = File(__file__).parent.child_folder('stylus')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
-
 
 class TestStylus(object):
 
@@ -28,7 +28,7 @@ class TestStylus(object):
 
     def test_can_execute_stylus(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
+        s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:
@@ -46,7 +46,7 @@ class TestStylus(object):
     def test_can_compress_with_stylus(self):
         s = Site(TEST_SITE)
         s.config.mode = "production"
-        s.config.plugins = ['hyde.ext.plugins.stylus.StylusPlugin']
+        s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
         paths = ['/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:

@@ -8,8 +8,9 @@ Use nose
 
 from hyde.engine import Engine
 from hyde.exceptions import HydeException
-from hyde.fs import FS, File, Folder
 from hyde.layout import Layout
+
+from fswrap import File, Folder
 from nose.tools import raises, with_setup, nottest
 
 TEST_SITE = File(__file__).parent.child_folder('_test')

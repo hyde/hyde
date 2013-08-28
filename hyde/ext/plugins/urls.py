@@ -2,14 +2,12 @@
 """
 Contains classes and utilities related to hyde urls.
 """
-import re
-
-from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.plugin import Plugin
 import hyde.site
 from functools import wraps
 import os
+from fswrap import File
+
 
 class UrlCleanerPlugin(Plugin):
     """

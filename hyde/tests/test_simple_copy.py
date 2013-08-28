@@ -18,14 +18,14 @@ Use nose
 `$ nosetests`
 """
 import yaml
-from urllib import quote
 
-from hyde.fs import File, Folder
-from hyde.model import Config, Expando
-from hyde.site import Node, RootNode, Site
+from hyde.model import Config
+from hyde.site import Site
 from hyde.generator import Generator
 
-from nose.tools import raises, with_setup, nottest
+from fswrap import File
+from nose.tools import nottest
+
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 

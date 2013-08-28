@@ -1,0 +1,20 @@
+@option compress: no;
+
+@import "inc/mixin";
+@import "inc/vars";
+@import "inc/reset.css";
+
+#header {
+  color: $base-color * 3;
+  border-left: $the-border;
+  border-right: $the-border * 2;
+}
+
+#footer {
+  color: ($base-color + #111) * 1.5;
+}
+
+#content {
+    @include rounded(10px);
+}
+

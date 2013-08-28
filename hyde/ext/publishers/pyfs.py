@@ -14,10 +14,11 @@ are valid URLs that can be used with this publisher:
 import getpass
 import hashlib
 
-from hyde.fs import File, Folder
+
 from hyde.publisher import Publisher
 
-from hyde.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler
+
 logger = getLoggerWithNullHandler('hyde.ext.publishers.pyfs')
 
 

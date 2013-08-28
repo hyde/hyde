@@ -4,9 +4,11 @@
 Abstract classes and utilities for template engines
 """
 from hyde.exceptions import HydeException
-from hyde.util import getLoggerWithNullHandler
 
 import abc
+
+from commando.util import getLoggerWithNullHandler
+
 
 class HtmlWrap(object):
     """

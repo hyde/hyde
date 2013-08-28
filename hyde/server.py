@@ -3,8 +3,6 @@
 Contains classes and utilities for serving a site
 generated from hyde.
 """
-import os
-import select
 import threading
 import urlparse
 import urllib
@@ -12,12 +10,12 @@ import traceback
 from datetime import datetime
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 from BaseHTTPServer import HTTPServer
-from hyde.fs import File, Folder
-from hyde.site import Site
-from hyde.generator import Generator
-from hyde.exceptions import HydeException
 
-from hyde.util import getLoggerWithNullHandler
+from hyde.generator import Generator
+
+from fswrap import File, Folder
+
+from commando.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.server')
 
 class HydeRequestHandler(SimpleHTTPRequestHandler):
@@ -72,6 +70,10 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
                     res = site.content.resource_from_relative_deploy_path(path + '.' + ext)
                     if res:
                         break
+                for ext in site.config.urlcleaner.strip_extensions:
+                    new_path = site.config.deploy_root_path.child(path + '.' + ext)
+                    if File(new_path).exists:
+                        return new_path
         else:
             res = site.content.resource_from_relative_deploy_path(path)
 
@@ -146,44 +148,6 @@ class HydeWebServer(HTTPServer):
             ext = "." + extension if not extension == 'default' else ''
             HydeRequestHandler.extensions_map[ext] = type
 
-
-####### Code from python 2.7.1: Socket server
-####### Duplicated to make sure shutdown works in Python v > 2.6
-#######
-
-    def serve_forever(self, poll_interval=0.5):
-        """Handle one request at a time until shutdown.
-
-        Polls for shutdown every poll_interval seconds. Ignores
-        self.timeout. If you need to do periodic tasks, do them in
-        another thread.
-        """
-        self.__is_shut_down.clear()
-        try:
-          while not self.__shutdown_request:
-              # XXX: Consider using another file descriptor or
-              # connecting to the socket to wake this up instead of
-              # polling. Polling reduces our responsiveness to a
-              # shutdown request and wastes cpu at all other times.
-              r, w, e = select.select([self], [], [], poll_interval)
-              if self in r:
-                  self._handle_request_noblock()
-        finally:
-          self.__shutdown_request = False
-          self.__is_shut_down.set()
-
-    def shutdown(self):
-        """Stops the serve_forever loop.
-
-        Blocks until the loop has finished. This must be called while
-        serve_forever() is running in another thread, or it will
-        deadlock.
-        """
-        self.__shutdown_request = True
-        self.__is_shut_down.wait()
-
-############## Duplication End.
-
     def regenerate(self):
         """
         Regenerates the entire site.
@@ -198,7 +162,7 @@ class HydeWebServer(HTTPServer):
         except Exception, exception:
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())
 
     def generate_node(self, node):
         """
@@ -216,7 +180,7 @@ class HydeWebServer(HTTPServer):
             logger.error(
                 'Error [%s] occured when generating the node [%s]'
                         % (repr(exception), node))
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())
 
     def generate_resource(self, resource):
         """
@@ -235,4 +199,4 @@ class HydeWebServer(HTTPServer):
             logger.error(
                 'Error [%s] occured when serving the resource [%s]'
                         % (repr(exception), resource))
-            logger.error(traceback.format_exc())
+            logger.debug(traceback.format_exc())

@@ -2,15 +2,31 @@
 """
 Contains data structures and utilities for hyde.
 """
-from hyde.fs import File, Folder
-
 import codecs
 import yaml
 from datetime import datetime
 from UserDict import IterableUserDict
 
-from hyde.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler
+from fswrap import File, Folder
+
 logger = getLoggerWithNullHandler('hyde.engine')
+
+SEQS = (tuple, list, set, frozenset)
+
+def make_expando(primitive):
+    """
+    Creates an expando object, a sequence of expando objects or just
+    returns the primitive based on the primitive's type.
+    """
+    if isinstance(primitive, dict):
+        return Expando(primitive)
+    elif isinstance(primitive, SEQS):
+        seq = type(primitive)
+        return seq(make_expando(attr) for attr in primitive)
+    else:
+        return primitive
+
 
 class Expando(object):
     """
@@ -45,21 +61,8 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, unicode(key).encode('utf-8'), self.transform(value))
+        setattr(self, unicode(key).encode('utf-8'), make_expando(value))
 
-
-    def transform(self, primitive):
-        """
-        Creates an expando object, a sequence of expando objects or just
-        returns the primitive based on the primitive's type.
-        """
-        if isinstance(primitive, dict):
-            return Expando(primitive)
-        elif isinstance(primitive, (tuple, list, set, frozenset)):
-            seq = type(primitive)
-            return seq(self.transform(attr) for attr in primitive)
-        else:
-            return primitive
 
     def __repr__(self):
         return unicode(self.to_dict())
@@ -73,10 +76,12 @@ class Expando(object):
         for k, v in d.items():
             if isinstance(v, Expando):
                 result[k] = v.to_dict()
-            elif isinstance(v, (tuple, list, set, frozenset)):
+            elif isinstance(v, SEQS):
                 seq = type(v)
-                result[k] = seq(item.to_dict() if isinstance(item, Expando)
-                                            else item for item in v)
+                result[k] = seq(item.to_dict()
+                    if isinstance(item, Expando)
+                    else item for item in v
+                )
             else:
                 result[k] = v
         return result
@@ -115,7 +120,8 @@ class Context(object):
         for provider_name, resource_name in providers.items():
             res = File(Folder(sitepath).child(resource_name))
             if res.exists:
-                context[provider_name] = Expando(yaml.load(res.read_all()))
+                data = make_expando(yaml.load(res.read_all()))
+                context[provider_name] = data
 
         return context
 
@@ -140,6 +146,10 @@ class Dependents(IterableUserDict):
         if self.deps_file.parent.exists:
             self.deps_file.write(yaml.dump(self.data))
 
+def _expand_path(sitepath, path):
+    child = sitepath.child_folder(path)
+    return Folder(child.fully_expanded_path)
+
 class Config(Expando):
     """
     Represents the hyde configuration file
@@ -155,6 +165,7 @@ class Config(Expando):
             layout_root='layout',
             media_url='/media',
             base_url="/",
+            encode_safe=None,
             not_found='404.html',
             plugins = [],
             ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"],
@@ -219,25 +230,26 @@ class Config(Expando):
         """
         Derives the deploy root path from the site path
         """
-        return self.sitepath.child_folder(self.deploy_root)
+        return _expand_path(self.sitepath, self.deploy_root)
 
     @property
     def content_root_path(self):
         """
         Derives the content root path from the site path
         """
-        return self.sitepath.child_folder(self.content_root)
+        return _expand_path(self.sitepath, self.content_root)
 
     @property
     def media_root_path(self):
         """
         Derives the media root path from the content path
         """
-        return self.content_root_path.child_folder(self.media_root)
+        path = Folder(self.content_root).child(self.media_root)
+        return _expand_path(self.sitepath, path)
 
     @property
     def layout_root_path(self):
         """
         Derives the layout root path from the site path
         """
-        return self.sitepath.child_folder(self.layout_root)
+        return _expand_path(self.sitepath, self.layout_root)

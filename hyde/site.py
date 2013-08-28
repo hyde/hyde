@@ -10,10 +10,10 @@ from functools import wraps
 from urllib import quote
 
 from hyde.exceptions import HydeException
-from hyde.fs import FS, File, Folder
 from hyde.model import Config
-from hyde.util import getLoggerWithNullHandler
 
+from commando.util import getLoggerWithNullHandler
+from fswrap import FS, File, Folder
 
 def path_normalized(f):
     @wraps(f)
@@ -51,7 +51,7 @@ class Processable(object):
         Gets the source path of this node.
         """
         return self.source.path
-        
+
     def get_relative_deploy_path(self):
         """
         Gets the path where the file will be created
@@ -109,7 +109,7 @@ class Resource(Processable):
         Gets the path relative to the root folder (Content)
         """
         return self.source_file.get_relative_path(self.node.root.source_folder)
-    
+
     @property
     def slug(self):
         #TODO: Add a more sophisticated slugify method
@@ -191,6 +191,16 @@ class Node(Processable):
         for child in self.child_nodes:
             for node in child.walk():
                 yield node
+
+    def rwalk(self):
+        """
+        Walk the node upward, first yielding itself then
+        yielding its parents.
+        """
+        x = self
+        while x:
+            yield x
+            x = x.parent
 
     def walk_resources(self):
         """
@@ -276,7 +286,7 @@ class RootNode(Node):
     def add_node(self, a_folder):
         """
         Adds a new node to this folder's hierarchy.
-        Also adds to to the hashtable of path to node associations
+        Also adds it to the hashtable of path to node associations
         for quick lookup.
         """
         folder = Folder(a_folder)
@@ -373,6 +383,13 @@ class RootNode(Node):
                 if dont_ignore(afile.name):
                     self.add_resource(afile)
 
+
+def _encode_path(base, path, safe):
+    base = base.strip().replace(os.sep, '/').encode('utf-8')
+    path = path.strip().replace(os.sep, '/').encode('utf-8')
+    path = quote(path, safe) if safe is not None else quote(path)
+    return base.rstrip('/') + '/' + path.lstrip('/')
+
 class Site(object):
     """
     Represents the site to be generated.
@@ -414,6 +431,45 @@ class Site(object):
         Walks the content and media folders to load up the sitemap.
         """
         self.content.load()
+
+    def _safe_chars(self, safe=None):
+        if safe is not None:
+            return safe
+        elif self.config.encode_safe is not None:
+            return self.config.encode_safe
+        else:
+            return None
+
+    def content_url(self, path, safe=None):
+        """
+        Returns the content url by appending the base url from the config
+        with the given path. The return value is url encoded.
+        """
+        return _encode_path(self.config.base_url, path, self._safe_chars(safe))
+
+
+    def media_url(self, path, safe=None):
+        """
+        Returns the media url by appending the media base url from the config
+        with the given path. The return value is url encoded.
+        """
+        return _encode_path(self.config.media_url, path, self._safe_chars(safe))
+
+    def full_url(self, path, safe=None):
+        """
+        Determines if the given path is media or content based on the
+        configuration and returns the appropriate url. The return value
+        is url encoded.
+        """
+        if urlparse.urlparse(path)[:2] != ("",""):
+            return path
+
+        if self.is_media(path):
+            relative_path = File(path).get_relative_path(
+                                Folder(self.config.media_root))
+            return self.media_url(relative_path, safe)
+        else:
+            return self.content_url(path, safe)
 
     def is_media(self, path):
         """

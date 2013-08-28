@@ -4,10 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.generator import Generator
 from hyde.site import Site
+
+from fswrap import File, Folder
 
 LESS_SOURCE = File(__file__).parent.child_folder('less')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -28,7 +28,7 @@ class TestLess(object):
 
     def test_can_execute_less(self):
         s = Site(TEST_SITE)
-        s.config.plugins = ['hyde.ext.plugins.less.LessCSSPlugin']
+        s.config.plugins = ['hyde.ext.plugins.css.LessCSSPlugin']
         source = TEST_SITE.child('content/media/css/site.less')
         target = File(Folder(s.config.deploy_root_path).child('media/css/site.css'))
         gen = Generator(s)

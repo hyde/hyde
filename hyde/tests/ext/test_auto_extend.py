@@ -4,13 +4,13 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
-from pyquery import PyQuery
 
+from fswrap import File
 from nose.tools import nottest
+from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -42,8 +42,8 @@ class TestAutoExtend(object):
     def test_can_auto_extend(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin',
-                            'hyde.ext.plugins.auto_extend.AutoExtendPlugin',
-                            'hyde.ext.plugins.blockdown.BlockdownPlugin']
+                            'hyde.ext.plugins.meta.AutoExtendPlugin',
+                            'hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 ---
@@ -59,8 +59,8 @@ extends: base.html
     def test_can_auto_extend_with_default_blocks(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin',
-                            'hyde.ext.plugins.auto_extend.AutoExtendPlugin',
-                            'hyde.ext.plugins.blockdown.BlockdownPlugin']
+                            'hyde.ext.plugins.meta.AutoExtendPlugin',
+                            'hyde.ext.plugins.text.BlockdownPlugin']
         txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
         templ = """
 ---

@@ -2,24 +2,48 @@
 """
 Contains definition for a plugin protocol and other utiltities.
 """
-import abc
-
-from hyde import loader
-
 from hyde.exceptions import HydeException
-from hyde.fs import File
-from hyde.util import getLoggerWithNullHandler, first_match, discover_executable
+from hyde.util import first_match, discover_executable
 from hyde.model import Expando
 
+import abc
 from functools import partial
 import fnmatch
-
 import os
 import re
 import subprocess
+import sys
 import traceback
 
+from commando.util import getLoggerWithNullHandler, load_python_object
+from fswrap import File
+
 logger = getLoggerWithNullHandler('hyde.engine')
+
+# Plugins have been reorganized. Map old plugin paths to new.
+PLUGINS_OLD_AND_NEW = {
+    "hyde.ext.plugins.less.LessCSSPlugin" : "hyde.ext.plugins.css.LessCSSPlugin",
+    "hyde.ext.plugins.stylus.StylusPlugin" : "hyde.ext.plugins.css.StylusPlugin",
+    "hyde.ext.plugins.jpegoptim.JPEGOptimPlugin" : "hyde.ext.plugins.images.JPEGOptimPlugin",
+    "hyde.ext.plugins.optipng.OptiPNGPlugin" : "hyde.ext.plugins.images.OptiPNGPlugin",
+    "hyde.ext.plugins.jpegtran.JPEGTranPlugin" : "hyde.ext.plugins.images.JPEGTranPlugin",
+    "hyde.ext.plugins.uglify.UglifyPlugin": "hyde.ext.plugins.js.UglifyPlugin",
+    "hyde.ext.plugins.requirejs.RequireJSPlugin": "hyde.ext.plugins.js.RequireJSPlugin",
+    "hyde.ext.plugins.coffee.CoffeePlugin": "hyde.ext.plugins.js.CoffeePlugin",
+    "hyde.ext.plugins.sorter.SorterPlugin": "hyde.ext.plugins.meta.SorterPlugin",
+    "hyde.ext.plugins.grouper.GrouperPlugin": "hyde.ext.plugins.meta.GrouperPlugin",
+    "hyde.ext.plugins.tagger.TaggerPlugin": "hyde.ext.plugins.meta.TaggerPlugin",
+    "hyde.ext.plugins.auto_extend.AutoExtendPlugin": "hyde.ext.plugins.meta.AutoExtendPlugin",
+    "hyde.ext.plugins.folders.FlattenerPlugin": "hyde.ext.plugins.structure.FlattenerPlugin",
+    "hyde.ext.plugins.combine.CombinePlugin": "hyde.ext.plugins.structure.CombinePlugin",
+    "hyde.ext.plugins.paginator.PaginatorPlugin": "hyde.ext.plugins.structure.PaginatorPlugin",
+    "hyde.ext.plugins.blockdown.BlockdownPlugin": "hyde.ext.plugins.text.BlockdownPlugin",
+    "hyde.ext.plugins.markings.MarkingsPlugin": "hyde.ext.plugins.text.MarkingsPlugin",
+    "hyde.ext.plugins.markings.ReferencePlugin": "hyde.ext.plugins.text.ReferencePlugin",
+    "hyde.ext.plugins.syntext.SyntextPlugin": "hyde.ext.plugins.text.SyntextPlugin",
+    "hyde.ext.plugins.textlinks.TextlinksPlugin": "hyde.ext.plugins.text.TextlinksPlugin",
+    "hyde.ext.plugins.git.GitDatesPlugin": "hyde.ext.plugins.vcs.GitDatesPlugin"
+}
 
 class PluginProxy(object):
     """
@@ -33,18 +57,19 @@ class PluginProxy(object):
     def __getattr__(self, method_name):
         if hasattr(Plugin, method_name):
             def __call_plugins__(*args):
-                # logger.debug("Calling plugin method [%s]", method_name)
                 res = None
                 if self.site.plugins:
                     for plugin in self.site.plugins:
                         if hasattr(plugin, method_name):
-                            # logger.debug(
-                            #    "\tCalling plugin [%s]",
-                            #   plugin.__class__.__name__)
                             checker = getattr(plugin, 'should_call__' + method_name)
                             if checker(*args):
                                 function = getattr(plugin, method_name)
-                                res = function(*args)
+                                try:
+                                    res = function(*args)
+                                except:
+                                    HydeException.reraise(
+                                        'Error occured when calling %s' %
+                                        plugin.plugin_name, sys.exc_info())
                                 targs = list(args)
                                 if len(targs):
                                     last = targs.pop()
@@ -263,7 +288,11 @@ class Plugin(object):
         Loads plugins based on the configuration. Assigns the plugins to
         'site.plugins'
         """
-        site.plugins = [loader.load_python_object(name)(site)
+        def load_plugin(name):
+            plugin_name = PLUGINS_OLD_AND_NEW.get(name, name)
+            return load_python_object(plugin_name)(site)
+
+        site.plugins = [load_plugin(name)
                             for name in site.config.plugins]
 
     @staticmethod
@@ -329,14 +358,11 @@ class CLTransformer(Plugin):
             app_path = discover_executable(app_path, self.site.sitepath)
 
         if app_path is None:
-            raise self.template.exception_class(
-                    self.executable_not_found_message)
-
+            raise HydeException(self.executable_not_found_message)
         app = File(app_path)
 
         if not app.exists:
-            raise self.template.exception_class(
-                    self.executable_not_found_message)
+            raise HydeException(self.executable_not_found_message)
 
         return app
 
@@ -389,9 +415,8 @@ class CLTransformer(Plugin):
             self.logger.debug(
                 "Calling executable [%s] with arguments %s" %
                     (args[0], unicode(args[1:])))
-            subprocess.check_output(args)
+            return subprocess.check_output(args)
         except subprocess.CalledProcessError, error:
-            self.logger.error(traceback.format_exc())
             self.logger.error(error.output)
             raise
 

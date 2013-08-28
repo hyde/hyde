@@ -1,4 +1,5 @@
 import re
+import difflib
 
 def strip_spaces_between_tags(value):
     """
@@ -6,6 +7,13 @@ def strip_spaces_between_tags(value):
     Returns the given HTML with spaces between tags removed.
     """
     return re.sub(r'>\s+<', '><', unicode(value))
+
+def assert_no_diff(expected, out):
+    diff = [l for l in difflib.unified_diff(expected.splitlines(True),
+                                                out.splitlines(True),
+                                                n=3)]
+    assert not diff, ''.join(diff)
+
 
 def assert_html_equals(expected, actual, sanitize=None):
     expected = strip_spaces_between_tags(expected.strip())

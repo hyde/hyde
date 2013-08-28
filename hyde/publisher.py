@@ -1,8 +1,7 @@
 import abc
 from operator import attrgetter
 
-from hyde.util import getLoggerWithNullHandler
-from hyde.loader import load_python_object
+from commando.util import getLoggerWithNullHandler, load_python_object
 
 """
 Contains abstract classes and utilities that help publishing a website to a

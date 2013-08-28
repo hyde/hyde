@@ -4,11 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.ext.plugins.meta import MetaPlugin
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
+from fswrap import File, Folder
 from pyquery import PyQuery
 import yaml
 
@@ -72,8 +71,8 @@ Heading 2
         text = target.read_all()
         q = PyQuery(text)
         assert q("h1").length == 2
-        assert q("h1:eq(0)").text().strip() == "Heading 1"
-        assert q("h1:eq(1)").text().strip() == "Heading 2"
+        assert q("h1:nth-child(1)").text().strip() == "Heading 1"
+        assert q("h1:nth-child(2)").text().strip() == "Heading 2"
 
     def test_can_load_front_matter(self):
         d = {'title': 'A nice title',

@@ -4,14 +4,12 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.ext.plugins.meta import MetaPlugin
-from hyde.ext.plugins.sorter import SorterPlugin
-from hyde.ext.plugins.grouper import GrouperPlugin
-from hyde.fs import File, Folder
+from hyde.ext.plugins.meta import GrouperPlugin, MetaPlugin, SorterPlugin
 from hyde.generator import Generator
 from hyde.site import Site
 from hyde.model import Config, Expando
 
+from fswrap import File
 from hyde.tests.util import assert_html_equals
 import yaml
 
@@ -30,8 +28,8 @@ class TestGrouperSingleLevel(object):
         nodemeta: meta.yaml
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
-          - hyde.ext.plugins.sorter.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.SorterPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:
@@ -236,8 +234,8 @@ class TestGrouperSingleLevel(object):
         nodemeta: meta.yaml
         plugins:
           - hyde.ext.plugins.meta.MetaPlugin
-          - hyde.ext.plugins.sorter.SorterPlugin
-          - hyde.ext.plugins.grouper.GrouperPlugin
+          - hyde.ext.plugins.meta.SorterPlugin
+          - hyde.ext.plugins.meta.GrouperPlugin
         sorter:
           kind:
               attr:

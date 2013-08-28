@@ -4,7 +4,7 @@ Classes, functions and utilties related to hyde layouts
 """
 import os
 
-from hyde.fs import File, Folder
+from fswrap import File, Folder
 
 HYDE_DATA = "HYDE_DATA"
 LAYOUTS = "layouts"

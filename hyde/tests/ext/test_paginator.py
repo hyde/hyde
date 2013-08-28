@@ -6,10 +6,10 @@ Use nose
 """
 from textwrap import dedent
 
-from hyde.fs import File, Folder
 from hyde.generator import Generator
-from hyde.model import Expando
 from hyde.site import Site
+
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 

@@ -5,16 +5,14 @@ Use nose
 `$ nosetests`
 """
 
-from hyde.exceptions import HydeException
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.plugin import Plugin
 from hyde.site import Site
 from hyde.model import Expando
 
 from mock import patch, Mock
-from nose.tools import raises, nottest, with_setup
 
+from fswrap import File, Folder
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
 

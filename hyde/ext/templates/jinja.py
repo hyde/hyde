@@ -4,15 +4,15 @@ Jinja template utilties
 """
 
 from datetime import datetime, date
+import itertools
 import os
 import re
-import itertools
+import sys
 from urllib import quote, unquote
 
-from hyde.fs import File, Folder
+from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
-from hyde.util import getLoggerWithNullHandler
 from operator import attrgetter
 
 import hyde.site
@@ -22,6 +22,8 @@ from jinja2 import FileSystemLoader, FileSystemBytecodeCache
 from jinja2 import contextfilter, environmentfilter, Markup, Undefined, nodes
 from jinja2.ext import Extension
 from jinja2.exceptions import TemplateError
+
+from commando.util import getLoggerWithNullHandler
 
 logger = getLoggerWithNullHandler('hyde.engine.Jinja2')
 
@@ -158,6 +160,10 @@ def restructuredtext(env, value):
     highlight_source = False
     if hasattr(env.config, 'restructuredtext'):
         highlight_source = getattr(env.config.restructuredtext, 'highlight_source', False)
+        extensions = getattr(env.config.restructuredtext, 'extensions', [])
+        import imp
+        for extension in extensions:
+            imp.load_module(extension, *imp.find_module(extension))
 
     if highlight_source:
         import hyde.lib.pygments.rst_directive
@@ -593,10 +599,20 @@ class HydeLoader(FileSystemLoader):
         #
         template = template.replace(os.sep, '/')
         logger.debug("Loading template [%s] and preprocessing" % template)
-        (contents,
-            filename,
-                date) = super(HydeLoader, self).get_source(
+        try:
+            (contents,
+                filename,
+                    date) = super(HydeLoader, self).get_source(
                                         environment, template)
+        except UnicodeDecodeError:
+            HydeException.reraise(
+                "Unicode error when processing %s" % template, sys.exc_info())
+        except TemplateError, exc:
+            HydeException.reraise('Error when processing %s: %s' % (
+                template,
+                unicode(exc)
+            ), sys.exc_info())
+
         if self.preprocessor:
             resource = self.site.content.resource_from_relative_path(template)
             if resource:
@@ -648,6 +664,7 @@ class Jinja2Template(Template):
         settings.update(defaults)
         settings['extensions'] = list()
         settings['extensions'].extend(default_extensions)
+        settings['filters'] = {}
 
         conf = {}
 
@@ -664,6 +681,15 @@ class Jinja2Template(Template):
             settings['extensions'].extend(extensions)
         else:
             settings['extensions'].append(extensions)
+
+        filters = conf.get('filters', {})
+        if isinstance(filters, dict):
+            for name, value in filters.items():
+                parts = value.split('.')
+                module_name = '.'.join(parts[:-1])
+                function_name = parts[-1]
+                module = __import__(module_name, fromlist=[function_name])
+                settings['filters'][name] = getattr(module, function_name)
 
         self.env = Environment(
                     loader=self.loader,
@@ -687,6 +713,7 @@ class Jinja2Template(Template):
         self.env.filters['xmldatetime'] = xmldatetime
         self.env.filters['islice'] = islice
         self.env.filters['top'] = top
+        self.env.filters.update(settings['filters'])
 
         config = {}
         if hasattr(site, 'config'):
@@ -695,12 +722,12 @@ class Jinja2Template(Template):
         self.env.extend(config=config)
 
         try:
-            from typogrify.templatetags import jinja2_filters
+            from typogrify.templatetags import jinja_filters
         except ImportError:
-            jinja2_filters = False
+            jinja_filters = False
 
-        if jinja2_filters:
-            jinja2_filters.register(self.env)
+        if jinja_filters:
+            jinja_filters.register(self.env)
 
     def clear_caches(self):
         """
@@ -719,9 +746,11 @@ class Jinja2Template(Template):
         from jinja2.meta import find_referenced_templates
         try:
             ast = self.env.parse(text)
-        except:
-            logger.error("Error parsing[%s]" % path)
-            raise
+        except Exception, e:
+            HydeException.reraise(
+                "Error processing %s: \n%s" % (path, unicode(e)),
+                sys.exc_info())
+
         tpls = find_referenced_templates(ast)
         deps = list(self.env.globals['deps'].get('path', []))
         for dep in tpls:
@@ -801,9 +830,6 @@ class Jinja2Template(Template):
             template = self.env.get_template(resource.relative_path)
             out = template.render(context)
         except:
-            out = ""
-            logger.debug(self.env.loader.get_source(
-                                self.env, resource.relative_path))
             raise
         return out
 

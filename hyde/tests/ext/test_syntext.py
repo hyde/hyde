@@ -4,10 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
+from fswrap import File
 from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -36,7 +36,7 @@ class TestSyntext(object):
         site = Site(TEST_SITE)
         site.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.syntext.SyntextPlugin']
+            'hyde.ext.plugins.text.SyntextPlugin']
         syn = File(site.content.source_folder.child('syn.html'))
         syn.write(text)
         gen = Generator(site)

@@ -3,18 +3,19 @@
 The generator class and related utility functions.
 """
 
+from commando.util import getLoggerWithNullHandler
+from fswrap import File, Folder
 from hyde.exceptions import HydeException
-from hyde.fs import File, Folder
 from hyde.model import Context, Dependents
 from hyde.plugin import Plugin
 from hyde.template import Template
-from hyde.site import Node, Resource
+from hyde.site import Resource
 
 from contextlib import contextmanager
 from datetime import datetime
-
 from shutil import copymode
-from hyde.util import getLoggerWithNullHandler
+import sys
+
 logger = getLoggerWithNullHandler('hyde.engine')
 
 
@@ -28,6 +29,7 @@ class Generator(object):
         self.site = site
         self.generated_once = False
         self.deps = Dependents(site.sitepath)
+        self.waiting_deps = {}
         self.create_context()
         self.template = None
         Plugin.load_all(site)
@@ -65,8 +67,8 @@ class Generator(object):
 
     def load_template_if_needed(self):
         """
-        Loads and configures the template environement from the site
-        configuration if its not done already.
+        Loads and configures the template environment from the site
+        configuration if it's not done already.
         """
 
         class GeneratorProxy(object):
@@ -103,7 +105,7 @@ class Generator(object):
 
     def load_site_if_needed(self):
         """
-        Checks if the site requries a reload and loads if
+        Checks if the site requires a reload and loads if
         necessary.
         """
         self.site.reload_if_needed()
@@ -132,6 +134,7 @@ class Generator(object):
         if not resource.source_file.is_text:
             return []
         rel_path = resource.relative_path
+        self.waiting_deps[rel_path] = []
         deps = []
         if hasattr(resource, 'depends'):
             user_deps = resource.depends
@@ -139,13 +142,18 @@ class Generator(object):
                 deps.append(dep)
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
-                    deps.extend(self.get_dependencies(dep_res))
+                    if dep_res.relative_path in self.waiting_deps.keys():
+                        self.waiting_deps[dep_res.relative_path].append(rel_path)
+                    else:
+                        deps.extend(self.get_dependencies(dep_res))
         if resource.uses_template:
             deps.extend(self.template.get_dependencies(rel_path))
         deps = list(set(deps))
         if None in deps:
             deps.remove(None)
         self.deps[rel_path] = deps
+        for path in self.waiting_deps[rel_path]:
+            self.deps[path].extend(deps)
         return deps
 
     def has_resource_changed(self, resource):
@@ -258,7 +266,7 @@ class Generator(object):
                     incremental=False):
         """
         Generates a single resource. If resource_path is non-existent or empty,
-        generats the entire website.
+        generates the entire website.
         """
         if not self.generated_once and not incremental:
             return self.generate_all()
@@ -327,10 +335,12 @@ class Generator(object):
                     try:
                         text = self.template.render_resource(resource,
                                         context)
-                    except Exception:
-                        logger.error("Error occurred when"
-                            " processing template: [%s]" % resource)
-                        raise
+                    except Exception, e:
+                        HydeException.reraise("Error occurred when"
+                            " processing template: [%s]: %s" %
+                            (resource, repr(e)),
+                            sys.exc_info()
+                        )
                 else:
                     text = resource.source_file.read_all()
                     text = self.events.begin_text_resource(resource, text) or text

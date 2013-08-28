@@ -1,15 +1,13 @@
-# -*- coding: utf-8 -*-
 """
 Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 from urllib import quote
 
-from pyquery import PyQuery
+from fswrap import File
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
@@ -45,11 +43,12 @@ class TestTextlinks(object):
 {%% endmarkdown %%}
 """
         site = Site(TEST_SITE)
-        site.config.plugins = ['hyde.ext.plugins.textlinks.TextlinksPlugin']
+        site.config.plugins = ['hyde.ext.plugins.text.TextlinksPlugin']
         site.config.base_url = 'http://example.com/'
         site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))
         tlink.write(text % d)
+        print tlink.read_all()
         gen = Generator(site)
         gen.generate_all()
         f = File(site.config.deploy_root_path.child(tlink.name))
@@ -57,5 +56,6 @@ class TestTextlinks(object):
         html = f.read_all()
         assert html
         for name, path in d.items():
-            assert quote(site.config.base_url + path) in html
+
+            assert site.config.base_url +  quote(path) in html
         assert '/media/img/hyde-logo.png' in html

@@ -4,10 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
-from hyde.model import Expando
 from hyde.generator import Generator
 from hyde.site import Site
+
+from fswrap import File, Folder
 
 COMBINE_SOURCE = File(__file__).parent.child_folder('combine')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -17,7 +17,7 @@ class CombineTester(object):
         s = Site(TEST_SITE)
         s.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.combine.CombinePlugin']
+            'hyde.ext.plugins.structure.CombinePlugin']
         source = TEST_SITE.child('content/media/js/script.js')
         target = File(Folder(s.config.deploy_root_path).child('media/js/script.js'))
         File(source).write(content)

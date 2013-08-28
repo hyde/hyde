@@ -7,20 +7,19 @@ Use nose
 Some code borrowed from rwbench.py from the jinja2 examples
 """
 from datetime import datetime
+from random import choice, randrange
+
 from hyde.ext.templates.jinja import Jinja2Template
-from hyde.fs import File, Folder
 from hyde.site import Site
 from hyde.generator import Generator
 from hyde.model import Config
 
-import jinja2
+from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
-from random import choice, randrange
-from util import assert_html_equals
-import yaml
-
+from nose.tools import nottest
 from pyquery import PyQuery
-from nose.tools import raises, nottest, with_setup
+
+import yaml
 
 ROOT = File(__file__).parent
 JINJA2 = ROOT.child_folder('templates/jinja2')
@@ -138,35 +137,14 @@ def test_asciidoc():
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
     html = t.render(source, {}).strip()
-    expected_output="""
-    <hr>
-    <h2><a name="_heading_2"></a>Heading 2</h2>
-    <ul>
-    <li>
-    <p>
-    test1
-    </p>
-    </li>
-    <li>
-    <p>
-    test2
-    </p>
-    </li>
-    <li>
-    <p>
-    test3
-    </p>
-    </li>
-    </ul>
-    """
 
     assert html
     q = PyQuery(html)
     assert q
     assert q("li").length == 3
-    assert q("li:eq(0)").text().strip() == "test1"
-    assert q("li:eq(1)").text().strip() == "test2"
-    assert q("li:eq(2)").text().strip() == "test3"
+    assert q("li:nth-child(1)").text().strip() == "test1"
+    assert q("li:nth-child(2)").text().strip() == "test2"
+    assert q("li:nth-child(3)").text().strip() == "test3"
 
 def test_markdown():
     source = """
@@ -242,7 +220,7 @@ def test_markdown_with_extensions():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading_3">Heading 3</h3>'
+    assert html == u'<h3 id="heading-3">Heading 3</h3>'
 
 def test_markdown_with_sourcecode():
     source = """
@@ -292,7 +270,7 @@ def test_line_statements():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading_3">Heading 3</h3>'
+    assert html == u'<h3 id="heading-3">Heading 3</h3>'
 
 def test_line_statements_with_config():
     source = """
@@ -315,7 +293,7 @@ def test_line_statements_with_config():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading_3">Heading 3</h3>'
+    assert html == u'<h3 id="heading-3">Heading 3</h3>'
 
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
@@ -378,7 +356,6 @@ class TestJinjaTemplate(object):
     def test_line_statements_with_blocks(self):
         site = Site(TEST_SITE)
         JINJA2.copy_contents_to(site.content.source)
-        inc = File(TEST_SITE.child('content/inc.md'))
         text = """
         {% extends 'index.html' %}
         $$$ block body
@@ -647,7 +624,7 @@ Hyde & Jinja.
         assert "reference" not in html
 
 
-    def test_yaml_tag(salf):
+    def test_yaml_tag(self):
 
         text = """
 {% yaml test %}

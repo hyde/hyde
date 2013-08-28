@@ -1,16 +1,7 @@
-commando==0.1.1a
-PyYAML==3.09
-Markdown==2.0.3
-MarkupSafe==0.11
-pygments
-smartypants==1.6.0.3
--e git://github.com/hyde/typogrify.git#egg=typogrify
-Jinja2==2.5.5
-pyquery==0.6.1
-unittest2==0.5.1
-mock==0.7.0b4
-nose==1.0.0
-pep8==0.6.1
-pylint==0.22.0
-pysmell==0.7.3
-PIL
+-r requirements.txt
+pyquery
+docutils
+mock
+nose
+pillow
+pyscss

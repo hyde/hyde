@@ -4,10 +4,10 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
-from hyde.fs import File, Folder
 from hyde.generator import Generator
 from hyde.site import Site
 
+from fswrap import File
 from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -65,7 +65,7 @@ Hyde & Jinja
         site = Site(TEST_SITE)
         site.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.markings.MarkingsPlugin']
+            'hyde.ext.plugins.text.MarkingsPlugin']
         inc = File(TEST_SITE.child('content/inc.md'))
         inc.write(text)
         site.load()
@@ -104,8 +104,8 @@ Hyde & Jinja
         site = Site(TEST_SITE)
         site.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
-            'hyde.ext.plugins.markings.MarkingsPlugin',
-            'hyde.ext.plugins.markings.ReferencePlugin']
+            'hyde.ext.plugins.text.MarkingsPlugin',
+            'hyde.ext.plugins.text.ReferencePlugin']
         inc = File(site.content.source_folder.child('inc.md'))
         inc.write(text.strip())
         src = File(site.content.source_folder.child('src.html'))
