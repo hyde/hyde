@@ -64,7 +64,8 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             deployed = Folder.file_or_folder(deployed)
             if isinstance(deployed, Folder):
                 node = site.content.node_from_relative_path(path)
-                res = node.get_resource('index.html')
+                if node is not None:
+                    res = node.get_resource('index.html')
             elif hasattr(site.config, 'urlcleaner') and hasattr(site.config.urlcleaner, 'strip_extensions'):
                 for ext in site.config.urlcleaner.strip_extensions:
                     res = site.content.resource_from_relative_deploy_path(path + '.' + ext)
