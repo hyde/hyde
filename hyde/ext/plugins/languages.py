@@ -5,12 +5,12 @@ Contains classes to help manage multi-language pages.
 
 from hyde.plugin import Plugin
 
-from hyde.fs import File, Folder
 from hyde.model import Expando
 from hyde.plugin import Plugin
 from hyde.ext.plugins.meta import Metadata
 import hyde.site
 
+from fswrap import File, Folder
 from functools import wraps
 
 import os
