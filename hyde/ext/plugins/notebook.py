@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Sphinx plugin.
+Notebook plugin.
 
 This plugin lets you easily include html-rendered IPython notebooks as part
 of your Hyde site.  This plugin requires IPython version 1.x
