@@ -25,7 +25,9 @@ Then the deploy directory will look like this:
         notebook.html  <-- converted by IPython.nbconvert
 """
 # TODO: - allow inserting notebooks into templates
-#       - keep raw notebook in deploy
+
+import os
+import shutil
 
 from hyde.plugin import Plugin
 from hyde.model import Expando
@@ -91,9 +93,22 @@ class NotebookPlugin(Plugin):
         if not resource.source_file.path.endswith(self.suffix):
             return text
             
+        # Copy the raw notebook file to the deploy directory
+        raw_file_dest = os.path.join(
+            resource.site.config.deploy_root,
+            File(resource.relative_deploy_path).parent.child(
+                resource.source_file.name))
+
+        shutil.copy(resource.source_file.path, raw_file_dest)
+            
+        # use nbconvert to convert to HTML
         exporter = HTMLExporter(template_file='full')
         nb_json = nbformat.reads_json(text)
         (body, resources) = exporter.from_notebook_node(nb_json)
+
+        # return the converted text
         return body
+
+            
 
     
