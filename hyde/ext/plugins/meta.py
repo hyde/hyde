@@ -377,7 +377,7 @@ class TaggerPlugin(Plugin):
             raise HydeException("No Template specified in tagger configuration.")
         content = self.site.content.source_folder
         source = Folder(config.get('source', ''))
-        target_prop = os.path.join(re.split('[\\/]', config.get('target', 'tags')))
+        target_prop = os.path.join(*re.split('[\\/]', config.get('target', 'tags')))
         target = content.child_folder(target_prop)
         if not target.exists:
             target.make()
