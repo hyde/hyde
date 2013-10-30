@@ -8,6 +8,7 @@ from functools import partial
 from itertools import ifilter
 from operator import attrgetter
 import re
+import os
 import sys
 
 from hyde.exceptions import HydeException
@@ -376,7 +377,8 @@ class TaggerPlugin(Plugin):
             raise HydeException("No Template specified in tagger configuration.")
         content = self.site.content.source_folder
         source = Folder(config.get('source', ''))
-        target = content.child_folder(config.get('target', 'tags'))
+        target_prop = os.path.join(re.split('[\\/]', config.get('target', 'tags')))
+        target = content.child_folder(target_prop)
         if not target.exists:
             target.make()
 
