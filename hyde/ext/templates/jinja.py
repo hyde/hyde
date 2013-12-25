@@ -667,6 +667,7 @@ class Jinja2Template(Template):
         settings['extensions'] = list()
         settings['extensions'].extend(default_extensions)
         settings['filters'] = {}
+        settings['tests'] = {}
 
         conf = {}
 
@@ -693,6 +694,15 @@ class Jinja2Template(Template):
                 module = __import__(module_name, fromlist=[function_name])
                 settings['filters'][name] = getattr(module, function_name)
 
+        tests = conf.get('tests', {})
+        if isinstance(tests, dict):
+            for name, value in tests.items():
+                parts = value.split('.')
+                module_name = '.'.join(parts[:-1])
+                function_name = parts[-1]
+                module = __import__(module_name, fromlist=[function_name])
+                settings['tests'][name] = getattr(module, function_name)
+
         self.env = Environment(
                     loader=self.loader,
                     undefined=SilentUndefined,
@@ -716,6 +726,7 @@ class Jinja2Template(Template):
         self.env.filters['islice'] = islice
         self.env.filters['top'] = top
         self.env.filters.update(settings['filters'])
+        self.env.tests.update(settings['tests'])
 
         config = {}
         if hasattr(site, 'config'):
