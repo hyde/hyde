@@ -78,9 +78,9 @@ class UglifyPlugin(CLTransformer):
         uglify = self.app
         source = File.make_temp(text)
         target = File.make_temp('')
-        args = [unicode(uglify)]
+        args = [str(uglify)]
         args.extend(self.process_args(supported))
-        args.extend(["-o", unicode(target), unicode(source)])
+        args.extend(["-o", str(target), str(source)])
         self.call_app(args)
         out = target.read_all()
         return out
@@ -123,8 +123,8 @@ class RequireJSPlugin(CLTransformer):
 
         rjs = self.app
         target = File.make_temp('')
-        args = [unicode(rjs)]
-        args.extend(['-o', unicode(resource), ("out=" + target.fully_expanded_path)])
+        args = [str(rjs)]
+        args.extend(['-o', str(resource), ("out=" + target.fully_expanded_path)])
 
         try:
             self.call_app(args)
@@ -178,6 +178,6 @@ class CoffeePlugin(CLTransformer):
 
         coffee = self.app
         source = File.make_temp(text)
-        args = [unicode(coffee)]
-        args.extend(["-c", "-p", unicode(source)])
+        args = [str(coffee)]
+        args.extend(["-c", "-p", str(source)])
         return self.call_app(args)

@@ -8,7 +8,7 @@ import itertools
 import os
 import re
 import sys
-from urllib import quote, unquote
+from urllib.parse import quote, unquote
 
 from hyde.exceptions import HydeException
 from hyde.model import Expando
@@ -113,17 +113,17 @@ def asciidoc(env, value):
     try:
         from asciidocapi import AsciiDocAPI
     except ImportError:
-        print u"Requires AsciiDoc library to use AsciiDoc tag."
+        print("Requires AsciiDoc library to use AsciiDoc tag.")
         raise
 
-    import StringIO
+    import io
     output = value
 
     asciidoc = AsciiDocAPI()
     asciidoc.options('--no-header-footer')
-    result = StringIO.StringIO()
-    asciidoc.execute(StringIO.StringIO(output.encode('utf-8')), result, backend='html4')
-    return unicode(result.getvalue(), "utf-8")
+    result = io.StringIO()
+    asciidoc.execute(io.StringIO(output.encode('utf-8')), result, backend='html4')
+    return str(result.getvalue(), "utf-8")
 
 @environmentfilter
 def markdown(env, value):
@@ -133,8 +133,8 @@ def markdown(env, value):
     try:
         import markdown as md
     except ImportError:
-        logger.error(u"Cannot load the markdown library.")
-        raise TemplateError(u"Cannot load the markdown library")
+        logger.error("Cannot load the markdown library.")
+        raise TemplateError("Cannot load the markdown library")
     output = value
     d = {}
     if hasattr(env.config, 'markdown'):
@@ -156,8 +156,8 @@ def restructuredtext(env, value):
     try:
         from docutils.core import publish_parts
     except ImportError:
-        logger.error(u"Cannot load the docutils library.")
-        raise TemplateError(u"Cannot load the docutils library.")
+        logger.error("Cannot load the docutils library.")
+        raise TemplateError("Cannot load the docutils library.")
 
     highlight_source = False
     if hasattr(env.config, 'restructuredtext'):
@@ -183,7 +183,7 @@ def syntax(env, value, lexer=None, filename=None):
         from pygments import lexers
         from pygments import formatters
     except ImportError:
-        logger.error(u"pygments library is required to"
+        logger.error("pygments library is required to"
                         " use syntax highlighting tags.")
         raise TemplateError("Cannot load pygments")
 
@@ -233,7 +233,7 @@ class Spaceless(Extension):
         """
         if not caller:
             return ''
-        return re.sub(r'>\s+<', '><', unicode(caller().strip()))
+        return re.sub(r'>\s+<', '><', str(caller().strip()))
 
 class Asciidoc(Extension):
     """
@@ -460,7 +460,7 @@ class Reference(Extension):
         """
         Parse the variable name that the content must be assigned to.
         """
-        token = parser.stream.next()
+        token = next(parser.stream)
         lineno = token.lineno
         tag = token.value
         name = parser.stream.next().value
@@ -493,7 +493,7 @@ class Refer(Extension):
         """
         Parse the referred template and the namespace.
         """
-        token = parser.stream.next()
+        token = next(parser.stream)
         lineno = token.lineno
         parser.stream.expect('name:to')
         template = parser.parse_expression()
@@ -566,7 +566,7 @@ class Refer(Extension):
         """
 
         out = caller()
-        for key, value in markings.items():
+        for key, value in list(markings.items()):
             namespace[key] = value
         namespace['html'] = HtmlWrap(out)
         return ''
@@ -582,11 +582,11 @@ class HydeLoader(FileSystemLoader):
         config = site.config if hasattr(site, 'config') else None
         if config:
             super(HydeLoader, self).__init__([
-                            unicode(config.content_root_path),
-                            unicode(config.layout_root_path),
+                            str(config.content_root_path),
+                            str(config.layout_root_path),
                         ])
         else:
-            super(HydeLoader, self).__init__(unicode(sitepath))
+            super(HydeLoader, self).__init__(str(sitepath))
 
         self.site = site
         self.preprocessor = preprocessor
@@ -609,10 +609,10 @@ class HydeLoader(FileSystemLoader):
         except UnicodeDecodeError:
             HydeException.reraise(
                 "Unicode error when processing %s" % template, sys.exc_info())
-        except TemplateError, exc:
+        except TemplateError as exc:
             HydeException.reraise('Error when processing %s: %s' % (
                 template,
-                unicode(exc)
+                str(exc)
             ), sys.exc_info())
 
         if self.preprocessor:
@@ -686,7 +686,7 @@ class Jinja2Template(Template):
 
         filters = conf.get('filters', {})
         if isinstance(filters, dict):
-            for name, value in filters.items():
+            for name, value in list(filters.items()):
                 parts = value.split('.')
                 module_name = '.'.join(parts[:-1])
                 function_name = parts[-1]
@@ -748,9 +748,9 @@ class Jinja2Template(Template):
         from jinja2.meta import find_referenced_templates
         try:
             ast = self.env.parse(text)
-        except Exception, e:
+        except Exception as e:
             HydeException.reraise(
-                "Error processing %s: \n%s" % (path, unicode(e)),
+                "Error processing %s: \n%s" % (path, str(e)),
                 sys.exc_info())
 
         tpls = find_referenced_templates(ast)

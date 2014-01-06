@@ -36,13 +36,11 @@ class HtmlWrap(object):
             return self.raw
         return self.q(selector).html()
 
-class Template(object):
+class Template(object, metaclass=abc.ABCMeta):
     """
     Interface for hyde template engines. To use a different template engine,
     the following interface must be implemented.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, sitepath):
         self.sitepath = sitepath

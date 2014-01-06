@@ -208,7 +208,7 @@ Emotions:
         tags = ['sad', 'happy', 'angry', 'thoughts', 'events']
         archives = dict((tag, File(tags_folder.child("%s.html" % tag))) for tag in tags)
 
-        for tag, archive in archives.items():
+        for tag, archive in list(archives.items()):
             assert archive.exists
 
         from pyquery import PyQuery
@@ -220,7 +220,7 @@ Emotions:
         q = PyQuery(archives['angry'].read_all())
         assert len(q("li.emotion")) == 3
 
-        for tag, archive in archives.items():
+        for tag, archive in list(archives.items()):
             if tag not in ["sad", "angry"]:
                 q = PyQuery(archives[tag].read_all())
                 assert not len(q("li.emotion"))

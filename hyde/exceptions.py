@@ -6,6 +6,6 @@ class HydeException(Exception):
     @staticmethod
     def reraise(message, exc_info):
         _, _, tb = exc_info
-        raise HydeException(message), None, tb
+        raise HydeException(message).with_traceback(tb)
 
 

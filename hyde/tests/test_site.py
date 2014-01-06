@@ -5,7 +5,7 @@ Use nose
 `$ nosetests`
 """
 import yaml
-from urllib import quote
+from urllib.parse import quote
 
 from hyde.model import Config
 from hyde.site import Node, RootNode, Site
@@ -216,8 +216,8 @@ class TestSiteWithConfig(object):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg/abc'
-        print s.content_url(path, "")
-        print "/"  + quote(path, "")
+        print(s.content_url(path, ""))
+        print("/"  + quote(path, ""))
         assert s.content_url(path, "") == "/" + quote(path, "")
 
     def test_media_url(self):

@@ -73,14 +73,14 @@ class MarkingsPlugin(TextyPlugin):
         """
         The default pattern for mark open text.
         """
-        return u'^§§+\s*([A-Za-z0-9_\-]+)\s*$'
+        return '^§§+\s*([A-Za-z0-9_\-]+)\s*$'
 
     @property
     def default_close_pattern(self):
         """
         The default pattern for mark close text.
         """
-        return u'^§§+\s*/([A-Za-z0-9_\-]*)\s*$'
+        return '^§§+\s*/([A-Za-z0-9_\-]*)\s*$'
 
     def text_to_tag(self, match, start=True):
         """
@@ -117,7 +117,7 @@ class ReferencePlugin(TextyPlugin):
         """
         The default pattern for mark open text.
         """
-        return u'^※\s*([^\s]+)\s*as\s*([A-Za-z0-9_\-]+)\s*$'
+        return '^※\s*([^\s]+)\s*as\s*([A-Za-z0-9_\-]+)\s*$'
 
     @property
     def default_close_pattern(self):

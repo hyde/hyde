@@ -5,9 +5,9 @@ Parses & holds information about the site to be generated.
 import os
 import fnmatch
 import sys
-import urlparse
+import urllib.parse
 from functools import wraps
-from urllib import quote
+from urllib.parse import quote
 
 from hyde.exceptions import HydeException
 from hyde.model import Config
@@ -18,7 +18,7 @@ from fswrap import FS, File, Folder
 def path_normalized(f):
     @wraps(f)
     def wrapper(self, path):
-        return f(self, unicode(path).replace('/', os.sep))
+        return f(self, str(path).replace('/', os.sep))
     return wrapper
 
 logger = getLoggerWithNullHandler('hyde.engine')
@@ -128,7 +128,7 @@ class Node(Processable):
         self.root = self
         self.module = None
         self.site = None
-        self.source_folder = Folder(unicode(source_folder))
+        self.source_folder = Folder(str(source_folder))
         self.parent = parent
         if parent:
             self.root = self.parent.root
@@ -238,7 +238,7 @@ class RootNode(Node):
         """
         if Folder(path) == self.source_folder:
             return self
-        return self.node_map.get(unicode(Folder(path)), None)
+        return self.node_map.get(str(Folder(path)), None)
 
     @path_normalized
     def node_from_relative_path(self, relative_path):
@@ -247,7 +247,7 @@ class RootNode(Node):
         If no match is found it returns None.
         """
         return self.node_from_path(
-                    self.source_folder.child(unicode(relative_path)))
+                    self.source_folder.child(str(relative_path)))
 
     @path_normalized
     def resource_from_path(self, path):
@@ -255,7 +255,7 @@ class RootNode(Node):
         Gets the resource that maps to the given path.
         If no match is found it returns None.
         """
-        return self.resource_map.get(unicode(File(path)), None)
+        return self.resource_map.get(str(File(path)), None)
 
     @path_normalized
     def resource_from_relative_path(self, relative_path):
@@ -271,7 +271,7 @@ class RootNode(Node):
         Handles the case where the relative deploy path of a
         resource has changed.
         """
-        self.resource_deploy_map[unicode(item.relative_deploy_path)] = item
+        self.resource_deploy_map[str(item.relative_deploy_path)] = item
 
     @path_normalized
     def resource_from_relative_deploy_path(self, relative_deploy_path):
@@ -312,7 +312,7 @@ class RootNode(Node):
         node = parent if parent else self
         for h_folder in hierarchy:
             node = node.add_child_node(h_folder)
-            self.node_map[unicode(h_folder)] = node
+            self.node_map[str(h_folder)] = node
             logger.debug("Added node [%s] to [%s]" % (
                             node.relative_path, self.source_folder))
 
@@ -341,7 +341,7 @@ class RootNode(Node):
         if not node:
             node = self.add_node(afile.parent)
         resource = node.add_child_resource(afile)
-        self.resource_map[unicode(afile)] = resource
+        self.resource_map[str(afile)] = resource
         relative_path = resource.relative_path
         resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
                                         for pattern
@@ -461,7 +461,7 @@ class Site(object):
         configuration and returns the appropriate url. The return value
         is url encoded.
         """
-        if urlparse.urlparse(path)[:2] != ("",""):
+        if urllib.parse.urlparse(path)[:2] != ("",""):
             return path
 
         if self.is_media(path):

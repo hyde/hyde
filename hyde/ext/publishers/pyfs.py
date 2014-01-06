@@ -40,7 +40,7 @@ class PyFS(Publisher):
         self.url = settings.url
         self.check_mtime = getattr(settings,"check_mtime",False)
         self.check_etag = getattr(settings,"check_etag",False)
-        if self.check_etag and not isinstance(self.check_etag,basestring):
+        if self.check_etag and not isinstance(self.check_etag,str):
             raise ValueError("check_etag must name the etag algorithm")
         self.prompt_for_credentials()
         self.fs = fsopendir(self.url)
@@ -48,8 +48,8 @@ class PyFS(Publisher):
     def prompt_for_credentials(self):
         credentials = {}
         if "%(username)s" in self.url:
-            print "Username: ",
-            credentials["username"] = raw_input().strip()
+            print("Username: ", end=' ')
+            credentials["username"] = input().strip()
         if "%(password)s" in self.url:
             credentials["password"] = getpass.getpass("Password: ")
         if credentials:

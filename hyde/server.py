@@ -4,12 +4,12 @@ Contains classes and utilities for serving a site
 generated from hyde.
 """
 import threading
-import urlparse
-import urllib
+import urllib.parse
+import urllib.request, urllib.parse, urllib.error
 import traceback
 from datetime import datetime
-from SimpleHTTPServer import SimpleHTTPRequestHandler
-from BaseHTTPServer import HTTPServer
+from http.server import SimpleHTTPRequestHandler
+from http.server import HTTPServer
 
 from hyde.generator import Generator
 
@@ -33,16 +33,16 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         """
         self.server.request_time = datetime.now()
         logger.debug("Processing request: [%s]" % self.path)
-        result = urlparse.urlparse(self.path)
-        query = urlparse.parse_qs(result.query)
+        result = urllib.parse.urlparse(self.path)
+        query = urllib.parse.parse_qs(result.query)
         if 'refresh' in query or result.query=='refresh':
             self.server.regenerate()
             if 'refresh' in query:
                 del query['refresh']
             parts = list(tuple(result))
-            parts[4] = urllib.urlencode(query)
+            parts[4] = urllib.parse.urlencode(query)
             parts = tuple(parts)
-            new_url = urlparse.urlunparse(parts)
+            new_url = urllib.parse.urlunparse(parts)
             logger.info('Redirecting... [%s]' % new_url)
             self.redirect(new_url)
         else:
@@ -55,7 +55,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         referring to the `site` variable in the server.
         """
         site = self.server.site
-        result = urlparse.urlparse(urllib.unquote(self.path).decode('utf-8'))
+        result = urllib.parse.urlparse(urllib.parse.unquote(self.path).decode('utf-8'))
         logger.debug("Trying to load file based on request: [%s]" % result.path)
         path = result.path.lstrip('/')
         res = None
@@ -144,7 +144,7 @@ class HydeWebServer(HTTPServer):
         except AttributeError:
             extensions = {}
 
-        for extension, type in extensions.iteritems():
+        for extension, type in extensions.items():
             ext = "." + extension if not extension == 'default' else ''
             HydeRequestHandler.extensions_map[ext] = type
 
@@ -159,7 +159,7 @@ class HydeWebServer(HTTPServer):
                 self.site.config.reload()
             self.site.load()
             self.generator.generate_all(incremental=False)
-        except Exception, exception:
+        except Exception as exception:
             logger.error('Error occured when regenerating the site [%s]'
                             % exception.message)
             logger.debug(traceback.format_exc())
@@ -176,7 +176,7 @@ class HydeWebServer(HTTPServer):
         try:
             logger.debug('Serving node [%s]' % node)
             self.generator.generate_node(node, incremental=True)
-        except Exception, exception:
+        except Exception as exception:
             logger.error(
                 'Error [%s] occured when generating the node [%s]'
                         % (repr(exception), node))
@@ -195,7 +195,7 @@ class HydeWebServer(HTTPServer):
         try:
             logger.debug('Serving resource [%s]' % resource)
             self.generator.generate_resource(resource, incremental=True)
-        except Exception, exception:
+        except Exception as exception:
             logger.error(
                 'Error [%s] occured when serving the resource [%s]'
                         % (repr(exception), resource))

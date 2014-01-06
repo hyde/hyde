@@ -26,7 +26,7 @@ class TestSyntext(object):
 
 
     def test_syntext(self):
-        text = u"""
+        text = """
 ~~~~~~~~css~~~~~~~
 .body{
     background-color: white;
