@@ -218,7 +218,7 @@ class Spaceless(Extension):
         """
         Parses the statements and calls back to strip spaces.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endspaceless'],
                 drop_needle=True)
         return nodes.CallBlock(
@@ -245,7 +245,7 @@ class Asciidoc(Extension):
         """
         Parses the statements and defers to the callback for asciidoc processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endasciidoc'], drop_needle=True)
 
         return nodes.CallBlock(
@@ -271,7 +271,7 @@ class Markdown(Extension):
         """
         Parses the statements and defers to the callback for markdown processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endmarkdown'], drop_needle=True)
 
         return nodes.CallBlock(
@@ -297,7 +297,7 @@ class restructuredText(Extension):
         """
         Simply extract our content
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endrestructuredtext'], drop_needle=True)
 
         return nodes.CallBlock(self.call_method('_render_rst'), [],  [], body
@@ -326,7 +326,7 @@ class YamlVar(Extension):
         Parses the contained data and defers to the callback to load it as
         yaml.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         var = parser.stream.expect('name').value
         body = parser.parse_statements(['name:endyaml'], drop_needle=True)
         return [
@@ -365,7 +365,7 @@ def parse_kwargs(parser):
     if parser.stream.current.test('string'):
         value = parser.parse_expression()
     else:
-        value = nodes.Const(parser.stream.next().value)
+        value = nodes.Const(next(parser.stream).value)
     return (name, value)
 
 class Syntax(Extension):
@@ -380,7 +380,7 @@ class Syntax(Extension):
         """
         Parses the statements and defers to the callback for pygments processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         lex = nodes.Const(None)
         filename = nodes.Const(None)
 
@@ -395,7 +395,7 @@ class Syntax(Extension):
                                         if name == 'lex' \
                                             else (value1, value)
             else:
-                lex = nodes.Const(parser.stream.next().value)
+                lex = nodes.Const(next(parser.stream).value)
                 if parser.stream.skip_if('comma'):
                     filename = parser.parse_expression()
 
@@ -463,7 +463,7 @@ class Reference(Extension):
         token = next(parser.stream)
         lineno = token.lineno
         tag = token.value
-        name = parser.stream.next().value
+        name = next(parser.stream).value
         body = parser.parse_statements(['name:end%s' % tag], drop_needle=True)
         return nodes.CallBlock(
                     self.call_method('_render_output',
@@ -498,7 +498,7 @@ class Refer(Extension):
         parser.stream.expect('name:to')
         template = parser.parse_expression()
         parser.stream.expect('name:as')
-        namespace = parser.stream.next().value
+        namespace = next(parser.stream).value
         includeNode = nodes.Include(lineno=lineno)
         includeNode.with_context = True
         includeNode.ignore_missing = False

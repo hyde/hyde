@@ -5,7 +5,7 @@ Contains data structures and utilities for hyde.
 import codecs
 import yaml
 from datetime import datetime
-from UserDict import IterableUserDict
+from collections import UserDict
 
 from commando.util import getLoggerWithNullHandler
 from fswrap import File, Folder
@@ -61,7 +61,7 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, str(key).encode('utf-8'), make_expando(value))
+        setattr(self, str(key), make_expando(value))
 
 
     def __repr__(self):
@@ -125,7 +125,7 @@ class Context(object):
 
         return context
 
-class Dependents(IterableUserDict):
+class Dependents(UserDict):
     """
     Represents the dependency graph for hyde.
     """

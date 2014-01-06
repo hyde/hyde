@@ -385,8 +385,8 @@ class RootNode(Node):
 
 
 def _encode_path(base, path, safe):
-    base = base.strip().replace(os.sep, '/').encode('utf-8')
-    path = path.strip().replace(os.sep, '/').encode('utf-8')
+    base = base.strip().replace(os.sep, '/')
+    path = path.strip().replace(os.sep, '/')
     path = quote(path, safe) if safe is not None else quote(path)
     return base.rstrip('/') + '/' + path.lstrip('/')
 
