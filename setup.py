@@ -118,16 +118,21 @@ setup(name=PROJECT,
       install_requires=(
           'fswrap==0.1.2',
           'commando==0.3.4',
-          'PyYAML==3.10',
-          'Markdown==2.3.1',
-          'MarkupSafe==0.18',
-          'Pygments==1.6',
-          'typogrify==2.0.0',
-          'smartypants<1.8',
-          'Jinja2==2.7.1'
+          'PyYAML==3.11',
+          'Markdown==2.6.2',
+          'MarkupSafe==0.23',
+          'Pygments==2.0.2',
+          'typogrify==2.0.7',
+          'smartypants==1.8.6',
+          'Jinja2==2.7.3'
       ),
       tests_require=(
-        'nose', 'mock'
+        'nose==1.3.6',
+        'mock==1.0.1',
+        'pyquery==1.2.9',
+        'docutils==0.12',
+        'Pillow==2.7.0',
+        'pyScss==1.3.4'
       ),
       test_suite='nose.collector',
       include_package_data = True,
