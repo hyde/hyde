@@ -8,9 +8,7 @@ from hyde.publisher import Publisher
 import abc
 from subprocess import Popen, PIPE
 
-class DVCS(Publisher):
-    __metaclass__ = abc.ABCMeta
-
+class DVCS(Publisher, metaclass=abc.ABCMeta):
     def initialize(self, settings):
         self.settings = settings
         self.path = self.site.sitepath.child_folder(settings.path)
@@ -56,7 +54,7 @@ class Git(DVCS):
 
     def add(self, path="."):
         cmd = Popen('git add "%s"' % path,
-                        cwd=unicode(self.path), stdout=PIPE, shell=True)
+                        cwd=str(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
@@ -64,7 +62,7 @@ class Git(DVCS):
     def pull(self):
         self.switch(self.branch)
         cmd = Popen("git pull origin %s" % self.branch,
-                    cwd=unicode(self.path),
+                    cwd=str(self.path),
                     stdout=PIPE,
                     shell=True)
         cmdresult = cmd.communicate()[0]
@@ -73,7 +71,7 @@ class Git(DVCS):
 
     def push(self):
         cmd = Popen("git push origin %s" % self.branch,
-                    cwd=unicode(self.path), stdout=PIPE,
+                    cwd=str(self.path), stdout=PIPE,
                     shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
@@ -82,7 +80,7 @@ class Git(DVCS):
 
     def commit(self, message):
         cmd = Popen('git commit -a -m"%s"' % message,
-                    cwd=unicode(self.path), stdout=PIPE, shell=True)
+                    cwd=str(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
@@ -90,14 +88,14 @@ class Git(DVCS):
     def switch(self, branch):
         self.branch = branch
         cmd = Popen('git checkout %s' % branch,
-                    cwd=unicode(self.path), stdout=PIPE, shell=True)
+                    cwd=str(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def merge(self, branch):
         cmd = Popen('git merge %s' % branch,
-                    cwd=unicode(self.path), stdout=PIPE, shell=True)
+                    cwd=str(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)

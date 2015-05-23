@@ -142,7 +142,7 @@ class Generator(object):
                 deps.append(dep)
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
-                    if dep_res.relative_path in self.waiting_deps.keys():
+                    if dep_res.relative_path in list(self.waiting_deps.keys()):
                         self.waiting_deps[dep_res.relative_path].append(rel_path)
                     else:
                         deps.extend(self.get_dependencies(dep_res))
@@ -335,7 +335,7 @@ class Generator(object):
                     try:
                         text = self.template.render_resource(resource,
                                         context)
-                    except Exception, e:
+                    except Exception as e:
                         HydeException.reraise("Error occurred when"
                             " processing template: [%s]: %s" %
                             (resource, repr(e)),

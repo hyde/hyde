@@ -5,7 +5,7 @@ Contains classes and utilities related to meta data in hyde.
 
 from collections import namedtuple
 from functools import partial
-from itertools import ifilter
+
 from operator import attrgetter
 import re
 import sys
@@ -42,7 +42,7 @@ class Metadata(Expando):
         """
         Updates the metadata with new stuff
         """
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             super(Metadata, self).update(yaml.load(data))
         else:
             super(Metadata, self).update(data)
@@ -256,7 +256,7 @@ def get_tagger_sort_method(site):
     return walker
 
 def walk_resources_tagged_with(node, tag):
-    tags = set(unicode(tag).split('+'))
+    tags = set(str(tag).split('+'))
     walker = get_tagger_sort_method(node.site)
     for resource in walker():
         try:
@@ -317,7 +317,7 @@ class TaggerPlugin(Plugin):
         except AttributeError:
             tag_meta = {}
 
-        for tagname, meta in tag_meta.iteritems():
+        for tagname, meta in tag_meta.items():
             # Don't allow name and resources in meta
             if 'resources' in meta:
                 del(meta['resources'])
@@ -364,7 +364,7 @@ class TaggerPlugin(Plugin):
 
         self.logger.debug("Generating archives for tags")
 
-        for name, config in archive_config.to_dict().iteritems():
+        for name, config in archive_config.to_dict().items():
             self._create_tag_archive(config)
 
 
@@ -382,7 +382,7 @@ class TaggerPlugin(Plugin):
 
         # Write meta data for the configuration
         meta = config.get('meta', {})
-        meta_text = u''
+        meta_text = ''
         if meta:
             import yaml
             meta_text = yaml.dump(meta, default_flow_style=False)
@@ -390,7 +390,7 @@ class TaggerPlugin(Plugin):
         extension = config.get('extension', 'html')
         template = config['template']
 
-        archive_text = u"""
+        archive_text = """
 ---
 extends: false
 %(meta)s
@@ -401,7 +401,7 @@ extends: false
 {%% set walker = source['walk_resources_tagged_with_%(tag)s'] %%}
 {%% extends "%(template)s" %%}
 """
-        for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
+        for tagname, tag in self.site.tagger.tags.to_dict().items():
             tag_data = {
                 "tag": tagname,
                 "node": source.name,
@@ -431,7 +431,7 @@ def filter_method(item, settings=None):
         filters.update(default_filters)
         filters.update(settings.filters.__dict__)
 
-    for field, value in filters.items():
+    for field, value in list(filters.items()):
         try:
             res = attrgetter(field)(item)
         except:
@@ -468,7 +468,7 @@ def sort_method(node, settings=None):
 
     excluder_ = partial(attributes_checker, attributes=attr)
 
-    resources = ifilter(lambda x: excluder_(x) and filter_(x),
+    resources = filter(lambda x: excluder_(x) and filter_(x),
                         node.walk_resources())
     return sorted(resources,
                     key=attrgetter(*attr),
@@ -515,7 +515,7 @@ class SorterPlugin(Plugin):
         if not hasattr(config, 'sorter'):
             return
 
-        for name, settings in config.sorter.__dict__.items():
+        for name, settings in list(config.sorter.__dict__.items()):
             sort_method_name = 'walk_resources_sorted_by_%s' % name
             self.logger.debug("Adding sort methods for [%s]" % name)
             add_method(Node, sort_method_name, sort_method, settings=settings)
@@ -740,7 +740,7 @@ class GrouperPlugin(Plugin):
         if not hasattr(self.site, 'grouper'):
             self.site.grouper = {}
 
-        for name, grouping in self.site.config.grouper.__dict__.items():
+        for name, grouping in list(self.site.config.grouper.__dict__.items()):
             grouping.name = name
             prev_att = 'prev_in_%s' % name
             next_att = 'next_in_%s' % name

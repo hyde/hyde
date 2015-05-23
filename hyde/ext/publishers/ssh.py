@@ -52,7 +52,7 @@ class SSH(Publisher):
             target=self.target)
         deploy_path = self.site.config.deploy_root_path.path
 
-        cmd = Popen(command, cwd=unicode(deploy_path), stdout=PIPE, shell=True)
+        cmd = Popen(command, cwd=str(deploy_path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)

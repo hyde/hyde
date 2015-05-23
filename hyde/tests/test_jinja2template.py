@@ -46,8 +46,8 @@ class User(object):
         self.username = username
 
 
-users = map(User, [u'John Doe', u'Jane Doe', u'Peter Somewhat'])
-articles = map(Article, range(20))
+users = list(map(User, ['John Doe', 'Jane Doe', 'Peter Somewhat']))
+articles = list(map(Article, list(range(20))))
 navigation = [
     ('index',           'Index'),
     ('about',           'About'),
@@ -87,7 +87,7 @@ def test_typogrify():
     t.configure(None)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
+    assert html == 'One <span class="amp">&amp;</span>&nbsp;two'
 
 def test_spaceless():
     source = """
@@ -113,7 +113,7 @@ def test_spaceless():
     t.configure(None)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    expected = u"""
+    expected = """
 <html><body><ul><li>
                     One
                 </li><li>
@@ -155,7 +155,7 @@ def test_markdown():
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
     html = t.render(source, {}).strip()
-    assert html == u'<h3>Heading 3</h3>'
+    assert html == '<h3>Heading 3</h3>'
 
 def test_restructuredtext():
     source = """
@@ -167,7 +167,7 @@ Hello
     t = Jinja2Template(JINJA2.path)
     t.configure(None)
     html = t.render(source, {}).strip()
-    assert html == u"""<div class="document" id="hello">
+    assert html == """<div class="document" id="hello">
 <h1 class="title">Hello</h1>
 </div>""", html
 
@@ -220,7 +220,7 @@ def test_markdown_with_extensions():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading-3">Heading 3</h3>'
+    assert html == '<h3 id="heading-3">Heading 3</h3>'
 
 def test_markdown_with_sourcecode():
     source = """
@@ -270,7 +270,7 @@ def test_line_statements():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading-3">Heading 3</h3>'
+    assert html == '<h3 id="heading-3">Heading 3</h3>'
 
 def test_line_statements_with_config():
     source = """
@@ -293,7 +293,7 @@ def test_line_statements_with_config():
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
-    assert html == u'<h3 id="heading-3">Heading 3</h3>'
+    assert html == '<h3 id="heading-3">Heading 3</h3>'
 
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
@@ -735,11 +735,11 @@ item_list:
         assert html.strip() == expected.strip()
 
     def test_urlencode_filter(self):
-        text= u"""
+        text= """
 <a href="{{ 'фотография.jpg'|urlencode }}">фотография</a>
 <a href="{{ 'http://localhost:8080/"abc.jpg'|urlencode }}">quoted</a>
 """
-        expected = u"""
+        expected = """
 <a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография</a>
 <a href="http%3A//localhost%3A8080/%22abc.jpg">quoted</a>
 """
@@ -749,10 +749,10 @@ item_list:
         assert html.strip() == expected.strip()
 
     def test_urldecode_filter(self):
-        text= u"""
+        text= """
 <a href="{{ 'фотография.jpg'|urlencode }}">{{ "%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg"|urldecode }}</a>
 """
-        expected = u"""
+        expected = """
 <a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография.jpg</a>
 """
         t = Jinja2Template(JINJA2.path)

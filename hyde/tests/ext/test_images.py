@@ -60,7 +60,7 @@ class TestImageSizer(object):
         return html
 
     def test_size_image(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -68,7 +68,7 @@ class TestImageSizer(object):
         assert ' height="%d"' % PORTRAIT_SIZE[1] in html
 
     def test_size_image_relative(self):
-        text = u"""
+        text = """
 <img src="media/img/%s">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -76,7 +76,7 @@ class TestImageSizer(object):
         assert ' height="%d"' % PORTRAIT_SIZE[1] in html
 
     def test_size_image_no_resize(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s" width="2000" height="150">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -84,7 +84,7 @@ class TestImageSizer(object):
         assert ' height="%d"' % PORTRAIT_SIZE[1] not in html
 
     def test_size_image_size_proportional(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s" width="%d">
 """ % (PORTRAIT_IMAGE,  PORTRAIT_SIZE[0]*2)
         html = self._generic_test_image(text)
@@ -92,13 +92,13 @@ class TestImageSizer(object):
         assert ' height="%d"' % (PORTRAIT_SIZE[1]*2) in html
 
     def test_size_image_not_exists(self):
-        text = u"""
+        text = """
 <img src="/media/img/hyde-logo-no.png">
 """
         self._generic_test_image(text)
 
     def test_size_image_multiline(self):
-        text = u"""
+        text = """
      <img src="/media/img/%s">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -106,7 +106,7 @@ class TestImageSizer(object):
         assert ' height="%d"' % PORTRAIT_SIZE[1] in html
 
     def test_size_multiple_images(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s">
 <img src="/media/img/%s">Hello <img src="/media/img/%s">
 <img src="/media/img/%s">Bye
@@ -122,7 +122,7 @@ class TestImageSizer(object):
                     if ' height=' in f]) == 4
 
     def test_size_malformed1(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s>
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -130,7 +130,7 @@ class TestImageSizer(object):
         assert ' height="%d"' % PORTRAIT_SIZE[1] in html
 
     def test_size_malformed2(self):
-        text = u"""
+        text = """
 <img src="/media/img/%s alt="hello">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)
@@ -139,7 +139,7 @@ class TestImageSizer(object):
 
     def test_outside_media_url(self):
         self.site.config.media_url = "http://media.example.com/"
-        text = u"""
+        text = """
 <img src="http://media.example.com/img/%s" alt="hello">
 """ % PORTRAIT_IMAGE
         html = self._generic_test_image(text)

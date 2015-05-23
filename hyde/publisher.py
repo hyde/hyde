@@ -8,12 +8,10 @@ Contains abstract classes and utilities that help publishing a website to a
 server.
 """
 
-class Publisher(object):
+class Publisher(object, metaclass=abc.ABCMeta):
     """
     The abstract base class for publishers.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, site, settings, message):
         super(Publisher, self).__init__()
@@ -42,7 +40,7 @@ class Publisher(object):
         if not settings:
             # Find the first configured publisher
             try:
-                publisher = site.config.publisher.__dict__.iterkeys().next()
+                publisher = next(iter(site.config.publisher.__dict__.keys()))
                 logger.warning("No default publisher configured. Using: %s" % publisher)
                 settings = attrgetter("publisher.%s" % publisher)(site.config)
             except (AttributeError, StopIteration):

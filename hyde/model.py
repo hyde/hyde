@@ -5,7 +5,7 @@ Contains data structures and utilities for hyde.
 import codecs
 import yaml
 from datetime import datetime
-from UserDict import IterableUserDict
+from collections import UserDict
 
 from commando.util import getLoggerWithNullHandler
 from fswrap import File, Folder
@@ -43,7 +43,7 @@ class Expando(object):
         Returns an iterator for all the items in the
         dictionary as key value pairs.
         """
-        return self.__dict__.iteritems()
+        return iter(self.__dict__.items())
 
     def update(self, d):
         """
@@ -51,7 +51,7 @@ class Expando(object):
         """
         d = d or {}
         if isinstance(d, dict):
-            for key, value in d.items():
+            for key, value in list(d.items()):
                 self.set_expando(key, value)
         elif isinstance(d, Expando):
             self.update(d.to_dict())
@@ -61,11 +61,11 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, unicode(key).encode('utf-8'), make_expando(value))
+        setattr(self, str(key), make_expando(value))
 
 
     def __repr__(self):
-        return unicode(self.to_dict())
+        return str(self.to_dict())
 
     def to_dict(self):
         """
@@ -73,7 +73,7 @@ class Expando(object):
         """
         result = {}
         d = self.__dict__
-        for k, v in d.items():
+        for k, v in list(d.items()):
             if isinstance(v, Expando):
                 result[k] = v.to_dict()
             elif isinstance(v, SEQS):
@@ -117,7 +117,7 @@ class Context(object):
             # No providers found
             pass
 
-        for provider_name, resource_name in providers.items():
+        for provider_name, resource_name in list(providers.items()):
             res = File(Folder(sitepath).child(resource_name))
             if res.exists:
                 data = make_expando(yaml.load(res.read_all()))
@@ -125,7 +125,7 @@ class Context(object):
 
         return context
 
-class Dependents(IterableUserDict):
+class Dependents(UserDict):
     """
     Represents the dependency graph for hyde.
     """

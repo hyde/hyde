@@ -74,9 +74,9 @@ def find_package_data(
                         or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
-                            print >> sys.stderr, (
+                            print((
                                 "Directory %s ignored by pattern %s"
-                                % (fn, pattern))
+                                % (fn, pattern)), file=sys.stderr)
                         break
                 if bad_name:
                     continue
@@ -96,9 +96,9 @@ def find_package_data(
                         or fn.lower() == pattern.lower()):
                         bad_name = True
                         if show_ignored:
-                            print >> sys.stderr, (
+                            print((
                                 "File %s ignored by pattern %s"
-                                % (fn, pattern))
+                                % (fn, pattern)), file=sys.stderr)
                         break
                 if bad_name:
                     continue
@@ -116,13 +116,13 @@ setup(name=PROJECT,
       packages=find_packages(),
       requires=['python (>= 2.7)'],
       install_requires=(
-          'fswrap==0.1.2',
-          'commando==0.3.4',
+          'fswrap==0.2',
+          'commando==0.4',
           'PyYAML==3.10',
           'Markdown==2.3.1',
           'MarkupSafe==0.18',
           'Pygments==1.6',
-          'typogrify==2.0.0',
+          'typogrify-web==0.1.0',
           'smartypants<1.8',
           'Jinja2==2.7.1'
       ),

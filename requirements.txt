@@ -1,9 +1,11 @@
-fswrap==0.1.2
-commando==0.3.4
+fswrap==0.2
+--find-links https://github.com/lakshmivyas/fswrap/tarball/python3#egg=commando
+commando==0.4
+--find-links https://github.com/lakshmivyas/commando/tarball/python3#egg=commando
 PyYAML==3.10
 Markdown==2.3.1
 MarkupSafe==0.18
 Pygments==1.6
-typogrify==2.0.0
+typogrify-web==0.1.0
 smartypants<1.8
 Jinja2==2.7.1

@@ -82,11 +82,10 @@ class PluginProxy(object):
         raise HydeException(
                 "Unknown plugin method [%s] called." % method_name)
 
-class Plugin(object):
+class Plugin(object, metaclass=abc.ABCMeta):
     """
     The plugin protocol
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, site):
         super(Plugin, self).__init__()
@@ -414,13 +413,13 @@ class CLTransformer(Plugin):
         try:
             self.logger.debug(
                 "Calling executable [%s] with arguments %s" %
-                    (args[0], unicode(args[1:])))
+                    (args[0], str(args[1:])))
             return subprocess.check_output(args)
-        except subprocess.CalledProcessError, error:
+        except subprocess.CalledProcessError as error:
             self.logger.error(error.output)
             raise
 
-class TextyPlugin(Plugin):
+class TextyPlugin(Plugin, metaclass=abc.ABCMeta):
     """
     Base class for text preprocessing plugins.
 
@@ -428,8 +427,6 @@ class TextyPlugin(Plugin):
     commonly used hyde functions for various templates
     can inherit from this class.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, site):
         super(TextyPlugin, self).__init__(site)

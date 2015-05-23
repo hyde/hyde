@@ -108,9 +108,9 @@ class LessCSSPlugin(CLTransformer):
         less = self.app
         source = File.make_temp(text)
         target = File.make_temp('')
-        args = [unicode(less)]
+        args = [str(less)]
         args.extend(self.process_args(supported))
-        args.extend([unicode(source), unicode(target)])
+        args.extend([str(source), str(target)])
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
@@ -221,9 +221,9 @@ class StylusPlugin(CLTransformer):
         target = source
         supported = [("compress", "c"), ("include", "I")]
 
-        args = [unicode(stylus)]
+        args = [str(stylus)]
         args.extend(self.process_args(supported))
-        args.append(unicode(source))
+        args.append(str(source))
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
@@ -247,7 +247,7 @@ class CleverCSSPlugin(Plugin):
         super(CleverCSSPlugin, self).__init__(site)
         try:
             import clevercss
-        except ImportError, e:
+        except ImportError as e:
             raise HydeException('Unable to import CleverCSS: ' + e.message)
         else:
             self.clevercss = clevercss
@@ -322,7 +322,7 @@ class SassyCSSPlugin(Plugin):
         super(SassyCSSPlugin, self).__init__(site)
         try:
             import scss
-        except ImportError, e:
+        except ImportError as e:
             raise HydeException('Unable to import pyScss: ' + e.message)
         else:
             self.scss = scss

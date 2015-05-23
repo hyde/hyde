@@ -5,7 +5,7 @@ Use nose
 """
 from hyde.generator import Generator
 from hyde.site import Site
-from urllib import quote
+from urllib.parse import quote
 
 from fswrap import File
 
@@ -30,7 +30,7 @@ class TestTextlinks(object):
             'plugins': 'plugins/metadata',
             'sorter': 'plugins/sorter'
         }
-        text = u"""
+        text = """
 {%% markdown %%}
 [[!!img/hyde-logo.png]]
 *   [Rich object model][hyde objects] and
@@ -48,14 +48,14 @@ class TestTextlinks(object):
         site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))
         tlink.write(text % d)
-        print tlink.read_all()
+        print(tlink.read_all())
         gen = Generator(site)
         gen.generate_all()
         f = File(site.config.deploy_root_path.child(tlink.name))
         assert f.exists
         html = f.read_all()
         assert html
-        for name, path in d.items():
+        for name, path in list(d.items()):
 
             assert site.config.base_url +  quote(path) in html
         assert '/media/img/hyde-logo.png' in html

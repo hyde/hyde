@@ -38,7 +38,7 @@ hyde templating workflow.  You would end up with::
 
 #  We need absolute import so that we can import the main "sphinx"
 #  module even though this module is also called "sphinx". Ugh.
-from __future__ import absolute_import
+
 
 import os
 import json
@@ -113,7 +113,7 @@ class SphinxPlugin(Plugin):
             curdir = os.getcwd()
             os.chdir(conf_path.path)
             try:
-                execfile(conf_file,self._sphinx_config)
+                exec(compile(open(conf_file).read(), conf_file, 'exec'),self._sphinx_config)
             finally:
                 os.chdir(curdir)
         return self._sphinx_config
@@ -164,7 +164,7 @@ class SphinxPlugin(Plugin):
         if not settings.block_map:
             output.append(sphinx_output["body"])
         else:
-            for (nm,content) in sphinx_output.iteritems():
+            for (nm,content) in sphinx_output.items():
                 try:
                     block = getattr(settings.block_map,nm)
                 except AttributeError:
