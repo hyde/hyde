@@ -48,7 +48,7 @@ from hyde.plugin import Plugin
 from hyde.model import Expando
 from hyde.ext.plugins.meta import MetaPlugin as _MetaPlugin
 
-from commado.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler
 from fswrap import File, Folder
 
 logger = getLoggerWithNullHandler('hyde.ext.plugins.sphinx')
