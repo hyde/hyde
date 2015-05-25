@@ -5,15 +5,15 @@ python:
 install:
   # requirements
   #
+  # tried to avoid apt-get update as suggested in Travis-CI documentation but it's required in order to identify nodejs-legacy package
+  - sudo apt-get update -qq
+  
   # todo add -qq to quietly install
-  - sudo apt-get install -y nodejs nodejs-legacy npm optipng jpegoptim libjpeg-progs asciidoc libxml2-dev libxslt1-dev ruby-dev
+  - sudo apt-get install -y nodejs nodejs-legacy npm optipng jpegoptim libjpeg-progs asciidoc libxml2-dev libxslt1-dev libpcre3-dev
   - sudo apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
   # Ubuntu 12: sudo apt-get install libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk
-  - sudo npm install -g sass requirejs@2.1 stylus@0.51 uglify@0.1
-  - sudo gem install therubyracer
-  - sudo gem install less -v 1.7.0
+  - sudo npm install -g sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
   # Python test requirements
-  - pip install PyScss
   - pip install -r dev-req.txt
 
 before_script:
