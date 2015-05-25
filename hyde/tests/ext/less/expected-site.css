@@ -1,22 +1,18 @@
-.rounded (@radius: 5px){
-    -webkit-border-radius: @radius;
-       -moz-border-radius: @radius;
-            border-radius: @radius;
-}@the-border: 1px;
-@base-color: #111;* {
-    border: 0;
-    padding: 0;
-    margin: 0;
-}#header {
-  color: @base-color * 3;
-  border-left: @the-border;
-  border-right: @the-border * 2;
+* {
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
-
+#header {
+  color: #333333;
+  border-left: 1px;
+  border-right: 2px;
+}
 #footer {
-  color: (@base-color + #111) * 1.5;
+  color: #333333;
 }
-
 #content {
-    .rounded(10px);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
 }
