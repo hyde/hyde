@@ -11,7 +11,7 @@ install:
   - sudo apt-get install libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk
   # Ubuntu 14
   # - sudo apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-  - sudo npm install -g sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
+  - sudo npm install -g sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4 less@2.5.1
   # uglify requires node instead of nodejs binary
   - sudo ln -s /usr/bin/nodejs /usr/bin/node
   # Python test requirements
