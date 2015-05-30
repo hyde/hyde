@@ -53,11 +53,12 @@ Generating the hyde site
 Serving the website
 -------------------
 
+Content changes will be updated automatically in your browser with the `Livereload extension`_ installed.
+
 ::
 
         cd ~/test_site
-        hyde serve
-        open http://localhost:8080
+        hyde serve -o
 
 Publishing the website
 ----------------------
@@ -168,3 +169,4 @@ Links
 .. _auzigog: https://github.com/auzigog
 .. _bootstrap framework: http://twitter.github.com/bootstrap/
 .. _Hyde Powered Websites: https://github.com/hyde/hyde/wiki/Hyde-Powered
+.. _Livereload extension: http://livereload.com/extensions/
