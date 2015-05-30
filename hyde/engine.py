@@ -111,6 +111,8 @@ class Engine(Application):
            help='The configuration used to generate the site')
     @store('-d', '--deploy-path', dest='deploy', default=None,
            help='Where should the site be generated?')
+    @true('-o', '--open-browser', dest='open_url', default=False,
+          help='Open the site in your default browser')
     def serve(self, args):
         """
         The serve command. Serves the site at the given
@@ -120,7 +122,8 @@ class Engine(Application):
         sitepath = self.main(args)
         site = self.make_site(sitepath, args.config, args.deploy)
         from hyde.server import HydeWebServer
-        server = HydeWebServer(site, args.address, args.port)
+        server = HydeWebServer(site, args.address, args.port,
+                               open_url=args.open_url)
         self.logger.info(
             "Starting webserver at [%s]:[%d]", args.address, args.port)
         try:

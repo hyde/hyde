@@ -124,7 +124,8 @@ setup(name=PROJECT,
           'Pygments==2.0.2',
           'typogrify==2.0.7',
           'smartypants==1.8.6',
-          'Jinja2==2.7.3'
+          'Jinja2==2.7.3',
+          'livereload==2.4.0'
       ),
       tests_require=(
         'nose==1.3.6',
