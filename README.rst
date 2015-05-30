@@ -156,7 +156,7 @@ Links
 .. _Hyde Documentation Source: https://github.com/hyde/docs
 .. _Cloudpanic: https://github.com/tipiirai/cloudpanic
 .. _Ringce: https://github.com/lakshmivyas/ringce/tree/v3.0
-.. _Authors: https://github.com/hyde/hyde/blob/master/AUTHORS.rst
+.. _Authors: https://github.com/hyde/hyde/graphs/contributors
 .. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
 .. _Hyde starter kit: http://merlin.rebrovic.net/hyde-starter-kit/about.html
 .. _merlinrebrovic: https://github.com/merlinrebrovic
