@@ -1,5 +1,7 @@
 Version 0.8.8
 
+.. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
+
 A brand new **hyde**
 ====================
 
