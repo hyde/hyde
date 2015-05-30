@@ -157,19 +157,6 @@ class HydeWebServer(livereload.Server):
                    root=self.site.config.deploy_root_path.path,
                    open_url_delay=self.open_url)
 
-    # def map_extensions(self):
-    #     """
-    #     Maps extensions specified in the configuration.
-    #     """
-    #     try:
-    #         extensions = self.site.config.server.extensions.to_dict()
-    #     except AttributeError:
-    #         extensions = {}
-    #
-    #     # for extension, _type in extensions.iteritems():
-    #     #     ext = "." + extension if not extension == 'default' else ''
-    #     #     HydeRequestHandler.extensions_map[ext] = _type
-
     def regenerate(self):
         """
         Regenerates the entire site.
