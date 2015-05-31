@@ -150,10 +150,11 @@ class HydeWebServer(livereload.Server):
         """
         self.regenerate()
         
-        self.watch(str(self.site.config.content_root_path), self.regenerate)
+        self.watch(self.site.config.content_root_path.path, self.regenerate)
+        self.watch(self.site.config.layout_root_path.path, self.regenerate)
 
         self.serve(host=self.address, port=self.port,
-                   root=str(self.site.config.deploy_root_path), 
+                   root=self.site.config.deploy_root_path.path, 
                    open_url_delay=self.open_url)
 
     def map_extensions(self):
