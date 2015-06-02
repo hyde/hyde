@@ -63,6 +63,12 @@ class ImageSizerPlugin(PILPlugin):
                 path = src[len(self.site.config.media_url):].lstrip("/")
                 path = self.site.config.media_root_path.child(path)
                 image = self.site.content.resource_from_relative_deploy_path(path)
+                if image is None:
+                    # Handle the case where the referenced image was generated
+                    # by ImageThumbnailsPlugin by checking if the given image
+                    # path matches such a thumbnail
+                    path = os.path.join(".thumbnails", src.lstrip("/"))
+                    image = self.site.content.resource_from_relative_path(path)
             elif re.match(r'([a-z]+://|//).*', src):
                 # Not a local link
                 return ""       # Nothing
