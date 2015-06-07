@@ -1,9 +1,1 @@
-fswrap==0.1.2
-commando==0.3.4
-PyYAML==3.11
-Markdown==2.6.2
-MarkupSafe==0.23
-Pygments==2.0.2
-typogrify==2.0.7
-smartypants==1.8.6
-Jinja2==2.7.3
+-e .
