@@ -17,12 +17,10 @@ class TestTextlinks(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
-
-
 
     def test_textlinks(self):
         d = {
@@ -34,8 +32,8 @@ class TestTextlinks(object):
 {%% markdown %%}
 [[!!img/hyde-logo.png]]
 *   [Rich object model][hyde objects] and
-    [overridable hierarchical metadata]([[ %(plugins)s ]]) thats available for use in
-    templates.
+    [overridable hierarchical metadata]([[ %(plugins)s ]]) thats available
+    for use in templates.
 *   Configurable [sorting][], filtering and grouping support.
 
 [hyde objects]: [[ %(objects)s ]]
@@ -57,5 +55,5 @@ class TestTextlinks(object):
         assert html
         for name, path in d.items():
 
-            assert site.config.base_url +  quote(path) in html
+            assert site.config.base_url + quote(path) in html
         assert '/media/img/hyde-logo.png' in html

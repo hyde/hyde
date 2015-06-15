@@ -1,6 +1,7 @@
 import re
 import difflib
 
+
 def strip_spaces_between_tags(value):
     """
     Stolen from `django.util.html`
@@ -8,10 +9,11 @@ def strip_spaces_between_tags(value):
     """
     return re.sub(r'>\s+<', '><', unicode(value))
 
+
 def assert_no_diff(expected, out):
     diff = [l for l in difflib.unified_diff(expected.splitlines(True),
-                                                out.splitlines(True),
-                                                n=3)]
+                                            out.splitlines(True),
+                                            n=3)]
     assert not diff, ''.join(diff)
 
 
@@ -23,6 +25,7 @@ def assert_html_equals(expected, actual, sanitize=None):
         actual = sanitize(actual)
     assert expected == actual
 
+
 def trap_exit_fail(f):
     def test_wrapper(*args):
         try:
@@ -31,6 +34,7 @@ def trap_exit_fail(f):
             assert False
     test_wrapper.__name__ = f.__name__
     return test_wrapper
+
 
 def trap_exit_pass(f):
     def test_wrapper(*args):

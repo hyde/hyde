@@ -16,6 +16,7 @@ from fswrap import File
 #
 
 class UglifyPlugin(CLTransformer):
+
     """
     The plugin class for Uglify JS
     """
@@ -85,7 +86,9 @@ class UglifyPlugin(CLTransformer):
         out = target.read_all()
         return out
 
+
 class RequireJSPlugin(CLTransformer):
+
     """
     requirejs plugin
 
@@ -103,6 +106,7 @@ class RequireJSPlugin(CLTransformer):
 
     Please see the homepage of requirejs for usage details.
     """
+
     def __init__(self, site):
         super(RequireJSPlugin, self).__init__(site)
 
@@ -124,20 +128,22 @@ class RequireJSPlugin(CLTransformer):
         rjs = self.app
         target = File.make_temp('')
         args = [unicode(rjs)]
-        args.extend(['-o', unicode(resource), ("out=" + target.fully_expanded_path)])
+        args.extend(
+            ['-o', unicode(resource), ("out=" + target.fully_expanded_path)])
 
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
-             HydeException.reraise(
-                    "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (self.app.name, resource.source_file),
-                    sys.exc_info())
+            HydeException.reraise(
+                "Cannot process %s. Error occurred when "
+                "processing [%s]" % (self.app.name, resource.source_file),
+                sys.exc_info())
 
         return target.read_all()
 
 
 class CoffeePlugin(CLTransformer):
+
     """
     The plugin class for Coffeescript
     """

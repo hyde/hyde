@@ -5,6 +5,7 @@ The hyde executable
 """
 from hyde.engine import Engine
 
+
 def main():
     """Main"""
     Engine().run()

@@ -7,7 +7,9 @@ Depends plugin
 
 from hyde.plugin import Plugin
 
+
 class DependsPlugin(Plugin):
+
     """
     The plugin class setting explicit dependencies.
     """
@@ -16,15 +18,14 @@ class DependsPlugin(Plugin):
         super(DependsPlugin, self).__init__(site)
 
     def begin_site(self):
-           """
-           Initialize dependencies.
+        """
+        Initialize dependencies.
 
-           Go through all the nodes and resources to initialize
-           dependencies at each level.
-           """
-           for resource in self.site.content.walk_resources():
-               self._update_resource(resource)
-
+        Go through all the nodes and resources to initialize
+        dependencies at each level.
+        """
+        for resource in self.site.content.walk_resources():
+            self._update_resource(resource)
 
     def _update_resource(self, resource):
         """
@@ -53,7 +54,7 @@ class DependsPlugin(Plugin):
 
         for dep in depends:
             resource.depends.append(dep.format(node=resource.node,
-                                    resource=resource,
-                                    site=self.site,
-                                    context=self.site.context))
+                                               resource=resource,
+                                               site=self.site,
+                                               context=self.site.context))
         resource.depends = list(set(resource.depends))

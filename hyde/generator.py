@@ -43,7 +43,6 @@ class Generator(object):
             site.context = Context.load(site.sitepath, site.config.context)
             self.__context__.update(site.context)
 
-
     @contextmanager
     def context_for_resource(self, resource):
         """
@@ -77,7 +76,8 @@ class Generator(object):
             providing restricted access to the methods.
             """
 
-            def __init__(self, preprocessor=None, postprocessor=None, context_for_path=None):
+            def __init__(self, preprocessor=None, postprocessor=None,
+                         context_for_path=None):
                 self.preprocessor = preprocessor
                 self.postprocessor = postprocessor
                 self.context_for_path = context_for_path
@@ -86,14 +86,16 @@ class Generator(object):
             logger.info("Generating site at [%s]" % self.site.sitepath)
             self.template = Template.find_template(self.site)
             logger.debug("Using [%s] as the template",
-                            self.template.__class__.__name__)
+                         self.template.__class__.__name__)
 
             logger.info("Configuring the template environment")
+            preprocessor = self.events.begin_text_resource
+            postprocessor = self.events.text_resource_complete
+            proxy = GeneratorProxy(context_for_path=self.context_for_path,
+                                   preprocessor=preprocessor,
+                                   postprocessor=postprocessor)
             self.template.configure(self.site,
-                        engine=GeneratorProxy(
-                            context_for_path=self.context_for_path,
-                            preprocessor=self.events.begin_text_resource,
-                            postprocessor=self.events.text_resource_complete))
+                                    engine=proxy)
             self.events.template_loaded(self.template)
 
     def initialize(self):
@@ -124,7 +126,7 @@ class Generator(object):
 
         rel_path = resource.relative_path
         deps = self.deps[rel_path] if rel_path in self.deps \
-                    else self.update_deps(resource)
+            else self.update_deps(resource)
         return deps
 
     def update_deps(self, resource):
@@ -143,7 +145,8 @@ class Generator(object):
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
                     if dep_res.relative_path in self.waiting_deps.keys():
-                        self.waiting_deps[dep_res.relative_path].append(rel_path)
+                        self.waiting_deps[
+                            dep_res.relative_path].append(rel_path)
                     else:
                         deps.extend(self.get_dependencies(dep_res))
         if resource.uses_template:
@@ -166,7 +169,7 @@ class Generator(object):
         self.load_site_if_needed()
 
         target = File(self.site.config.deploy_root_path.child(
-                                resource.relative_deploy_path))
+                      resource.relative_deploy_path))
         if not target.exists or target.older_than(resource.source_file):
             logger.debug("Found changes in %s" % resource)
             return True
@@ -209,7 +212,7 @@ class Generator(object):
         self.load_site_if_needed()
         self.events.begin_site()
         logger.info("Generating site to [%s]" %
-                        self.site.config.deploy_root_path)
+                    self.site.config.deploy_root_path)
         self.__generate_node__(self.site.content, incremental)
         self.events.site_complete()
         self.finalize()
@@ -261,9 +264,8 @@ class Generator(object):
         except HydeException:
             self.generate_all()
 
-    def generate_resource_at_path(self,
-                    resource_path=None,
-                    incremental=False):
+    def generate_resource_at_path(self, resource_path=None,
+                                  incremental=False):
         """
         Generates a single resource. If resource_path is non-existent or empty,
         generates the entire website.
@@ -311,7 +313,6 @@ class Generator(object):
                 self.__generate_resource__(resource, incremental)
             self.events.node_complete(node)
 
-
     def __generate_resource__(self, resource, incremental=False):
         self.refresh_config()
         if not resource.is_processable:
@@ -323,7 +324,7 @@ class Generator(object):
         logger.debug("Processing [%s]", resource)
         with self.context_for_resource(resource) as context:
             target = File(self.site.config.deploy_root_path.child(
-                                    resource.relative_deploy_path))
+                          resource.relative_deploy_path))
             target.parent.make()
             if resource.simple_copy:
                 logger.debug("Simply Copying [%s]", resource)
@@ -334,19 +335,19 @@ class Generator(object):
                     logger.debug("Rendering [%s]", resource)
                     try:
                         text = self.template.render_resource(resource,
-                                        context)
+                                                             context)
                     except Exception, e:
-                        HydeException.reraise("Error occurred when"
-                            " processing template: [%s]: %s" %
-                            (resource, repr(e)),
-                            sys.exc_info()
-                        )
+                        HydeException.reraise("Error occurred when processing"
+                                              "template: [%s]: %s" %
+                                              (resource, repr(e)),
+                                              sys.exc_info())
                 else:
                     text = resource.source_file.read_all()
-                    text = self.events.begin_text_resource(resource, text) or text
+                    text = self.events.begin_text_resource(
+                        resource, text) or text
 
                 text = self.events.text_resource_complete(
-                                        resource, text) or text
+                    resource, text) or text
                 target.write(text)
                 copymode(resource.source_file.path, target.path)
             else:

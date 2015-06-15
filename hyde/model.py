@@ -14,6 +14,7 @@ logger = getLoggerWithNullHandler('hyde.engine')
 
 SEQS = (tuple, list, set, frozenset)
 
+
 def make_expando(primitive):
     """
     Creates an expando object, a sequence of expando objects or just
@@ -29,6 +30,7 @@ def make_expando(primitive):
 
 
 class Expando(object):
+
     """
     A generic expando class that creates attributes from
     the passed in dictionary.
@@ -63,7 +65,6 @@ class Expando(object):
         """
         setattr(self, unicode(key).encode('utf-8'), make_expando(value))
 
-
     def __repr__(self):
         return unicode(self.to_dict())
 
@@ -79,9 +80,9 @@ class Expando(object):
             elif isinstance(v, SEQS):
                 seq = type(v)
                 result[k] = seq(item.to_dict()
-                    if isinstance(item, Expando)
-                    else item for item in v
-                )
+                                if isinstance(item, Expando)
+                                else item for item in v
+                                )
             else:
                 result[k] = v
         return result
@@ -94,6 +95,7 @@ class Expando(object):
 
 
 class Context(object):
+
     """
     Wraps the context related functions and utilities.
     """
@@ -125,7 +127,9 @@ class Context(object):
 
         return context
 
+
 class Dependents(IterableUserDict):
+
     """
     Represents the dependency graph for hyde.
     """
@@ -146,11 +150,14 @@ class Dependents(IterableUserDict):
         if self.deps_file.parent.exists:
             self.deps_file.write(yaml.dump(self.data))
 
+
 def _expand_path(sitepath, path):
     child = sitepath.child_folder(path)
     return Folder(child.fully_expanded_path)
 
+
 class Config(Expando):
+
     """
     Represents the hyde configuration file
     """
@@ -158,7 +165,7 @@ class Config(Expando):
     def __init__(self, sitepath, config_file=None, config_dict=None):
         self.default_config = dict(
             mode='production',
-            simple_copy = [],
+            simple_copy=[],
             content_root='content',
             deploy_root='deploy',
             media_root='media',
@@ -167,9 +174,9 @@ class Config(Expando):
             base_url="/",
             encode_safe=None,
             not_found='404.html',
-            plugins = [],
-            ignore = [ "*~", "*.bak", ".hg", ".git", ".svn"],
-            meta = {
+            plugins=[],
+            ignore=["*~", "*.bak", ".hg", ".git", ".svn"],
+            meta={
                 "nodemeta": 'meta.yaml'
             }
         )
@@ -188,7 +195,7 @@ class Config(Expando):
         if not self.config_files:
             return True
         return any((conf.has_changed_since(self.load_time)
-                        for conf in self.config_files))
+                    for conf in self.config_files))
 
     def load(self):
         conf = dict(**self.default_config)
@@ -202,15 +209,14 @@ class Config(Expando):
             return
         self.update(self.load())
 
-
     def read_config(self, config_file):
         """
         Reads the configuration file and updates this
         object while allowing for inherited configurations.
         """
         conf_file = self.sitepath.child(
-                            config_file if
-                                    config_file else 'site.yaml')
+            config_file if
+            config_file else 'site.yaml')
         conf = {}
         if File(conf_file).exists:
             self.config_files.append(File(conf_file))
@@ -223,7 +229,6 @@ class Config(Expando):
                     conf = parent
         self.load_time = datetime.now()
         return conf
-
 
     @property
     def deploy_root_path(self):

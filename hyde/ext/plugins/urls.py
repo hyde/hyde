@@ -8,7 +8,9 @@ from hyde.site import Site
 from functools import wraps
 from fswrap import File
 
+
 class UrlCleanerPlugin(Plugin):
+
     """
     Url Cleaner plugin for hyde. Adds to hyde the ability to generate clean
     urls.
@@ -53,13 +55,13 @@ class UrlCleanerPlugin(Plugin):
             def wrapper(site, path, safe=None):
                 url = urlgetter(site, path, safe)
                 index_file_names = getattr(settings,
-                                        'index_file_names',
-                                        ['index.html'])
+                                           'index_file_names',
+                                           ['index.html'])
                 rep = File(url)
                 if rep.name in index_file_names:
                     url = rep.parent.path.rstrip('/')
                     if hasattr(settings, 'append_slash') and \
-                        settings.append_slash:
+                            settings.append_slash:
                         url += '/'
                 elif hasattr(settings, 'strip_extensions'):
                     if rep.kind in settings.strip_extensions:

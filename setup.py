@@ -132,7 +132,8 @@ setup(name=PROJECT,
         'pyquery==1.2.9',
         'docutils==0.12',
         'Pillow==2.7.0',
-        'pyScss==1.3.4'
+        'pyScss==1.3.4',
+        'flake8==2.4.1'
       ),
       test_suite='nose.collector',
       include_package_data = True,

@@ -11,6 +11,7 @@ LAYOUTS = "layouts"
 
 
 class Layout(object):
+
     """
     Represents a layout package
     """
@@ -26,10 +27,10 @@ class Layout(object):
         layout_folder = None
         if HYDE_DATA in os.environ:
             layout_folder = Layout._get_layout_folder(
-                                os.environ[HYDE_DATA], layout_name)
+                os.environ[HYDE_DATA], layout_name)
         if not layout_folder:
             layout_folder = Layout._get_layout_folder(
-                                File(__file__).parent, layout_name)
+                File(__file__).parent, layout_name)
         return layout_folder
 
     @staticmethod

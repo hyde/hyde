@@ -12,14 +12,17 @@ from fswrap import File, Folder
 COMBINE_SOURCE = File(__file__).parent.child_folder('combine')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
+
 class CombineTester(object):
+
     def _test_combine(self, content):
         s = Site(TEST_SITE)
         s.config.plugins = [
             'hyde.ext.plugins.meta.MetaPlugin',
             'hyde.ext.plugins.structure.CombinePlugin']
         source = TEST_SITE.child('content/media/js/script.js')
-        target = File(Folder(s.config.deploy_root_path).child('media/js/script.js'))
+        target = File(
+            Folder(s.config.deploy_root_path).child('media/js/script.js'))
         File(source).write(content)
 
         gen = Generator(s)
@@ -29,12 +32,13 @@ class CombineTester(object):
         text = target.read_all()
         return text, s
 
+
 class TestCombine(CombineTester):
 
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
         TEST_SITE.child_folder('content/media/js').make()
         COMBINE_SOURCE.copy_contents_to(TEST_SITE.child('content/media/js'))
 
@@ -107,7 +111,7 @@ combine:
 ---
 
 First line""")
-        for i in range(1,4):
+        for i in range(1, 4):
             assert not File(Folder(s.config.deploy_root_path).
                             child('media/js/script.%d.js' % i)).exists
 
@@ -117,7 +121,7 @@ class TestCombinePaths(CombineTester):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
         TEST_SITE.child_folder('content/media/js').make()
         JS = TEST_SITE.child_folder('content/scripts').make()
         S1 = JS.child_folder('s1').make()

@@ -29,10 +29,13 @@ from nose.tools import nottest
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 
+
 class TestSimpleCopy(object):
+
     @classmethod
     def setup_class(cls):
-        cls.SITE_PATH =  File(__file__).parent.child_folder('sites/test_jinja_with_config')
+        cls.SITE_PATH = File(__file__).parent.child_folder(
+            'sites/test_jinja_with_config')
         cls.SITE_PATH.make()
         TEST_SITE_ROOT.copy_contents_to(cls.SITE_PATH)
 
@@ -67,7 +70,8 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('about.html')
         assert res
         assert not res.simple_copy
-        res = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
+        res = s.content.resource_from_relative_path(
+            'blog/2010/december/merry-christmas.html')
         assert res
         assert res.simple_copy
 
@@ -81,7 +85,8 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('about.html')
         assert res
         assert not res.simple_copy
-        res = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
+        res = s.content.resource_from_relative_path(
+            'blog/2010/december/merry-christmas.html')
         assert res
         assert res.simple_copy
         res = s.content.resource_from_relative_path('media/css/site.css')
@@ -96,8 +101,10 @@ class TestSimpleCopy(object):
         s = Site(self.SITE_PATH, self.config)
         g = Generator(s)
         g.generate_all()
-        source = s.content.resource_from_relative_path('blog/2010/december/merry-christmas.html')
-        target = File(s.config.deploy_root_path.child(source.relative_deploy_path))
+        source = s.content.resource_from_relative_path(
+            'blog/2010/december/merry-christmas.html')
+        target = File(
+            s.config.deploy_root_path.child(source.relative_deploy_path))
         left = source.source_file.read_all()
         right = target.read_all()
         assert left == right
@@ -129,11 +136,13 @@ twitter: @me
         ])
         conf = {'plugins': ['hyde.ext.plugins.meta.MetaPlugin']}
         conf.update(self.config.to_dict())
-        s = Site(self.SITE_PATH, Config(sitepath=self.SITE_PATH, config_dict=conf))
+        s = Site(self.SITE_PATH, Config(
+            sitepath=self.SITE_PATH, config_dict=conf))
         g = Generator(s)
         g.generate_all()
         source = s.content.resource_from_relative_path('blog/index.html')
-        target = File(s.config.deploy_root_path.child(source.relative_deploy_path))
+        target = File(
+            s.config.deploy_root_path.child(source.relative_deploy_path))
         left = source.source_file.read_all()
         right = target.read_all()
         assert left == right

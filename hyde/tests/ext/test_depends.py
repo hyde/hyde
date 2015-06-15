@@ -17,10 +17,10 @@ class TestDepends(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
         TEST_SITE.parent.child_folder(
-                    'templates/jinja2').copy_contents_to(
-                        TEST_SITE.child_folder('content'))
+            'templates/jinja2').copy_contents_to(
+            TEST_SITE.child_folder('content'))
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -40,6 +40,7 @@ depends: index.html
         gen = Generator(s)
         gen.load_site_if_needed()
         gen.load_template_if_needed()
+
         def dateformat(x):
             return x.strftime('%Y-%m-%d')
         gen.template.env.filters['dateformat'] = dateformat

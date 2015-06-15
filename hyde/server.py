@@ -18,7 +18,9 @@ from fswrap import File, Folder
 from commando.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.server')
 
+
 class HydeRequestHandler(SimpleHTTPRequestHandler):
+
     """
     Serves files by regenerating the resource (or)
     everything when a request is issued.
@@ -35,7 +37,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         logger.debug("Processing request: [%s]" % self.path)
         result = urlparse.urlparse(self.path)
         query = urlparse.parse_qs(result.query)
-        if 'refresh' in query or result.query=='refresh':
+        if 'refresh' in query or result.query == 'refresh':
             self.server.regenerate()
             if 'refresh' in query:
                 del query['refresh']
@@ -48,7 +50,6 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         else:
             SimpleHTTPRequestHandler.do_GET(self)
 
-
     def translate_path(self, path):
         """
         Finds the absolute path of the requested file by
@@ -56,7 +57,8 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         """
         site = self.server.site
         result = urlparse.urlparse(urllib.unquote(self.path).decode('utf-8'))
-        logger.debug("Trying to load file based on request: [%s]" % result.path)
+        logger.debug(
+            "Trying to load file based on request: [%s]" % result.path)
         path = result.path.lstrip('/')
         res = None
         if path.strip() == "" or File(path).kind.strip() == "":
@@ -65,13 +67,16 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             if isinstance(deployed, Folder):
                 node = site.content.node_from_relative_path(path)
                 res = node.get_resource('index.html')
-            elif hasattr(site.config, 'urlcleaner') and hasattr(site.config.urlcleaner, 'strip_extensions'):
+            elif hasattr(site.config, 'urlcleaner') and hasattr(
+                    site.config.urlcleaner, 'strip_extensions'):
                 for ext in site.config.urlcleaner.strip_extensions:
-                    res = site.content.resource_from_relative_deploy_path(path + '.' + ext)
+                    res = site.content.resource_from_relative_deploy_path(
+                        path + '.' + ext)
                     if res:
                         break
                 for ext in site.config.urlcleaner.strip_extensions:
-                    new_path = site.config.deploy_root_path.child(path + '.' + ext)
+                    new_path = site.config.deploy_root_path.child(
+                        path + '.' + ext)
                     if File(new_path).exists:
                         return new_path
         else:
@@ -83,7 +88,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
         else:
             self.server.generate_resource(res)
         new_path = site.config.deploy_root_path.child(
-                    res.relative_deploy_path)
+            res.relative_deploy_path)
         return new_path
 
     def do_404(self):
@@ -95,13 +100,13 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             self.redirect(site.config.not_found)
         else:
             res = site.content.resource_from_relative_deploy_path(
-                    site.config.not_found)
+                site.config.not_found)
 
             message = "Requested resource not found"
             if not res:
                 logger.error(
                     "Cannot find the 404 template [%s]."
-                        % site.config.not_found)
+                    % site.config.not_found)
             else:
                 f404 = File(self.translate_path(site.config.not_found))
                 if f404.exists:
@@ -118,6 +123,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
 
 
 class HydeWebServer(HTTPServer):
+
     """
     The hyde web server that regenerates the resource, node or site when
     a request is issued.
@@ -133,7 +139,7 @@ class HydeWebServer(HTTPServer):
         self.__shutdown_request = False
         self.map_extensions()
         HTTPServer.__init__(self, (address, port),
-                                            HydeRequestHandler)
+                            HydeRequestHandler)
 
     def map_extensions(self):
         """
@@ -161,7 +167,7 @@ class HydeWebServer(HTTPServer):
             self.generator.generate_all(incremental=False)
         except Exception, exception:
             logger.error('Error occured when regenerating the site [%s]'
-                            % exception.message)
+                         % exception.message)
             logger.debug(traceback.format_exc())
 
     def generate_node(self, node):
@@ -179,7 +185,7 @@ class HydeWebServer(HTTPServer):
         except Exception, exception:
             logger.error(
                 'Error [%s] occured when generating the node [%s]'
-                        % (repr(exception), node))
+                % (repr(exception), node))
             logger.debug(traceback.format_exc())
 
     def generate_resource(self, resource):
@@ -198,5 +204,5 @@ class HydeWebServer(HTTPServer):
         except Exception, exception:
             logger.error(
                 'Error [%s] occured when serving the resource [%s]'
-                        % (repr(exception), resource))
+                % (repr(exception), resource))
             logger.debug(traceback.format_exc())

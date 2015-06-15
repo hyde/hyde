@@ -3,7 +3,7 @@
 Text processing plugins
 """
 
-from hyde.plugin import Plugin,TextyPlugin
+from hyde.plugin import Plugin, TextyPlugin
 
 
 #
@@ -11,9 +11,11 @@ from hyde.plugin import Plugin,TextyPlugin
 #
 
 class BlockdownPlugin(TextyPlugin):
+
     """
     The plugin class for block text replacement.
     """
+
     def __init__(self, site):
         super(BlockdownPlugin, self).__init__(site)
 
@@ -55,9 +57,11 @@ class BlockdownPlugin(TextyPlugin):
 #
 
 class MarkingsPlugin(TextyPlugin):
+
     """
     The plugin class for mark text replacement.
     """
+
     def __init__(self, site):
         super(MarkingsPlugin, self).__init__(site)
 
@@ -99,9 +103,11 @@ class MarkingsPlugin(TextyPlugin):
 #
 
 class ReferencePlugin(TextyPlugin):
+
     """
     The plugin class for reference text replacement.
     """
+
     def __init__(self, site):
         super(ReferencePlugin, self).__init__(site)
 
@@ -143,9 +149,11 @@ class ReferencePlugin(TextyPlugin):
 #
 
 class SyntextPlugin(TextyPlugin):
+
     """
     The plugin class for syntax text replacement.
     """
+
     def __init__(self, site):
         super(SyntextPlugin, self).__init__(site)
 
@@ -169,7 +177,6 @@ class SyntextPlugin(TextyPlugin):
         The default pattern for block close text.
         """
         return '^\s*~~~+\s*$'
-
 
     def get_params(self, match, start=True):
         """
@@ -199,16 +206,18 @@ class SyntextPlugin(TextyPlugin):
 #
 
 class TextlinksPlugin(Plugin):
+
     """
     The plugin class for text link replacement.
     """
+
     def __init__(self, site):
         super(TextlinksPlugin, self).__init__(site)
         import re
         self.content_link = re.compile('\[\[([^\]^!][^\]]*)\]\]',
-                                       re.UNICODE|re.MULTILINE)
+                                       re.UNICODE | re.MULTILINE)
         self.media_link = re.compile('\[\[\!\!([^\]]*)\]\]',
-                                     re.UNICODE|re.MULTILINE)
+                                     re.UNICODE | re.MULTILINE)
 
     def begin_text_resource(self, resource, text):
         """
@@ -221,11 +230,12 @@ class TextlinksPlugin(Plugin):
         """
         if not resource.uses_template:
             return text
+
         def replace_content(match):
             return self.template.get_content_url_statement(match.groups(1)[0])
+
         def replace_media(match):
             return self.template.get_media_url_statement(match.groups(1)[0])
         text = self.content_link.sub(replace_content, text)
         text = self.media_link.sub(replace_media, text)
         return text
-

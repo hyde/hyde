@@ -19,11 +19,10 @@ class TestOptipng(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
         IMAGES = TEST_SITE.child_folder('content/media/images')
         IMAGES.make()
         OPTIPNG_SOURCE.copy_contents_to(IMAGES)
-
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -33,8 +32,10 @@ class TestOptipng(object):
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.images.OptiPNGPlugin']
         s.config.optipng = Expando(dict(args=dict(quiet="")))
-        source =File(TEST_SITE.child('content/media/images/hyde-lt-b.png'))
-        target = File(Folder(s.config.deploy_root_path).child('media/images/hyde-lt-b.png'))
+        source = File(TEST_SITE.child('content/media/images/hyde-lt-b.png'))
+        target = File(
+            Folder(s.config.deploy_root_path).child(
+                'media/images/hyde-lt-b.png'))
         gen = Generator(s)
         gen.generate_resource_at_path(source)
         assert target.exists

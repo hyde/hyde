@@ -24,6 +24,7 @@ import yaml
 ROOT = File(__file__).parent
 JINJA2 = ROOT.child_folder('templates/jinja2')
 
+
 class Article(object):
 
     def __init__(self, id):
@@ -33,11 +34,13 @@ class Article(object):
         self.user = choice(users)
         self.body = generate_lorem_ipsum()
         self.pub_date = datetime.utcfromtimestamp(
-                            randrange(10 ** 9, 2 * 10 ** 9))
+            randrange(10 ** 9, 2 * 10 ** 9))
         self.published = True
+
 
 def dateformat(x):
     return x.strftime('%Y-%m-%d')
+
 
 class User(object):
 
@@ -59,6 +62,7 @@ navigation = [
 
 context = dict(users=users, articles=articles, page_navigation=navigation)
 
+
 def test_render():
     """
     Uses pyquery to test the html structure for validity
@@ -77,6 +81,7 @@ def test_render():
     assert actual("div.article p.meta").length == 20
     assert actual("div.article div.text").length == 20
 
+
 def test_typogrify():
     source = """
     {%filter typogrify%}
@@ -88,6 +93,7 @@ def test_typogrify():
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'One <span class="amp">&amp;</span>&nbsp;two'
+
 
 def test_spaceless():
     source = """
@@ -124,6 +130,7 @@ def test_spaceless():
 """
     assert html.strip() == expected.strip()
 
+
 def test_asciidoc():
     source = """
     {%asciidoc%}
@@ -146,6 +153,7 @@ def test_asciidoc():
     assert q("li:nth-child(2)").text().strip() == "test2"
     assert q("li:nth-child(3)").text().strip() == "test3"
 
+
 def test_markdown():
     source = """
     {%markdown%}
@@ -156,6 +164,7 @@ def test_markdown():
     t.configure(None)
     html = t.render(source, {}).strip()
     assert html == u'<h3>Heading 3</h3>'
+
 
 def test_restructuredtext():
     source = """
@@ -170,6 +179,7 @@ Hello
     assert html == u"""<div class="document" id="hello">
 <h1 class="title">Hello</h1>
 </div>""", html
+
 
 def test_restructuredtext_with_sourcecode():
     source = """
@@ -188,23 +198,29 @@ See `Example`_
 {% endrestructuredtext %}
 """
 
-    expected = """
+    expected = ("""
 <div class="document" id="code">
 <h1 class="title">Code</h1>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<div class="highlight"><pre><span class="k">def</span> """
+                """<span class="nf">add</span><span class="p">(</span>"""
+                """<span class="n">a"""
+                """</span><span class="p">,</span> <span class="n">b</span>"""
+                """<span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> """
+                """<span class="o">+</span> <span class="n">b</span>
 </pre></div>
 <p>See <a class="reference external" href="example.html">Example</a></p>
 </div>
-"""
+""")
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
     c = Config(JINJA2.path, config_dict=dict(
-                    restructuredtext=dict(highlight_source=True)))
+        restructuredtext=dict(highlight_source=True)))
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
     assert html.strip() == expected.strip()
+
 
 def test_markdown_with_extensions():
     source = """
@@ -215,12 +231,14 @@ def test_markdown_with_extensions():
     """
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
-    c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
+    c = Config(JINJA2.path, config_dict=dict(
+        markdown=dict(extensions=['headerid'])))
     s.config = c
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading-3">Heading 3</h3>'
+
 
 def test_markdown_with_sourcecode():
     source = """
@@ -237,19 +255,23 @@ See [Example][]
 {%endmarkdown%}
 """
 
-    expected = """
+    expected = ("""
     <h1>Code</h1>
-<div class="codehilite"><pre><span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<div class="codehilite"><pre><span class="k">def</span> """
+                """<span class="nf">add</span><span class="p">(</span>"""
+                """<span class="n">a</span><span class="p">,</span> """
+                """<span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+"""
+                """</span> <span class="n">b</span>
 </pre></div>
 
 
 <p>See <a href="example.html">Example</a></p>
-    """
+    """)
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
     c = Config(JINJA2.path, config_dict=dict(
-                    markdown=dict(extensions=['codehilite'])))
+        markdown=dict(extensions=['codehilite'])))
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
@@ -265,12 +287,14 @@ def test_line_statements():
     """
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
-    c = Config(JINJA2.path, config_dict=dict(markdown=dict(extensions=['headerid'])))
+    c = Config(JINJA2.path, config_dict=dict(
+        markdown=dict(extensions=['headerid'])))
     s.config = c
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()
     assert html == u'<h3 id="heading-3">Heading 3</h3>'
+
 
 def test_line_statements_with_config():
     source = """
@@ -298,6 +322,7 @@ def test_line_statements_with_config():
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
+
 @nottest
 def assert_markdown_typogrify_processed_well(include_text, includer_text):
     site = Site(TEST_SITE)
@@ -317,11 +342,13 @@ def assert_markdown_typogrify_processed_well(include_text, includer_text):
     assert q(".amp").length == 1
     return html
 
+
 class TestJinjaTemplate(object):
 
     def setUp(self):
         TEST_SITE.make()
-        TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+        TEST_SITE.parent.child_folder(
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -375,7 +402,6 @@ class TestJinjaTemplate(object):
         assert article.length == 1
         assert article.text() == "Heya"
 
-
     def test_depends_with_reference_tag(self):
         site = Site(TEST_SITE)
         JINJA2.copy_contents_to(site.content.source)
@@ -408,7 +434,6 @@ class TestJinjaTemplate(object):
 
         assert not deps[0]
 
-
     def test_can_include_templates_with_processing(self):
         text = """
 ===
@@ -424,10 +449,8 @@ Hyde & Jinja.
 {% endmarkdown %}{% endfilter %}
 """
 
-
         text2 = """{% include "inc.md"  %}"""
         assert_markdown_typogrify_processed_well(text, text2)
-
 
     def test_includetext(self):
         text = """
@@ -595,7 +618,6 @@ Hyde & Jinja.
         assert "mark" not in html
         assert "reference" not in html
 
-
     def test_refer_with_var(self):
         text = """
 ===
@@ -622,7 +644,6 @@ Hyde & Jinja.
         html = assert_markdown_typogrify_processed_well(text, text2)
         assert "mark" not in html
         assert "reference" not in html
-
 
     def test_yaml_tag(self):
 
@@ -728,20 +749,22 @@ item_list:
   </ul>
 </aside>
 """
-        text = "{%% filter markdown|typogrify %%}{%% raw %%}%s{%% endraw %%}{%% endfilter %%}" % expected
+        text = """{%% filter markdown|typogrify %%}{%% raw
+            %%}%s{%% endraw %%}{%% endfilter %%}""" % expected
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
         html = t.render(text, {}).strip()
         assert html.strip() == expected.strip()
 
     def test_urlencode_filter(self):
-        text= u"""
-<a href="{{ 'фотография.jpg'|urlencode }}">фотография</a>
-<a href="{{ 'http://localhost:8080/"abc.jpg'|urlencode }}">quoted</a>
+        text = u"""
+<a href="{{ 'фотография.jpg'|urlencode }}"
+>фотография</a><a href="{{ 'http://localhost:8080/"abc.jpg'|urlencode
+}}">quoted</a>
 """
         expected = u"""
-<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография</a>
-<a href="http%3A//localhost%3A8080/%22abc.jpg">quoted</a>
+<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg"
+>фотография</a><a href="http%3A//localhost%3A8080/%22abc.jpg">quoted</a>
 """
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
@@ -749,12 +772,13 @@ item_list:
         assert html.strip() == expected.strip()
 
     def test_urldecode_filter(self):
-        text= u"""
-<a href="{{ 'фотография.jpg'|urlencode }}">{{ "%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg"|urldecode }}</a>
+        text = u"""
+<a href="{{ 'фотография.jpg'|urlencode }}">{{
+"%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg"|urldecode
+}}</a>
 """
-        expected = u"""
-<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография.jpg</a>
-"""
+        expected = (u'<a href="%D1%84%D0%BE%D1%82%D0%BE%D0%B3%D1'
+                    u'%80%D0%B0%D1%84%D0%B8%D1%8F.jpg">фотография.jpg</a>')
         t = Jinja2Template(JINJA2.path)
         t.configure(None)
         html = t.render(text, {}).strip()

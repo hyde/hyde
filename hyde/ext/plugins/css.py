@@ -18,7 +18,9 @@ from fswrap import File
 # Less CSS
 #
 
+
 class LessCSSPlugin(CLTransformer):
+
     """
     The plugin class for less css
     """
@@ -29,7 +31,6 @@ class LessCSSPlugin(CLTransformer):
             re.compile('^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
                        re.MULTILINE)
 
-
     @property
     def executable_name(self):
         return "lessc"
@@ -39,7 +40,7 @@ class LessCSSPlugin(CLTransformer):
         Check user defined
         """
         return resource.source_file.kind == 'less' and \
-               getattr(resource, 'meta', {}).get('parse', True)
+            getattr(resource, 'meta', {}).get('parse', True)
 
     def _should_replace_imports(self, resource):
         return getattr(resource, 'meta', {}).get('uses_template', True)
@@ -72,12 +73,12 @@ class LessCSSPlugin(CLTransformer):
                 afile = File(afile.path + '.less')
             ref = self.site.content.resource_from_path(afile.path)
             if not ref:
-                raise HydeException("Cannot import from path [%s]" % afile.path)
+                raise HydeException(
+                    "Cannot import from path [%s]" % afile.path)
             ref.is_processable = False
             return self.template.get_include_statement(ref.relative_path)
         text = self.import_finder.sub(import_to_include, text)
         return text
-
 
     @property
     def plugin_name(self):
@@ -114,10 +115,10 @@ class LessCSSPlugin(CLTransformer):
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
-             HydeException.reraise(
-                    "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (self.app.name, resource.source_file),
-                    sys.exc_info())
+            HydeException.reraise(
+                "Cannot process %s. Error occurred when "
+                "processing [%s]" % (self.app.name, resource.source_file),
+                sys.exc_info())
 
         return target.read_all()
 
@@ -127,6 +128,7 @@ class LessCSSPlugin(CLTransformer):
 #
 
 class StylusPlugin(CLTransformer):
+
     """
     The plugin class for stylus css
     """
@@ -162,7 +164,8 @@ class StylusPlugin(CLTransformer):
             if not match.lastindex:
                 return ''
             path = match.groups(1)[0]
-            afile = File(File(resource.source_file.parent.child(path)).fully_expanded_path)
+            first_child = resource.source_file.parent.child(path)
+            afile = File(File(first_child).fully_expanded_path)
             if len(afile.kind.strip()) == 0:
                 afile = File(afile.path + '.styl')
 
@@ -179,8 +182,8 @@ class StylusPlugin(CLTransformer):
             else:
                 ref.is_processable = False
                 return "\n" + \
-                        self.template.get_include_statement(ref.relative_path) + \
-                        "\n"
+                    self.template.get_include_statement(ref.relative_path) + \
+                    "\n"
             return '@import "' + path + '"\n'
 
         text = self.import_finder.sub(import_to_include, text)
@@ -196,7 +199,7 @@ class StylusPlugin(CLTransformer):
         except AttributeError:
             mode = "production"
 
-        defaults = {"compress":""}
+        defaults = {"compress": ""}
         if mode.startswith('dev'):
             defaults = {}
         return defaults
@@ -227,9 +230,9 @@ class StylusPlugin(CLTransformer):
             self.call_app(args)
         except subprocess.CalledProcessError:
             HydeException.reraise(
-                    "Cannot process %s. Error occurred when "
-                    "processing [%s]" % (stylus.name, resource.source_file),
-                    sys.exc_info())
+                "Cannot process %s. Error occurred when "
+                "processing [%s]" % (stylus.name, resource.source_file),
+                sys.exc_info())
         target = File(source.path + '.css')
         return target.read_all()
 
@@ -239,6 +242,7 @@ class StylusPlugin(CLTransformer):
 #
 
 class CleverCSSPlugin(Plugin):
+
     """
     The plugin class for CleverCSS
     """
@@ -257,7 +261,7 @@ class CleverCSSPlugin(Plugin):
         Check user defined
         """
         return resource.source_file.kind == 'ccss' and \
-               getattr(resource, 'meta', {}).get('parse', True)
+            getattr(resource, 'meta', {}).get('parse', True)
 
     def _should_replace_imports(self, resource):
         return getattr(resource, 'meta', {}).get('uses_template', True)
@@ -282,8 +286,8 @@ class CleverCSSPlugin(Plugin):
             return text
 
         import_finder = re.compile(
-                            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
-                            re.MULTILINE)
+            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
+            re.MULTILINE)
 
         def import_to_include(match):
             if not match.lastindex:
@@ -294,7 +298,8 @@ class CleverCSSPlugin(Plugin):
                 afile = File(afile.path + '.ccss')
             ref = self.site.content.resource_from_path(afile.path)
             if not ref:
-                raise HydeException("Cannot import from path [%s]" % afile.path)
+                raise HydeException(
+                    "Cannot import from path [%s]" % afile.path)
             ref.is_processable = False
             return self.template.get_include_statement(ref.relative_path)
         text = import_finder.sub(import_to_include, text)
@@ -313,7 +318,9 @@ class CleverCSSPlugin(Plugin):
 # Sassy CSS
 #
 
+
 class SassyCSSPlugin(Plugin):
+
     """
     The plugin class for SassyCSS
     """
@@ -332,7 +339,7 @@ class SassyCSSPlugin(Plugin):
         Check user defined
         """
         return resource.source_file.kind == 'scss' and \
-               getattr(resource, 'meta', {}).get('parse', True)
+            getattr(resource, 'meta', {}).get('parse', True)
 
     @property
     def options(self):
@@ -364,7 +371,6 @@ class SassyCSSPlugin(Plugin):
         """
         return self.settings.get('includes', [])
 
-
     def begin_site(self):
         """
         Find all the sassycss files and set their relative deploy path.
@@ -373,7 +379,7 @@ class SassyCSSPlugin(Plugin):
         self.scss.STATIC_ROOT = self.site.config.content_root_path.path
         self.scss.ASSETS_URL = self.site.media_url('/')
         self.scss.ASSETS_ROOT = self.site.config.deploy_root_path.child(
-                                    self.site.config.media_root)
+            self.site.config.media_root)
 
         for resource in self.site.content.walk_resources():
             if self._should_parse_resource(resource):
@@ -391,8 +397,8 @@ class SassyCSSPlugin(Plugin):
         includes = [resource.node.path] + self.includes
         includes = [path.rstrip(os.sep) + os.sep for path in includes]
         options = self.options
-        if not 'load_paths' in options:
+        if 'load_paths' not in options:
             options['load_paths'] = []
         options['load_paths'].extend(includes)
-        scss = self.scss.Scss(scss_opts=options, scss_vars=self.vars )
+        scss = self.scss.Scss(scss_opts=options, scss_vars=self.vars)
         return scss.compile(text)

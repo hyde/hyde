@@ -10,13 +10,12 @@ from hyde.plugin import Plugin
 
 class DraftsPlugin(Plugin):
 
-
     def begin_site(self):
 
         in_production = self.site.config.mode.startswith('prod')
         if not in_production:
-            self.logger.info(
-                'Generating draft posts as the site is not in production mode.')
+            self.logger.info('Generating draft posts as the site is'
+                             'not in production mode.')
             return
 
         for resource in self.site.content.walk_resources():
@@ -33,4 +32,4 @@ class DraftsPlugin(Plugin):
 
             self.logger.info(
                 '%s is%s draft' % (resource,
-                    '' if is_draft else ' not'))
+                                   '' if is_draft else ' not'))
