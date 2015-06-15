@@ -29,7 +29,7 @@ class TestStylus(object):
     def test_can_execute_stylus(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
-        paths = ['/usr/local/share/npm/bin/stylus']
+        paths = ['/usr/local/bin/stylus', '/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:
                 s.config.stylus = Expando(dict(app=path))
@@ -47,7 +47,7 @@ class TestStylus(object):
         s = Site(TEST_SITE)
         s.config.mode = "production"
         s.config.plugins = ['hyde.ext.plugins.css.StylusPlugin']
-        paths = ['/usr/local/share/npm/bin/stylus']
+        paths = ['/usr/local/bin/stylus', '/usr/local/share/npm/bin/stylus']
         for path in paths:
             if File(path).exists:
                 s.config.stylus = Expando(dict(app=path))

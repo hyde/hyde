@@ -307,7 +307,7 @@ class Generator(object):
         for node in node.walk():
             logger.debug("Generating Node [%s]", node)
             self.events.begin_node(node)
-            for resource in node.resources:
+            for resource in sorted(node.resources):
                 self.__generate_resource__(resource, incremental)
             self.events.node_complete(node)
 

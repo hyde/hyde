@@ -45,6 +45,12 @@ class Processable(object):
     def __repr__(self):
         return self.path
 
+    def __lt__(self, other):
+        return self.source.path < other.source.path
+
+    def __gt__(self, other):
+        return self.source.path > other.source.path
+
     @property
     def path(self):
         """
@@ -188,7 +194,7 @@ class Node(Processable):
         yielding the child nodes depth-first.
         """
         yield self
-        for child in self.child_nodes:
+        for child in sorted([node for node in self.child_nodes]):
             for node in child.walk():
                 yield node
 
@@ -207,7 +213,7 @@ class Node(Processable):
         Walks the resources in this hierarchy.
         """
         for node in self.walk():
-            for resource in node.resources:
+            for resource in sorted([resource for resource in node.resources]):
                 yield resource
 
     @property

@@ -218,7 +218,6 @@ class StylusPlugin(CLTransformer):
             return
         stylus = self.app
         source = File.make_temp(text.strip())
-        target = source
         supported = [("compress", "c"), ("include", "I")]
 
         args = [unicode(stylus)]
@@ -231,6 +230,7 @@ class StylusPlugin(CLTransformer):
                     "Cannot process %s. Error occurred when "
                     "processing [%s]" % (stylus.name, resource.source_file),
                     sys.exc_info())
+        target = File(source.path + '.css')
         return target.read_all()
 
 
