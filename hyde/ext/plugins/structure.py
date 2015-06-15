@@ -20,9 +20,11 @@ import operator
 #
 
 class FlattenerPlugin(Plugin):
+
     """
     The plugin class for flattening nested folders.
     """
+
     def __init__(self, site):
         super(FlattenerPlugin, self).__init__(site)
 
@@ -50,7 +52,7 @@ class FlattenerPlugin(Plugin):
                     target_path = target.child(resource.name)
                     self.logger.debug(
                         'Flattening resource path [%s] to [%s]' %
-                            (resource, target_path))
+                        (resource, target_path))
                     resource.relative_deploy_path = target_path
                 for child in node.walk():
                     child.relative_deploy_path = target.path
@@ -61,12 +63,14 @@ class FlattenerPlugin(Plugin):
 #
 
 class CombinePlugin(Plugin):
+
     """
     To use this combine, the following configuration should be added
     to meta data::
          combine:
             sort: false #Optional. Defaults to true.
-            root: content/media #Optional. Path must be relative to content folder - default current folder
+            root: content/media #Optional. Path must be relative to content
+                folder - default current folder
             recurse: true #Optional. Default false.
             files:
                 - ns1.*.js
@@ -97,13 +101,14 @@ class CombinePlugin(Plugin):
         except AttributeError:
             raise AttributeError("No resources to combine for [%s]" % resource)
         if type(files) is str:
-            files = [ files ]
+            files = [files]
 
         # Grab resources to combine
 
         # select site root
         try:
-            root = self.site.content.node_from_relative_path(resource.meta.combine.root)
+            root = self.site.content.node_from_relative_path(
+                resource.meta.combine.root)
         except AttributeError:
             root = resource.node
 
@@ -122,10 +127,12 @@ class CombinePlugin(Plugin):
             sort = True
 
         if sort:
-            resources = sorted([r for r in walker if any(fnmatch(r.name, f) for f in files)],
-                                                    key=operator.attrgetter('name'))
+            resources = sorted([r for r in walker
+                                if any(fnmatch(r.name, f) for f in files)],
+                               key=operator.attrgetter('name'))
         else:
-            resources = [(f, r) for r in walker for f in files if fnmatch(r.name, f)]
+            resources = [(f, r)
+                         for r in walker for f in files if fnmatch(r.name, f)]
             resources = [r[1] for f in files for r in resources if f in r]
 
         if not resources:
@@ -173,7 +180,7 @@ class CombinePlugin(Plugin):
         except AttributeError:
             pass
 
-        if where not in [ "top", "bottom" ]:
+        if where not in ["top", "bottom"]:
             raise ValueError("%r should be either `top` or `bottom`" % where)
 
         self.logger.debug(
@@ -190,11 +197,14 @@ class CombinePlugin(Plugin):
 #
 
 class Page:
+
     def __init__(self, posts, number):
         self.posts = posts
         self.number = number
 
+
 class Paginator:
+
     """
     Iterates resources which have pages associated with them.
     """
@@ -204,7 +214,8 @@ class Paginator:
     def __init__(self, settings):
         self.sorter = getattr(settings, 'sorter', None)
         self.size = getattr(settings, 'size', 10)
-        self.file_pattern = getattr(settings, 'file_pattern', self.file_pattern)
+        self.file_pattern = getattr(
+            settings, 'file_pattern', self.file_pattern)
 
     def _relative_url(self, source_path, number, basename, ext):
         """
@@ -214,8 +225,8 @@ class Paginator:
         path = File(source_path)
         if number != 1:
             filename = self.file_pattern.replace('$PAGE', str(number)) \
-                                    .replace('$FILE', basename) \
-                                    .replace('$EXT', ext)
+                .replace('$FILE', basename) \
+                .replace('$EXT', ext)
             path = path.parent.child(os.path.normpath(filename))
         return path
 
@@ -227,10 +238,11 @@ class Paginator:
         res = Resource(base_resource.source_file, node)
         res.node.meta = Metadata(node.meta)
         res.meta = Metadata(base_resource.meta, res.node.meta)
+        brs = base_resource.source_file
         path = self._relative_url(base_resource.relative_path,
-                                page_number,
-                                base_resource.source_file.name_without_extension,
-                                base_resource.source_file.extension)
+                                  page_number,
+                                  brs.name_without_extension,
+                                  brs.extension)
         res.set_relative_deploy_path(path)
         return res
 
@@ -250,7 +262,7 @@ class Paginator:
         if not hasattr(resource, 'depends'):
             resource.depends = []
         resource.depends.extend([dep.relative_path for dep in dependencies
-                                if dep.relative_path not in resource.depends])
+                                 if dep.relative_path not in resource.depends])
 
     def _walk_pages_in_node(self, node):
         """
@@ -294,6 +306,7 @@ class Paginator:
 
 
 class PaginatorPlugin(Plugin):
+
     """
     Paginator plugin.
 
@@ -315,6 +328,7 @@ class PaginatorPlugin(Plugin):
         {{ resource.page.next }}
 
     """
+
     def __init__(self, site):
         super(PaginatorPlugin, self).__init__(site)
 
@@ -322,10 +336,10 @@ class PaginatorPlugin(Plugin):
         for node in self.site.content.walk():
             added_resources = []
             paged_resources = (res for res in node.resources
-                                 if hasattr(res.meta, 'paginator'))
+                               if hasattr(res.meta, 'paginator'))
             for resource in paged_resources:
                 paginator = Paginator(resource.meta.paginator)
-                added_resources += paginator.walk_paged_resources(node, resource)
+                added_resources += paginator.walk_paged_resources(
+                    node, resource)
 
             node.resources += added_resources
-

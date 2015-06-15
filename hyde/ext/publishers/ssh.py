@@ -34,7 +34,9 @@ from hyde.publisher import Publisher
 
 from subprocess import Popen, PIPE
 
+
 class SSH(Publisher):
+
     def initialize(self, settings):
         self.settings = settings
         self.username = settings.username
@@ -47,7 +49,7 @@ class SSH(Publisher):
         command = "{command} {opts} ./ {username}{server}:{target}".format(
             command=self.command,
             opts=self.opts,
-            username=self.username+'@' if self.username else '',
+            username=self.username + '@' if self.username else '',
             server=self.server,
             target=self.target)
         deploy_path = self.site.config.deploy_root_path.path

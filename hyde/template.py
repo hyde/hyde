@@ -11,6 +11,7 @@ from commando.util import getLoggerWithNullHandler
 
 
 class HtmlWrap(object):
+
     """
     A wrapper class for raw html.
 
@@ -36,7 +37,9 @@ class HtmlWrap(object):
             return self.raw
         return self.q(selector).html()
 
+
 class Template(object):
+
     """
     Interface for hyde template engines. To use a different template engine,
     the following interface must be implemented.
@@ -50,7 +53,6 @@ class Template(object):
 
     @abc.abstractmethod
     def configure(self, site, engine):
-
         """
         The site object should contain a config attribute. The config object
         is a simple YAML object with required settings. The template

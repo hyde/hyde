@@ -8,6 +8,7 @@ from hyde.publisher import Publisher
 import abc
 from subprocess import Popen, PIPE
 
+
 class DVCS(Publisher):
     __metaclass__ = abc.ABCMeta
 
@@ -19,23 +20,28 @@ class DVCS(Publisher):
         self.switch(self.branch)
 
     @abc.abstractmethod
-    def pull(self): pass
+    def pull(self):
+        pass
 
     @abc.abstractmethod
-    def push(self): pass
+    def push(self):
+        pass
 
     @abc.abstractmethod
-    def commit(self, message): pass
+    def commit(self, message):
+        pass
 
     @abc.abstractmethod
-    def switch(self, branch): pass
+    def switch(self, branch):
+        pass
 
     @abc.abstractmethod
-    def add(self, path="."): pass
+    def add(self, path="."):
+        pass
 
     @abc.abstractmethod
-    def merge(self, branch): pass
-
+    def merge(self, branch):
+        pass
 
     def publish(self):
         super(DVCS, self).publish()
@@ -47,8 +53,8 @@ class DVCS(Publisher):
         self.push()
 
 
-
 class Git(DVCS):
+
     """
     Acts as a publisher to a git repository. Can be used to publish to
     github pages.
@@ -56,7 +62,7 @@ class Git(DVCS):
 
     def add(self, path="."):
         cmd = Popen('git add "%s"' % path,
-                        cwd=unicode(self.path), stdout=PIPE, shell=True)
+                    cwd=unicode(self.path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
@@ -78,7 +84,6 @@ class Git(DVCS):
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
-
 
     def commit(self, message):
         cmd = Popen('git commit -a -m"%s"' % message,

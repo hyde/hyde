@@ -29,10 +29,13 @@ from commando.util import getLoggerWithNullHandler
 
 logger = getLoggerWithNullHandler('hyde.engine.Jinja2')
 
+
 class SilentUndefined(Undefined):
+
     """
     A redefinition of undefined that eats errors.
     """
+
     def __getattr__(self, name):
         return self
 
@@ -41,12 +44,14 @@ class SilentUndefined(Undefined):
     def __call__(self, *args, **kwargs):
         return self
 
+
 @contextfunction
 def media_url(context, path, safe=None):
     """
     Returns the media url given a partial path.
     """
     return context['site'].media_url(path, safe)
+
 
 @contextfunction
 def content_url(context, path, safe=None):
@@ -55,12 +60,14 @@ def content_url(context, path, safe=None):
     """
     return context['site'].content_url(path, safe)
 
+
 @contextfunction
 def full_url(context, path, safe=None):
     """
     Returns the full url given a partial path.
     """
     return context['site'].full_url(path, safe)
+
 
 @contextfilter
 def urlencode(ctx, url, safe=None):
@@ -69,16 +76,18 @@ def urlencode(ctx, url, safe=None):
     else:
         return quote(url.encode('utf8'))
 
+
 @contextfilter
 def urldecode(ctx, url):
     return unquote(url).decode('utf8')
+
 
 @contextfilter
 def date_format(ctx, dt, fmt=None):
     if not dt:
         dt = datetime.now()
     if not isinstance(dt, datetime) or \
-        not isinstance(dt, date):
+            not isinstance(dt, date):
         logger.error("Date format called on a non date object")
         return dt
 
@@ -93,8 +102,10 @@ def date_format(ctx, dt, fmt=None):
 def islice(iterable, start=0, stop=3, step=1):
     return itertools.islice(iterable, start, stop, step)
 
+
 def top(iterable, count=3):
     return islice(iterable, stop=count)
+
 
 def xmldatetime(dt):
     if not dt:
@@ -104,6 +115,7 @@ def xmldatetime(dt):
     if tz:
         zprefix = tz[:3] + ":" + tz[3:]
     return dt.strftime("%Y-%m-%dT%H:%M:%S") + zprefix
+
 
 @environmentfilter
 def asciidoc(env, value):
@@ -122,8 +134,10 @@ def asciidoc(env, value):
     asciidoc = AsciiDocAPI()
     asciidoc.options('--no-header-footer')
     result = StringIO.StringIO()
-    asciidoc.execute(StringIO.StringIO(output.encode('utf-8')), result, backend='html4')
+    asciidoc.execute(
+        StringIO.StringIO(output.encode('utf-8')), result, backend='html4')
     return unicode(result.getvalue(), "utf-8")
+
 
 @environmentfilter
 def markdown(env, value):
@@ -140,13 +154,14 @@ def markdown(env, value):
     if hasattr(env.config, 'markdown'):
         d['extensions'] = getattr(env.config.markdown, 'extensions', [])
         d['extension_configs'] = getattr(env.config.markdown,
-                                        'extension_configs',
-                                        Expando({})).to_dict()
+                                         'extension_configs',
+                                         Expando({})).to_dict()
         if hasattr(env.config.markdown, 'output_format'):
             d['output_format'] = env.config.markdown.output_format
     marked = md.Markdown(**d)
 
     return marked.convert(output)
+
 
 @environmentfilter
 def restructuredtext(env, value):
@@ -161,17 +176,19 @@ def restructuredtext(env, value):
 
     highlight_source = False
     if hasattr(env.config, 'restructuredtext'):
-        highlight_source = getattr(env.config.restructuredtext, 'highlight_source', False)
+        highlight_source = getattr(
+            env.config.restructuredtext, 'highlight_source', False)
         extensions = getattr(env.config.restructuredtext, 'extensions', [])
         import imp
         for extension in extensions:
             imp.load_module(extension, *imp.find_module(extension))
 
     if highlight_source:
-        import hyde.lib.pygments.rst_directive
+        import hyde.lib.pygments.rst_directive  # noqa
 
     parts = publish_parts(source=value, writer_name="html")
     return parts['html_body']
+
 
 @environmentfilter
 def syntax(env, value, lexer=None, filename=None):
@@ -184,17 +201,17 @@ def syntax(env, value, lexer=None, filename=None):
         from pygments import formatters
     except ImportError:
         logger.error(u"pygments library is required to"
-                        " use syntax highlighting tags.")
+                     " use syntax highlighting tags.")
         raise TemplateError("Cannot load pygments")
 
     pyg = (lexers.get_lexer_by_name(lexer)
-                if lexer else
-                    lexers.guess_lexer(value))
+           if lexer else
+           lexers.guess_lexer(value))
     settings = {}
     if hasattr(env.config, 'syntax'):
         settings = getattr(env.config.syntax,
-                            'options',
-                            Expando({})).to_dict()
+                           'options',
+                           Expando({})).to_dict()
 
     formatter = formatters.HtmlFormatter(**settings)
     code = pygments.highlight(value, pyg, formatter)
@@ -204,10 +221,13 @@ def syntax(env, value, lexer=None, filename=None):
         if not getattr(env.config.syntax, 'use_figure', True):
             return Markup(code)
     return Markup(
-            '<div class="codebox"><figure class="code">%s<figcaption>%s</figcaption></figure></div>\n\n'
-                        % (code, caption))
+        '<div class="codebox"><figure class="code">%s<figcaption>'
+        '%s</figcaption></figure></div>\n\n'
+        % (code, caption))
+
 
 class Spaceless(Extension):
+
     """
     Emulates the django spaceless template tag.
     """
@@ -220,10 +240,10 @@ class Spaceless(Extension):
         """
         lineno = parser.stream.next().lineno
         body = parser.parse_statements(['name:endspaceless'],
-                drop_needle=True)
+                                       drop_needle=True)
         return nodes.CallBlock(
-                    self.call_method('_render_spaceless'),
-                    [], [], body).set_lineno(lineno)
+            self.call_method('_render_spaceless'),
+            [], [], body).set_lineno(lineno)
 
     def _render_spaceless(self, caller=None):
         """
@@ -235,7 +255,9 @@ class Spaceless(Extension):
             return ''
         return re.sub(r'>\s+<', '><', unicode(caller().strip()))
 
+
 class Asciidoc(Extension):
+
     """
     A wrapper around the asciidoc filter for syntactic sugar.
     """
@@ -243,14 +265,15 @@ class Asciidoc(Extension):
 
     def parse(self, parser):
         """
-        Parses the statements and defers to the callback for asciidoc processing.
+        Parses the statements and defers to the callback
+        for asciidoc processing.
         """
         lineno = parser.stream.next().lineno
         body = parser.parse_statements(['name:endasciidoc'], drop_needle=True)
 
         return nodes.CallBlock(
-                    self.call_method('_render_asciidoc'),
-                        [], [], body).set_lineno(lineno)
+            self.call_method('_render_asciidoc'),
+            [], [], body).set_lineno(lineno)
 
     def _render_asciidoc(self, caller=None):
         """
@@ -261,7 +284,9 @@ class Asciidoc(Extension):
         output = caller().strip()
         return asciidoc(self.environment, output)
 
+
 class Markdown(Extension):
+
     """
     A wrapper around the markdown filter for syntactic sugar.
     """
@@ -269,14 +294,15 @@ class Markdown(Extension):
 
     def parse(self, parser):
         """
-        Parses the statements and defers to the callback for markdown processing.
+        Parses the statements and defers to the callback
+        for markdown processing.
         """
         lineno = parser.stream.next().lineno
         body = parser.parse_statements(['name:endmarkdown'], drop_needle=True)
 
         return nodes.CallBlock(
-                    self.call_method('_render_markdown'),
-                        [], [], body).set_lineno(lineno)
+            self.call_method('_render_markdown'),
+            [], [], body).set_lineno(lineno)
 
     def _render_markdown(self, caller=None):
         """
@@ -287,7 +313,9 @@ class Markdown(Extension):
         output = caller().strip()
         return markdown(self.environment, output)
 
+
 class restructuredText(Extension):
+
     """
     A wrapper around the restructuredtext filter for syntactic sugar
     """
@@ -298,10 +326,11 @@ class restructuredText(Extension):
         Simply extract our content
         """
         lineno = parser.stream.next().lineno
-        body = parser.parse_statements(['name:endrestructuredtext'], drop_needle=True)
+        body = parser.parse_statements(
+            ['name:endrestructuredtext'], drop_needle=True)
 
         return nodes.CallBlock(self.call_method('_render_rst'), [],  [], body
-                              ).set_lineno(lineno)
+                               ).set_lineno(lineno)
 
     def _render_rst(self, caller=None):
         """
@@ -312,7 +341,9 @@ class restructuredText(Extension):
         output = caller().strip()
         return restructuredtext(self.environment, output)
 
+
 class YamlVar(Extension):
+
     """
     An extension that converts the content between the tags
     into an yaml object and sets the value in the given
@@ -330,16 +361,15 @@ class YamlVar(Extension):
         var = parser.stream.expect('name').value
         body = parser.parse_statements(['name:endyaml'], drop_needle=True)
         return [
-                nodes.Assign(
-                    nodes.Name(var, 'store'),
-                    nodes.Const({})
-                    ).set_lineno(lineno),
-                nodes.CallBlock(
-                    self.call_method('_set_yaml',
-                            args=[nodes.Name(var, 'load')]),
-                            [], [], body).set_lineno(lineno)
-                ]
-
+            nodes.Assign(
+                nodes.Name(var, 'store'),
+                nodes.Const({})
+            ).set_lineno(lineno),
+            nodes.CallBlock(
+                self.call_method('_set_yaml',
+                                 args=[nodes.Name(var, 'load')]),
+                [], [], body).set_lineno(lineno)
+        ]
 
     def _set_yaml(self, var, caller=None):
         """
@@ -356,6 +386,7 @@ class YamlVar(Extension):
         var.update(yaml.load(out))
         return ''
 
+
 def parse_kwargs(parser):
     """
     Parses keyword arguments in tags.
@@ -368,17 +399,19 @@ def parse_kwargs(parser):
         value = nodes.Const(parser.stream.next().value)
     return (name, value)
 
+
 class Syntax(Extension):
+
     """
     A wrapper around the syntax filter for syntactic sugar.
     """
 
     tags = set(['syntax'])
 
-
     def parse(self, parser):
         """
-        Parses the statements and defers to the callback for pygments processing.
+        Parses the statements and defers to the callback for
+        pygments processing.
         """
         lineno = parser.stream.next().lineno
         lex = nodes.Const(None)
@@ -392,8 +425,8 @@ class Syntax(Extension):
                     (_, value1) = parse_kwargs(parser)
 
                 (lex, filename) = (value, value1) \
-                                        if name == 'lex' \
-                                            else (value1, value)
+                    if name == 'lex' \
+                    else (value1, value)
             else:
                 lex = nodes.Const(parser.stream.next().value)
                 if parser.stream.skip_if('comma'):
@@ -401,10 +434,9 @@ class Syntax(Extension):
 
         body = parser.parse_statements(['name:endsyntax'], drop_needle=True)
         return nodes.CallBlock(
-                    self.call_method('_render_syntax',
-                        args=[lex, filename]),
-                        [], [], body).set_lineno(lineno)
-
+            self.call_method('_render_syntax',
+                             args=[lex, filename]),
+            [], [], body).set_lineno(lineno)
 
     def _render_syntax(self, lex, filename, caller=None):
         """
@@ -415,7 +447,9 @@ class Syntax(Extension):
         output = caller().strip()
         return syntax(self.environment, output, lex, filename)
 
+
 class IncludeText(Extension):
+
     """
     Automatically runs `markdown` and `typogrify` on included
     files.
@@ -429,8 +463,8 @@ class IncludeText(Extension):
         """
         node = parser.parse_include()
         return nodes.CallBlock(
-                    self.call_method('_render_include_text'),
-                        [], [], [node]).set_lineno(node.lineno)
+            self.call_method('_render_include_text'),
+            [], [], [node]).set_lineno(node.lineno)
 
     def _render_include_text(self, caller=None):
         """
@@ -448,7 +482,9 @@ class IncludeText(Extension):
 
 MARKINGS = '_markings_'
 
+
 class Reference(Extension):
+
     """
     Marks a block in a template such that its available for use
     when referenced using a `refer` tag.
@@ -465,11 +501,13 @@ class Reference(Extension):
         tag = token.value
         name = parser.stream.next().value
         body = parser.parse_statements(['name:end%s' % tag], drop_needle=True)
-        return nodes.CallBlock(
-                    self.call_method('_render_output',
-                        args=[nodes.Name(MARKINGS, 'load'), nodes.Const(name)]),
-                        [], [], body).set_lineno(lineno)
-
+        return nodes.CallBlock(self.call_method('_render_output',
+                                                args=[
+                                                    nodes.Name(MARKINGS,
+                                                               'load'),
+                                                    nodes.Const(name)
+                                                ]), [], [],
+                               body).set_lineno(lineno)
 
     def _render_output(self, markings, name, caller=None):
         """
@@ -482,7 +520,9 @@ class Reference(Extension):
             markings[name] = out
         return out
 
+
 class Refer(Extension):
+
     """
     Imports content blocks specified in the referred template as
     variables in a given namespace.
@@ -507,43 +547,43 @@ class Refer(Extension):
         temp = parser.free_identifier(lineno)
 
         return [
-                nodes.Assign(
-                    nodes.Name(temp.name, 'store'),
-                    nodes.Name(MARKINGS, 'load')
-                ).set_lineno(lineno),
-                nodes.Assign(
-                    nodes.Name(MARKINGS, 'store'),
-                    nodes.Const({})).set_lineno(lineno),
-                nodes.Assign(
-                    nodes.Name(namespace, 'store'),
-                    nodes.Const({})).set_lineno(lineno),
-                nodes.CallBlock(
-                    self.call_method('_push_resource',
-                            args=[
-                                nodes.Name(namespace, 'load'),
-                                nodes.Name('site', 'load'),
-                                nodes.Name('resource', 'load'),
-                                template]),
-                            [], [], []).set_lineno(lineno),
-                nodes.Assign(
-                    nodes.Name('resource', 'store'),
-                    nodes.Getitem(nodes.Name(namespace, 'load'),
-                        nodes.Const('resource'), 'load')
-                    ).set_lineno(lineno),
-                nodes.CallBlock(
-                    self.call_method('_assign_reference',
-                            args=[
-                                nodes.Name(MARKINGS, 'load'),
-                                nodes.Name(namespace, 'load')]),
-                            [], [], [includeNode]).set_lineno(lineno),
-                nodes.Assign(nodes.Name('resource', 'store'),
-                            nodes.Getitem(nodes.Name(namespace, 'load'),
-                            nodes.Const('parent_resource'), 'load')
-                    ).set_lineno(lineno),
-                    nodes.Assign(
-                        nodes.Name(MARKINGS, 'store'),
-                        nodes.Name(temp.name, 'load')
-                    ).set_lineno(lineno),
+            nodes.Assign(
+                nodes.Name(temp.name, 'store'),
+                nodes.Name(MARKINGS, 'load')
+            ).set_lineno(lineno),
+            nodes.Assign(
+                nodes.Name(MARKINGS, 'store'),
+                nodes.Const({})).set_lineno(lineno),
+            nodes.Assign(
+                nodes.Name(namespace, 'store'),
+                nodes.Const({})).set_lineno(lineno),
+            nodes.CallBlock(
+                self.call_method('_push_resource',
+                                 args=[
+                                     nodes.Name(namespace, 'load'),
+                                     nodes.Name('site', 'load'),
+                                     nodes.Name('resource', 'load'),
+                                     template]),
+                [], [], []).set_lineno(lineno),
+            nodes.Assign(
+                nodes.Name('resource', 'store'),
+                nodes.Getitem(nodes.Name(namespace, 'load'),
+                              nodes.Const('resource'), 'load')
+            ).set_lineno(lineno),
+            nodes.CallBlock(
+                self.call_method('_assign_reference',
+                                 args=[
+                                     nodes.Name(MARKINGS, 'load'),
+                                     nodes.Name(namespace, 'load')]),
+                [], [], [includeNode]).set_lineno(lineno),
+            nodes.Assign(nodes.Name('resource', 'store'),
+                         nodes.Getitem(nodes.Name(namespace, 'load'),
+                                       nodes.Const('parent_resource'), 'load')
+                         ).set_lineno(lineno),
+            nodes.Assign(
+                nodes.Name(MARKINGS, 'store'),
+                nodes.Name(temp.name, 'load')
+            ).set_lineno(lineno),
         ]
 
     def _push_resource(self, namespace, site, resource, template, caller):
@@ -553,10 +593,10 @@ class Refer(Extension):
         namespace['parent_resource'] = resource
         if not hasattr(resource, 'depends'):
             resource.depends = []
-        if not template in resource.depends:
+        if template not in resource.depends:
             resource.depends.append(template)
         namespace['resource'] = site.content.resource_from_relative_path(
-                                    template)
+            template)
         return ''
 
     def _assign_reference(self, markings, namespace, caller):
@@ -573,6 +613,7 @@ class Refer(Extension):
 
 
 class HydeLoader(FileSystemLoader):
+
     """
     A wrapper around the file system loader that performs
     hyde specific tweaks.
@@ -582,9 +623,9 @@ class HydeLoader(FileSystemLoader):
         config = site.config if hasattr(site, 'config') else None
         if config:
             super(HydeLoader, self).__init__([
-                            unicode(config.content_root_path),
-                            unicode(config.layout_root_path),
-                        ])
+                unicode(config.content_root_path),
+                unicode(config.layout_root_path),
+            ])
         else:
             super(HydeLoader, self).__init__(unicode(sitepath))
 
@@ -604,8 +645,8 @@ class HydeLoader(FileSystemLoader):
         try:
             (contents,
                 filename,
-                    date) = super(HydeLoader, self).get_source(
-                                        environment, template)
+             date) = super(HydeLoader, self).get_source(
+                environment, template)
         except UnicodeDecodeError:
             HydeException.reraise(
                 "Unicode error when processing %s" % template, sys.exc_info())
@@ -624,6 +665,7 @@ class HydeLoader(FileSystemLoader):
 
 # pylint: disable-msg=W0104,E0602,W0613,R0201
 class Jinja2Template(Template):
+
     """
     The Jinja2 Template implementation
     """
@@ -638,23 +680,23 @@ class Jinja2Template(Template):
         self.site = site
         self.engine = engine
         self.preprocessor = (engine.preprocessor
-                            if hasattr(engine, 'preprocessor') else None)
+                             if hasattr(engine, 'preprocessor') else None)
 
         self.loader = HydeLoader(self.sitepath, site, self.preprocessor)
 
         default_extensions = [
-                IncludeText,
-                Spaceless,
-                Asciidoc,
-                Markdown,
-                restructuredText,
-                Syntax,
-                Reference,
-                Refer,
-                YamlVar,
-                'jinja2.ext.do',
-                'jinja2.ext.loopcontrols',
-                'jinja2.ext.with_'
+            IncludeText,
+            Spaceless,
+            Asciidoc,
+            Markdown,
+            restructuredText,
+            Syntax,
+            Reference,
+            Refer,
+            YamlVar,
+            'jinja2.ext.do',
+            'jinja2.ext.loopcontrols',
+            'jinja2.ext.with_'
         ]
 
         defaults = {
@@ -694,12 +736,12 @@ class Jinja2Template(Template):
                 settings['filters'][name] = getattr(module, function_name)
 
         self.env = Environment(
-                    loader=self.loader,
-                    undefined=SilentUndefined,
-                    line_statement_prefix=settings['line_statement_prefix'],
-                    trim_blocks=True,
-                    bytecode_cache=FileSystemBytecodeCache(),
-                    extensions=settings['extensions'])
+            loader=self.loader,
+            undefined=SilentUndefined,
+            line_statement_prefix=settings['line_statement_prefix'],
+            trim_blocks=True,
+            bytecode_cache=FileSystemBytecodeCache(),
+            extensions=settings['extensions'])
         self.env.globals['media_url'] = media_url
         self.env.globals['content_url'] = content_url
         self.env.globals['full_url'] = full_url
@@ -738,7 +780,6 @@ class Jinja2Template(Template):
         if self.env.bytecode_cache:
             self.env.bytecode_cache.clear()
 
-
     def get_dependencies(self, path):
         """
         Finds dependencies hierarchically based on the included
@@ -774,10 +815,12 @@ class Jinja2Template(Template):
         The pattern for matching selected template statements.
         """
         return {
-           "block_open": '\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
-           "block_close": '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
-           "include": '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
-           "extends": '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
+            "block_open": '\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
+            "block_close": '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
+            "include":
+                '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
+            "extends":
+                '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
         }
 
     def get_include_statement(self, path_to_include):

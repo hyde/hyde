@@ -20,11 +20,10 @@ class TestUglify(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
         JS = TEST_SITE.child_folder('content/media/js')
         JS.make()
         UGLIFY_SOURCE.copy_contents_to(JS)
-
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -34,7 +33,8 @@ class TestUglify(object):
         s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "production"
         source = TEST_SITE.child('content/media/js/jquery.js')
-        target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
+        target = File(
+            Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)
         gen.generate_resource_at_path(source)
 
@@ -48,9 +48,11 @@ class TestUglify(object):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "production"
-        s.config.uglify = Expando(dict(args={"comments":"/http\:\/\/jquery.org\/license/"}))
+        s.config.uglify = Expando(
+            dict(args={"comments": "/http\:\/\/jquery.org\/license/"}))
         source = TEST_SITE.child('content/media/js/jquery.js')
-        target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
+        target = File(
+            Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)
         gen.generate_resource_at_path(source)
 
@@ -65,7 +67,8 @@ class TestUglify(object):
         s.config.plugins = ['hyde.ext.plugins.js.UglifyPlugin']
         s.config.mode = "dev"
         source = TEST_SITE.child('content/media/js/jquery.js')
-        target = File(Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
+        target = File(
+            Folder(s.config.deploy_root_path).child('media/js/jquery.js'))
         gen = Generator(s)
         gen.generate_resource_at_path(source)
 
@@ -74,5 +77,3 @@ class TestUglify(object):
         # TODO: Very fragile. Better comparison needed.
         text = target.read_all()
         assert_no_diff(expected, text)
-
-

@@ -63,6 +63,7 @@ except ImportError:
 
 
 class SphinxPlugin(Plugin):
+
     """The plugin class for rendering sphinx-generated documentation."""
 
     def __init__(self, site):
@@ -93,7 +94,7 @@ class SphinxPlugin(Plugin):
         else:
             for name in dir(user_settings):
                 if not name.startswith("_"):
-                    setattr(settings,name,getattr(user_settings,name))
+                    setattr(settings, name, getattr(user_settings, name))
         return settings
 
     @property
@@ -109,11 +110,11 @@ class SphinxPlugin(Plugin):
             conf_path = self.site.sitepath.child_folder(conf_path)
             #  Sphinx always execs the config file in its parent dir.
             conf_file = conf_path.child("conf.py")
-            self._sphinx_config = {"__file__":conf_file}
+            self._sphinx_config = {"__file__": conf_file}
             curdir = os.getcwd()
             os.chdir(conf_path.path)
             try:
-                execfile(conf_file,self._sphinx_config)
+                execfile(conf_file, self._sphinx_config)
             finally:
                 os.chdir(curdir)
         return self._sphinx_config
@@ -132,16 +133,17 @@ class SphinxPlugin(Plugin):
         #  We need to:
         #    * change the deploy name from .rst to .html
         #    * if a block_map is given, switch off default_block
-        suffix = self.sphinx_config.get("source_suffix",".rst")
+        suffix = self.sphinx_config.get("source_suffix", ".rst")
         for resource in self.site.content.walk_resources():
             if resource.source_file.path.endswith(suffix):
-                new_name = resource.source_file.name_without_extension + ".html"
+                new_name = resource.source_file.name_without_extension + \
+                    ".html"
                 target_folder = File(resource.relative_deploy_path).parent
                 resource.relative_deploy_path = target_folder.child(new_name)
                 if settings.block_map:
                     resource.meta.default_block = None
 
-    def begin_text_resource(self,resource,text):
+    def begin_text_resource(self, resource, text):
         """Event hook for processing an individual resource.
 
         If the input resource is a sphinx input file, this method will replace
@@ -151,7 +153,7 @@ class SphinxPlugin(Plugin):
         This means that if no sphinx-related resources need updating, then
         we entirely avoid running sphinx.
         """
-        suffix = self.sphinx_config.get("source_suffix",".rst")
+        suffix = self.sphinx_config.get("source_suffix", ".rst")
         if not resource.source_file.path.endswith(suffix):
             return text
         if self.sphinx_build_dir is None:
@@ -164,9 +166,9 @@ class SphinxPlugin(Plugin):
         if not settings.block_map:
             output.append(sphinx_output["body"])
         else:
-            for (nm,content) in sphinx_output.iteritems():
+            for (nm, content) in sphinx_output.iteritems():
                 try:
-                    block = getattr(settings.block_map,nm)
+                    block = getattr(settings.block_map, nm)
                 except AttributeError:
                     pass
                 else:
@@ -198,41 +200,45 @@ class SphinxPlugin(Plugin):
             conf_path = self.settings.conf_path
             conf_path = self.site.sitepath.child_folder(conf_path)
             conf_file = conf_path.child("conf.py")
-            logger.error("Please ensure %s is a valid sphinx config",conf_file)
+            logger.error(
+                "Please ensure %s is a valid sphinx config", conf_file)
             logger.error("or set sphinx.conf_path to the directory")
             logger.error("containing your sphinx conf.py")
             raise
         #  Check that the hyde_json extension is loaded
-        extensions = sphinx_config.get("extensions",[])
+        extensions = sphinx_config.get("extensions", [])
         if "hyde.ext.plugins.sphinx" not in extensions:
             logger.error("The hyde_json sphinx extension is not configured.")
             logger.error("Please add 'hyde.ext.plugins.sphinx' to the list")
             logger.error("of extensions in your sphinx conf.py file.")
-            logger.info("(set sphinx.sanity_check=false to disable this check)")
+            logger.info(
+                "(set sphinx.sanity_check=false to disable this check)")
             raise RuntimeError("sphinx is not configured correctly")
         #  Check that the master doc exists in the source tree.
-        master_doc = sphinx_config.get("master_doc","index")
-        master_doc += sphinx_config.get("source_suffix",".rst")
-        master_doc = os.path.join(self.site.content.path,master_doc)
+        master_doc = sphinx_config.get("master_doc", "index")
+        master_doc += sphinx_config.get("source_suffix", ".rst")
+        master_doc = os.path.join(self.site.content.path, master_doc)
         if not os.path.exists(master_doc):
             logger.error("The sphinx master document doesn't exist.")
-            logger.error("Please create the file %s",master_doc)
+            logger.error("Please create the file %s", master_doc)
             logger.error("or change the 'master_doc' setting in your")
             logger.error("sphinx conf.py file.")
-            logger.info("(set sphinx.sanity_check=false to disable this check)")
+            logger.info(
+                "(set sphinx.sanity_check=false to disable this check)")
             raise RuntimeError("sphinx is not configured correctly")
         #  Check that I am *before* the other plugins,
         #  with the possible exception of MetaPlugin
         for plugin in self.site.plugins:
             if plugin is self:
                 break
-            if not isinstance(plugin,_MetaPlugin):
+            if not isinstance(plugin, _MetaPlugin):
                 logger.error("The sphinx plugin is installed after the")
-                logger.error("plugin %r.",plugin.__class__.__name__)
+                logger.error("plugin %r.", plugin.__class__.__name__)
                 logger.error("It's quite likely that this will break things.")
                 logger.error("Please move the sphinx plugin to the top")
                 logger.error("of the plugins list.")
-                logger.info("(sphinx.sanity_check=false to disable this check)")
+                logger.info(
+                    "(sphinx.sanity_check=false to disable this check)")
                 raise RuntimeError("sphinx is not configured correctly")
 
     def _run_sphinx(self):
@@ -254,7 +260,7 @@ class SphinxPlugin(Plugin):
         if sphinx.main(sphinx_args) != 0:
             raise RuntimeError("sphinx build failed")
 
-    def _get_sphinx_output(self,resource):
+    def _get_sphinx_output(self, resource):
         """Get the sphinx output for a given resource.
 
         This returns a dict mapping block names to HTML text fragments.
@@ -263,13 +269,14 @@ class SphinxPlugin(Plugin):
         related pages and so-on.
         """
         relpath = File(resource.relative_path)
-        relpath = relpath.parent.child(relpath.name_without_extension+".fjson")
-        with open(self.sphinx_build_dir.child(relpath),"rb") as f:
+        relpath = relpath.parent.child(
+            relpath.name_without_extension + ".fjson")
+        with open(self.sphinx_build_dir.child(relpath), "rb") as f:
             return json.load(f)
 
 
-
 class HydeJSONHTMLBuilder(JSONHTMLBuilder):
+
     """A slightly-customised JSONHTMLBuilder, for use by Hyde.
 
     This is a Sphinx builder that serilises the generated HTML fragments into
@@ -280,6 +287,7 @@ class HydeJSONHTMLBuilder(JSONHTMLBuilder):
     work correctly once things have been processed by Hyde.
     """
     name = "hyde_json"
+
     def get_target_uri(self, docname, typ=None):
         return docname + ".html"
 
@@ -291,5 +299,3 @@ def setup(app):
     Hyde plugin.  It simply registers the HydeJSONHTMLBuilder class.
     """
     app.add_builder(HydeJSONHTMLBuilder)
-
-

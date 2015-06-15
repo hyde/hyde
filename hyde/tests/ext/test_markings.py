@@ -12,6 +12,7 @@ from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
+
 def assert_valid_conversion(html):
     assert html
     q = PyQuery(html)
@@ -25,17 +26,16 @@ def assert_valid_conversion(html):
     assert '.' not in q.text()
     assert '/' not in q.text()
 
+
 class TestMarkings(object):
 
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
-
-
 
     def test_mark(self):
         text = u"""

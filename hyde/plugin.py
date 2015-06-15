@@ -13,7 +13,6 @@ import os
 import re
 import subprocess
 import sys
-import traceback
 
 from commando.util import getLoggerWithNullHandler, load_python_object
 from fswrap import File
@@ -22,30 +21,53 @@ logger = getLoggerWithNullHandler('hyde.engine')
 
 # Plugins have been reorganized. Map old plugin paths to new.
 PLUGINS_OLD_AND_NEW = {
-    "hyde.ext.plugins.less.LessCSSPlugin" : "hyde.ext.plugins.css.LessCSSPlugin",
-    "hyde.ext.plugins.stylus.StylusPlugin" : "hyde.ext.plugins.css.StylusPlugin",
-    "hyde.ext.plugins.jpegoptim.JPEGOptimPlugin" : "hyde.ext.plugins.images.JPEGOptimPlugin",
-    "hyde.ext.plugins.optipng.OptiPNGPlugin" : "hyde.ext.plugins.images.OptiPNGPlugin",
-    "hyde.ext.plugins.jpegtran.JPEGTranPlugin" : "hyde.ext.plugins.images.JPEGTranPlugin",
-    "hyde.ext.plugins.uglify.UglifyPlugin": "hyde.ext.plugins.js.UglifyPlugin",
-    "hyde.ext.plugins.requirejs.RequireJSPlugin": "hyde.ext.plugins.js.RequireJSPlugin",
-    "hyde.ext.plugins.coffee.CoffeePlugin": "hyde.ext.plugins.js.CoffeePlugin",
-    "hyde.ext.plugins.sorter.SorterPlugin": "hyde.ext.plugins.meta.SorterPlugin",
-    "hyde.ext.plugins.grouper.GrouperPlugin": "hyde.ext.plugins.meta.GrouperPlugin",
-    "hyde.ext.plugins.tagger.TaggerPlugin": "hyde.ext.plugins.meta.TaggerPlugin",
-    "hyde.ext.plugins.auto_extend.AutoExtendPlugin": "hyde.ext.plugins.meta.AutoExtendPlugin",
-    "hyde.ext.plugins.folders.FlattenerPlugin": "hyde.ext.plugins.structure.FlattenerPlugin",
-    "hyde.ext.plugins.combine.CombinePlugin": "hyde.ext.plugins.structure.CombinePlugin",
-    "hyde.ext.plugins.paginator.PaginatorPlugin": "hyde.ext.plugins.structure.PaginatorPlugin",
-    "hyde.ext.plugins.blockdown.BlockdownPlugin": "hyde.ext.plugins.text.BlockdownPlugin",
-    "hyde.ext.plugins.markings.MarkingsPlugin": "hyde.ext.plugins.text.MarkingsPlugin",
-    "hyde.ext.plugins.markings.ReferencePlugin": "hyde.ext.plugins.text.ReferencePlugin",
-    "hyde.ext.plugins.syntext.SyntextPlugin": "hyde.ext.plugins.text.SyntextPlugin",
-    "hyde.ext.plugins.textlinks.TextlinksPlugin": "hyde.ext.plugins.text.TextlinksPlugin",
-    "hyde.ext.plugins.git.GitDatesPlugin": "hyde.ext.plugins.vcs.GitDatesPlugin"
+    "hyde.ext.plugins.less.LessCSSPlugin":
+        "hyde.ext.plugins.css.LessCSSPlugin",
+    "hyde.ext.plugins.stylus.StylusPlugin":
+        "hyde.ext.plugins.css.StylusPlugin",
+    "hyde.ext.plugins.jpegoptim.JPEGOptimPlugin":
+        "hyde.ext.plugins.images.JPEGOptimPlugin",
+    "hyde.ext.plugins.optipng.OptiPNGPlugin":
+        "hyde.ext.plugins.images.OptiPNGPlugin",
+    "hyde.ext.plugins.jpegtran.JPEGTranPlugin":
+        "hyde.ext.plugins.images.JPEGTranPlugin",
+    "hyde.ext.plugins.uglify.UglifyPlugin":
+        "hyde.ext.plugins.js.UglifyPlugin",
+    "hyde.ext.plugins.requirejs.RequireJSPlugin":
+        "hyde.ext.plugins.js.RequireJSPlugin",
+    "hyde.ext.plugins.coffee.CoffeePlugin":
+        "hyde.ext.plugins.js.CoffeePlugin",
+    "hyde.ext.plugins.sorter.SorterPlugin":
+        "hyde.ext.plugins.meta.SorterPlugin",
+    "hyde.ext.plugins.grouper.GrouperPlugin":
+        "hyde.ext.plugins.meta.GrouperPlugin",
+    "hyde.ext.plugins.tagger.TaggerPlugin":
+        "hyde.ext.plugins.meta.TaggerPlugin",
+    "hyde.ext.plugins.auto_extend.AutoExtendPlugin":
+        "hyde.ext.plugins.meta.AutoExtendPlugin",
+    "hyde.ext.plugins.folders.FlattenerPlugin":
+        "hyde.ext.plugins.structure.FlattenerPlugin",
+    "hyde.ext.plugins.combine.CombinePlugin":
+        "hyde.ext.plugins.structure.CombinePlugin",
+    "hyde.ext.plugins.paginator.PaginatorPlugin":
+        "hyde.ext.plugins.structure.PaginatorPlugin",
+    "hyde.ext.plugins.blockdown.BlockdownPlugin":
+        "hyde.ext.plugins.text.BlockdownPlugin",
+    "hyde.ext.plugins.markings.MarkingsPlugin":
+        "hyde.ext.plugins.text.MarkingsPlugin",
+    "hyde.ext.plugins.markings.ReferencePlugin":
+        "hyde.ext.plugins.text.ReferencePlugin",
+    "hyde.ext.plugins.syntext.SyntextPlugin":
+        "hyde.ext.plugins.text.SyntextPlugin",
+    "hyde.ext.plugins.textlinks.TextlinksPlugin":
+        "hyde.ext.plugins.text.TextlinksPlugin",
+    "hyde.ext.plugins.git.GitDatesPlugin":
+        "hyde.ext.plugins.vcs.GitDatesPlugin"
 }
 
+
 class PluginProxy(object):
+
     """
     A proxy class to raise events in registered  plugins
     """
@@ -61,7 +83,8 @@ class PluginProxy(object):
                 if self.site.plugins:
                     for plugin in self.site.plugins:
                         if hasattr(plugin, method_name):
-                            checker = getattr(plugin, 'should_call__' + method_name)
+                            checker = getattr(
+                                plugin, 'should_call__' + method_name)
                             if checker(*args):
                                 function = getattr(plugin, method_name)
                                 try:
@@ -80,9 +103,11 @@ class PluginProxy(object):
 
             return __call_plugins__
         raise HydeException(
-                "Unknown plugin method [%s] called." % method_name)
+            "Unknown plugin method [%s] called." % method_name)
+
 
 class Plugin(object):
+
     """
     The plugin protocol
     """
@@ -92,9 +117,8 @@ class Plugin(object):
         super(Plugin, self).__init__()
         self.site = site
         self.logger = getLoggerWithNullHandler(
-                            'hyde.engine.%s' % self.__class__.__name__)
+            'hyde.engine.%s' % self.__class__.__name__)
         self.template = None
-
 
     def template_loaded(self, template):
         """
@@ -123,7 +147,8 @@ class Plugin(object):
         elif name.startswith('should_call__'):
             (_, _, method) = name.rpartition('__')
             if (method in ('begin_text_resource', 'text_resource_complete',
-                            'begin_binary_resource', 'binary_resource_complete')):
+                           'begin_binary_resource',
+                           'binary_resource_complete')):
                 result = self._file_filter
             elif (method in ('begin_node', 'node_complete')):
                 result = self._dir_filter
@@ -132,7 +157,7 @@ class Plugin(object):
                     return True
                 result = always_true
 
-        return  result if result else super(Plugin, self).__getattribute__(name)
+        return result if result else super(Plugin, self).__getattribute__(name)
 
     @property
     def settings(self):
@@ -146,7 +171,6 @@ class Plugin(object):
         except AttributeError:
             pass
         return opts
-
 
     @property
     def plugin_name(self):
@@ -195,26 +219,26 @@ class Plugin(object):
         except AttributeError:
             filters = None
         result = any(fnmatch.fnmatch(resource.path, f)
-                                        for f in filters) if filters else True
+                     for f in filters) if filters else True
         return result
 
     def _dir_filter(self, node, *args, **kwargs):
         """
-        Returns True if the node path is a descendant of the include_paths property in
-        plugin settings.
+        Returns True if the node path is a descendant of the
+        include_paths property in plugin settings.
         """
         try:
             node_filters = self.settings.include_paths
             if not isinstance(node_filters, list):
                 node_filters = [node_filters]
             node_filters = [self.site.content.node_from_relative_path(f)
-                                        for f in node_filters]
+                            for f in node_filters]
         except AttributeError:
             node_filters = None
         result = any(node.source == f.source or
-                        node.source.is_descendant_of(f.source)
-                                        for f in node_filters if f) \
-                                        if node_filters else True
+                     node.source.is_descendant_of(f.source)
+                     for f in node_filters if f) \
+            if node_filters else True
         return result
 
     def begin_text_resource(self, resource, text):
@@ -293,7 +317,7 @@ class Plugin(object):
             return load_python_object(plugin_name)(site)
 
         site.plugins = [load_plugin(name)
-                            for name in site.config.plugins]
+                        for name in site.config.plugins]
 
     @staticmethod
     def get_proxy(site):
@@ -302,7 +326,9 @@ class Plugin(object):
         """
         return PluginProxy(site)
 
+
 class CLTransformer(Plugin):
+
     """
     Handy class for plugins that simply call a command line app to
     transform resources.
@@ -333,11 +359,11 @@ class CLTransformer(Plugin):
         """
 
         return ("%(name)s executable path not configured properly. "
-        "This plugin expects `%(name)s.app` to point "
-        "to the full path of the `%(exec)s` executable." %
-        {
-            "name":self.plugin_name, "exec": self.executable_name
-        })
+                "This plugin expects `%(name)s.app` to point "
+                "to the full path of the `%(exec)s` executable." %
+                {
+                    "name": self.plugin_name, "exec": self.executable_name
+                })
 
     @property
     def app(self):
@@ -398,7 +424,7 @@ class CLTransformer(Plugin):
             if match:
                 val = args[match]
                 param = "%s%s" % (self.option_prefix(descriptive),
-                                        descriptive)
+                                  descriptive)
                 if descriptive.endswith("="):
                     param += val
                     val = None
@@ -414,13 +440,15 @@ class CLTransformer(Plugin):
         try:
             self.logger.debug(
                 "Calling executable [%s] with arguments %s" %
-                    (args[0], unicode(args[1:])))
+                (args[0], unicode(args[1:])))
             return subprocess.check_output(args)
         except subprocess.CalledProcessError, error:
             self.logger.error(error.output)
             raise
 
+
 class TextyPlugin(Plugin):
+
     """
     Base class for text preprocessing plugins.
 
@@ -493,10 +521,11 @@ class TextyPlugin(Plugin):
         """
         Replace a text base pattern with a template statement.
         """
-        text_open = re.compile(self.open_pattern, re.UNICODE|re.MULTILINE)
+        text_open = re.compile(self.open_pattern, re.UNICODE | re.MULTILINE)
         text = text_open.sub(self.text_to_tag, text)
         if self.close_pattern:
-            text_close = re.compile(self.close_pattern, re.UNICODE|re.MULTILINE)
+            text_close = re.compile(
+                self.close_pattern, re.UNICODE | re.MULTILINE)
             text = text_close.sub(
-                    partial(self.text_to_tag, start=False), text)
+                partial(self.text_to_tag, start=False), text)
         return text

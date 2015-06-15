@@ -18,7 +18,7 @@ class TestBlockdown(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -26,7 +26,8 @@ class TestBlockdown(object):
     def test_can_parse_blockdown(self):
         s = Site(TEST_SITE)
         s.config.plugins = ['hyde.ext.plugins.text.BlockdownPlugin']
-        txt ="This template tests to make sure blocks can be replaced with markdownish syntax."
+        txt = ("This template tests to make sure blocks can be replaced"
+               "with markdownish syntax.")
         templ = """
 {%% extends "base.html" %%}
 =====title========
@@ -39,7 +40,8 @@ class TestBlockdown(object):
         gen = Generator(s)
         gen.generate_resource_at_path(bd.path)
         res = s.content.resource_from_path(bd.path)
-        target = File(s.config.deploy_root_path.child(res.relative_deploy_path))
+        target = File(
+            s.config.deploy_root_path.child(res.relative_deploy_path))
         assert target.exists
         text = target.read_all()
         q = PyQuery(text)

@@ -20,7 +20,7 @@ class TestMeta(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -76,8 +76,8 @@ Heading 2
 
     def test_can_load_front_matter(self):
         d = {'title': 'A nice title',
-            'author': 'Lakshmi Vyas',
-            'twitter': 'lakshmivyas'}
+             'author': 'Lakshmi Vyas',
+             'twitter': 'lakshmivyas'}
         text = """
 ---
 title: %(title)s
@@ -118,8 +118,8 @@ twitter: %(twitter)s
 
     def test_can_load_from_node_meta(self):
         d = {'title': 'A nice title',
-            'author': 'Lakshmi Vyas',
-            'twitter': 'lakshmivyas'}
+             'author': 'Lakshmi Vyas',
+             'twitter': 'lakshmivyas'}
         text = """
 ===
 title: Even nicer title
@@ -161,7 +161,7 @@ title: Even nicer title
 
     def test_can_load_from_site_meta(self):
         d = {'title': 'A nice title',
-            'author': 'Lakshmi Vyas'}
+             'author': 'Lakshmi Vyas'}
         text = """
 ---
 title: Even nicer title
@@ -205,15 +205,14 @@ title: Even nicer title
                 assert v in q("span." + k).text()
         assert q("span.title").text() == "Even nicer title"
 
-
     def test_multiple_levels(self):
 
         page_d = {'title': 'An even nicer title'}
 
         blog_d = {'author': 'Laks'}
 
-        content_d  = {'title': 'A nice title',
-                      'author': 'Lakshmi Vyas'}
+        content_d = {'title': 'A nice title',
+                     'author': 'Lakshmi Vyas'}
 
         site_d = {'author': 'Lakshmi',
                   'twitter': 'lakshmivyas',
@@ -256,7 +255,8 @@ title: %(title)s
         for k, v in expected.items():
             assert hasattr(res.meta, k)
             assert getattr(res.meta, k) == v
-        target = File(Folder(s.config.deploy_root_path).child('blog/about2.html'))
+        target = File(
+            Folder(s.config.deploy_root_path).child('blog/about2.html'))
         text = target.read_all()
         q = PyQuery(text)
         for k, v in expected.items():

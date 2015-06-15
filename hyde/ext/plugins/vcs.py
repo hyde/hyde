@@ -12,9 +12,11 @@ import subprocess
 
 
 class VCSDatesPlugin(Plugin):
+
     """
     Base class for getting resource timestamps from VCS.
     """
+
     def __init__(self, site, vcs_name='vcs'):
         super(VCSDatesPlugin, self).__init__(site)
         self.vcs_name = vcs_name
@@ -38,8 +40,8 @@ class VCSDatesPlugin(Plugin):
 
                 if created == "git":
                     created = date_created or \
-                                datetime.utcfromtimestamp(
-                                    os.path.getctime(resource.path))
+                        datetime.utcfromtimestamp(
+                            os.path.getctime(resource.path))
                     created = created.replace(tzinfo=None)
                     resource.meta.created = created
 
@@ -47,7 +49,6 @@ class VCSDatesPlugin(Plugin):
                     modified = date_modified or resource.source.last_modified
                     modified = modified.replace(tzinfo=None)
                     resource.meta.modified = modified
-
 
     def get_dates(self):
         """
@@ -60,7 +61,10 @@ class VCSDatesPlugin(Plugin):
 #
 # Git Dates
 #
+
+
 class GitDatesPlugin(VCSDatesPlugin):
+
     def __init__(self, site):
         super(GitDatesPlugin, self).__init__(site, 'git')
 
@@ -78,7 +82,8 @@ class GitDatesPlugin(VCSDatesPlugin):
             ]).split("\n")
             commits = commits[:-1]
         except subprocess.CalledProcessError:
-            self.logger.warning("Unable to get git history for [%s]" % resource)
+            self.logger.warning(
+                "Unable to get git history for [%s]" % resource)
             commits = None
 
         if commits:
@@ -93,6 +98,8 @@ class GitDatesPlugin(VCSDatesPlugin):
 #
 # Mercurial Dates
 #
+
+
 class MercurialDatesPlugin(VCSDatesPlugin):
 
     def __init__(self, site):
@@ -105,12 +112,12 @@ class MercurialDatesPlugin(VCSDatesPlugin):
         # Run hg log --template={date|isodatesec}
         try:
             commits = subprocess.check_output([
-                            "hg", "log", "--template={date|isodatesec}\n",
-                                               resource.path]).split('\n')
+                "hg", "log", "--template={date|isodatesec}\n",
+                resource.path]).split('\n')
             commits = commits[:-1]
         except subprocess.CalledProcessError:
             self.logger.warning("Unable to get mercurial history for [%s]"
-                                             % resource)
+                                % resource)
             commits = None
 
         if not commits:

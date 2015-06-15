@@ -5,7 +5,9 @@ Contains classes to help manage multi-language pages.
 
 from hyde.plugin import Plugin
 
+
 class LanguagePlugin(Plugin):
+
     """
     Each page should be tagged with a language using `language` meta
     data. Each page should also have an UUID stored in `uuid` meta
@@ -36,7 +38,8 @@ class LanguagePlugin(Plugin):
 
     def __init__(self, site):
         super(LanguagePlugin, self).__init__(site)
-        self.languages = {} # Associate a UUID to the list of resources available
+        # Associate a UUID to the list of resources available
+        self.languages = {}
 
     def begin_site(self):
         """
@@ -60,8 +63,9 @@ class LanguagePlugin(Plugin):
                 resource.translations = \
                     [r for r in resources
                      if r.meta.language != language]
-                translations = ",".join([t.meta.language for t in resource.translations])
-                self.logger.debug(
-                    "Adding translations for resource [%s] from %s to %s" % (resource,
-                                                                             language,
-                                                                             translations))
+                translations = ",".join(
+                    [t.meta.language for t in resource.translations])
+                self.logger.debug("Adding translations for resource"
+                                  "[%s] from %s to %s" % (resource,
+                                                          language,
+                                                          translations))

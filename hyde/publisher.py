@@ -8,7 +8,9 @@ Contains abstract classes and utilities that help publishing a website to a
 server.
 """
 
+
 class Publisher(object):
+
     """
     The abstract base class for publishers.
     """
@@ -18,13 +20,14 @@ class Publisher(object):
     def __init__(self, site, settings, message):
         super(Publisher, self).__init__()
         self.logger = getLoggerWithNullHandler(
-                            'hyde.engine.%s' % self.__class__.__name__)
+            'hyde.engine.%s' % self.__class__.__name__)
         self.site = site
         self.message = message
         self.initialize(settings)
 
     @abc.abstractmethod
-    def initialize(self, settings): pass
+    def initialize(self, settings):
+        pass
 
     @abc.abstractmethod
     def publish(self):
@@ -43,7 +46,8 @@ class Publisher(object):
             # Find the first configured publisher
             try:
                 publisher = site.config.publisher.__dict__.iterkeys().next()
-                logger.warning("No default publisher configured. Using: %s" % publisher)
+                logger.warning(
+                    "No default publisher configured. Using: %s" % publisher)
                 settings = attrgetter("publisher.%s" % publisher)(site.config)
             except (AttributeError, StopIteration):
                 logger.error(

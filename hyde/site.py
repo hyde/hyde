@@ -15,6 +15,7 @@ from hyde.model import Config
 from commando.util import getLoggerWithNullHandler
 from fswrap import FS, File, Folder
 
+
 def path_normalized(f):
     @wraps(f)
     def wrapper(self, path):
@@ -22,6 +23,7 @@ def path_normalized(f):
     return wrapper
 
 logger = getLoggerWithNullHandler('hyde.engine')
+
 
 class Processable(object):
     """
@@ -64,8 +66,8 @@ class Processable(object):
         after its been processed.
         """
         return self._relative_deploy_path \
-                    if self._relative_deploy_path is not None \
-                    else self.relative_path
+            if self._relative_deploy_path is not None \
+            else self.relative_path
 
     def set_relative_deploy_path(self, path):
         """
@@ -75,7 +77,8 @@ class Processable(object):
         self._relative_deploy_path = path
         self.site.content.deploy_path_changed(self)
 
-    relative_deploy_path = property(get_relative_deploy_path, set_relative_deploy_path)
+    relative_deploy_path = property(get_relative_deploy_path,
+                                    set_relative_deploy_path)
 
     @property
     def url(self):
@@ -118,8 +121,9 @@ class Resource(Processable):
 
     @property
     def slug(self):
-        #TODO: Add a more sophisticated slugify method
+        # TODO: Add a more sophisticated slugify method
         return self.source.name_without_extension
+
 
 class Node(Processable):
     """
@@ -159,7 +163,7 @@ class Node(Processable):
 
         if self.contains_resource(resource_name):
             return self.root.resource_from_path(
-                        self.source_folder.child(resource_name))
+                self.source_folder.child(resource_name))
         return None
 
     def add_child_node(self, folder):
@@ -223,6 +227,7 @@ class Node(Processable):
         """
         return self.source_folder.get_relative_path(self.root.source_folder)
 
+
 class RootNode(Node):
     """
     Represents one of the roots of site: Content, Media or Layout
@@ -253,7 +258,7 @@ class RootNode(Node):
         If no match is found it returns None.
         """
         return self.node_from_path(
-                    self.source_folder.child(unicode(relative_path)))
+            self.source_folder.child(unicode(relative_path)))
 
     @path_normalized
     def resource_from_path(self, path):
@@ -270,7 +275,7 @@ class RootNode(Node):
         If no match is found it returns None.
         """
         return self.resource_from_path(
-                    self.source_folder.child(relative_path))
+            self.source_folder.child(relative_path))
 
     def deploy_path_changed(self, item):
         """
@@ -320,7 +325,7 @@ class RootNode(Node):
             node = node.add_child_node(h_folder)
             self.node_map[unicode(h_folder)] = node
             logger.debug("Added node [%s] to [%s]" % (
-                            node.relative_path, self.source_folder))
+                         node.relative_path, self.source_folder))
 
         return node
 
@@ -350,11 +355,10 @@ class RootNode(Node):
         self.resource_map[unicode(afile)] = resource
         relative_path = resource.relative_path
         resource.simple_copy = any(fnmatch.fnmatch(relative_path, pattern)
-                                        for pattern
-                                        in self.site.config.simple_copy)
+                                   for pattern in self.site.config.simple_copy)
 
         logger.debug("Added resource [%s] to [%s]" %
-                    (resource.relative_path, self.source_folder))
+                     (resource.relative_path, self.source_folder))
         return resource
 
     def load(self):
@@ -396,6 +400,7 @@ def _encode_path(base, path, safe):
     path = quote(path, safe) if safe is not None else quote(path)
     return base.rstrip('/') + '/' + path.lstrip('/')
 
+
 class Site(object):
     """
     Represents the site to be generated.
@@ -420,9 +425,8 @@ class Site(object):
         """
         if self.config.needs_refresh():
             logger.debug("Refreshing config data")
-            self.config = Config(self.sitepath,
-                        self.config.config_file,
-                        self.config.config_dict)
+            self.config = Config(self.sitepath, self.config.config_file,
+                                 self.config.config_dict)
 
     def reload_if_needed(self):
         """
@@ -453,13 +457,13 @@ class Site(object):
         """
         return _encode_path(self.config.base_url, path, self._safe_chars(safe))
 
-
     def media_url(self, path, safe=None):
         """
         Returns the media url by appending the media base url from the config
         with the given path. The return value is url encoded.
         """
-        return _encode_path(self.config.media_url, path, self._safe_chars(safe))
+        return _encode_path(self.config.media_url, path,
+                            self._safe_chars(safe))
 
     def full_url(self, path, safe=None):
         """
@@ -467,12 +471,12 @@ class Site(object):
         configuration and returns the appropriate url. The return value
         is url encoded.
         """
-        if urlparse.urlparse(path)[:2] != ("",""):
+        if urlparse.urlparse(path)[:2] != ("", ""):
             return path
 
         if self.is_media(path):
             relative_path = File(path).get_relative_path(
-                                Folder(self.config.media_root))
+                Folder(self.config.media_root))
             return self.media_url(relative_path, safe)
         else:
             return self.content_url(path, safe)

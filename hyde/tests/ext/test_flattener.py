@@ -19,7 +19,7 @@ class TestFlattner(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                    'sites/test_jinja').copy_contents_to(TEST_SITE)
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -42,7 +42,8 @@ class TestFlattner(object):
         gen.generate_all()
 
         assert not s.config.deploy_root_path.child_folder('blog').exists
-        assert File(s.config.deploy_root_path.child('merry-christmas.html')).exists
+        assert File(
+            s.config.deploy_root_path.child('merry-christmas.html')).exists
 
     def test_flattener_fixes_nodes(self):
         s = Site(TEST_SITE)
@@ -64,5 +65,3 @@ class TestFlattner(object):
 
         assert blog_node
         assert blog_node.url == '/'
-
-

@@ -21,7 +21,7 @@ class TestGrouperSingleLevel(object):
     def setUp(self):
         TEST_SITE.make()
         TEST_SITE.parent.child_folder(
-                  'sites/test_grouper').copy_contents_to(TEST_SITE)
+            'sites/test_grouper').copy_contents_to(TEST_SITE)
 
         self.s = Site(TEST_SITE)
         cfg = """
@@ -55,7 +55,8 @@ class TestGrouperSingleLevel(object):
         SorterPlugin(self.s).begin_site()
         GrouperPlugin(self.s).begin_site()
 
-        self.all = ['installation.html', 'overview.html', 'templating.html', 'plugins.html', 'tags.html']
+        self.all = ['installation.html', 'overview.html',
+                    'templating.html', 'plugins.html', 'tags.html']
         self.start = ['installation.html', 'overview.html', 'templating.html']
         self.plugins = ['plugins.html', 'tags.html']
         self.section = self.all
@@ -72,7 +73,8 @@ class TestGrouperSingleLevel(object):
 
     def test_site_grouper_walk_groups(self):
 
-        groups = dict([(g.name, g) for g in self.s.grouper['section'].walk_groups()])
+        groups = dict([(g.name, g)
+                       for g in self.s.grouper['section'].walk_groups()])
         assert len(groups) == 3
         assert 'section' in groups
         assert 'start' in groups
@@ -81,7 +83,8 @@ class TestGrouperSingleLevel(object):
     def test_walk_section_groups(self):
 
         assert hasattr(self.s.content, 'walk_section_groups')
-        groups = dict([(grouper.group.name, grouper) for grouper in self.s.content.walk_section_groups()])
+        groups = dict([(grouper.group.name, grouper)
+                       for grouper in self.s.content.walk_section_groups()])
         assert len(groups) == 3
         assert 'section' in groups
         assert 'start' in groups
@@ -93,15 +96,16 @@ class TestGrouperSingleLevel(object):
     def test_walk_start_groups(self):
 
         assert hasattr(self.s.content, 'walk_start_groups')
-        groups = dict([(g.name, g) for g, resources in self.s.content.walk_start_groups()])
+        groups = dict([(g.name, g)
+                       for g, resources in self.s.content.walk_start_groups()])
         assert len(groups) == 1
         assert 'start' in groups
-
 
     def test_walk_plugins_groups(self):
 
         assert hasattr(self.s.content, 'walk_plugins_groups')
-        groups = dict([(g.name, g) for g, resources in self.s.content.walk_plugins_groups()])
+        groups = dict([(g.name, g) for g, resources in
+                      self.s.content.walk_plugins_groups()])
         assert len(groups) == 1
         assert 'plugins' in groups
 
@@ -109,22 +113,24 @@ class TestGrouperSingleLevel(object):
 
         assert hasattr(self.s.content, 'walk_resources_grouped_by_section')
 
-        resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_section()]
+        resources = [resource.name for resource in
+                     self.s.content.walk_resources_grouped_by_section()]
         assert resources == self.all
-
 
     def test_walk_start_resources(self):
 
         assert hasattr(self.s.content, 'walk_resources_grouped_by_start')
 
-        start_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_start()]
+        start_resources = [resource.name for resource in
+                           self.s.content.walk_resources_grouped_by_start()]
         assert start_resources == self.start
 
     def test_walk_plugins_resources(self):
 
         assert hasattr(self.s.content, 'walk_resources_grouped_by_plugins')
 
-        plugin_resources = [resource.name for resource in self.s.content.walk_resources_grouped_by_plugins()]
+        plugin_resources = [resource.name for resource in
+                            self.s.content.walk_resources_grouped_by_plugins()]
         assert plugin_resources == self.plugins
 
     def test_resource_group(self):
@@ -134,7 +140,8 @@ class TestGrouperSingleLevel(object):
         for name, group in groups.items():
             pages = getattr(self, name)
             for page in pages:
-                res = self.s.content.resource_from_relative_path('blog/' + page)
+                res = self.s.content.resource_from_relative_path(
+                    'blog/' + page)
                 assert hasattr(res, 'section_group')
                 res_group = getattr(res, 'section_group')
                 assert res_group == group
@@ -146,7 +153,8 @@ class TestGrouperSingleLevel(object):
         for name, group in groups.items():
             pages = getattr(self, name)
             for page in pages:
-                res = self.s.content.resource_from_relative_path('blog/' + page)
+                res = self.s.content.resource_from_relative_path(
+                    'blog/' + page)
                 res_groups = getattr(res, 'walk_%s_groups' % name)()
                 assert group in res_groups
 
@@ -154,7 +162,8 @@ class TestGrouperSingleLevel(object):
 
         resources = []
         for page in self.all:
-            resources.append(self.s.content.resource_from_relative_path('blog/' + page))
+            resources.append(
+                self.s.content.resource_from_relative_path('blog/' + page))
 
         index = 0
         for res in resources:
@@ -174,7 +183,7 @@ class TestGrouperSingleLevel(object):
 
     def test_nav_with_grouper(self):
 
-        text ="""
+        text = """
 {% for group, resources in site.content.walk_section_groups() %}
 <ul>
     <li>
@@ -225,7 +234,7 @@ class TestGrouperSingleLevel(object):
         gen = Generator(self.s)
         gen.load_site_if_needed()
         gen.load_template_if_needed()
-        out = gen.template.render(text, {'site':self.s})
+        out = gen.template.render(text, {'site': self.s})
         assert_html_equals(out, expected)
 
     def test_nav_with_grouper_sorted(self):
@@ -264,7 +273,7 @@ class TestGrouperSingleLevel(object):
         SorterPlugin(self.s).begin_site()
         GrouperPlugin(self.s).begin_site()
 
-        text ="""
+        text = """
 {% set sorted = site.grouper['section'].groups|sort(attribute='name') %}
 {% for group in sorted %}
 <ul>
@@ -314,9 +323,10 @@ class TestGrouperSingleLevel(object):
 
 
 """
-        self.s.config.grouper.section.groups.append(Expando({"name": "awesome", "description": "Aweesoome"}));
+        self.s.config.grouper.section.groups.append(
+            Expando({"name": "awesome", "description": "Aweesoome"}))
         gen = Generator(self.s)
         gen.load_site_if_needed()
         gen.load_template_if_needed()
-        out = gen.template.render(text, {'site':self.s})
+        out = gen.template.render(text, {'site': self.s})
         assert_html_equals(out, expected)

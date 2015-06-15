@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Use nose
 `$ pip install nose`
@@ -15,11 +15,13 @@ from fswrap import File, Folder
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
+
 class TestGenerator(object):
 
     def setUp(self):
         TEST_SITE.make()
-        TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+        TEST_SITE.parent.child_folder(
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()
@@ -38,7 +40,8 @@ class TestGenerator(object):
     def test_generate_resource_from_path_with_is_processable_false(self):
         site = Site(TEST_SITE)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         resource.is_processable = False
         gen = Generator(site)
         gen.generate_resource_at_path(TEST_SITE.child('content/about.html'))
@@ -48,7 +51,8 @@ class TestGenerator(object):
     def test_generate_resource_from_path_with_uses_template_false(self):
         site = Site(TEST_SITE)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         resource.uses_template = False
         gen = Generator(site)
         gen.generate_resource_at_path(TEST_SITE.child('content/about.html'))
@@ -61,11 +65,13 @@ class TestGenerator(object):
     def test_generate_resource_from_path_with_deploy_override(self):
         site = Site(TEST_SITE)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         resource.relative_deploy_path = 'about/index.html'
         gen = Generator(site)
         gen.generate_resource_at_path(TEST_SITE.child('content/about.html'))
-        about = File(Folder(site.config.deploy_root_path).child('about/index.html'))
+        about = File(
+            Folder(site.config.deploy_root_path).child('about/index.html'))
         assert about.exists
         text = about.read_all()
         q = PyQuery(text)
@@ -74,7 +80,8 @@ class TestGenerator(object):
     def test_has_resource_changed(self):
         site = Site(TEST_SITE)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         gen.generate_all()
         import time
@@ -110,7 +117,8 @@ class TestGenerator(object):
 {% endblock %}
 """
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         resource.source_file.write(text)
         gen.generate_all()
@@ -150,7 +158,8 @@ class TestGenerator(object):
 """
         File(TEST_SITE.child('nav.yaml')).write(nav)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         resource.source_file.write(text)
         gen.generate_all()
@@ -192,7 +201,8 @@ main:
 """
         File(TEST_SITE.child('nav.yaml')).write(nav)
         site.load()
-        resource = site.content.resource_from_path(TEST_SITE.child('content/about.html'))
+        resource = site.content.resource_from_path(
+            TEST_SITE.child('content/about.html'))
         gen = Generator(site)
         resource.source_file.write(text)
         gen.generate_all()
@@ -257,4 +267,3 @@ main:
         left = File(site.config.deploy_root_path.child(f1.name)).read_all()
         right = File(site.config.deploy_root_path.child(f2.name)).read_all()
         assert left == right
-

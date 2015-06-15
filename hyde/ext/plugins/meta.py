@@ -26,6 +26,7 @@ import yaml
 #
 
 class Metadata(Expando):
+
     """
     Container class for yaml meta data.
     """
@@ -49,6 +50,7 @@ class Metadata(Expando):
 
 
 class MetaPlugin(Plugin):
+
     """
     Metadata plugin for hyde. Loads meta data in the following order:
 
@@ -66,8 +68,8 @@ class MetaPlugin(Plugin):
     def __init__(self, site):
         super(MetaPlugin, self).__init__(site)
         self.yaml_finder = re.compile(
-                    r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n*",
-                    re.MULTILINE)
+            r"^\s*(?:---|===)\s*\n((?:.|\n)+?)\n\s*(?:---|===)\s*\n*",
+            re.MULTILINE)
 
     def begin_site(self):
         """
@@ -88,7 +90,8 @@ class MetaPlugin(Plugin):
                 if not hasattr(resource, 'meta'):
                     resource.meta = Metadata({}, node.meta)
                 if resource.source_file.is_text and not resource.simple_copy:
-                    self.__read_resource__(resource, resource.source_file.read_all())
+                    self.__read_resource__(
+                        resource, resource.source_file.read_all())
 
     def __read_resource__(self, resource, text):
         """
@@ -96,7 +99,8 @@ class MetaPlugin(Plugin):
         the resource. Load meta data by looking for the marker.
         Once loaded, remove the meta area from the text.
         """
-        self.logger.debug("Trying to load metadata from resource [%s]" % resource)
+        self.logger.debug(
+            "Trying to load metadata from resource [%s]" % resource)
         match = re.match(self.yaml_finder, text)
         if not match:
             self.logger.debug("No metadata found in resource [%s]" % resource)
@@ -113,7 +117,7 @@ class MetaPlugin(Plugin):
             resource.meta.update(data)
         self.__update_standard_attributes__(resource)
         self.logger.debug("Successfully loaded metadata from resource [%s]"
-                        % resource)
+                          % resource)
         return text or ' '
 
     def __update_standard_attributes__(self, obj):
@@ -165,6 +169,7 @@ class MetaPlugin(Plugin):
 #
 
 class AutoExtendPlugin(Plugin):
+
     """
     The plugin class for extending templates using metadata.
     """
@@ -204,9 +209,9 @@ class AutoExtendPlugin(Plugin):
                 extended_text += '\n'
                 if block:
                     extended_text += ('%s\n%s\n%s' %
-                                        (self.t_block_open_tag(block),
-                                            text,
-                                            self.t_block_close_tag(block)))
+                                      (self.t_block_open_tag(block),
+                                       text,
+                                       self.t_block_close_tag(block)))
                 else:
                     extended_text += text
                 return extended_text
@@ -218,6 +223,7 @@ class AutoExtendPlugin(Plugin):
 #
 
 class Tag(Expando):
+
     """
     A simple object that represents a tag.
     """
@@ -255,6 +261,7 @@ def get_tagger_sort_method(site):
             sys.exc_info())
     return walker
 
+
 def walk_resources_tagged_with(node, tag):
     tags = set(unicode(tag).split('+'))
     walker = get_tagger_sort_method(node.site)
@@ -266,7 +273,9 @@ def walk_resources_tagged_with(node, tag):
         if tags <= taglist:
             yield resource
 
+
 class TaggerPlugin(Plugin):
+
     """
     Tagger plugin for hyde. Adds the ability to do tag resources and search
     based on the tags.
@@ -286,6 +295,7 @@ class TaggerPlugin(Plugin):
                target: blog/tags
                archive_extension: html
     """
+
     def __init__(self, site):
         super(TaggerPlugin, self).__init__(site)
 
@@ -295,11 +305,13 @@ class TaggerPlugin(Plugin):
         and methods for walking tagged resources.
         """
         self.logger.debug("Adding tags from metadata")
-        config = self.site.config
-        content = self.site.content
+        # *F841 local variable 'config' is assigned to but never used
+        # config = self.site.config
+        # *F841 local variable 'content' is assigned to but never used
+        # content = self.site.content
         tags = {}
         add_method(Node,
-            'walk_resources_tagged_with', walk_resources_tagged_with)
+                   'walk_resources_tagged_with', walk_resources_tagged_with)
         walker = get_tagger_sort_method(self.site)
         for resource in walker():
             self._process_tags_in_resource(resource, tags)
@@ -337,14 +349,14 @@ class TaggerPlugin(Plugin):
             return
 
         for tagname in taglist:
-            if not tagname in tags:
+            if tagname not in tags:
                 tag = Tag(tagname)
                 tags[tagname] = tag
                 tag.resources.append(resource)
                 add_method(Node,
-                    'walk_resources_tagged_with_%s' % tagname,
-                    walk_resources_tagged_with,
-                    tag=tag)
+                           'walk_resources_tagged_with_%s' % tagname,
+                           walk_resources_tagged_with,
+                           tag=tag)
             else:
                 tags[tagname].resources.append(resource)
             if not hasattr(resource, 'tags'):
@@ -367,13 +379,13 @@ class TaggerPlugin(Plugin):
         for name, config in archive_config.to_dict().iteritems():
             self._create_tag_archive(config)
 
-
     def _create_tag_archive(self, config):
         """
         Generates archives for each tag based on the given configuration.
         """
-        if not 'template' in config:
-            raise HydeException("No Template specified in tagger configuration.")
+        if 'template' not in config:
+            raise HydeException(
+                "No Template specified in tagger configuration.")
         content = self.site.content.source_folder
         source = Folder(config.get('source', ''))
         target = content.child_folder(config.get('target', 'tags'))
@@ -441,15 +453,17 @@ def filter_method(item, settings=None):
             break
     return all_match
 
+
 def attributes_checker(item, attributes=None):
     """
     Checks if the given list of attributes exist.
     """
     try:
-      attrgetter(*attributes)(item)
-      return True
+        attrgetter(*attributes)(item)
+        return True
     except AttributeError:
-      return False
+        return False
+
 
 def sort_method(node, settings=None):
     """
@@ -471,11 +485,12 @@ def sort_method(node, settings=None):
     resources = ifilter(lambda x: excluder_(x) and filter_(x),
                         node.walk_resources())
     return sorted(resources,
-                    key=attrgetter(*attr),
-                    reverse=reverse)
+                  key=attrgetter(*attr),
+                  reverse=reverse)
 
 
 class SorterPlugin(Plugin):
+
     """
     Sorter plugin for hyde. Adds the ability to do
     sophisticated sorting by expanding the site objects
@@ -529,8 +544,8 @@ class SorterPlugin(Plugin):
             setattr(Resource, next_att, None)
 
             walker = getattr(self.site.content,
-                                sort_method_name,
-                                self.site.content.walk_resources)
+                             sort_method_name,
+                             self.site.content.walk_resources)
             first, last = None, None
             for prev, next in pairwalk(walker()):
                 if not first:
@@ -555,7 +570,9 @@ class SorterPlugin(Plugin):
 
 Grouper = namedtuple('Grouper', 'group resources')
 
+
 class Group(Expando):
+
     """
     A wrapper class for groups. Adds methods for
     grouping resources.
@@ -573,21 +590,21 @@ class Group(Expando):
         super(Group, self).__init__(grouping)
 
         add_method(Node,
-                'walk_%s_groups' % self.name,
-                Group.walk_groups_in_node,
-                group=self)
+                   'walk_%s_groups' % self.name,
+                   Group.walk_groups_in_node,
+                   group=self)
         add_method(Node,
-                'walk_resources_grouped_by_%s' % self.name,
-                Group.walk_resources,
-                group=self)
+                   'walk_resources_grouped_by_%s' % self.name,
+                   Group.walk_resources,
+                   group=self)
         add_property(Resource,
-                    '%s_group' % self.name,
-                    Group.get_resource_group,
-                    group=self)
+                     '%s_group' % self.name,
+                     Group.get_resource_group,
+                     group=self)
         add_method(Resource,
-                    'walk_%s_groups' % self.name,
-                    Group.walk_resource_groups,
-                    group=self)
+                   'walk_%s_groups' % self.name,
+                   Group.walk_resource_groups,
+                   group=self)
 
     def set_expando(self, key, value):
         """
@@ -612,9 +629,9 @@ class Group(Expando):
             group_name = None
 
         return next((g for g in group.walk_groups()
-                            if g.name == group_name), None) \
-                    if group_name \
-                    else None
+                     if g.name == group_name), None) \
+            if group_name \
+            else None
 
     @staticmethod
     def walk_resource_groups(resource, group):
@@ -693,7 +710,9 @@ class Group(Expando):
             if group_value == self.name:
                 yield resource
 
+
 class GrouperPlugin(Plugin):
+
     """
     Grouper plugin for hyde. Adds the ability to do
     group resources and nodes in an arbitrary
@@ -726,6 +745,7 @@ class GrouperPlugin(Plugin):
                         Helpful snippets and tweaks to
                         make hyde more awesome.
     """
+
     def __init__(self, site):
         super(GrouperPlugin, self).__init__(site)
 
@@ -748,9 +768,8 @@ class GrouperPlugin(Plugin):
             setattr(Resource, next_att, None)
             self.site.grouper[name] = Group(grouping)
             walker = Group.walk_resources(
-                            self.site.content, self.site.grouper[name])
+                self.site.content, self.site.grouper[name])
 
             for prev, next in pairwalk(walker):
                 setattr(next, prev_att, prev)
                 setattr(prev, next_att, next)
-

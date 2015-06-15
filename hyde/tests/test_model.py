@@ -8,17 +8,20 @@ from hyde.model import Config, Expando
 
 from fswrap import File, Folder
 
+
 def test_expando_one_level():
     d = {"a": 123, "b": "abc"}
     x = Expando(d)
     assert x.a == d['a']
     assert x.b == d['b']
 
+
 def test_expando_two_levels():
     d = {"a": 123, "b": {"c": 456}}
     x = Expando(d)
     assert x.a == d['a']
     assert x.b.c == d['b']['c']
+
 
 def test_expando_three_levels():
     d = {"a": 123, "b": {"c": 456, "d": {"e": "abc"}}}
@@ -27,6 +30,7 @@ def test_expando_three_levels():
     assert x.b.c == d['b']['c']
     assert x.b.d.e == d['b']['d']['e']
 
+
 def test_expando_update():
     d1 = {"a": 123, "b": "abc"}
     x = Expando(d1)
@@ -34,7 +38,7 @@ def test_expando_update():
     assert x.b == d1['b']
     d = {"b": {"c": 456, "d": {"e": "abc"}}, "f": "lmn"}
     x.update(d)
-    assert  x.a == d1['a']
+    assert x.a == d1['a']
     assert x.b.c == d['b']['c']
     assert x.b.d.e == d['b']['d']['e']
     assert x.f == d["f"]
@@ -44,10 +48,12 @@ def test_expando_update():
     assert x.a == 789
     assert x.f == "opq"
 
+
 def test_expando_to_dict():
     d = {"a": 123, "b": {"c": 456, "d": {"e": "abc"}}}
     x = Expando(d)
     assert d == x.to_dict()
+
 
 def test_expando_to_dict_with_update():
     d1 = {"a": 123, "b": "abc"}
@@ -67,6 +73,8 @@ def test_expando_to_dict_with_update():
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
 import yaml
+
+
 class TestConfig(object):
 
     @classmethod
@@ -94,7 +102,8 @@ class TestConfig(object):
 
     def setUp(self):
         TEST_SITE.make()
-        TEST_SITE.parent.child_folder('sites/test_jinja').copy_contents_to(TEST_SITE)
+        TEST_SITE.parent.child_folder(
+            'sites/test_jinja').copy_contents_to(TEST_SITE)
 
     def tearDown(self):
         TEST_SITE.delete()

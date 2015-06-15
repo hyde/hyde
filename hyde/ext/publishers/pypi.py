@@ -19,16 +19,14 @@ from commando.util import getLoggerWithNullHandler
 logger = getLoggerWithNullHandler('hyde.ext.publishers.pypi')
 
 
-
-
 class PyPI(Publisher):
 
     def initialize(self, settings):
         self.settings = settings
         self.project = settings.project
-        self.url = getattr(settings,"url","https://pypi.python.org/pypi/")
-        self.username = getattr(settings,"username",None)
-        self.password = getattr(settings,"password",None)
+        self.url = getattr(settings, "url", "https://pypi.python.org/pypi/")
+        self.username = getattr(settings, "username", None)
+        self.password = getattr(settings, "password", None)
         self.prompt_for_credentials()
 
     def prompt_for_credentials(self):
@@ -38,12 +36,13 @@ class PyPI(Publisher):
         else:
             pypirc = ConfigParser.RawConfigParser()
             pypirc.read([pypirc_file])
-        missing_errs = (ConfigParser.NoSectionError,ConfigParser.NoOptionError)
+        missing_errs = (
+            ConfigParser.NoSectionError, ConfigParser.NoOptionError)
         #  Try to find username in .pypirc
         if self.username is None:
             if pypirc is not None:
                 try:
-                    self.username = pypirc.get("server-login","username")
+                    self.username = pypirc.get("server-login", "username")
                 except missing_errs:
                     pass
         #  Prompt for username on command-line
@@ -54,7 +53,7 @@ class PyPI(Publisher):
         if self.password is None:
             if pypirc is not None:
                 try:
-                    self.password = pypirc.get("server-login","password")
+                    self.password = pypirc.get("server-login", "password")
                 except missing_errs:
                     pass
         #  Prompt for username on command-line
@@ -73,11 +72,11 @@ class PyPI(Publisher):
             #  Bundle it up into a zipfile
             logger.info("building the zipfile")
             root = self.site.config.deploy_root_path
-            zf = zipfile.ZipFile(tf,"w",zipfile.ZIP_DEFLATED)
+            zf = zipfile.ZipFile(tf, "w", zipfile.ZIP_DEFLATED)
             try:
                 for item in root.walker.walk_files():
-                    logger.info("  adding file: %s",item.path)
-                    zf.write(item.path,item.get_relative_path(root))
+                    logger.info("  adding file: %s", item.path)
+                    zf.write(item.path, item.get_relative_path(root))
             finally:
                 zf.close()
             #  Formulate the necessary bits for the HTTP POST.
@@ -85,12 +84,14 @@ class PyPI(Publisher):
             authz = self.username + ":" + self.password
             authz = "Basic " + standard_b64encode(authz)
             boundary = "-----------" + os.urandom(20).encode("hex")
-            sep_boundary = "\r\n--" + boundary
-            end_boundary = "\r\n--" + boundary + "--\r\n"
+            # *F841 local variable 'sep_boundary' is assigned to but never used
+            # sep_boundary = "\r\n--" + boundary
+            # *F841 local variable 'end_boundary' is assigned to but never used
+            # end_boundary = "\r\n--" + boundary + "--\r\n"
             content_type = "multipart/form-data; boundary=%s" % (boundary,)
-            items = ((":action","doc_upload"),("name",self.project))
+            items = ((":action", "doc_upload"), ("name", self.project))
             body_prefix = ""
-            for (name,value) in items:
+            for (name, value) in items:
                 body_prefix += "--" + boundary + "\r\n"
                 body_prefix += "Content-Disposition: form-data; name=\""
                 body_prefix += name + "\"\r\n\r\n"
@@ -110,24 +111,24 @@ class PyPI(Publisher):
             con.connect()
             try:
                 con.putrequest("POST", self.url)
-                con.putheader("Content-Type",content_type)
-                con.putheader("Content-Length",str(content_length))
-                con.putheader("Authorization",authz)
+                con.putheader("Content-Type", content_type)
+                con.putheader("Content-Length", str(content_length))
+                con.putheader("Authorization", authz)
                 con.endheaders()
                 con.send(body_prefix)
                 tf.seek(0)
-                data = tf.read(1024*32)
+                data = tf.read(1024 * 32)
                 while data:
                     con.send(data)
-                    data = tf.read(1024*32)
+                    data = tf.read(1024 * 32)
                 con.send(body_suffix)
                 r = con.getresponse()
                 try:
                     #  PyPI tries to redirect to the page on success.
-                    if r.status in (200,301,):
+                    if r.status in (200, 301,):
                         logger.info("success!")
                     else:
-                        msg = "Upload failed: %s %s" % (r.status,r.reason,)
+                        msg = "Upload failed: %s %s" % (r.status, r.reason,)
                         raise Exception(msg)
                 finally:
                     r.close()
@@ -135,5 +136,3 @@ class PyPI(Publisher):
                 con.close()
         finally:
             tf.close()
-
-

@@ -39,6 +39,7 @@ class PILPlugin(Plugin):
 
 
 class ImageSizerPlugin(PILPlugin):
+
     """
     Each HTML page is modified to add width and height for images if
     they are not already specified.
@@ -50,26 +51,28 @@ class ImageSizerPlugin(PILPlugin):
         super(ImageSizerPlugin, self).__init__(site)
         self.cache = {}
 
-
     def _handle_img(self, resource, src, width, height):
         """Determine what should be added to an img tag"""
         if height is not None and width is not None:
             return ""           # Nothing
         if src is None:
-            self.logger.warn("[%s] has an img tag without src attribute" % resource)
+            self.logger.warn(
+                "[%s] has an img tag without src attribute" % resource)
             return ""           # Nothing
         if src not in self.cache:
             if src.startswith(self.site.config.media_url):
                 path = src[len(self.site.config.media_url):].lstrip("/")
                 path = self.site.config.media_root_path.child(path)
-                image = self.site.content.resource_from_relative_deploy_path(path)
+                image = self.site.content.resource_from_relative_deploy_path(
+                    path)
             elif re.match(r'([a-z]+://|//).*', src):
                 # Not a local link
                 return ""       # Nothing
             elif src.startswith("/"):
                 # Absolute resource
                 path = src.lstrip("/")
-                image = self.site.content.resource_from_relative_deploy_path(path)
+                image = self.site.content.resource_from_relative_deploy_path(
+                    path)
             else:
                 # Relative resource
                 path = resource.node.source_folder.child(src)
@@ -80,7 +83,7 @@ class ImageSizerPlugin(PILPlugin):
                 return ""       # Nothing
             if image.source_file.kind not in ['png', 'jpg', 'jpeg', 'gif']:
                 self.logger.warn(
-                        "[%s] has an img tag not linking to an image" % resource)
+                    "[%s] has an img tag not linking to an image" % resource)
                 return ""       # Nothing
             # Now, get the size of the image
             try:
@@ -96,9 +99,9 @@ class ImageSizerPlugin(PILPlugin):
         if new_width is None or new_height is None:
             return ""           # Nothing
         if width is not None:
-            return 'height="%d" ' % (int(width)*new_height/new_width)
+            return 'height="%d" ' % (int(width) * new_height / new_width)
         elif height is not None:
-            return 'width="%d" ' % (int(height)*new_width/new_height)
+            return 'width="%d" ' % (int(height) * new_width / new_height)
         return 'height="%d" width="%d" ' % (new_height, new_width)
 
     def text_resource_complete(self, resource, text):
@@ -151,7 +154,7 @@ class ImageSizerPlugin(PILPlugin):
                     continue
                 attr = None
                 for tag in tags:
-                    if text[pos:(pos+len(tag)+1)] == ("%s=" % tag):
+                    if text[pos:(pos + len(tag) + 1)] == ("%s=" % tag):
                         attr = tag
                         pos = pos + len(tag) + 1
                         break
@@ -177,12 +180,13 @@ class ImageSizerPlugin(PILPlugin):
 
         return text
 
+
 def scale_aspect(a, b1, b2):
-  from math import ceil
-  """
+    from math import ceil
+    """
   Scales a by b2/b1 rounding up to nearest integer
   """
-  return int(ceil(a * b2 / float(b1)))
+    return int(ceil(a * b2 / float(b1)))
 
 
 def thumb_scale_size(orig_width, orig_height, width, height):
@@ -197,7 +201,7 @@ def thumb_scale_size(orig_width, orig_height, width, height):
         width = scale_aspect(orig_width, orig_height, height)
     elif height is None:
         height = scale_aspect(orig_height, orig_width, width)
-    elif orig_width*height >= orig_height*width:
+    elif orig_width * height >= orig_height * width:
         width = scale_aspect(orig_width, orig_height, height)
     else:
         height = scale_aspect(orig_height, orig_width, width)
@@ -208,7 +212,9 @@ def thumb_scale_size(orig_width, orig_height, width, height):
 # Image Thumbnails
 #
 
+
 class ImageThumbnailsPlugin(PILPlugin):
+
     """
     Provide a function to get thumbnail for any image resource.
 
@@ -239,11 +245,11 @@ class ImageThumbnailsPlugin(PILPlugin):
             prefix: thumbs4_
             include:
             - '*.jpg'
-    which means - make four thumbnails from every picture with different prefixes
-    and sizes
+    which means - make four thumbnails from every picture with different
+    prefixes and sizes
 
-    It is only valid to specify either width/height or larger/smaller, but not to
-    mix the two types.
+    It is only valid to specify either width/height or larger/smaller, but
+    not to mix the two types.
 
     If larger/smaller are specified, then the orientation (i.e., landscape or
     portrait) is preserved while thumbnailing.
@@ -256,7 +262,8 @@ class ImageThumbnailsPlugin(PILPlugin):
     def __init__(self, site):
         super(ImageThumbnailsPlugin, self).__init__(site)
 
-    def thumb(self, resource, width, height, prefix, crop_type, preserve_orientation=False):
+    def thumb(self, resource, width, height, prefix, crop_type,
+              preserve_orientation=False):
         """
         Generate a thumbnail for the given image
         """
@@ -268,14 +275,17 @@ class ImageThumbnailsPlugin(PILPlugin):
         # for simple maintenance but keep original deploy path to preserve
         # naming logic in generated site
         path = os.path.join(".thumbnails",
-                            os.path.dirname(resource.get_relative_deploy_path()),
+                            os.path.dirname(
+                                resource.get_relative_deploy_path()),
                             "%s%s" % (prefix, name))
         target = resource.site.config.content_root_path.child_file(path)
         res = self.site.content.add_resource(target)
-        res.set_relative_deploy_path(res.get_relative_deploy_path().replace('.thumbnails/', '', 1))
+        res.set_relative_deploy_path(
+            res.get_relative_deploy_path().replace('.thumbnails/', '', 1))
 
         target.parent.make()
-        if os.path.exists(target.path) and os.path.getmtime(resource.path) <= os.path.getmtime(target.path):
+        if (os.path.exists(target.path) and os.path.getmtime(resource.path) <=
+                os.path.getmtime(target.path)):
             return
         self.logger.debug("Making thumbnail for [%s]" % resource)
 
@@ -285,17 +295,18 @@ class ImageThumbnailsPlugin(PILPlugin):
         format = im.format
 
         if preserve_orientation and im.size[1] > im.size[0]:
-          width, height = height, width
+            width, height = height, width
 
-        resize_width, resize_height = thumb_scale_size(im.size[0], im.size[1], width, height)
+        resize_width, resize_height = thumb_scale_size(
+            im.size[0], im.size[1], width, height)
 
         self.logger.debug("Resize to: %d,%d" % (resize_width, resize_height))
         im = im.resize((resize_width, resize_height), self.Image.ANTIALIAS)
         if width is not None and height is not None:
             shiftx = shifty = 0
             if crop_type == "center":
-                shiftx = (im.size[0] - width)/2
-                shifty = (im.size[1] - height)/2
+                shiftx = (im.size[0] - width) / 2
+                shifty = (im.size[1] - height) / 2
             elif crop_type == "bottomright":
                 shiftx = (im.size[0] - width)
                 shifty = (im.size[1] - height)
@@ -304,22 +315,23 @@ class ImageThumbnailsPlugin(PILPlugin):
 
         options = dict(optimize=True)
         if format == "JPEG":
-          options['quality'] = 75
+            options['quality'] = 75
 
         im.save(target.path, **options)
 
     def begin_site(self):
         """
-        Find any image resource that should be thumbnailed and call thumb on it.
+        Find any image resource that should be thumbnailed and call thumb
+        on it.
         """
         # Grab default values from config
         config = self.site.config
-        defaults = { "width": None,
-                     "height": None,
-                     "larger": None,
-                     "smaller": None,
-                     "crop_type": "topleft",
-                     "prefix": 'thumb_'}
+        defaults = {"width": None,
+                    "height": None,
+                    "larger": None,
+                    "smaller": None,
+                    "crop_type": "topleft",
+                    "prefix": 'thumb_'}
         if hasattr(config, 'thumbnails'):
             defaults.update(config.thumbnails)
 
@@ -327,45 +339,64 @@ class ImageThumbnailsPlugin(PILPlugin):
             if hasattr(node, 'meta') and hasattr(node.meta, 'thumbnails'):
                 for th in node.meta.thumbnails:
                     if not hasattr(th, 'include'):
-                        self.logger.error("Include is not set for node [%s]" % node)
+                        self.logger.error(
+                            "Include is not set for node [%s]" % node)
                         continue
                     include = th.include
-                    prefix = th.prefix if hasattr(th, 'prefix') else defaults['prefix']
-                    height = th.height if hasattr(th, 'height') else defaults['height']
-                    width = th.width if hasattr(th, 'width') else defaults['width']
-                    larger = th.larger if hasattr(th, 'larger') else defaults['larger']
-                    smaller = th.smaller if hasattr(th, 'smaller') else defaults['smaller']
-                    crop_type = th.crop_type if hasattr(th, 'crop_type') else defaults['crop_type']
+                    prefix = th.prefix if hasattr(
+                        th, 'prefix') else defaults['prefix']
+                    height = th.height if hasattr(
+                        th, 'height') else defaults['height']
+                    width = th.width if hasattr(
+                        th, 'width') else defaults['width']
+                    larger = th.larger if hasattr(
+                        th, 'larger') else defaults['larger']
+                    smaller = th.smaller if hasattr(
+                        th, 'smaller') else defaults['smaller']
+                    crop_type = th.crop_type if hasattr(
+                        th, 'crop_type') else defaults['crop_type']
                     if crop_type not in ["topleft", "center", "bottomright"]:
-                        self.logger.error("Unknown crop_type defined for node [%s]" % node)
+                        self.logger.error(
+                            "Unknown crop_type defined for node [%s]" % node)
                         continue
-                    if width is None and height is None and larger is None and smaller is None:
-                        self.logger.error("At least one of width, height, larger, or smaller must be set for node [%s]" % node)
+                    if (width is None and height is None and larger is None and
+                            smaller is None):
+                        self.logger.error(
+                            "At least one of width, height, larger, or smaller"
+                            "must be set for node [%s]" % node)
                         continue
 
                     if ((larger is not None or smaller is not None) and
-                        (width is not None or height is not None)):
-                        self.logger.error("It is not valid to specify both one of width/height and one of larger/smaller for node [%s]" % node)
+                            (width is not None or height is not None)):
+                        self.logger.error(
+                            "It is not valid to specify both one of"
+                            "width/height and one of larger/smaller"
+                            "for node [%s]" % node)
                         continue
 
                     if larger is None and smaller is None:
-                      preserve_orientation = False
-                      dim1, dim2 = width, height
+                        preserve_orientation = False
+                        dim1, dim2 = width, height
                     else:
-                      preserve_orientation = True
-                      dim1, dim2 = larger, smaller
+                        preserve_orientation = True
+                        dim1, dim2 = larger, smaller
 
-                    match_includes = lambda s: any([glob.fnmatch.fnmatch(s, inc) for inc in include])
+                    match_includes = lambda s: any(
+                        [glob.fnmatch.fnmatch(s, inc) for inc in include])
 
                     for resource in node.resources:
                         if match_includes(resource.path):
-                            self.thumb(resource, dim1, dim2, prefix, crop_type, preserve_orientation)
+                            self.thumb(
+                                resource, dim1, dim2, prefix, crop_type,
+                                preserve_orientation)
 
 #
 # JPEG Optimization
 #
 
+
 class JPEGOptimPlugin(CLTransformer):
+
     """
     The plugin class for JPEGOptim
     """
@@ -408,7 +439,7 @@ class JPEGOptimPlugin(CLTransformer):
             "strip-icc",
         ]
         target = File(self.site.config.deploy_root_path.child(
-                                resource.relative_deploy_path))
+            resource.relative_deploy_path))
         jpegoptim = self.app
         args = [unicode(jpegoptim)]
         args.extend(self.process_args(supported))
@@ -417,6 +448,7 @@ class JPEGOptimPlugin(CLTransformer):
 
 
 class JPEGTranPlugin(CLTransformer):
+
     """
     Almost like jpegoptim except it uses jpegtran. jpegtran allows to make
     progressive JPEG. Unfortunately, it only does lossless compression. If
@@ -463,7 +495,7 @@ class JPEGTranPlugin(CLTransformer):
             "copy",
         ]
         source = File(self.site.config.deploy_root_path.child(
-                resource.relative_deploy_path))
+            resource.relative_deploy_path))
         target = File.make_temp('')
         jpegtran = self.app
         args = [unicode(jpegtran)]
@@ -474,12 +506,12 @@ class JPEGTranPlugin(CLTransformer):
         target.delete()
 
 
-
 #
 # PNG Optimization
 #
 
 class OptiPNGPlugin(CLTransformer):
+
     """
     The plugin class for OptiPNG
     """
@@ -535,7 +567,7 @@ class OptiPNGPlugin(CLTransformer):
             "nz"
         ]
         target = File(self.site.config.deploy_root_path.child(
-                                resource.relative_deploy_path))
+            resource.relative_deploy_path))
         optipng = self.app
         args = [unicode(optipng)]
         args.extend(self.process_args(supported))
