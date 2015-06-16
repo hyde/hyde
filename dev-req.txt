@@ -1,4 +1,4 @@
--e .
+-r requirements.txt
 pyquery==1.2.9
 docutils==0.12
 mock==1.0.1
