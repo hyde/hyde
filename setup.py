@@ -1,7 +1,3 @@
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
 from setuptools import setup, find_packages
 from hyde.version import __version__
 
