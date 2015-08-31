@@ -1,7 +1,3 @@
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
 from setuptools import setup, find_packages
 from hyde.version import __version__
 
@@ -116,8 +112,8 @@ setup(name=PROJECT,
       packages=find_packages(),
       requires=['python (>= 2.7)'],
       install_requires=(
-          'fswrap==0.1.2',
-          'commando==0.3.4',
+          'fswrap==1.0.0',
+          'commando==1.0.0',
           'PyYAML==3.11',
           'Markdown==2.6.2',
           'MarkupSafe==0.23',
