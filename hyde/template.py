@@ -11,6 +11,7 @@ from commando.util import getLoggerWithNullHandler, load_python_object
 
 DEFAULT_TEMPLATE = 'hyde.ext.templates.jinja.Jinja2Template'
 
+
 class HtmlWrap(object):
 
     """

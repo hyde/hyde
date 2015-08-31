@@ -72,7 +72,8 @@ def test_expando_to_dict_with_update():
 
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
-import yaml
+
+import yaml   # NOQA
 
 
 class TestConfig(object):
