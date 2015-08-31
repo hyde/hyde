@@ -88,3 +88,6 @@ src
 .coverage
 
 *.tar.gz
+
+# hyde plugins
+node_modules
