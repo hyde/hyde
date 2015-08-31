@@ -25,9 +25,8 @@ class HtmlWrap(object):
         try:
             from pyquery import PyQuery
         except:
-            PyQuery = False
-        if PyQuery:
-            self.q = PyQuery(html)
+            PyQuery = None
+        self.q = PyQuery(html) if PyQuery else None
 
     def __unicode__(self):
         return self.raw
