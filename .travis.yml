@@ -16,13 +16,10 @@ install:
   - sudo npm install -g sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
 
   # Python test requirements
-  - pip install -r dev-req.txt
+  - pip install tox
 
 before_script:
   - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
 
 script:
-  # Source code sanity check
-  - flake8 hyde
-  # Run Python tests and generate coverage statistics
-  - nosetests
+  - tox
