@@ -31,6 +31,10 @@ class TestPaginator(object):
     def tearDown(self):
         TEST_SITE.delete()
 
+    def test_page_no_paginator(self):
+        f = File(self.deploy.child('empty.txt'))
+        assert f.exists
+
     def test_pages_of_one(self):
         pages = ['pages_of_one.txt', 'page2/pages_of_one.txt',
                  'page3/pages_of_one.txt', 'page4/pages_of_one.txt']
