@@ -286,6 +286,7 @@ class Paginator:
         """
         added_resources = []
         pages = list(self._walk_pages_in_node(node))
+        resource.pages = pages
         if pages:
             deps = reduce(list.__add__, [page.posts for page in pages], [])
 
@@ -297,6 +298,7 @@ class Paginator:
                 Paginator._attach_page_to_resource(page, new_resource)
                 new_resource.depends = resource.depends
                 added_resources.append(new_resource)
+                new_resource.pages = pages
 
             for prev, next in pairwalk(pages):
                 next.previous = prev
