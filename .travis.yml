@@ -2,6 +2,11 @@ language: python
 python:
   - "2.7"
 
+# Cache pip requirements for faster builds
+cache:
+  directories:
+    - $HOME/.cache/pip
+
 install:
   - sudo apt-get purge -y nodejs
   - sudo apt-get install -qqy python-software-properties
@@ -18,8 +23,19 @@ install:
   # Python test requirements
   - pip install tox
 
+# Run each tox environment separately
+env:
+  - TOX_ENV=py27
+  - TOX_ENV=pep8
+
 before_script:
   - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
 
 script:
-  - tox
+  - tox -e $TOX_ENV
+
+# Only build for the master branch
+# Note that this does not prevent pull request builds
+branches:
+  only:
+    master
