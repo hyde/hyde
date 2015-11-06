@@ -402,3 +402,93 @@ class SassyCSSPlugin(Plugin):
         options['load_paths'].extend(includes)
         scss = self.scss.Scss(scss_opts=options, scss_vars=self.vars)
         return scss.compile(text)
+
+
+#
+# Sass CSS
+#
+
+
+class SassPlugin(Plugin):
+
+    """
+    The plugin class for LibSass
+    """
+
+    def __init__(self, site):
+        super(SassPlugin, self).__init__(site)
+        try:
+            import sass
+        except ImportError, e:
+            raise HydeException('Unable to import libsass: ' + e.message)
+        else:
+            self.sass = sass
+        self.resources = []
+
+    def _should_parse_resource(self, resource):
+        """
+        Check user defined
+        """
+        files = self.site.config.get("sass", {}).get("files", [])
+        return resource.source_file.kind == 'scss' and \
+            resource.relative_path in files
+
+    @property
+    def options(self):
+        """
+        Returns options depending on development mode
+        """
+        try:
+            mode = self.site.config.mode
+        except AttributeError:
+            mode = "production"
+
+        if 'sass' in self.site.config and \
+                'output_style' in self.site.config.sass:
+            output_style = self.site.config.sass.output_style
+        else:
+            debug = mode.startswith('dev')
+            output_style = 'compressed' if not debug else 'nested'
+
+        opts = {'output_style': output_style}
+        site_opts = self.settings.get('options', {})
+        opts.update(site_opts)
+        return opts
+
+    @property
+    def includes(self):
+        """
+        Returns scss load paths.
+        """
+        return self.settings.get('includes', [])
+
+    def begin_site(self):
+        """
+        Find all the sassycss files and set their relative deploy path.
+        """
+        for resource in self.site.content.walk_resources():
+            if self._should_parse_resource(resource):
+                new_name = resource.source_file.name_without_extension + ".css"
+                target_folder = File(resource.relative_deploy_path).parent
+                resource.relative_deploy_path = target_folder.child(new_name)
+                self.resources.append(resource.relative_path)
+
+    def text_resource_complete(self, resource, text):
+        """
+        Run sassycss compiler on text.
+        """
+        if resource.relative_path not in self.resources:
+            return
+
+        includes = [resource.node.path] + self.includes
+        includes = [path.rstrip(os.sep) + os.sep for path in includes]
+        options = self.options
+        if 'include_paths' not in options:
+            options['include_paths'] = []
+        options['include_paths'].extend(includes)
+        self.logger.error(resource)
+        try:
+            return self.sass.compile(string=text, **options)
+        except Exception, exc:
+            self.logger.error(exc)
+            raise
