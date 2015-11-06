@@ -1,12 +1,9 @@
-Version 0.8.9a
+Version 0.8.9
 
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
 
-A brand new **hyde**
-====================
-
-This is the new version of `hyde`_ under active development.
-`Hyde documentation`_ is a work in progress.
+Overview
+========
 
 `Hyde starter kit`_ by `merlinrebrovic`_ is a really nice way to get started
 with hyde.
@@ -15,6 +12,16 @@ with hyde.
 like Twitter's `bootstrap framework`_.
 
 You can also take a look at `Hyde Powered Websites`_ for inspiration and reference.
+
+Currently hyde is only supported on python 2.7.x.  Python 3.x support is in
+progress, thanks to `jonafato`_.
+
+Active development of hyde had stalled for some time, but thanks to `llonchj`_
+and `jonafato`_ there is now a slow but steady progress towards 1.0.
+
+Mailing List:  `hyde-dev`_ on google groups.
+IRC: #hyde on freenode
+
 
 Installation
 ------------
@@ -128,9 +135,11 @@ command once PyFS is installed:
 Examples
 --------
 
-1. `Hyde Documentation Source`_
-2. `Cloudpanic`_
-3. `Ringce`_
+1. `julien.danjou.info`_
+2. `luffy.cx`_
+3. `Cloudpanic`_
+4. `Hyde Documentation Source`_
+
 
 A brief list of features
 --------------------------
@@ -157,7 +166,6 @@ Links
 .. _Hyde documentation: http://hyde.github.com
 .. _Hyde Documentation Source: https://github.com/hyde/docs
 .. _Cloudpanic: https://github.com/tipiirai/cloudpanic
-.. _Ringce: https://github.com/lakshmivyas/ringce/tree/v3.0
 .. _Authors: https://github.com/hyde/hyde/graphs/contributors
 .. _Changelog: https://github.com/hyde/hyde/blob/master/CHANGELOG.rst
 .. _Hyde starter kit: http://merlin.rebrovic.net/hyde-starter-kit/about.html
@@ -168,3 +176,8 @@ Links
 .. _auzigog: https://github.com/auzigog
 .. _bootstrap framework: http://twitter.github.com/bootstrap/
 .. _Hyde Powered Websites: https://github.com/hyde/hyde/wiki/Hyde-Powered
+.. _hyde-dev: https://groups.google.com/forum/#!forum/hyde-dev
+.. _julien.danjou.info: https://github.com/jd/julien.danjou.info
+.. _luffy.cx: https://github.com/vincentbernat/www.luffy.cx
+.. _jonafato: https://github.com/jonafato
+.. _llonchj: https://github.com/llonchj

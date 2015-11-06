@@ -107,35 +107,29 @@ def find_package_data(
 
 ##############################################################################
 
+
+def read_requirements(f):
+    reqs = []
+    with open(f, "r") as h:
+        reqs = [req.split('#', 1)[0].strip() for req in h]
+        reqs = [req for req in reqs if req]
+    return reqs
+
+
+install_requires = read_requirements('requirements.txt')
+dev_requires = read_requirements('dev-only.txt')
+
 setup(name=PROJECT,
       version=__version__,
       description='hyde is a static website generator',
       long_description=long_description,
-      author='Lakshmi Vyas',
-      author_email='lakshmi.vyas@gmail.com',
-      url='http://hyde.github.com',
+      author='hyde developers',
+      author_email='hyde-dev@googlegroups.com',
+      url='http://hyde.github.io',
       packages=find_packages(),
       requires=['python (>= 2.7)'],
-      install_requires=(
-          'fswrap==1.0.0',
-          'commando==1.0.0',
-          'PyYAML==3.11',
-          'Markdown==2.6.2',
-          'MarkupSafe==0.23',
-          'Pygments==2.0.2',
-          'typogrify==2.0.7',
-          'smartypants==1.8.6',
-          'Jinja2==2.7.3'
-      ),
-      tests_require=(
-          'nose==1.3.6',
-          'mock==1.0.1',
-          'pyquery==1.2.9',
-          'docutils==0.12',
-          'Pillow==2.7.0',
-          'pyScss==1.3.4',
-          'flake8==2.4.1'
-      ),
+      install_requires=install_requires,
+      tests_require=dev_requires,
       test_suite='nose.collector',
       include_package_data=True,
       # Scan the input for package information

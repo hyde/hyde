@@ -1,3 +1,45 @@
+Version 0.8.9 (2015-11-06)
+===========================================================
+
+*   Add mailing list and IRC channel information to README.
+
+Thanks to @jonafato:
+
+*   Update command and fswrap dependencies.
+*   Use setuptools directly.
+*   Improve travis builds with caching and preventing duplicate builds.
+
+Thanks to @bheesham:
+
+*   Bugfix: Fix favicon and apple touch icon paths in basic template.
+
+Thanks to @jd:
+
+*   Bugfix: Paginator fails when there is no meta variable.
+*   Add tox support.
+*   Fix setup.py and make it pep8 compliant.
+*   Add pages list to resources in paginator plugin.
+
+Thanks to @mtahmed:
+
+*   Bugfix:  Ensure that `self.q` is assigned to None when PyQuery is unavilable.
+
+Thanks to @ftao:
+
+*   Bugfix: Remove typo in sphinx plugin commando import.
+
+Thanks to Alexey Biryukov:
+
+*   Hyde now supports assigning jinja2 custom tests similar to custom filters in site.yaml.
+
+Thanks to @llonchj:
+
+*   Huge updates to unit tests, development dependencies (flake8, pep8 etc).
+*   Travis support.
+*   The ``h`` binary is now deprecated and will be removed in one of the future releases.
+*   libsass support.
+
+
 Version 0.8.8 (2013-08-20)
 ===========================================================
 
