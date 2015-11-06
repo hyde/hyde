@@ -1,7 +1,3 @@
-# Bootstrap installation of Distribute
-import distribute_setup
-distribute_setup.use_setuptools()
-
 from setuptools import setup, find_packages
 from hyde.version import __version__
 
@@ -17,7 +13,7 @@ try:
 except IOError:
     long_description = ''
 
-################################################################################
+##############################################################################
 # find_package_data is an Ian Bicking creation.
 
 # Provided as an attribute, so you can append to these instead
@@ -26,12 +22,13 @@ standard_exclude = ('*.py', '*.pyc', '*~', '.*', '*.bak', '*.swp*')
 standard_exclude_directories = ('.*', 'CVS', '_darcs', './build',
                                 './dist', 'EGG-INFO', '*.egg-info')
 
+
 def find_package_data(
-    where='.', package='',
-    exclude=standard_exclude,
-    exclude_directories=standard_exclude_directories,
-    only_in_packages=True,
-    show_ignored=False):
+        where='.', package='',
+        exclude=standard_exclude,
+        exclude_directories=standard_exclude_directories,
+        only_in_packages=True,
+        show_ignored=False):
     """
     Return a dictionary suitable for use in ``package_data``
     in a distutils ``setup.py`` file.
@@ -70,8 +67,9 @@ def find_package_data(
             if os.path.isdir(fn):
                 bad_name = False
                 for pattern in exclude_directories:
-                    if (fnmatchcase(name, pattern)
-                        or fn.lower() == pattern.lower()):
+                    if fnmatchcase(name, pattern) or \
+                       fn.lower() == pattern.lower():
+
                         bad_name = True
                         if show_ignored:
                             print >> sys.stderr, (
@@ -87,13 +85,15 @@ def find_package_data(
                         new_package = package + '.' + name
                     stack.append((fn, '', new_package, False))
                 else:
-                    stack.append((fn, prefix + name + '/', package, only_in_packages))
+                    stack.append((fn, prefix + name + '/', package,
+                                  only_in_packages))
             elif package or not only_in_packages:
                 # is a file
                 bad_name = False
                 for pattern in exclude:
-                    if (fnmatchcase(name, pattern)
-                        or fn.lower() == pattern.lower()):
+                    if fnmatchcase(name, pattern) \
+                       or fn.lower() == pattern.lower():
+
                         bad_name = True
                         if show_ignored:
                             print >> sys.stderr, (
@@ -104,20 +104,21 @@ def find_package_data(
                     continue
                 out.setdefault(package, []).append(prefix+name)
     return out
-################################################################################
+
+##############################################################################
 
 setup(name=PROJECT,
       version=__version__,
       description='hyde is a static website generator',
-      long_description = long_description,
+      long_description=long_description,
       author='Lakshmi Vyas',
       author_email='lakshmi.vyas@gmail.com',
       url='http://hyde.github.com',
       packages=find_packages(),
       requires=['python (>= 2.7)'],
       install_requires=(
-          'fswrap==0.1.2',
-          'commando==0.3.4',
+          'fswrap==1.0.0',
+          'commando==1.0.0',
           'PyYAML==3.11',
           'Markdown==2.6.2',
           'MarkupSafe==0.23',
@@ -127,23 +128,23 @@ setup(name=PROJECT,
           'Jinja2==2.7.3'
       ),
       tests_require=(
-        'nose==1.3.6',
-        'mock==1.0.1',
-        'pyquery==1.2.9',
-        'docutils==0.12',
-        'Pillow==2.7.0',
-        'pyScss==1.3.4',
-        'flake8==2.4.1'
+          'nose==1.3.6',
+          'mock==1.0.1',
+          'pyquery==1.2.9',
+          'docutils==0.12',
+          'Pillow==2.7.0',
+          'pyScss==1.3.4',
+          'flake8==2.4.1'
       ),
       test_suite='nose.collector',
-      include_package_data = True,
+      include_package_data=True,
       # Scan the input for package information
       # to grab any data files (text, images, etc.)
       # associated with sub-packages.
-      package_data = find_package_data(PROJECT,
+
+      package_data=find_package_data(PROJECT,
                                      package=PROJECT,
-                                     only_in_packages=False,
-                                     ),
+                                     only_in_packages=False,),
       entry_points={
           'console_scripts': [
               'hyde = hyde.main:main'
@@ -151,22 +152,21 @@ setup(name=PROJECT,
       },
       license='MIT',
       classifiers=[
-            'Development Status :: 4 - Beta',
-            'Environment :: Console',
-            'Intended Audience :: End Users/Desktop',
-            'Intended Audience :: Developers',
-            'Intended Audience :: System Administrators',
-            'License :: OSI Approved :: MIT License',
-            'Operating System :: MacOS :: MacOS X',
-            'Operating System :: Unix',
-            'Operating System :: POSIX',
-            'Operating System :: Microsoft :: Windows',
-            'Programming Language :: Python',
-            'Topic :: Software Development',
-            'Topic :: Software Development :: Build Tools',
-            'Topic :: Software Development :: Code Generators',
-            'Topic :: Internet',
-            'Topic :: Internet :: WWW/HTTP :: Site Management',
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
+          'Intended Audience :: End Users/Desktop',
+          'Intended Audience :: Developers',
+          'Intended Audience :: System Administrators',
+          'License :: OSI Approved :: MIT License',
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Unix',
+          'Operating System :: POSIX',
+          'Operating System :: Microsoft :: Windows',
+          'Programming Language :: Python',
+          'Topic :: Software Development',
+          'Topic :: Software Development :: Build Tools',
+          'Topic :: Software Development :: Code Generators',
+          'Topic :: Internet',
+          'Topic :: Internet :: WWW/HTTP :: Site Management',
       ],
-      zip_safe=False,
-)
+      zip_safe=False,)

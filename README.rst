@@ -1,4 +1,4 @@
-Version 0.8.8
+Version 0.8.9a
 
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
 

@@ -7,7 +7,9 @@ from hyde.exceptions import HydeException
 
 import abc
 
-from commando.util import getLoggerWithNullHandler
+from commando.util import getLoggerWithNullHandler, load_python_object
+
+DEFAULT_TEMPLATE = 'hyde.ext.templates.jinja.Jinja2Template'
 
 
 class HtmlWrap(object):
@@ -25,9 +27,8 @@ class HtmlWrap(object):
         try:
             from pyquery import PyQuery
         except:
-            PyQuery = False
-        if PyQuery:
-            self.q = PyQuery(html)
+            PyQuery = None
+        self.q = PyQuery(html) if PyQuery else None
 
     def __unicode__(self):
         return self.raw
@@ -161,7 +162,7 @@ class Template(object):
         """
         Reads the configuration to find the appropriate template.
         """
-        # TODO: Find the appropriate template environment
-        from hyde.ext.templates.jinja import Jinja2Template
-        template = Jinja2Template(site.sitepath)
+        template_object = site.config.get('template', DEFAULT_TEMPLATE)
+        template_cls = load_python_object(template_object)
+        template = template_cls(site.sitepath)
         return template

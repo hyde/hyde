@@ -381,8 +381,9 @@ class ImageThumbnailsPlugin(PILPlugin):
                         preserve_orientation = True
                         dim1, dim2 = larger, smaller
 
-                    match_includes = lambda s: any(
-                        [glob.fnmatch.fnmatch(s, inc) for inc in include])
+                    def match_includes(s):
+                        return any([glob.fnmatch.fnmatch(s, inc)
+                                    for inc in include])
 
                     for resource in node.resources:
                         if match_includes(resource.path):
