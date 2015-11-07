@@ -4,6 +4,9 @@ include LICENSE
 include README.rst
 include AUTHORS.rst
 include CHANGELOG.rst
+include requirements.txt
+include dev-req.txt
+include dev-only.txt
 recursive-include hyde *.py
 recursive-include hyde/tests *.py
 recursive-include hyde/layouts *.*
