@@ -1,6 +1,29 @@
+sudo: false
+
 language: python
 python:
   - "2.7"
+
+addons:
+  apt:
+    packages:
+    - asciidoc
+    - jpegoptim
+    - libfreetype6-dev
+    - libjpeg-progs
+    - libjpeg8-dev
+    - liblcms2-dev
+    - libpcre3-dev
+    - libtiff4-dev
+    - libwebp-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - nodejs
+    - optipng
+    - python-tk
+    - tcl8.5-dev
+    - tk8.5-dev
+    - zlib1g-dev
 
 # Cache pip requirements for faster builds
 cache:
@@ -8,17 +31,8 @@ cache:
     - $HOME/.cache/pip
 
 install:
-  - sudo apt-get purge -y nodejs
-  - sudo apt-get install -qqy python-software-properties
-  - sudo add-apt-repository -y ppa:chris-lea/node.js
-  - sudo apt-get -qq update
-  - sudo apt-get install -qqy nodejs optipng jpegoptim libjpeg-progs asciidoc libxml2-dev libxslt1-dev libpcre3-dev
-  - sudo apt-get install -qqy libtiff4-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.5-dev tk8.5-dev python-tk
-  # Ubuntu 14
-  # - sudo apt-get install -y libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
-
   # JS dependencies
-  - sudo npm install -g sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
+  - npm install sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
 
   # Python test requirements
   - pip install tox
@@ -29,6 +43,7 @@ env:
   - TOX_ENV=pep8
 
 before_script:
+  - export PATH=$(pwd)/node_modules/.bin:$PATH
   - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
 
 script:
