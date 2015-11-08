@@ -68,7 +68,7 @@ class TestPlugins(object):
 
     def setUp(self):
         self.site = Site(TEST_SITE)
-        self.site.config.plugins = ['hyde.tests.test_plugin.PluginLoaderStub']
+        self.site.config.plugins = ['tests.test_plugin.PluginLoaderStub']
 
     def test_can_load_plugin_modules(self):
         assert not len(self.site.plugins)
@@ -354,8 +354,8 @@ class TestPlugins(object):
 
     def test_plugin_chaining(self):
         self.site.config.plugins = [
-            'hyde.tests.test_plugin.ConstantReturnPlugin',
-            'hyde.tests.test_plugin.NoReturnPlugin'
+            'tests.test_plugin.ConstantReturnPlugin',
+            'tests.test_plugin.NoReturnPlugin'
         ]
         path = self.site.content.source_folder.child('about.html')
         gen = Generator(self.site)
@@ -372,8 +372,8 @@ class TestPlugins(object):
             with patch.object(NoReturnPlugin, 'begin_text_resource',
                               new=Mock(wraps=empty_return)) as mock2:
                 self.site.config.plugins = [
-                    'hyde.tests.test_plugin.ConstantReturnPlugin',
-                    'hyde.tests.test_plugin.NoReturnPlugin'
+                    'tests.test_plugin.ConstantReturnPlugin',
+                    'tests.test_plugin.NoReturnPlugin'
                 ]
                 self.site.config.constantreturn = Expando(
                     dict(include_file_pattern="*.css"))
@@ -400,8 +400,8 @@ class TestPlugins(object):
             with patch.object(NoReturnPlugin, 'begin_text_resource',
                               new=Mock(wraps=empty_return)) as mock2:
                 self.site.config.plugins = [
-                    'hyde.tests.test_plugin.ConstantReturnPlugin',
-                    'hyde.tests.test_plugin.NoReturnPlugin'
+                    'tests.test_plugin.ConstantReturnPlugin',
+                    'tests.test_plugin.NoReturnPlugin'
                 ]
                 self.site.config.constantreturn = Expando(
                     dict(include_paths="media"))
