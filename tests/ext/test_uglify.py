@@ -11,7 +11,7 @@ from hyde.site import Site
 
 from fswrap import File, Folder
 
-from ..util import assert_no_diff
+from util import assert_no_diff
 
 UGLIFY_SOURCE = File(__file__).parent.child_folder('uglify')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
