@@ -42,4 +42,4 @@ Run the tests
 =============
 
 ::
-    nosetests hyde/tests
+    nosetests tests

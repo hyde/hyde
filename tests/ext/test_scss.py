@@ -6,9 +6,10 @@ Use nose
 """
 from hyde.generator import Generator
 from hyde.site import Site
-from hyde.tests.util import assert_no_diff
 
 from fswrap import File, Folder
+
+from ..util import assert_no_diff
 
 SCSS_SOURCE = File(__file__).parent.child_folder('scss')
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')

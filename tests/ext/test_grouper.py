@@ -10,8 +10,9 @@ from hyde.site import Site
 from hyde.model import Config, Expando
 
 from fswrap import File
-from hyde.tests.util import assert_html_equals
 import yaml
+
+from ..util import assert_html_equals
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
 
