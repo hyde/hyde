@@ -1,13 +1,19 @@
-Version 0.8.9 (2015-11-06)
+Version 0.8.9 (2015-11-09)
 ===========================================================
 
 *   Add mailing list and IRC channel information to README.
+*   Relax the version numbers (with an upper bound on major version) for
+    dependencies.
 
 Thanks to @jonafato:
 
 *   Update command and fswrap dependencies.
 *   Use setuptools directly.
-*   Improve travis builds with caching and preventing duplicate builds.
+*   Improve travis builds.
+    - add caching support.
+    - prevent duplicate builds.
+    - add support for new container based builds.
+*   Move tests out of the hyde package.
 
 Thanks to @bheesham:
 
