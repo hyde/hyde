@@ -336,7 +336,7 @@ class Generator(object):
                     try:
                         text = self.template.render_resource(resource,
                                                              context)
-                    except Exception, e:
+                    except Exception as e:
                         HydeException.reraise("Error occurred when processing"
                                               "template: [%s]: %s" %
                                               (resource, repr(e)),

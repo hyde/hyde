@@ -6,6 +6,8 @@ import os
 
 from fswrap import File, Folder
 
+from hyde._compat import str
+
 HYDE_DATA = "HYDE_DATA"
 LAYOUTS = "layouts"
 
@@ -39,6 +41,6 @@ class Layout(object):
         Finds the layout folder from the given root folder.
         If it does not exist, return None
         """
-        layouts_folder = Folder(unicode(root)).child_folder(LAYOUTS)
+        layouts_folder = Folder(str(root)).child_folder(LAYOUTS)
         layout_folder = layouts_folder.child_folder(layout_name)
         return layout_folder if layout_folder.exists else None

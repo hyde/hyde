@@ -24,14 +24,14 @@ class PluginLoaderStub(Plugin):
 class NoReturnPlugin(Plugin):
 
     def begin_text_resource(self, resource, text):
-        print "NoReturnPlugin"
+        print("NoReturnPlugin")
         return None
 
 
 class ConstantReturnPlugin(Plugin):
 
     def begin_text_resource(self, resource, text):
-        print "ConstantReturnPlugin"
+        print("ConstantReturnPlugin")
         return "Jam"
 
 

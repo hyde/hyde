@@ -6,6 +6,7 @@ Use nose
 """
 import os
 
+from hyde._compat import str
 from hyde.layout import Layout, HYDE_DATA, LAYOUTS
 
 from fswrap import File
@@ -36,7 +37,7 @@ def test_find_layout_from_env_var():
     f = Layout.find_layout()
     LAYOUT_ROOT.make()
     f.copy_to(LAYOUT_ROOT)
-    os.environ[HYDE_DATA] = unicode(DATA_ROOT)
+    os.environ[HYDE_DATA] = str(DATA_ROOT)
     f = Layout.find_layout()
     assert f.parent == LAYOUT_ROOT
     assert f.name == 'basic'

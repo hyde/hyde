@@ -5,6 +5,7 @@ Depends plugin
 /// Experimental: Not working yet.
 """
 
+from hyde._compat import basestring
 from hyde.plugin import Plugin
 
 

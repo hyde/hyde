@@ -72,9 +72,8 @@ def find_package_data(
 
                         bad_name = True
                         if show_ignored:
-                            print >> sys.stderr, (
-                                "Directory %s ignored by pattern %s"
-                                % (fn, pattern))
+                            msg = "Directory {} ignored by pattern {}"
+                            sys.stderr.write(msg.format(fn, pattern))
                         break
                 if bad_name:
                     continue
@@ -96,9 +95,8 @@ def find_package_data(
 
                         bad_name = True
                         if show_ignored:
-                            print >> sys.stderr, (
-                                "File %s ignored by pattern %s"
-                                % (fn, pattern))
+                            msg = "File {} ignored by pattern {}"
+                            sys.stderr.write(msg.format(fn, pattern))
                         break
                 if bad_name:
                     continue
@@ -157,6 +155,12 @@ setup(name=PROJECT,
           'Operating System :: POSIX',
           'Operating System :: Microsoft :: Windows',
           'Programming Language :: Python',
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',
           'Topic :: Software Development',
           'Topic :: Software Development :: Build Tools',
           'Topic :: Software Development :: Code Generators',

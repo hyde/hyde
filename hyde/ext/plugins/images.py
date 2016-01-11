@@ -14,6 +14,7 @@ import re
 
 from fswrap import File
 
+from hyde._compat import str
 from hyde.exceptions import HydeException
 
 
@@ -27,7 +28,7 @@ class PILPlugin(Plugin):
             # No pillow
             try:
                 import Image
-            except ImportError, e:
+            except ImportError as e:
                 raise HydeException('Unable to load PIL: ' + e.message)
 
         self.Image = Image
@@ -442,9 +443,9 @@ class JPEGOptimPlugin(CLTransformer):
         target = File(self.site.config.deploy_root_path.child(
             resource.relative_deploy_path))
         jpegoptim = self.app
-        args = [unicode(jpegoptim)]
+        args = [str(jpegoptim)]
         args.extend(self.process_args(supported))
-        args.extend(["-q", unicode(target)])
+        args.extend(["-q", str(target)])
         self.call_app(args)
 
 
@@ -499,9 +500,9 @@ class JPEGTranPlugin(CLTransformer):
             resource.relative_deploy_path))
         target = File.make_temp('')
         jpegtran = self.app
-        args = [unicode(jpegtran)]
+        args = [str(jpegtran)]
         args.extend(self.process_args(supported))
-        args.extend(["-outfile", unicode(target), unicode(source)])
+        args.extend(["-outfile", str(target), str(source)])
         self.call_app(args)
         target.copy_to(source)
         target.delete()
@@ -570,7 +571,7 @@ class OptiPNGPlugin(CLTransformer):
         target = File(self.site.config.deploy_root_path.child(
             resource.relative_deploy_path))
         optipng = self.app
-        args = [unicode(optipng)]
+        args = [str(optipng)]
         args.extend(self.process_args(supported))
-        args.extend([unicode(target)])
+        args.extend([str(target)])
         self.call_app(args)

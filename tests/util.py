@@ -1,13 +1,15 @@
 import re
 import difflib
 
+from hyde._compat import str
+
 
 def strip_spaces_between_tags(value):
     """
     Stolen from `django.util.html`
     Returns the given HTML with spaces between tags removed.
     """
-    return re.sub(r'>\s+<', '><', unicode(value))
+    return re.sub(r'>\s+<', '><', str(value))
 
 
 def assert_no_diff(expected, out):

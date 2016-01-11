@@ -3,9 +3,9 @@ Use nose
 `$ pip install nose`
 `$ nosetests`
 """
+from hyde._compat import quote
 from hyde.generator import Generator
 from hyde.site import Site
-from urllib import quote
 
 from fswrap import File
 
@@ -46,7 +46,7 @@ class TestTextlinks(object):
         site.config.media_url = '/media'
         tlink = File(site.content.source_folder.child('tlink.html'))
         tlink.write(text % d)
-        print tlink.read_all()
+        print(tlink.read_all())
         gen = Generator(site)
         gen.generate_all()
         f = File(site.config.deploy_root_path.child(tlink.name))

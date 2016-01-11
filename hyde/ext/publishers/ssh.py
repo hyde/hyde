@@ -30,6 +30,7 @@ within the ``deploy/`` directory:
     rsync -r -e ssh ./ username@ssh.server.com:/www/username/mysite/
 
 """
+from hyde._compat import str
 from hyde.publisher import Publisher
 
 from subprocess import Popen, PIPE
@@ -54,7 +55,7 @@ class SSH(Publisher):
             target=self.target)
         deploy_path = self.site.config.deploy_root_path.path
 
-        cmd = Popen(command, cwd=unicode(deploy_path), stdout=PIPE, shell=True)
+        cmd = Popen(command, cwd=str(deploy_path), stdout=PIPE, shell=True)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)

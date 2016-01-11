@@ -41,8 +41,8 @@ class TestSass(object):
         assert target.exists
         text = target.read_all()
         expected_text = File(SCSS_SOURCE.child('expected-sass.css')).read_all()
-        print "TEXT" + "-" * 80
-        print text
-        print "-" * 80
-        print expected_text
+        print("TEXT" + "-" * 80)
+        print(text)
+        print("-" * 80)
+        print(expected_text)
         assert_no_diff(expected_text, text)
