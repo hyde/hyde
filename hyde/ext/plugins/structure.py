@@ -338,8 +338,8 @@ class PaginatorPlugin(Plugin):
         for node in self.site.content.walk():
             added_resources = []
             paged_resources = (res for res in node.resources
-                               if hasattr(res, "meta")
-                               and hasattr(res.meta, 'paginator'))
+                               if hasattr(res, "meta") and
+                               hasattr(res.meta, 'paginator'))
             for resource in paged_resources:
                 paginator = Paginator(resource.meta.paginator)
                 added_resources += paginator.walk_paged_resources(
