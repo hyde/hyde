@@ -3,19 +3,19 @@ from operator import attrgetter
 
 from commando.util import getLoggerWithNullHandler, load_python_object
 
+from hyde._compat import with_metaclass
+
 """
 Contains abstract classes and utilities that help publishing a website to a
 server.
 """
 
 
-class Publisher(object):
+class Publisher(with_metaclass(abc.ABCMeta)):
 
     """
     The abstract base class for publishers.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, site, settings, message):
         super(Publisher, self).__init__()

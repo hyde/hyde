@@ -9,6 +9,7 @@ Some code borrowed from rwbench.py from the jinja2 examples
 from datetime import datetime
 from random import choice, randrange
 
+from hyde._compat import PY3
 from hyde.ext.templates.jinja import Jinja2Template
 from hyde.site import Site
 from hyde.generator import Generator
@@ -16,6 +17,7 @@ from hyde.model import Config
 
 from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
+from nose.plugins.skip import SkipTest
 from nose.tools import nottest
 from pyquery import PyQuery
 
@@ -49,7 +51,7 @@ class User(object):
         self.username = username
 
 
-users = map(User, [u'John Doe', u'Jane Doe', u'Peter Somewhat'])
+users = list(map(User, [u'John Doe', u'Jane Doe', u'Peter Somewhat']))
 articles = map(Article, range(20))
 navigation = [
     ('index',           'Index'),
@@ -132,6 +134,11 @@ def test_spaceless():
 
 
 def test_asciidoc():
+    if PY3:
+        # asciidoc is not supported under Python 3. Supporting it is out
+        # of the scope of this project, so its tests are simply skipped
+        # when run under Python 3.
+        raise SkipTest
     source = """
     {%asciidoc%}
     == Heading 2 ==

@@ -8,8 +8,8 @@ import itertools
 import os
 import re
 import sys
-from urllib import quote, unquote
 
+from hyde._compat import PY3, quote, unquote, str, StringIO
 from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.template import HtmlWrap, Template
@@ -79,7 +79,10 @@ def urlencode(ctx, url, safe=None):
 
 @contextfilter
 def urldecode(ctx, url):
-    return unquote(url).decode('utf8')
+    url = unquote(url)
+    if not PY3:
+        url = url.decode('utf8')
+    return url
 
 
 @contextfilter
@@ -125,18 +128,17 @@ def asciidoc(env, value):
     try:
         from asciidocapi import AsciiDocAPI
     except ImportError:
-        print u"Requires AsciiDoc library to use AsciiDoc tag."
+        print(u"Requires AsciiDoc library to use AsciiDoc tag.")
         raise
 
-    import StringIO
     output = value
 
     asciidoc = AsciiDocAPI()
     asciidoc.options('--no-header-footer')
-    result = StringIO.StringIO()
+    result = StringIO()
     asciidoc.execute(
-        StringIO.StringIO(output.encode('utf-8')), result, backend='html4')
-    return unicode(result.getvalue(), "utf-8")
+        StringIO(output.encode('utf-8')), result, backend='html4')
+    return str(result.getvalue(), "utf-8")
 
 
 @environmentfilter
@@ -238,7 +240,7 @@ class Spaceless(Extension):
         """
         Parses the statements and calls back to strip spaces.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endspaceless'],
                                        drop_needle=True)
         return nodes.CallBlock(
@@ -253,7 +255,7 @@ class Spaceless(Extension):
         """
         if not caller:
             return ''
-        return re.sub(r'>\s+<', '><', unicode(caller().strip()))
+        return re.sub(r'>\s+<', '><', str(caller().strip()))
 
 
 class Asciidoc(Extension):
@@ -268,7 +270,7 @@ class Asciidoc(Extension):
         Parses the statements and defers to the callback
         for asciidoc processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endasciidoc'], drop_needle=True)
 
         return nodes.CallBlock(
@@ -297,7 +299,7 @@ class Markdown(Extension):
         Parses the statements and defers to the callback
         for markdown processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(['name:endmarkdown'], drop_needle=True)
 
         return nodes.CallBlock(
@@ -325,7 +327,7 @@ class restructuredText(Extension):
         """
         Simply extract our content
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         body = parser.parse_statements(
             ['name:endrestructuredtext'], drop_needle=True)
 
@@ -357,7 +359,7 @@ class YamlVar(Extension):
         Parses the contained data and defers to the callback to load it as
         yaml.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         var = parser.stream.expect('name').value
         body = parser.parse_statements(['name:endyaml'], drop_needle=True)
         return [
@@ -396,7 +398,7 @@ def parse_kwargs(parser):
     if parser.stream.current.test('string'):
         value = parser.parse_expression()
     else:
-        value = nodes.Const(parser.stream.next().value)
+        value = nodes.Const(next(parser.stream).value)
     return (name, value)
 
 
@@ -413,7 +415,7 @@ class Syntax(Extension):
         Parses the statements and defers to the callback for
         pygments processing.
         """
-        lineno = parser.stream.next().lineno
+        lineno = next(parser.stream).lineno
         lex = nodes.Const(None)
         filename = nodes.Const(None)
 
@@ -428,7 +430,7 @@ class Syntax(Extension):
                     if name == 'lex' \
                     else (value1, value)
             else:
-                lex = nodes.Const(parser.stream.next().value)
+                lex = nodes.Const(next(parser.stream).value)
                 if parser.stream.skip_if('comma'):
                     filename = parser.parse_expression()
 
@@ -496,10 +498,10 @@ class Reference(Extension):
         """
         Parse the variable name that the content must be assigned to.
         """
-        token = parser.stream.next()
+        token = next(parser.stream)
         lineno = token.lineno
         tag = token.value
-        name = parser.stream.next().value
+        name = next(parser.stream).value
         body = parser.parse_statements(['name:end%s' % tag], drop_needle=True)
         return nodes.CallBlock(self.call_method('_render_output',
                                                 args=[
@@ -533,12 +535,12 @@ class Refer(Extension):
         """
         Parse the referred template and the namespace.
         """
-        token = parser.stream.next()
+        token = next(parser.stream)
         lineno = token.lineno
         parser.stream.expect('name:to')
         template = parser.parse_expression()
         parser.stream.expect('name:as')
-        namespace = parser.stream.next().value
+        namespace = next(parser.stream).value
         includeNode = nodes.Include(lineno=lineno)
         includeNode.with_context = True
         includeNode.ignore_missing = False
@@ -623,11 +625,11 @@ class HydeLoader(FileSystemLoader):
         config = site.config if hasattr(site, 'config') else None
         if config:
             super(HydeLoader, self).__init__([
-                unicode(config.content_root_path),
-                unicode(config.layout_root_path),
+                str(config.content_root_path),
+                str(config.layout_root_path),
             ])
         else:
-            super(HydeLoader, self).__init__(unicode(sitepath))
+            super(HydeLoader, self).__init__(str(sitepath))
 
         self.site = site
         self.preprocessor = preprocessor
@@ -650,10 +652,10 @@ class HydeLoader(FileSystemLoader):
         except UnicodeDecodeError:
             HydeException.reraise(
                 "Unicode error when processing %s" % template, sys.exc_info())
-        except TemplateError, exc:
+        except TemplateError as exc:
             HydeException.reraise('Error when processing %s: %s' % (
                 template,
-                unicode(exc)
+                str(exc)
             ), sys.exc_info())
 
         if self.preprocessor:
@@ -800,9 +802,9 @@ class Jinja2Template(Template):
         from jinja2.meta import find_referenced_templates
         try:
             ast = self.env.parse(text)
-        except Exception, e:
+        except Exception as e:
             HydeException.reraise(
-                "Error processing %s: \n%s" % (path, unicode(e)),
+                "Error processing %s: \n%s" % (path, str(e)),
                 sys.exc_info())
 
         tpls = find_referenced_templates(ast)

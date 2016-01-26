@@ -15,6 +15,7 @@ import getpass
 import hashlib
 
 
+from hyde._compat import basestring, input
 from hyde.publisher import Publisher
 
 from commando.util import getLoggerWithNullHandler
@@ -47,8 +48,8 @@ class PyFS(Publisher):
     def prompt_for_credentials(self):
         credentials = {}
         if "%(username)s" in self.url:
-            print "Username: ",
-            credentials["username"] = raw_input().strip()
+            print("Username: ",)
+            credentials["username"] = input().strip()
         if "%(password)s" in self.url:
             credentials["password"] = getpass.getpass("Password: ")
         if credentials:

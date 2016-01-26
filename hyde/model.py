@@ -5,10 +5,11 @@ Contains data structures and utilities for hyde.
 import codecs
 import yaml
 from datetime import datetime
-from UserDict import IterableUserDict
 
 from commando.util import getLoggerWithNullHandler
 from fswrap import File, Folder
+
+from hyde._compat import iteritems, str, UserDict
 
 logger = getLoggerWithNullHandler('hyde.engine')
 
@@ -45,7 +46,7 @@ class Expando(object):
         Returns an iterator for all the items in the
         dictionary as key value pairs.
         """
-        return self.__dict__.iteritems()
+        return iteritems(self.__dict__)
 
     def update(self, d):
         """
@@ -63,10 +64,10 @@ class Expando(object):
         Sets the expando attribute after
         transforming the value.
         """
-        setattr(self, unicode(key).encode('utf-8'), make_expando(value))
+        setattr(self, str(key), make_expando(value))
 
     def __repr__(self):
-        return unicode(self.to_dict())
+        return str(self.to_dict())
 
     def to_dict(self):
         """
@@ -128,7 +129,7 @@ class Context(object):
         return context
 
 
-class Dependents(IterableUserDict):
+class Dependents(UserDict):
 
     """
     Represents the dependency graph for hyde.

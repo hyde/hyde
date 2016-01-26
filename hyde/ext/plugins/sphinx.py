@@ -44,6 +44,7 @@ import os
 import json
 import tempfile
 
+from hyde._compat import execfile, iteritems
 from hyde.plugin import Plugin
 from hyde.model import Expando
 from hyde.ext.plugins.meta import MetaPlugin as _MetaPlugin
@@ -166,7 +167,7 @@ class SphinxPlugin(Plugin):
         if not settings.block_map:
             output.append(sphinx_output["body"])
         else:
-            for (nm, content) in sphinx_output.iteritems():
+            for (nm, content) in iteritems(sphinx_output):
                 try:
                     block = getattr(settings.block_map, nm)
                 except AttributeError:

@@ -5,11 +5,11 @@ Contains classes and utilities related to meta data in hyde.
 
 from collections import namedtuple
 from functools import partial
-from itertools import ifilter
 from operator import attrgetter
 import re
 import sys
 
+from hyde._compat import basestring, filter, iteritems, str
 from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.plugin import Plugin
@@ -263,7 +263,7 @@ def get_tagger_sort_method(site):
 
 
 def walk_resources_tagged_with(node, tag):
-    tags = set(unicode(tag).split('+'))
+    tags = set(str(tag).split('+'))
     walker = get_tagger_sort_method(node.site)
     for resource in walker():
         try:
@@ -329,7 +329,7 @@ class TaggerPlugin(Plugin):
         except AttributeError:
             tag_meta = {}
 
-        for tagname, meta in tag_meta.iteritems():
+        for tagname, meta in iteritems(tag_meta):
             # Don't allow name and resources in meta
             if 'resources' in meta:
                 del(meta['resources'])
@@ -376,7 +376,7 @@ class TaggerPlugin(Plugin):
 
         self.logger.debug("Generating archives for tags")
 
-        for name, config in archive_config.to_dict().iteritems():
+        for name, config in iteritems(archive_config.to_dict()):
             self._create_tag_archive(config)
 
     def _create_tag_archive(self, config):
@@ -413,7 +413,7 @@ extends: false
 {%% set walker = source['walk_resources_tagged_with_%(tag)s'] %%}
 {%% extends "%(template)s" %%}
 """
-        for tagname, tag in self.site.tagger.tags.to_dict().iteritems():
+        for tagname, tag in iteritems(self.site.tagger.tags.to_dict()):
             tag_data = {
                 "tag": tagname,
                 "node": source.name,
@@ -482,8 +482,8 @@ def sort_method(node, settings=None):
 
     excluder_ = partial(attributes_checker, attributes=attr)
 
-    resources = ifilter(lambda x: excluder_(x) and filter_(x),
-                        node.walk_resources())
+    resources = filter(lambda x: excluder_(x) and filter_(x),
+                       node.walk_resources())
     return sorted(resources,
                   key=attrgetter(*attr),
                   reverse=reverse)

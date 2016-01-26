@@ -13,6 +13,7 @@ import urlparse
 from base64 import standard_b64encode
 import ConfigParser
 
+from hyde._compat import input
 from hyde.publisher import Publisher
 
 from commando.util import getLoggerWithNullHandler
@@ -47,8 +48,8 @@ class PyPI(Publisher):
                     pass
         #  Prompt for username on command-line
         if self.username is None:
-            print "Username: ",
-            self.username = raw_input().strip()
+            print("Username: ",)
+            self.username = input().strip()
         #  Try to find password in .pypirc
         if self.password is None:
             if pypirc is not None:

@@ -1,10 +1,10 @@
-class HydeException(Exception):
+from hyde._compat import reraise
 
-    """
-    Base class for exceptions from hyde
-    """
+
+class HydeException(Exception):
+    """Base class for exceptions from hyde."""
 
     @staticmethod
     def reraise(message, exc_info):
         _, _, tb = exc_info
-        raise HydeException(message), None, tb
+        reraise(HydeException, HydeException(message), tb)

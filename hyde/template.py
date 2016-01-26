@@ -3,6 +3,7 @@
 """
 Abstract classes and utilities for template engines
 """
+from hyde._compat import with_metaclass
 from hyde.exceptions import HydeException
 
 import abc
@@ -30,8 +31,11 @@ class HtmlWrap(object):
             PyQuery = None
         self.q = PyQuery(html) if PyQuery else None
 
-    def __unicode__(self):
+    def __str__(self):
         return self.raw
+
+    # Support __unicode__ as well as __str__ for backward compatibility.
+    __unicode__ = __str__
 
     def __call__(self, selector=None):
         if not self.q:
@@ -39,14 +43,12 @@ class HtmlWrap(object):
         return self.q(selector).html()
 
 
-class Template(object):
+class Template(with_metaclass(abc.ABCMeta)):
 
     """
     Interface for hyde template engines. To use a different template engine,
     the following interface must be implemented.
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, sitepath):
         self.sitepath = sitepath

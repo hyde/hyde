@@ -3,6 +3,7 @@
 Plugins related to structure
 """
 
+from hyde._compat import reduce
 from hyde.ext.plugins.meta import Metadata
 from hyde.plugin import Plugin
 from hyde.site import Resource

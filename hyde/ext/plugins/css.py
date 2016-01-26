@@ -3,7 +3,7 @@
 CSS plugins
 """
 
-
+from hyde._compat import str
 from hyde.plugin import CLTransformer, Plugin
 from hyde.exceptions import HydeException
 
@@ -109,9 +109,9 @@ class LessCSSPlugin(CLTransformer):
         less = self.app
         source = File.make_temp(text)
         target = File.make_temp('')
-        args = [unicode(less)]
+        args = [str(less)]
         args.extend(self.process_args(supported))
-        args.extend([unicode(source), unicode(target)])
+        args.extend([str(source), str(target)])
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
@@ -223,9 +223,9 @@ class StylusPlugin(CLTransformer):
         source = File.make_temp(text.strip())
         supported = [("compress", "c"), ("include", "I")]
 
-        args = [unicode(stylus)]
+        args = [str(stylus)]
         args.extend(self.process_args(supported))
-        args.append(unicode(source))
+        args.append(str(source))
         try:
             self.call_app(args)
         except subprocess.CalledProcessError:
@@ -251,7 +251,7 @@ class CleverCSSPlugin(Plugin):
         super(CleverCSSPlugin, self).__init__(site)
         try:
             import clevercss
-        except ImportError, e:
+        except ImportError as e:
             raise HydeException('Unable to import CleverCSS: ' + e.message)
         else:
             self.clevercss = clevercss
@@ -329,7 +329,7 @@ class SassyCSSPlugin(Plugin):
         super(SassyCSSPlugin, self).__init__(site)
         try:
             import scss
-        except ImportError, e:
+        except ImportError as e:
             raise HydeException('Unable to import pyScss: ' + e.message)
         else:
             self.scss = scss
@@ -419,7 +419,7 @@ class SassPlugin(Plugin):
         super(SassPlugin, self).__init__(site)
         try:
             import sass
-        except ImportError, e:
+        except ImportError as e:
             raise HydeException('Unable to import libsass: ' + e.message)
         else:
             self.sass = sass
@@ -489,6 +489,6 @@ class SassPlugin(Plugin):
         self.logger.error(resource)
         try:
             return self.sass.compile(string=text, **options)
-        except Exception, exc:
+        except Exception as exc:
             self.logger.error(exc)
             raise

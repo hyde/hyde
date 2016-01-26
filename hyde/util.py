@@ -3,7 +3,9 @@ Module for python 2.6 compatibility.
 """
 import os
 from functools import partial
-from itertools import izip, tee
+from itertools import tee
+
+from hyde._compat import str, zip
 
 
 def make_method(method_name, method_):
@@ -26,7 +28,7 @@ def add_method(obj, method_name, method_, *args, **kwargs):
 def pairwalk(iterable):
     a, b = tee(iterable)
     next(b, None)
-    return izip(a, b)
+    return zip(a, b)
 
 
 def first_match(predicate, iterable):
@@ -49,7 +51,7 @@ def discover_executable(name, sitepath):
     # Check if an executable can be found in the site path first.
     # If not check the os $PATH for its presence.
 
-    paths = [unicode(sitepath)] + os.environ['PATH'].split(os.pathsep)
+    paths = [str(sitepath)] + os.environ['PATH'].split(os.pathsep)
     for path in paths:
         full_name = os.path.join(path, name)
         if os.path.exists(full_name):
