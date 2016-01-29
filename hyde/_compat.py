@@ -12,7 +12,9 @@ PY3 = sys.version_info.major == 3
 if PY3:
     # Imports that have moved.
     from collections import UserDict  # NOQA
+    import configparser  # NOQA
     from functools import reduce  # NOQA
+    from http.client import HTTPConnection, HTTPSConnection  # NOQA
     from http.server import HTTPServer, SimpleHTTPRequestHandler  # NOQA
     from io import StringIO  # NOQA
     from urllib import parse  # NOQA
@@ -43,7 +45,9 @@ if PY3:
 else:
     # Imports that have moved.
     from itertools import ifilter as filter, izip as zip  # NOQA
+    import ConfigParser as configparser  # NOQA
     reduce = reduce
+    from httplib import HTTPConnection, HTTPSConnection  # NOQA
     from BaseHTTPServer import HTTPServer  # NOQA
     from SimpleHTTPServer import SimpleHTTPRequestHandler  # NOQA
     from cStringIO import StringIO  # NOQA

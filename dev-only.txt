@@ -1,3 +1,4 @@
+coverage>=4.0.3, <5.0
 pyquery>=1.2.9, <2.0
 docutils>=0.12, <1.0
 mock>=1.0.1, <2.0
