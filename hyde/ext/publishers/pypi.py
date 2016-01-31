@@ -8,12 +8,10 @@ import os
 import getpass
 import zipfile
 import tempfile
-import httplib
-import urlparse
 from base64 import standard_b64encode
-import ConfigParser
 
-from hyde._compat import input
+from hyde._compat import (configparser, input, HTTPConnection, HTTPSConnection,
+                          parse)
 from hyde.publisher import Publisher
 
 from commando.util import getLoggerWithNullHandler
@@ -35,10 +33,10 @@ class PyPI(Publisher):
         if not os.path.isfile(pypirc_file):
             pypirc = None
         else:
-            pypirc = ConfigParser.RawConfigParser()
+            pypirc = configparser.Rawconfigparser()
             pypirc.read([pypirc_file])
         missing_errs = (
-            ConfigParser.NoSectionError, ConfigParser.NoOptionError)
+            configparser.NoSectionError, configparser.NoOptionError)
         #  Try to find username in .pypirc
         if self.username is None:
             if pypirc is not None:
@@ -104,11 +102,11 @@ class PyPI(Publisher):
             content_length = len(body_prefix) + tf.tell() + len(body_suffix)
             #  POST it up to PyPI
             logger.info("uploading to PyPI")
-            url = urlparse.urlparse(self.url)
+            url = parse.urlparse(self.url)
             if url.scheme == "https":
-                con = httplib.HTTPSConnection(url.netloc)
+                con = HTTPSConnection(url.netloc)
             else:
-                con = httplib.HTTPConnection(url.netloc)
+                con = HTTPConnection(url.netloc)
             con.connect()
             try:
                 con.putrequest("POST", self.url)
