@@ -57,3 +57,7 @@ script:
 branches:
   only:
     master
+
+notifications:
+  irc:
+    channels: chat.freenode.net#hyde
