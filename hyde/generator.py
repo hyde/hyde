@@ -149,7 +149,7 @@ class Generator(object):
                             dep_res.relative_path].append(rel_path)
                     else:
                         deps.extend(self.get_dependencies(dep_res))
-        if resource.uses_template:
+        if resource.uses_template and not resource.simple_copy:
             deps.extend(self.template.get_dependencies(rel_path))
         deps = list(set(deps))
         if None in deps:
