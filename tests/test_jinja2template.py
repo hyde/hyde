@@ -18,7 +18,7 @@ from hyde.model import Config
 from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
 from nose.plugins.skip import SkipTest
-from nose.tools import nottest
+from nose.tools import nottest, eq_
 from pyquery import PyQuery
 
 import yaml
@@ -226,7 +226,7 @@ See `Example`_
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
-    assert html.strip() == expected.strip()
+    eq_(html.strip(), expected.strip())
 
 
 def test_markdown_with_extensions():
@@ -282,7 +282,7 @@ See [Example][]
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
-    assert html.strip() == expected.strip()
+    eq_(html.strip(), expected.strip())
 
 
 def test_line_statements():
