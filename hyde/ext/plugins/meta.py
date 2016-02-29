@@ -55,12 +55,14 @@ class MetaPlugin(Plugin):
     Metadata plugin for hyde. Loads meta data in the following order:
 
     1. meta.yaml: files in any folder
-    2. frontmatter: any text file with content enclosed within three dashes
-        or three equals signs.
-        Example:
-        ---
-        abc: def
-        ---
+    2. frontmatter: any text file with content enclosed within three
+       dashes or three equals signs.
+
+       Example::
+
+           ---
+           abc: def
+           ---
 
     Supports YAML syntax.
     """
@@ -497,24 +499,24 @@ class SorterPlugin(Plugin):
     to support prebuilt sorting methods. These methods
     can be used in the templates directly.
 
-    Configuration example
-    ---------------------
-    #yaml
+    Configuration example::
 
-    sorter:
-        kind:
-            # Sorts by this attribute name
-            # Uses `attrgetter` on the resource object
-            attr: source_file.kind
+        #yaml
 
-            # The filters to be used before sorting
-            # This can be used to remove all the items
-            # that do not apply. For example,
-            # filtering non html content
-            filters:
-                source_file.kind: html
-                is_processable: True
-                meta.is_listable: True
+        sorter:
+            kind:
+                # Sorts by this attribute name
+                # Uses `attrgetter` on the resource object
+                attr: source_file.kind
+
+                # The filters to be used before sorting
+                # This can be used to remove all the items
+                # that do not apply. For example,
+                # filtering non html content
+                filters:
+                    source_file.kind: html
+                    is_processable: True
+                    meta.is_listable: True
     """
 
     def __init__(self, site):

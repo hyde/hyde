@@ -11,7 +11,8 @@ with hyde.
 `Hyde layout for bootstrap`_ by `auzigog`_ is also a good alternative if you
 like Twitter's `bootstrap framework`_.
 
-You can also take a look at `Hyde Powered Websites`_ for inspiration and reference.
+You can also take a look at `Hyde Powered Websites`_ for inspiration and
+reference.
 
 Currently hyde is only supported on python 2.7.x.  Python 3.x support is in
 progress, thanks to `jonafato`_.
