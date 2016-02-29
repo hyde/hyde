@@ -208,7 +208,7 @@ See `Example`_
     expected = ("""
 <div class="document" id="code">
 <h1 class="title">Code</h1>
-<div class="highlight"><pre><span class="k">def</span> """
+<div class="highlight"><pre><span></span><span class="k">def</span> """
                 """<span class="nf">add</span><span class="p">(</span>"""
                 """<span class="n">a"""
                 """</span><span class="p">,</span> <span class="n">b</span>"""
@@ -264,7 +264,7 @@ See [Example][]
 
     expected = ("""
     <h1>Code</h1>
-<div class="codehilite"><pre><span class="k">def</span> """
+<div class="codehilite"><pre><span></span><span class="k">def</span> """
                 """<span class="nf">add</span><span class="p">(</span>"""
                 """<span class="n">a</span><span class="p">,</span> """
                 """<span class="n">b</span><span class="p">):</span>
