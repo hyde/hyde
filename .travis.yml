@@ -44,6 +44,7 @@ env:
   - TOX_ENV=py34
   - TOX_ENV=py35
   - TOX_ENV=pep8
+  - TOX_ENV=docs
 
 before_script:
   - export PATH=$(pwd)/node_modules/.bin:$PATH

@@ -18,7 +18,7 @@ from hyde.model import Config
 from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
 from nose.plugins.skip import SkipTest
-from nose.tools import nottest
+from nose.tools import nottest, eq_
 from pyquery import PyQuery
 
 import yaml
@@ -208,7 +208,7 @@ See `Example`_
     expected = ("""
 <div class="document" id="code">
 <h1 class="title">Code</h1>
-<div class="highlight"><pre><span class="k">def</span> """
+<div class="highlight"><pre><span></span><span class="k">def</span> """
                 """<span class="nf">add</span><span class="p">(</span>"""
                 """<span class="n">a"""
                 """</span><span class="p">,</span> <span class="n">b</span>"""
@@ -226,7 +226,7 @@ See `Example`_
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
-    assert html.strip() == expected.strip()
+    eq_(html.strip(), expected.strip())
 
 
 def test_markdown_with_extensions():
@@ -264,7 +264,7 @@ See [Example][]
 
     expected = ("""
     <h1>Code</h1>
-<div class="codehilite"><pre><span class="k">def</span> """
+<div class="codehilite"><pre><span></span><span class="k">def</span> """
                 """<span class="nf">add</span><span class="p">(</span>"""
                 """<span class="n">a</span><span class="p">,</span> """
                 """<span class="n">b</span><span class="p">):</span>
@@ -282,7 +282,7 @@ See [Example][]
     s.config = c
     t.configure(s)
     html = t.render(source, {}).strip()
-    assert html.strip() == expected.strip()
+    eq_(html.strip(), expected.strip())
 
 
 def test_line_statements():
