@@ -54,7 +54,7 @@ class Expando(object):
         """
         d = d or {}
         if isinstance(d, dict):
-            for key, value in d.items():
+            for key, value in list(d.items()):
                 self.set_expando(key, value)
         elif isinstance(d, Expando):
             self.update(d.to_dict())
@@ -75,7 +75,7 @@ class Expando(object):
         """
         result = {}
         d = self.__dict__
-        for k, v in d.items():
+        for k, v in list(d.items()):
             if isinstance(v, Expando):
                 result[k] = v.to_dict()
             elif isinstance(v, SEQS):
@@ -120,7 +120,7 @@ class Context(object):
             # No providers found
             pass
 
-        for provider_name, resource_name in providers.items():
+        for provider_name, resource_name in list(providers.items()):
             res = File(Folder(sitepath).child(resource_name))
             if res.exists:
                 data = make_expando(yaml.load(res.read_all()))

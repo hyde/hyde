@@ -23,7 +23,7 @@ if PY3:
     # Types that have changed name.
     filter = filter  # NOQA
     input = input  # NOQA
-    basestring = str  # NOQA
+    str = str  # NOQA
     str = str  # NOQA
     zip = zip  # NOQA
 
@@ -44,21 +44,21 @@ if PY3:
 
 else:
     # Imports that have moved.
-    from itertools import ifilter as filter, izip as zip  # NOQA
-    import ConfigParser as configparser  # NOQA
+      # NOQA
+    import configparser as configparser  # NOQA
     reduce = reduce
-    from httplib import HTTPConnection, HTTPSConnection  # NOQA
-    from BaseHTTPServer import HTTPServer  # NOQA
-    from SimpleHTTPServer import SimpleHTTPRequestHandler  # NOQA
-    from cStringIO import StringIO  # NOQA
+    from http.client import HTTPConnection, HTTPSConnection  # NOQA
+    from http.server import HTTPServer  # NOQA
+    from http.server import SimpleHTTPRequestHandler  # NOQA
+    from io import StringIO  # NOQA
     from UserDict import IterableUserDict as UserDict  # NOQA
-    import urlparse as parse  # NOQA
-    from urllib import quote, unquote  # NOQA
+    import urllib.parse as parse  # NOQA
+    from urllib.parse import quote, unquote  # NOQA
 
     # Types that have changed name.
     input = raw_input  # NOQA
-    basestring = basestring  # NOQA
-    str = unicode  # NOQA
+    str = str  # NOQA
+    str = str  # NOQA
     execfile = execfile  # NOQA
 
     exec('def reraise(tp, value, tb=None):\n raise tp, value, tb')
@@ -67,9 +67,9 @@ else:
 def iteritems(d):
     """Return iterable items from a dict."""
     if hasattr(d, 'iteritems'):
-        return d.iteritems()
-    else:
         return iter(d.items())
+    else:
+        return iter(list(d.items()))
 
 
 def with_metaclass(meta, *bases):

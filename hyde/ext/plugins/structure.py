@@ -14,6 +14,7 @@ from fswrap import File, Folder
 import os
 from fnmatch import fnmatch
 import operator
+from functools import reduce
 
 
 #

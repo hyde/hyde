@@ -242,8 +242,8 @@ class TestSiteWithConfig(object):
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg/abc'
-        print(s.content_url(path, ""))
-        print("/" + quote(path, ""))
+        print((s.content_url(path, "")))
+        print(("/" + quote(path, "")))
         assert s.content_url(path, "") == "/" + quote(path, "")
 
     def test_media_url(self):

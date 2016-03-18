@@ -5,7 +5,7 @@ Depends plugin
 /// Experimental: Not working yet.
 """
 
-from hyde._compat import basestring
+from hyde._compat import str
 from hyde.plugin import Plugin
 
 
@@ -50,7 +50,7 @@ class DependsPlugin(Plugin):
         if not hasattr(resource, 'depends') or not resource.depends:
             resource.depends = []
 
-        if isinstance(depends, basestring):
+        if isinstance(depends, str):
             depends = [depends]
 
         for dep in depends:

@@ -38,7 +38,7 @@ class TestMarkings(object):
         TEST_SITE.delete()
 
     def test_mark(self):
-        text = u"""
+        text = """
 ===
 is_processable: False
 ===
@@ -77,7 +77,7 @@ Hyde & Jinja
         assert_valid_conversion(html)
 
     def test_reference(self):
-        text = u"""
+        text = """
 ===
 is_processable: False
 ===
@@ -94,7 +94,7 @@ Hyde & Jinja
 {% endfilter %}
 """
 
-        text2 = u"""
+        text2 = """
 ※ inc.md as inc
 {% filter markdown|typogrify %}
 {{ inc.heading }}

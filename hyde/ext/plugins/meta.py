@@ -9,7 +9,7 @@ from operator import attrgetter
 import re
 import sys
 
-from hyde._compat import basestring, filter, iteritems, str
+from hyde._compat import str, filter, iteritems, str
 from hyde.exceptions import HydeException
 from hyde.model import Expando
 from hyde.plugin import Plugin
@@ -43,7 +43,7 @@ class Metadata(Expando):
         """
         Updates the metadata with new stuff
         """
-        if isinstance(data, basestring):
+        if isinstance(data, str):
             super(Metadata, self).update(yaml.load(data))
         else:
             super(Metadata, self).update(data)
@@ -396,7 +396,7 @@ class TaggerPlugin(Plugin):
 
         # Write meta data for the configuration
         meta = config.get('meta', {})
-        meta_text = u''
+        meta_text = ''
         if meta:
             import yaml
             meta_text = yaml.dump(meta, default_flow_style=False)
@@ -404,7 +404,7 @@ class TaggerPlugin(Plugin):
         extension = config.get('extension', 'html')
         template = config['template']
 
-        archive_text = u"""
+        archive_text = """
 ---
 extends: false
 %(meta)s
@@ -445,7 +445,7 @@ def filter_method(item, settings=None):
         filters.update(default_filters)
         filters.update(settings.filters.__dict__)
 
-    for field, value in filters.items():
+    for field, value in list(filters.items()):
         try:
             res = attrgetter(field)(item)
         except:
@@ -484,8 +484,7 @@ def sort_method(node, settings=None):
 
     excluder_ = partial(attributes_checker, attributes=attr)
 
-    resources = filter(lambda x: excluder_(x) and filter_(x),
-                       node.walk_resources())
+    resources = [x for x in node.walk_resources() if excluder_(x) and filter_(x)]
     return sorted(resources,
                   key=attrgetter(*attr),
                   reverse=reverse)
@@ -532,7 +531,7 @@ class SorterPlugin(Plugin):
         if not hasattr(config, 'sorter'):
             return
 
-        for name, settings in config.sorter.__dict__.items():
+        for name, settings in list(config.sorter.__dict__.items()):
             sort_method_name = 'walk_resources_sorted_by_%s' % name
             self.logger.debug("Adding sort methods for [%s]" % name)
             add_method(Node, sort_method_name, sort_method, settings=settings)
@@ -762,7 +761,7 @@ class GrouperPlugin(Plugin):
         if not hasattr(self.site, 'grouper'):
             self.site.grouper = {}
 
-        for name, grouping in self.site.config.grouper.__dict__.items():
+        for name, grouping in list(self.site.config.grouper.__dict__.items()):
             grouping.name = name
             prev_att = 'prev_in_%s' % name
             next_att = 'next_in_%s' % name

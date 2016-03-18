@@ -138,7 +138,7 @@ class TestGrouperSingleLevel(object):
 
         groups = dict([(g.name, g) for g in self.s.grouper['section'].groups])
 
-        for name, group in groups.items():
+        for name, group in list(groups.items()):
             pages = getattr(self, name)
             for page in pages:
                 res = self.s.content.resource_from_relative_path(
@@ -151,7 +151,7 @@ class TestGrouperSingleLevel(object):
 
         groups = dict([(g.name, g) for g in self.s.grouper['section'].groups])
 
-        for name, group in groups.items():
+        for name, group in list(groups.items()):
             pages = getattr(self, name)
             for page in pages:
                 res = self.s.content.resource_from_relative_path(

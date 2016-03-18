@@ -144,7 +144,7 @@ class Generator(object):
                 deps.append(dep)
                 dep_res = self.site.content.resource_from_relative_path(dep)
                 if dep_res:
-                    if dep_res.relative_path in self.waiting_deps.keys():
+                    if dep_res.relative_path in list(self.waiting_deps.keys()):
                         self.waiting_deps[
                             dep_res.relative_path].append(rel_path)
                     else:

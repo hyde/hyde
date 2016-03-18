@@ -4,7 +4,7 @@ Contains classes and utilities for serving a site
 generated from hyde.
 """
 import threading
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import traceback
 from datetime import datetime
 
@@ -42,7 +42,7 @@ class HydeRequestHandler(SimpleHTTPRequestHandler):
             if 'refresh' in query:
                 del query['refresh']
             parts = list(tuple(result))
-            parts[4] = urllib.urlencode(query)
+            parts[4] = urllib.parse.urlencode(query)
             parts = tuple(parts)
             new_url = parse.urlunparse(parts)
             logger.info('Redirecting... [%s]' % new_url)
