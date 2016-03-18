@@ -46,7 +46,7 @@ class PyPI(Publisher):
                     pass
         #  Prompt for username on command-line
         if self.username is None:
-            print("Username: ",)
+            print(("Username: ",))
             self.username = input().strip()
         #  Try to find password in .pypirc
         if self.password is None:

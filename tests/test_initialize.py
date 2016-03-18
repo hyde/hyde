@@ -107,10 +107,8 @@ def verify_site_contents(site, layout):
     assert site.child_folder('layout').exists
     assert File(site.child('info.yaml')).exists
 
-    expected = list(map(
-        lambda f: f.get_relative_path(layout), layout.walker.walk_all()))
-    actual = list(map(
-        lambda f: f.get_relative_path(site), site.walker.walk_all()))
+    expected = list([f.get_relative_path(layout) for f in layout.walker.walk_all()])
+    actual = list([f.get_relative_path(site) for f in site.walker.walk_all()])
     assert actual
     assert expected
 

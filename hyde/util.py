@@ -28,7 +28,7 @@ def add_method(obj, method_name, method_, *args, **kwargs):
 def pairwalk(iterable):
     a, b = tee(iterable)
     next(b, None)
-    return zip(a, b)
+    return list(zip(a, b))
 
 
 def first_match(predicate, iterable):

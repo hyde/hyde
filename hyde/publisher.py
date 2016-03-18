@@ -45,7 +45,7 @@ class Publisher(with_metaclass(abc.ABCMeta)):
         if not settings:
             # Find the first configured publisher
             try:
-                publisher = site.config.publisher.__dict__.iterkeys().next()
+                publisher = next(iter(site.config.publisher.__dict__.keys()))
                 logger.warning(
                     "No default publisher configured. Using: %s" % publisher)
                 settings = attrgetter("publisher.%s" % publisher)(site.config)

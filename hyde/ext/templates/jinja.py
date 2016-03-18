@@ -128,7 +128,7 @@ def asciidoc(env, value):
     try:
         from asciidocapi import AsciiDocAPI
     except ImportError:
-        print(u"Requires AsciiDoc library to use AsciiDoc tag.")
+        print("Requires AsciiDoc library to use AsciiDoc tag.")
         raise
 
     output = value
@@ -149,8 +149,8 @@ def markdown(env, value):
     try:
         import markdown as md
     except ImportError:
-        logger.error(u"Cannot load the markdown library.")
-        raise TemplateError(u"Cannot load the markdown library")
+        logger.error("Cannot load the markdown library.")
+        raise TemplateError("Cannot load the markdown library")
     output = value
     d = {}
     if hasattr(env.config, 'markdown'):
@@ -173,8 +173,8 @@ def restructuredtext(env, value):
     try:
         from docutils.core import publish_parts
     except ImportError:
-        logger.error(u"Cannot load the docutils library.")
-        raise TemplateError(u"Cannot load the docutils library.")
+        logger.error("Cannot load the docutils library.")
+        raise TemplateError("Cannot load the docutils library.")
 
     highlight_source = False
     if hasattr(env.config, 'restructuredtext'):
@@ -202,7 +202,7 @@ def syntax(env, value, lexer=None, filename=None):
         from pygments import lexers
         from pygments import formatters
     except ImportError:
-        logger.error(u"pygments library is required to"
+        logger.error("pygments library is required to"
                      " use syntax highlighting tags.")
         raise TemplateError("Cannot load pygments")
 
@@ -608,7 +608,7 @@ class Refer(Extension):
         """
 
         out = caller()
-        for key, value in markings.items():
+        for key, value in list(markings.items()):
             namespace[key] = value
         namespace['html'] = HtmlWrap(out)
         return ''
@@ -731,7 +731,7 @@ class Jinja2Template(Template):
 
         filters = conf.get('filters', {})
         if isinstance(filters, dict):
-            for name, value in filters.items():
+            for name, value in list(filters.items()):
                 parts = value.split('.')
                 module_name = '.'.join(parts[:-1])
                 function_name = parts[-1]
@@ -740,7 +740,7 @@ class Jinja2Template(Template):
 
         tests = conf.get('tests', {})
         if isinstance(tests, dict):
-            for name, value in tests.items():
+            for name, value in list(tests.items()):
                 parts = value.split('.')
                 module_name = '.'.join(parts[:-1])
                 function_name = parts[-1]

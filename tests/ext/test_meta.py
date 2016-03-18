@@ -113,7 +113,7 @@ twitter: %(twitter)s
         target = File(Folder(s.config.deploy_root_path).child('about2.html'))
         text = target.read_all()
         q = PyQuery(text)
-        for k, v in d.items():
+        for k, v in list(d.items()):
             assert v in q("span." + k).text()
 
     def test_can_load_from_node_meta(self):
@@ -154,7 +154,7 @@ title: Even nicer title
         target = File(Folder(s.config.deploy_root_path).child('about2.html'))
         text = target.read_all()
         q = PyQuery(text)
-        for k, v in d.items():
+        for k, v in list(d.items()):
             if not k == 'title':
                 assert v in q("span." + k).text()
         assert q("span.title").text() == "Even nicer title"
@@ -200,7 +200,7 @@ title: Even nicer title
         target = File(Folder(s.config.deploy_root_path).child('about2.html'))
         text = target.read_all()
         q = PyQuery(text)
-        for k, v in d.items():
+        for k, v in list(d.items()):
             if not k == 'title':
                 assert v in q("span." + k).text()
         assert q("span.title").text() == "Even nicer title"
@@ -252,13 +252,13 @@ title: %(title)s
 
         res = s.content.resource_from_path(about2.path)
         assert hasattr(res, 'meta')
-        for k, v in expected.items():
+        for k, v in list(expected.items()):
             assert hasattr(res.meta, k)
             assert getattr(res.meta, k) == v
         target = File(
             Folder(s.config.deploy_root_path).child('blog/about2.html'))
         text = target.read_all()
         q = PyQuery(text)
-        for k, v in expected.items():
+        for k, v in list(expected.items()):
             if k != 'nodemeta':
                 assert v in q("span." + k).text()

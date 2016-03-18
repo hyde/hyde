@@ -76,8 +76,8 @@ class Pygments(Directive):
             lexer = TextLexer()
         # take an arbitrary option if more than one is given
         formatter = self.options and VARIANTS[
-            self.options.keys()[0]] or DEFAULT
-        parsed = highlight(u'\n'.join(self.content), lexer, formatter)
+            list(self.options.keys())[0]] or DEFAULT
+        parsed = highlight('\n'.join(self.content), lexer, formatter)
         return [nodes.raw('', parsed, format='html')]
 
 directives.register_directive('sourcecode', Pygments)

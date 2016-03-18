@@ -57,7 +57,7 @@ class LanguagePlugin(Plugin):
                     self.languages[uuid] = []
                 self.languages[uuid].append(resource)
         # Add back the information about other languages
-        for uuid, resources in self.languages.items():
+        for uuid, resources in list(self.languages.items()):
             for resource in resources:
                 language = resource.meta.language
                 resource.translations = \
