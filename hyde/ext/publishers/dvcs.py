@@ -61,7 +61,7 @@ class Git(DVCS):
     """
 
     def add(self, path="."):
-        cmd = Popen('git add'.split() + [ path ],
+        cmd = Popen('git add --'.split() + [ path ],
                     cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
