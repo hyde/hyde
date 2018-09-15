@@ -54,18 +54,16 @@ addons:
 cache:
   directories:
     - $HOME/.cache/pip
-    - $HOME/node_modules/.bin
 
 install:
   # JS dependencies
-  - npm install 
+  - npm install
 
   # Python test requirements
   - pip install tox
 
 before_script:
-  - export PATH=$HOME/node_modules/.bin:$PATH
-  - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
+  - export PATH=$(pwd)/node_modules/.bin:$PATH && export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
 
 
 script:
