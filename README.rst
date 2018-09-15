@@ -3,7 +3,8 @@ Version 0.8.9
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
     :target: https://travis-ci.org/hyde/hyde
 
-This branch: 
+This branch:
+
 .. image:: https://travis-ci.org/jgoldfar/hyde.svg?branch=fixes-for-python2.7
     :target: https://travis-ci.org/jgoldfar/hyde
 

@@ -5,13 +5,13 @@ language: python
 # Run each tox environment separately
 matrix:
   include:
-    - name: "2.7 Unit Test"
+    - name: "Python 2.7 Unit Test"
       python: '2.7'
       env: TOX_ENV=py27
-    - name: "3.4 Unit Test"
+    - name: "Python 3.4 Unit Test"
       python: '3.4'
       env: TOX_ENV=py34
-    - name: "3.6 Unit Test"
+    - name: "Python 3.6 Unit Test"
       python: '3.6'
       env: TOX_ENV=py36
     - name: "Pypy Unit Test"
