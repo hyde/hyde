@@ -19,9 +19,12 @@ matrix:
     - name: "Python 3.6 Unit Test"
       python: '3.6'
       env: TOX_ENV=py36
-    - name: "Pypy Unit Test"
-      python: pypy
-      env: TOX_ENV=pypy
+#    - name: "Python 3.7 Unit Test" # Python 3.7 is not available on Travis yet
+#      python: '3.7'
+#      env: TOX_ENV=py37
+#    - name: "Pypy Unit Test" # PyQuery is not currently "safe"
+#      python: pypy
+#      env: TOX_ENV=pypy
     - name: "Pep8 Test"
       python: 2.7
       env: TOX_ENV=pep8
