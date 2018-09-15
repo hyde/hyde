@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
 import yaml
 
 from hyde._compat import quote
@@ -11,6 +6,7 @@ from hyde.model import Config
 from hyde.site import Node, RootNode, Site
 
 from fswrap import File, Folder
+# from nose2.tools.decorators import with_setup, with_teardown
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
 
@@ -195,24 +191,23 @@ def test_relative_deploy_path_override():
 
 class TestSiteWithConfig(object):
 
-    @classmethod
-    def setup_class(cls):
-        cls.SITE_PATH = File(__file__).parent.child_folder(
+    def setup_class(self):
+        self.SITE_PATH = File(__file__).parent.child_folder(
             'sites/test_jinja_with_config')
-        cls.SITE_PATH.make()
-        TEST_SITE_ROOT.copy_contents_to(cls.SITE_PATH)
-        cls.config_file = File(cls.SITE_PATH.child('alternate.yaml'))
-        with open(cls.config_file.path) as config:
-            cls.config = Config(
-                sitepath=cls.SITE_PATH, config_dict=yaml.load(config))
-        cls.SITE_PATH.child_folder('content').rename_to(
-            cls.config.content_root)
+        self.SITE_PATH.make()
+        TEST_SITE_ROOT.copy_contents_to(self.SITE_PATH)
+        self.config_file = File(self.SITE_PATH.child('alternate.yaml'))
+        with open(self.config_file.path) as config:
+            self.config = Config(
+                sitepath=self.SITE_PATH, config_dict=yaml.load(config))
+        self.SITE_PATH.child_folder('content').rename_to(
+            self.config.content_root)
 
-    @classmethod
-    def teardown_class(cls):
-        cls.SITE_PATH.delete()
-
+    def teardown_class(self):
+        self.SITE_PATH.delete()
+    
     def test_load_with_config(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'blog/2010/december'
@@ -225,34 +220,44 @@ class TestSiteWithConfig(object):
         assert resource.relative_path == path
         assert not s.content.resource_from_relative_path(
             '/happy-festivus.html')
+        self.teardown_class()
 
     def test_content_url(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'blog/2010/december'
         assert s.content_url(path) == "/" + path
+        self.teardown_class()
 
     def test_content_url_encoding(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg'
         assert s.content_url(path) == "/" + quote(path)
+        self.teardown_class()
 
     def test_content_url_encoding_safe(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = '".jpg/abc'
         print(s.content_url(path, ""))
         print("/" + quote(path, ""))
         assert s.content_url(path, "") == "/" + quote(path, "")
+        self.teardown_class()
 
     def test_media_url(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'css/site.css'
         assert s.media_url(path) == "/media/" + path
+        self.teardown_class()
 
     def test_is_media(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         assert s.is_media('media/css/site.css')
@@ -260,22 +265,28 @@ class TestSiteWithConfig(object):
         s.config.media_root = 'monkey'
         assert not s.is_media('media/css/site.css')
         assert s.is_media('monkey/css/site.css')
+        self.teardown_class()
 
     def test_full_url_for_content(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'blog/2010/december'
         assert s.full_url(path) == "/" + path
+        self.teardown_class()
 
     def test_full_url_for_media(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'media/css/site.css'
         assert s.is_media(path)
         full_url = s.full_url(path)
         assert full_url == "/" + path
+        self.teardown_class()
 
     def test_media_url_from_resource(self):
+        self.setup_class()
         s = Site(self.SITE_PATH, config=self.config)
         s.load()
         path = 'css/site.css'
@@ -283,8 +294,10 @@ class TestSiteWithConfig(object):
             Folder("media").child(path))
         assert resource
         assert resource.full_url == "/media/" + path
+        self.teardown_class()
 
     def test_config_ignore(self):
+        self.setup_class()
         c = Config(self.SITE_PATH, config_dict=self.config.to_dict())
         s = Site(self.SITE_PATH, config=c)
         s.load()
@@ -296,8 +309,10 @@ class TestSiteWithConfig(object):
         s.config.ignore.append('*.png')
         resource = s.content.resource_from_relative_path(path)
         assert not resource
+        self.teardown_class()
 
     def test_config_ignore_nodes(self):
+        self.setup_class()
         c = Config(self.SITE_PATH, config_dict=self.config.to_dict())
         git = self.SITE_PATH.child_folder('.git')
         git.make()
@@ -314,3 +329,4 @@ class TestSiteWithConfig(object):
         assert not blog_node
         git_node = s.content.node_from_relative_path('.git')
         assert not git_node
+        self.teardown_class()

@@ -133,32 +133,34 @@ def test_spaceless():
     assert html.strip() == expected.strip()
 
 
-def test_asciidoc():
-    if PY3:
-        # asciidoc is not supported under Python 3. Supporting it is out
-        # of the scope of this project, so its tests are simply skipped
-        # when run under Python 3.
-        raise SkipTest
-    source = """
-    {%asciidoc%}
-    == Heading 2 ==
+## TODO: Re-enable or consider completely removing.
 
-    * test1
-    * test2
-    * test3
-    {%endasciidoc%}
-    """
-    t = Jinja2Template(JINJA2.path)
-    t.configure(None)
-    html = t.render(source, {}).strip()
-
-    assert html
-    q = PyQuery(html)
-    assert q
-    assert q("li").length == 3
-    assert q("li:nth-child(1)").text().strip() == "test1"
-    assert q("li:nth-child(2)").text().strip() == "test2"
-    assert q("li:nth-child(3)").text().strip() == "test3"
+# def test_asciidoc():
+#     if PY3:
+#         # asciidoc is not supported under Python 3. Supporting it is out
+#         # of the scope of this project, so its tests are simply skipped
+#         # when run under Python 3.
+#         raise SkipTest
+#     source = """
+#     {%asciidoc%}
+#     == Heading 2 ==
+# 
+#     * test1
+#     * test2
+#     * test3
+#     {%endasciidoc%}
+#     """
+#     t = Jinja2Template(JINJA2.path)
+#     t.configure(None)
+#     html = t.render(source, {}).strip()
+# 
+#     assert html
+#     q = PyQuery(html)
+#     assert q
+#     assert q("li").length == 3
+#     assert q("li:nth-child(1)").text().strip() == "test1"
+#     assert q("li:nth-child(2)").text().strip() == "test2"
+#     assert q("li:nth-child(3)").text().strip() == "test3"
 
 
 def test_markdown():
