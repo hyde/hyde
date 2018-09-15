@@ -1,8 +1,6 @@
 sudo: false
 
 language: python
-python:
-  - "3.5"
 
 addons:
   apt:
@@ -38,13 +36,25 @@ install:
   - pip install tox
 
 # Run each tox environment separately
-env:
-  - TOX_ENV=py27
-  - TOX_ENV=py33
-  - TOX_ENV=py34
-  - TOX_ENV=py35
-  - TOX_ENV=pep8
-  - TOX_ENV=docs
+matrix: 
+  - name: "2.7 Unit Test"
+    python: '2.7'
+    env: TOX_ENV=py27
+  - name: "3.4 Unit Test"
+    python: '3.4'
+    env: TOX_ENV=py34
+  - name: "3.6 Unit Test"
+    python: '3.6'
+    env: TOX_ENV=py36
+  - name: "Pypy Unit Test"
+    python: pypy
+    env: TOX_ENV=pypy
+  - name: "Pep8 Test"
+    python: 2.7
+    env: TOX_ENV=pep8
+  - name: "Docs"
+    python: 2.7
+    env: TOX_ENV=docs
 
 before_script:
   - export PATH=$(pwd)/node_modules/.bin:$PATH
@@ -52,13 +62,3 @@ before_script:
 
 script:
   - tox -e $TOX_ENV
-
-# Only build for the master branch
-# Note that this does not prevent pull request builds
-branches:
-  only:
-    master
-
-notifications:
-  irc:
-    channels: chat.freenode.net#hyde
