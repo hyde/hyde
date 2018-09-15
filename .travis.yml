@@ -52,7 +52,7 @@ cache:
 
 install:
   # JS dependencies
-  - npm install sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
+  - npm install sass@0.5.0 requirejs@2.1 stylus@0.54 uglify-js@2.8.29 less@2.5.1
 
   # Python test requirements
   - pip install tox
