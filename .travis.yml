@@ -2,6 +2,11 @@ sudo: false
 
 language: python
 
+# TODO: Test on OSX as well
+#os:
+#  - linux
+#  - osx
+
 # Run each tox environment separately
 matrix:
   include:
@@ -49,17 +54,19 @@ addons:
 cache:
   directories:
     - $HOME/.cache/pip
+    - $HOME/node_modules/.bin
 
 install:
   # JS dependencies
-  - npm install sass@0.5.0 requirejs@2.1 stylus@0.54 uglify-js@2.8.29 less@2.5.1
+  - npm install 
 
   # Python test requirements
   - pip install tox
 
 before_script:
-  - export PATH=$(pwd)/node_modules/.bin:$PATH
+  - export PATH=$HOME/node_modules/.bin:$PATH
   - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
+
 
 script:
   - tox -e $TOX_ENV

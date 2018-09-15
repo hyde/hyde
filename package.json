@@ -1,0 +1,31 @@
+{
+  "name": "hyde",
+  "version": "0.8.9",
+  "description": "Javascript dependencies for Hyde static website generator",
+  "main": "setup.py",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "dependencies": {
+    "less": "^3.8.1",
+    "requirejs": "^2.1.22",
+    "sass": "^0.5.0",
+    "stylus": "^0.54.5",
+    "uglify-js": "^2.8.29"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgoldfar/hyde.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jgoldfar/hyde/issues"
+  },
+  "homepage": "https://github.com/jgoldfar/hyde#readme"
+}
