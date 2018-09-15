@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Use nose
-`$ pip install nose`
-`$ nosetests`
+Use nose2
+`$ pip install nose2`
+`$ nose2`
 
 Some code borrowed from rwbench.py from the jinja2 examples
 """
@@ -17,8 +17,6 @@ from hyde.model import Config
 
 from fswrap import File
 from jinja2.utils import generate_lorem_ipsum
-from nose.plugins.skip import SkipTest
-from nose.tools import nottest, eq_
 from pyquery import PyQuery
 
 import yaml
@@ -26,6 +24,8 @@ import yaml
 ROOT = File(__file__).parent
 JINJA2 = ROOT.child_folder('templates/jinja2')
 
+def eq_(a, b):
+    assert a == b, "%r != %r" % (a, b)
 
 class Article(object):
 
@@ -332,7 +332,6 @@ def test_line_statements_with_config():
 TEST_SITE = File(__file__).parent.child_folder('_test')
 
 
-@nottest
 def assert_markdown_typogrify_processed_well(include_text, includer_text):
     site = Site(TEST_SITE)
     site.config.plugins = ['hyde.ext.plugins.meta.MetaPlugin']

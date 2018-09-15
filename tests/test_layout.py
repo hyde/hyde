@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Use nose
-`$ pip install nose`
-`$ nosetests`
+Use nose2
+`$ pip install nose2`
+`$ nose2`
 """
 import os
 
