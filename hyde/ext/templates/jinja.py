@@ -482,6 +482,7 @@ class IncludeText(Extension):
             output = typo(output)
         return output
 
+
 MARKINGS = '_markings_'
 
 
@@ -887,7 +888,7 @@ class Jinja2Template(Template):
         try:
             template = self.env.get_template(resource.relative_path)
             out = template.render(context)
-        except:
+        except Exception:
             raise
         return out
 
