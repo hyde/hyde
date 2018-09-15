@@ -9,9 +9,11 @@ with:
 
 
 Apart from these requirements the following are required by plugins if you
-choose to run the corresponding tests. Some of the comands use the Mac OS X
+choose to run the corresponding tests. Some of the commands use the Mac OS X
 package manager `homebrew` - please use the package manager corresponding to
 your operating system.
+
+Note: asciidoc is currently not tested, so the steps corresponding to that format are unnecessary.
 
 
 ::
@@ -42,4 +44,4 @@ Run the tests
 =============
 
 ::
-    nosetests tests
+    nose2 tests
