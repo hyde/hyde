@@ -3,6 +3,7 @@
 Text processing plugins
 """
 
+from __future__ import unicode_literals
 from hyde.plugin import Plugin, TextyPlugin
 
 
@@ -31,14 +32,14 @@ class BlockdownPlugin(TextyPlugin):
         """
         The default pattern for block open text.
         """
-        return '^\s*===+([A-Za-z0-9_\-\.]+)=*\s*$'
+        return r'^\s*===+([A-Za-z0-9_\-\.]+)=*\s*$'
 
     @property
     def default_close_pattern(self):
         """
         The default pattern for block close text.
         """
-        return '^\s*===+/+\s*=*/*([A-Za-z0-9_\-\.]*)[\s=/]*$'
+        return r'^\s*===+/+\s*=*/*([A-Za-z0-9_\-\.]*)[\s=/]*$'
 
     def text_to_tag(self, match, start=True):
         """
@@ -77,14 +78,14 @@ class MarkingsPlugin(TextyPlugin):
         """
         The default pattern for mark open text.
         """
-        return u'^§§+\s*([A-Za-z0-9_\-]+)\s*$'
+        return r'^§§+\s*([A-Za-z0-9_\-]+)\s*$'
 
     @property
     def default_close_pattern(self):
         """
         The default pattern for mark close text.
         """
-        return u'^§§+\s*/([A-Za-z0-9_\-]*)\s*$'
+        return r'^§§+\s*/([A-Za-z0-9_\-]*)\s*$'
 
     def text_to_tag(self, match, start=True):
         """
@@ -123,7 +124,7 @@ class ReferencePlugin(TextyPlugin):
         """
         The default pattern for mark open text.
         """
-        return u'^※\s*([^\s]+)\s*as\s*([A-Za-z0-9_\-]+)\s*$'
+        return r'^※\s*([^\s]+)\s*as\s*([A-Za-z0-9_\-]+)\s*$'
 
     @property
     def default_close_pattern(self):
@@ -169,14 +170,14 @@ class SyntextPlugin(TextyPlugin):
         """
         The default pattern for block open text.
         """
-        return '^\s*~~~+\s*([A-Za-z0-9_\-\.:\']+)\s*~*\s*$'
+        return r'^\s*~~~+\s*([A-Za-z0-9_\-\.:\']+)\s*~*\s*$'
 
     @property
     def default_close_pattern(self):
         """
         The default pattern for block close text.
         """
-        return '^\s*~~~+\s*$'
+        return r'^\s*~~~+\s*$'
 
     def get_params(self, match, start=True):
         """
@@ -214,9 +215,9 @@ class TextlinksPlugin(Plugin):
     def __init__(self, site):
         super(TextlinksPlugin, self).__init__(site)
         import re
-        self.content_link = re.compile('\[\[([^\]^!][^\]]*)\]\]',
+        self.content_link = re.compile(r'\[\[([^\]^!][^\]]*)\]\]',
                                        re.UNICODE | re.MULTILINE)
-        self.media_link = re.compile('\[\[\!\!([^\]]*)\]\]',
+        self.media_link = re.compile(r'\[\[\!\!([^\]]*)\]\]',
                                      re.UNICODE | re.MULTILINE)
 
     def begin_text_resource(self, resource, text):

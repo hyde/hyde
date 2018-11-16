@@ -28,7 +28,7 @@ class LessCSSPlugin(CLTransformer):
     def __init__(self, site):
         super(LessCSSPlugin, self).__init__(site)
         self.import_finder = \
-            re.compile('^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
+            re.compile(r'^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
                        re.MULTILINE)
 
     @property
@@ -136,7 +136,7 @@ class StylusPlugin(CLTransformer):
     def __init__(self, site):
         super(StylusPlugin, self).__init__(site)
         self.import_finder = \
-            re.compile('^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;?\s*$',
+            re.compile(r'^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;?\s*$',  # noqa: E501
                        re.MULTILINE)
 
     def begin_site(self):
@@ -286,7 +286,7 @@ class CleverCSSPlugin(Plugin):
             return text
 
         import_finder = re.compile(
-            '^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
+            r'^\\s*@import\s+(?:\'|\")([^\'\"]*)(?:\'|\")\s*\;\s*$',
             re.MULTILINE)
 
         def import_to_include(match):
