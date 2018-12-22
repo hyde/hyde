@@ -1,8 +1,4 @@
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
+# -*- coding: utf-8 -*-
 from hyde._compat import quote
 from hyde.generator import Generator
 from hyde.site import Site

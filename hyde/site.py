@@ -21,6 +21,7 @@ def path_normalized(f):
         return f(self, str(path).replace('/', os.sep))
     return wrapper
 
+
 logger = getLoggerWithNullHandler('hyde.engine')
 
 

@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
 from hyde.ext.plugins.meta import GrouperPlugin, MetaPlugin, SorterPlugin
 from hyde.generator import Generator
 from hyde.site import Site

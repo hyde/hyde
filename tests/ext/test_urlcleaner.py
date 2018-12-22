@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
 from hyde.generator import Generator
 from hyde.model import Config
 from hyde.site import Site
