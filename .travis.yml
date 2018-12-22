@@ -66,8 +66,8 @@ install:
   - pip install tox
 
 before_script:
-  - export PATH=$(pwd)/node_modules/.bin:$PATH && export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
-
+  - export PATH=${TRAVIS_BUILD_DIR}/node_modules/.bin/:${PATH}
+  - export PYTHONPATH=${PYTHONPATH}:/usr/share/asciidoc/
 
 script:
   - tox -e $TOX_ENV

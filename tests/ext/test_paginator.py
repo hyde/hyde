@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
 from textwrap import dedent
 
 from hyde.generator import Generator
