@@ -320,7 +320,7 @@ def test_line_statements_with_config():
     """
     t = Jinja2Template(JINJA2.path)
     s = Site(JINJA2.path)
-    s.config = Config(JINJA2.path, config_dict=yaml.load(config))
+    s.config = Config(JINJA2.path, config_dict=yaml.load(config, Loader=yaml.FullLoader))
     t.configure(s)
     t.env.filters['dateformat'] = dateformat
     html = t.render(source, {}).strip()

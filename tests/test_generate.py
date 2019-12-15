@@ -231,7 +231,7 @@ main:
             title: "one event"
             location: "a city"
 """
-        events_dict = yaml.load(events)
+        events_dict = yaml.load(events, Loader=yaml.FullLoader)
         config_dict = dict(context=dict(
             data=dict(events1=events_dict),
             providers=dict(events2="events.yaml")

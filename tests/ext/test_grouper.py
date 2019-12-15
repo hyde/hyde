@@ -50,7 +50,7 @@ class TestGrouperSingleLevel(object):
                       description: Plugins
 
         """
-        self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg, Loader=yaml.FullLoader))
         self.s.load()
         MetaPlugin(self.s).begin_site()
         SorterPlugin(self.s).begin_site()
@@ -268,7 +268,7 @@ class TestGrouperSingleLevel(object):
                       description: Plugins
 
         """
-        self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        self.s.config = Config(TEST_SITE, config_dict=yaml.load(cfg, Loader=yaml.FullLoader))
         self.s.load()
         MetaPlugin(self.s).begin_site()
         SorterPlugin(self.s).begin_site()
