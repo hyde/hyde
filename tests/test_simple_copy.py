@@ -47,7 +47,7 @@ class TestSimpleCopy(object):
     def setup_config(self, passthru):
         self.config_file = File(self.SITE_PATH.child('site.yaml'))
         with open(self.config_file.path) as config:
-            conf = yaml.load(config)
+            conf = yaml.load(config, Loader=yaml.FullLoader)
             conf['simple_copy'] = passthru
             self.config = Config(sitepath=self.SITE_PATH, config_dict=conf)
 

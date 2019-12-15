@@ -128,11 +128,11 @@ class TestConfig(object):
         assert c.meta.nodemeta == 'meta.yaml'
 
     def test_conf1(self):
-        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf1))
+        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf1, Loader=yaml.FullLoader))
         assert c.content_root_path == TEST_SITE.child_folder('stuff')
 
     def test_conf2(self):
-        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf2))
+        c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf2, Loader=yaml.FullLoader))
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
         assert c.media_root_path == c.content_root_path.child_folder('mmm')
         assert c.media_url == TEST_SITE.child_folder('/media')

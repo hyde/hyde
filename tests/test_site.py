@@ -204,7 +204,7 @@ class TestSiteWithConfig(object):
         cls.config_file = File(cls.SITE_PATH.child('alternate.yaml'))
         with open(cls.config_file.path) as config:
             cls.config = Config(
-                sitepath=cls.SITE_PATH, config_dict=yaml.load(config))
+                sitepath=cls.SITE_PATH, config_dict=yaml.load(config, Loader=yaml.FullLoader))
         cls.SITE_PATH.child_folder('content').rename_to(
             cls.config.content_root)
 
