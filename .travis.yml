@@ -2,13 +2,13 @@ sudo: false
 
 language: python
 python:
-  - "2.7"
-  - "3.3"
-  - "3.4"
-  - "3.5"
-  - "3.6"
-  - "3.7"
-  - "3.8"
+  - 2.7
+  - 3.3
+  - 3.4
+  - 3.5
+  - 3.6
+  - 3.7
+  - 3.8
 
 addons:
   apt:
@@ -62,12 +62,3 @@ before_script:
 script:
   - tox -e $TOX_ENV
 
-# Only build for the master branch
-# Note that this does not prevent pull request builds
-branches:
-  only:
-    master
-
-notifications:
-  irc:
-    channels: chat.freenode.net#hyde
