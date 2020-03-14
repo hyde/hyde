@@ -32,7 +32,7 @@ cache:
 
 install:
   # JS dependencies
-  - npm install sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
+  - npm install sass@1.26.3 requirejs@2.3.6 stylus@0.54.7 uglify-js@3.8.0 less@3.10.3
 
   # Python test requirements
   - pip install tox
@@ -43,6 +43,9 @@ env:
   - TOX_ENV=py33
   - TOX_ENV=py34
   - TOX_ENV=py35
+  - TOX_ENV=py36
+  - TOX_ENV=py37
+  - TOX_ENV=py38
   - TOX_ENV=pep8
   - TOX_ENV=docs
 
