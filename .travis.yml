@@ -8,12 +8,15 @@ matrix:
     - name: "Python 2.7 Unit Test"
       python: '2.7'
       env: TOX_ENV=py27
-    - name: "Python 3.4 Unit Test"
-      python: '3.4'
-      env: TOX_ENV=py34
+    - name: "Python 3.5 Unit Test"
+      python: '3.5'
+      env: TOX_ENV=py35
     - name: "Python 3.6 Unit Test"
       python: '3.6'
       env: TOX_ENV=py36
+    - name: "Python 3.7 Unit Test"
+      python: '3.7'
+      env: TOX_ENV=py37
     - name: "Pep8 Test"
       python: 2.7
       env: TOX_ENV=pep8
