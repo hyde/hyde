@@ -1,8 +1,25 @@
 sudo: false
 
 language: python
-python:
-  - "3.5"
+
+# Run each tox environment separately
+matrix:
+  include:
+    - name: "Python 2.7 Unit Test"
+      python: '2.7'
+      env: TOX_ENV=py27
+    - name: "Python 3.5 Unit Test"
+      python: '3.5'
+      env: TOX_ENV=py35
+    - name: "Python 3.6 Unit Test"
+      python: '3.6'
+      env: TOX_ENV=py36
+    - name: "Python 3.7 Unit Test"
+      python: '3.7'
+      env: TOX_ENV=py37
+    - name: "Docs"
+      python: 2.7
+      env: TOX_ENV=docs
 
 addons:
   apt:
@@ -14,7 +31,7 @@ addons:
     - libjpeg8-dev
     - liblcms2-dev
     - libpcre3-dev
-    - libtiff4-dev
+    - libtiff5-dev
     - libwebp-dev
     - libxml2-dev
     - libxslt1-dev
@@ -32,33 +49,14 @@ cache:
 
 install:
   # JS dependencies
-  - npm install sass@0.5.0 requirejs@2.1 stylus@0.51 uglify-js@2.4.23 less@2.5.1
+  - npm install sass@0.5.0 requirejs@2.1 stylus@0.54.6 uglify-js@2.4.23 less@2.7.3
 
   # Python test requirements
   - pip install tox
 
-# Run each tox environment separately
-env:
-  - TOX_ENV=py27
-  - TOX_ENV=py33
-  - TOX_ENV=py34
-  - TOX_ENV=py35
-  - TOX_ENV=pep8
-  - TOX_ENV=docs
-
 before_script:
-  - export PATH=$(pwd)/node_modules/.bin:$PATH
-  - export PYTHONPATH=$PYTHONPATH:/usr/share/asciidoc/
+  - export PATH=${TRAVIS_BUILD_DIR}/node_modules/.bin/:${PATH}
+  - export PYTHONPATH=${PYTHONPATH}:/usr/share/asciidoc/
 
 script:
   - tox -e $TOX_ENV
-
-# Only build for the master branch
-# Note that this does not prevent pull request builds
-branches:
-  only:
-    master
-
-notifications:
-  irc:
-    channels: chat.freenode.net#hyde
