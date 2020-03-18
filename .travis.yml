@@ -17,6 +17,9 @@ matrix:
     - name: "Python 3.7 Unit Test"
       python: '3.7'
       env: TOX_ENV=py37
+    - name: "Python 3.8 Unit Test"
+      python: '3.8'
+      env: TOX_ENV=py38
     - name: "Pep8 Test"
       python: 2.7
       env: TOX_ENV=pep8
