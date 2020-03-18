@@ -1,7 +1,18 @@
-Version TBA
+Version 0.9.0 (TBD)
 ===========
 
-* Experimental Python 3 support
+Thanks to @descent098
+
+**Installation**
+
+- Resolved bug with being unable to build local docs due to missing *sphinx_rtd_theme* dependency
+
+**CI/CD**
+
+- Fixed Travis build errors due to deprecated dependencies
+- Removed PEP-8 Validation
+
+
 
 
 Version 0.8.9 (2015-11-09)
