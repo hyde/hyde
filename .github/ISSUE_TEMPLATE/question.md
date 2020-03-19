@@ -2,7 +2,7 @@
 name: question
 about: Submit a question to help us improve
 title: "[question]"
-labels: User Documentation
+labels: User Documentation, Needs More Info
 assignees: Descent098
 ---
 
