@@ -74,6 +74,7 @@ pylint*
 .tm_properties
 .idea
 PYSMELLTAGS
+.vscode/
 
 # Hyde specific
 .hyde_deps
