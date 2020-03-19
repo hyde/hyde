@@ -12,6 +12,11 @@ Thanks to @descent098
 - Fixed Travis build errors due to deprecated dependencies
 - Removed PEP-8 Validation
 
+**Development QOL**
+
+- Added pull request templates
+- Added issue templates for questions, bug reports, and Feature requests
+
 
 
 
