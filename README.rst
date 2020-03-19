@@ -19,7 +19,9 @@ tackled in version 1.0, thanks to `llonchj`_ and `jonafato`_ for their work in
 moving towards 1.0.
 
 A new slack has been created for current development, any information about how 
-to help or contribute to active development can be found there: [join here](https://join.slack.com/t/hyde-network/shared_invite/zt-cxbso1ba-pHM1BGbDA9t9dBa20hLVNQ).
+to help or contribute to active development can be found there: 
+
+`<https://join.slack.com/t/hyde-network/shared_invite/zt-cxbso1ba-pHM1BGbDA9t9dBa20hLVNQ>`_
 
 
 Installation
