@@ -1,4 +1,4 @@
-Version 0.8.9
+Version 0.9.0
 
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
 
@@ -14,14 +14,12 @@ like Twitter's `bootstrap framework`_.
 You can also take a look at `Hyde Powered Websites`_ for inspiration and
 reference.
 
-Currently hyde is only supported on python 2.7.x.  Python 3.x support is in
-progress, thanks to `jonafato`_.
+Currently hyde is only supported on python 2.7.x.  Python 3.x support is being
+tackled in version 1.0, thanks to `llonchj`_ and `jonafato`_ for their work in
+moving towards 1.0.
 
-Active development of hyde had stalled for some time, but thanks to `llonchj`_
-and `jonafato`_ there is now a slow but steady progress towards 1.0.
-
-Mailing List:  `hyde-dev`_ on google groups.
-IRC: #hyde on freenode
+A new slack has been created for current development, any information about how 
+to help or contribute to active development can be found there: [join here](https://join.slack.com/t/hyde-network/shared_invite/zt-cxbso1ba-pHM1BGbDA9t9dBa20hLVNQ).
 
 
 Installation
@@ -55,7 +53,8 @@ Generating the hyde site
 
 ::
 
-        cd ~/test_site
+        mkdir test_site
+        cd test_site
         hyde gen
 
 Serving the website
@@ -63,7 +62,8 @@ Serving the website
 
 ::
 
-        cd ~/test_site
+        mkdir test_site
+        cd test_site
         hyde serve
         open http://localhost:8080
 
@@ -72,7 +72,8 @@ Publishing the website
 
 ::
 
-        cd ~/test_site
+        mkdir test_site
+        cd test_site
         hyde publish -p github
 
 
