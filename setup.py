@@ -8,11 +8,30 @@ import sys
 
 
 PROJECT = 'hyde'
-try:
-    long_description = open('README.rst', 'rt').read()
-except IOError:
-    long_description = ''
 
+
+def get_content(*filenames): # TODO: add typhint in version 1.0.0
+    """Takes in an aribtrary amount of file paths and scrapes the content from the files
+
+    Parameters
+    ----------
+    filenames: str
+        The paths to the files
+    
+    Returns
+    -------
+    str
+        The content of the files
+    """
+    content = ""
+    for file in filenames:
+        with open(file, "r") as full_description:
+            content += full_description.read()
+    return content
+
+
+
+# TODO: Look at removing find_package_data() with https://setuptools.readthedocs.io/en/latest/setuptools.html#basic-use
 ##############################################################################
 # find_package_data is an Ian Bicking creation.
 
@@ -106,65 +125,74 @@ def find_package_data(
 ##############################################################################
 
 
-def read_requirements(f):
-    reqs = []
-    with open(f, "r") as h:
-        reqs = [req.split('#', 1)[0].strip() for req in h]
-        reqs = [req for req in reqs if req]
+def read_requirements(*filenames):
+    """Takes an arbitrary number of filepaths and returns a list of the
+    requirements in the file (newline delimited).
+
+    Returns
+    -------
+    list:
+        The list of requirements to install
+    """
+    reqs = []   # list of requirements built from the files
+    for file in filenames:
+        with open(file, "r") as requirements_file:
+            reqs = [req.split('#', 1)[0].strip() for req in requirements_file]
+            reqs = [req for req in reqs if req]
     return reqs
 
 
-install_requires = read_requirements('requirements.txt')
-dev_requires = read_requirements('dev-only.txt')
+install_requires = read_requirements('requirements.txt') # Defines general Hyde dependencies
+dev_requires = read_requirements('dev-only.txt')         # Defines development dependencies
 
 setup(name=PROJECT,
-      version=__version__,
-      description='hyde is a static website generator',
-      long_description=long_description,
-      author='hyde developers',
-      author_email='hyde-dev@googlegroups.com',
-      url='http://hyde.github.io',
-      packages=find_packages(),
-      requires=['python (>= 2.7)'],
-      install_requires=install_requires,
-      tests_require=dev_requires,
-      test_suite='nose.collector',
-      include_package_data=True,
-      # Scan the input for package information
-      # to grab any data files (text, images, etc.)
-      # associated with sub-packages.
+    version=__version__,
+    description='hyde is a static website generator',
+    long_description=get_content('README.rst', 'CHANGELOG.rst'),
+    author='hyde developers',
+    author_email='hyde-dev@googlegroups.com',
+    url='http://hyde.github.io',
+    packages=find_packages(),
+    requires=['python (>= 2.7)'],
+    install_requires=install_requires,
+    tests_require=dev_requires,
+    test_suite='nose.collector',
+    include_package_data=True,
+    # Scan the input for package information
+    # to grab any data files (text, images, etc.)
+    # associated with sub-packages.
 
-      package_data=find_package_data(PROJECT,
-                                     package=PROJECT,
-                                     only_in_packages=False,),
-      entry_points={
-          'console_scripts': [
-              'hyde = hyde.main:main'
-          ]
-      },
-      license='MIT',
-      classifiers=[
-          'Development Status :: 4 - Beta',
-          'Environment :: Console',
-          'Intended Audience :: End Users/Desktop',
-          'Intended Audience :: Developers',
-          'Intended Audience :: System Administrators',
-          'License :: OSI Approved :: MIT License',
-          'Operating System :: MacOS :: MacOS X',
-          'Operating System :: Unix',
-          'Operating System :: POSIX',
-          'Operating System :: Microsoft :: Windows',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 2',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
-          'Programming Language :: Python :: 3.5',
-          'Topic :: Software Development',
-          'Topic :: Software Development :: Build Tools',
-          'Topic :: Software Development :: Code Generators',
-          'Topic :: Internet',
-          'Topic :: Internet :: WWW/HTTP :: Site Management',
-      ],
-      zip_safe=False,)
+    package_data=find_package_data(PROJECT,
+                                    package=PROJECT,
+                                    only_in_packages=False,),
+    entry_points={
+        'console_scripts': [
+            'hyde = hyde.main:main'
+        ]
+    },
+    license='MIT',
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Environment :: Console',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Developers',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Unix',
+        'Operating System :: POSIX',
+        'Operating System :: Microsoft :: Windows',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Build Tools',
+        'Topic :: Software Development :: Code Generators',
+        'Topic :: Internet',
+        'Topic :: Internet :: WWW/HTTP :: Site Management',
+    ],
+    zip_safe=False,)

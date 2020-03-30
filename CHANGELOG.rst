@@ -6,6 +6,8 @@ Thanks to @descent098
 **Installation**
 
 - Resolved bug with being unable to build local docs due to missing *sphinx_rtd_theme* dependency
+- Deprecated h file
+- Updated setup.py to remove helper functions
 
 **CI/CD**
 
