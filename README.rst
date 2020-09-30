@@ -64,7 +64,7 @@ Serving the website
 ::
 
         cd ~/test_site
-        hyde serve
+        hyde server
         open http://localhost:8080
 
 Publishing the website
