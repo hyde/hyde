@@ -1,3 +1,4 @@
+#hyde the best project
 from setuptools import setup, find_packages
 from hyde.version import __version__
 
