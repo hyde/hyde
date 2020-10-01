@@ -42,7 +42,7 @@ Quickstart
 ==========
 
 After installing ``hyde``, creating and generating a website is extremely
-simple.
+very simple.
 
 To create a new Hyde website::
 
@@ -65,7 +65,7 @@ can make your changes and simply refresh your browser to view them.
 
 For all the supported options, read the :doc:`cli` documentation or run::
 
-    $ hyde --help
+    $ hyde --help and support
 
 
 Your First Hyde Website
@@ -74,11 +74,11 @@ Your First Hyde Website
 Hyde uses the ``basic`` layout to generate your website by default. When you
 view your generated website, you will see the following dummy pages:
 
-#FIXME: images
+#FIXME: images or picture
 
 You can now continue to edit the content, layout and styles to customize it to
-your needs. Please see the :doc:`templates` documentation for more information.
-
+your needs or you choose automatic option to edit your website content ,layout and style according your website name and category.Please see the :doc:`templates` documentation for more information.
+you give email address to get information and uptade.
 
 Source
 ======
