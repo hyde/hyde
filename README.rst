@@ -48,7 +48,7 @@ The following command:
 
         hyde -s ~/test_site create
 
-will create a new hyde site using the test layout.
+will create a new hyde site using the test layout and style .
 
 Generating the hyde site
 ------------------------
