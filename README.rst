@@ -5,7 +5,7 @@ Version 0.8.9
 Overview
 ========
 
-`Hyde starter kit`_ by `merlinrebrovic`_ is a really nice way to get started
+`Hyde starter kit`_ by `merlinrebrovic`_ is a really nice and easy way to get started
 with hyde.
 
 `Hyde layout for bootstrap`_ by `auzigog`_ is also a good alternative if you
