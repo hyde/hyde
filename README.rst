@@ -1,4 +1,4 @@
-Version 0.8.9
+Version 0.8.9 - an amazing project
 
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
 
