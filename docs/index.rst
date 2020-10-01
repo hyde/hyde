@@ -5,7 +5,7 @@ Hyde
 Overview
 ========
 
-Hyde is a static website generator written in Python. While Hyde took life as
+Hyde is a static website generator written in Python and other some language.but main sourse code written in python. While Hyde took life as
 `Jekyll <https://jekyllrb.com/>`_'s evil twin, it has since been completely
 consumed by `the dark side <https://www.python.org/>`_ and has taken on an
 `identity of its own <https://groups.google.com/forum/#!forum/hyde-dev>`_.
