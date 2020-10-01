@@ -1,4 +1,5 @@
-Available updated Version 0.8.9
+#is the upgraded one
+Version 0.8.9
 
 .. image:: https://travis-ci.org/hyde/hyde.svg?branch=master
 
