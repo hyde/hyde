@@ -4,6 +4,7 @@ Version 0.8.9
 
 Overview
 ========
+Welcome you will correct info here.
 
 `Hyde starter kit`_ by `merlinrebrovic`_ is a really nice way to get started
 with hyde.
@@ -25,7 +26,7 @@ IRC: #hyde on freenode
 
 
 Installation
-------------
+---------------------------------------------------------------------------------------
 
 To get the latest released version:
 
@@ -40,7 +41,7 @@ For the current trunk:
     pip install -e git://github.com/hyde/hyde.git#egg=hyde
 
 Creating a new hyde site
-------------------------
+----------------------------------------------------------------
 
 The following command:
 
@@ -51,7 +52,7 @@ The following command:
 will create a new hyde site using the test layout.
 
 Generating the hyde site
-------------------------
+-----------------------------------------------------------------
 
 ::
 
