@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Contains definition for a plugin protocol and other utiltities.
+Contains definition for a plugin protocol and other utilities.
 """
 from hyde._compat import str
 from hyde.exceptions import HydeException
