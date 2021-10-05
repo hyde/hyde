@@ -291,9 +291,12 @@ class ImageThumbnailsPlugin(PILPlugin):
         self.logger.debug("Making thumbnail for [%s]" % resource)
 
         im = self.Image.open(resource.path)
-        if im.mode != 'RGBA':
-            im = im.convert('RGBA')
         format = im.format
+        # don't convert JPEG to RGBA because PIL doesn't
+        # support saving JPEGs as that from v 3.7
+        # see https://github.com/python-pillow/Pillow/commit/193c7561392fd12c3bd93bc232d9041c89bec4f6
+        if im.mode != 'RGBA' and im.format != 'JPEG':
+            im = im.convert('RGBA')
 
         if preserve_orientation and im.size[1] > im.size[0]:
             width, height = height, width
