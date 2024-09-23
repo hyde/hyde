@@ -7,6 +7,7 @@ from collections import namedtuple
 from functools import partial
 from operator import attrgetter
 import re
+import os
 import sys
 
 from hyde._compat import basestring, filter, iteritems, str
@@ -390,7 +391,8 @@ class TaggerPlugin(Plugin):
                 "No Template specified in tagger configuration.")
         content = self.site.content.source_folder
         source = Folder(config.get('source', ''))
-        target = content.child_folder(config.get('target', 'tags'))
+        target_prop = os.path.join(*re.split('[\\/]', config.get('target', 'tags')))
+        target = content.child_folder(target_prop)
         if not target.exists:
             target.make()
 
