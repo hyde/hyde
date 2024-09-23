@@ -17,8 +17,7 @@ reference.
 Currently hyde is only supported on python 2.7.x.  Python 3.x support is in
 progress, thanks to `jonafato`_.
 
-Active development of hyde had stalled for some time, but thanks to `llonchj`_
-and `jonafato`_ there is now a slow but steady progress towards 1.0.
+Hyde is not actively maintained.
 
 Mailing List:  `hyde-dev`_ on google groups.
 IRC: #hyde on freenode
