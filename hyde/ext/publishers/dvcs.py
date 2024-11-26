@@ -61,48 +61,46 @@ class Git(DVCS):
     """
 
     def add(self, path="."):
-        cmd = Popen('git add "%s"' % path,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+        cmd = Popen('git add --'.split() + [ path ],
+                    cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def pull(self):
         self.switch(self.branch)
-        cmd = Popen("git pull origin %s" % self.branch,
+        cmd = Popen('git pull origin'.split() + [ self.branch ],
                     cwd=str(self.path),
-                    stdout=PIPE,
-                    shell=True)
+                    stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def push(self):
-        cmd = Popen("git push origin %s" % self.branch,
-                    cwd=str(self.path), stdout=PIPE,
-                    shell=True)
+        cmd = Popen('git push origin'.split() + [ self.branch ],
+                    cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def commit(self, message):
-        cmd = Popen('git commit -a -m"%s"' % message,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+        cmd = Popen('git commit -a'.split() + [ '-m' + str(message) ],
+                    cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def switch(self, branch):
         self.branch = branch
-        cmd = Popen('git checkout %s' % branch,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+        cmd = Popen('git checkout'.split() + [ branch ],
+                    cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
 
     def merge(self, branch):
-        cmd = Popen('git merge %s' % branch,
-                    cwd=str(self.path), stdout=PIPE, shell=True)
+        cmd = Popen('git merge'.split() + [ branch ],
+                    cwd=str(self.path), stdout=PIPE)
         cmdresult = cmd.communicate()[0]
         if cmd.returncode:
             raise Exception(cmdresult)
