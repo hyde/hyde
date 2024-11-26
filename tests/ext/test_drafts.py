@@ -46,7 +46,7 @@ class TestDrafts(object):
             - hyde.ext.plugins.blog.DraftsPlugin
         """
         import yaml
-        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg, Loader=yaml.FullLoader))
         s.load()
         gen = Generator(s)
         gen.generate_all()
@@ -62,7 +62,7 @@ class TestDrafts(object):
             - hyde.ext.plugins.blog.DraftsPlugin
         """
         import yaml
-        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg))
+        s.config = Config(TEST_SITE, config_dict=yaml.load(cfg, Loader=yaml.FullLoader))
         s.load()
         gen = Generator(s)
         gen.generate_all()

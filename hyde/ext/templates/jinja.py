@@ -385,7 +385,7 @@ class YamlVar(Extension):
             return ''
 
         out = caller().strip()
-        var.update(yaml.load(out))
+        var.update(yaml.load(out, Loader=yaml.FullLoader))
         return ''
 
 

@@ -44,7 +44,7 @@ class Metadata(Expando):
         Updates the metadata with new stuff
         """
         if isinstance(data, basestring):
-            super(Metadata, self).update(yaml.load(data))
+            super(Metadata, self).update(yaml.load(data, Loader=yaml.FullLoader))
         else:
             super(Metadata, self).update(data)
 

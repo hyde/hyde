@@ -123,7 +123,7 @@ class Context(object):
         for provider_name, resource_name in providers.items():
             res = File(Folder(sitepath).child(resource_name))
             if res.exists:
-                data = make_expando(yaml.load(res.read_all()))
+                data = make_expando(yaml.load(res.read_all(), Loader=yaml.FullLoader))
                 context[provider_name] = data
 
         return context
@@ -140,7 +140,7 @@ class Dependents(UserDict):
         self.deps_file = File(self.sitepath.child(depends_file_name))
         self.data = {}
         if self.deps_file.exists:
-            self.data = yaml.load(self.deps_file.read_all())
+            self.data = yaml.load(self.deps_file.read_all(), Loader=yaml.FullLoader)
         import atexit
         atexit.register(self.save)
 
@@ -223,7 +223,7 @@ class Config(Expando):
             self.config_files.append(File(conf_file))
             logger.info("Reading site configuration from [%s]", conf_file)
             with codecs.open(conf_file, 'r', 'utf-8') as stream:
-                conf = yaml.load(stream)
+                conf = yaml.load(stream, Loader=yaml.FullLoader)
                 if 'extends' in conf:
                     parent = self.read_config(conf['extends'])
                     parent.update(conf)
