@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Use nose
-`$ pip install nose`
-`$ nosetests`
-"""
 from hyde.generator import Generator
 from hyde.site import Site
 
-
 from fswrap import File
-from nose.tools import nottest
 from pyquery import PyQuery
 
 TEST_SITE = File(__file__).parent.parent.child_folder('_test')
@@ -25,7 +18,6 @@ class TestAutoExtend(object):
     def tearDown(self):
         TEST_SITE.delete()
 
-    @nottest
     def assert_extended(self, s, txt, templ):
         content = (templ.strip() % txt).strip()
         bd = File(TEST_SITE.child('content/auto_extend.html'))

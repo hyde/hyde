@@ -482,6 +482,7 @@ class IncludeText(Extension):
             output = typo(output)
         return output
 
+
 MARKINGS = '_markings_'
 
 
@@ -828,12 +829,12 @@ class Jinja2Template(Template):
         The pattern for matching selected template statements.
         """
         return {
-            "block_open": '\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
-            "block_close": '\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
+            "block_open": r'\s*\{\%\s*block\s*([^\s]+)\s*\%\}',
+            "block_close": r'\s*\{\%\s*endblock\s*([^\s]*)\s*\%\}',
             "include":
-                '\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
+                r'\s*\{\%\s*include\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}',
             "extends":
-                '\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
+                r'\s*\{\%\s*extends\s*(?:\'|\")(.+?\.[^.]*)(?:\'|\")\s*\%\}'
         }
 
     def get_include_statement(self, path_to_include):
@@ -887,7 +888,7 @@ class Jinja2Template(Template):
         try:
             template = self.env.get_template(resource.relative_path)
             out = template.render(context)
-        except:
+        except Exception:
             raise
         return out
 

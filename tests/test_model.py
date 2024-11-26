@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Use nose
-`$ pip install nose`
-`$ nosetests`
+Use nose2
+`$ pip install nose2`
+`$ nose2`
 """
 from hyde.model import Config, Expando
 
@@ -128,10 +128,12 @@ class TestConfig(object):
         assert c.meta.nodemeta == 'meta.yaml'
 
     def test_conf1(self):
+        self.setup_class()
         c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf1))
         assert c.content_root_path == TEST_SITE.child_folder('stuff')
 
     def test_conf2(self):
+        self.setup_class()
         c = Config(sitepath=TEST_SITE, config_dict=yaml.load(self.conf2))
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
         assert c.media_root_path == c.content_root_path.child_folder('mmm')
@@ -139,6 +141,7 @@ class TestConfig(object):
         assert c.deploy_root_path == Folder('~/deploy_site')
 
     def test_read_from_file_by_default(self):
+        self.setup_class()
         File(TEST_SITE.child('site.yaml')).write(self.conf2)
         c = Config(sitepath=TEST_SITE)
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
@@ -147,6 +150,7 @@ class TestConfig(object):
         assert c.deploy_root_path == Folder('~/deploy_site')
 
     def test_read_from_specified_file(self):
+        self.setup_class()
         File(TEST_SITE.child('another.yaml')).write(self.conf2)
         c = Config(sitepath=TEST_SITE, config_file='another.yaml')
         assert c.content_root_path == TEST_SITE.child_folder('site/stuff')
@@ -155,6 +159,7 @@ class TestConfig(object):
         assert c.deploy_root_path == Folder('~/deploy_site')
 
     def test_extends(self):
+        self.setup_class()
         another = """
         extends: site.yaml
         mode: production

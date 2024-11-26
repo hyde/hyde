@@ -27,7 +27,7 @@ class HtmlWrap(object):
         self.raw = html
         try:
             from pyquery import PyQuery
-        except:
+        except Exception:
             PyQuery = None
         self.q = PyQuery(html) if PyQuery else None
 

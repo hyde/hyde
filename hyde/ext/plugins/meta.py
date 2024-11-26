@@ -448,7 +448,7 @@ def filter_method(item, settings=None):
     for field, value in filters.items():
         try:
             res = attrgetter(field)(item)
-        except:
+        except Exception:
             res = None
         if res != value:
             all_match = False

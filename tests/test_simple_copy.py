@@ -13,9 +13,9 @@ simple_copy:
 Matching is done with `fnmatch` module. So any `glob` that fnmatch
 can process is a valid pattern.
 
-Use nose
-`$ pip install nose`
-`$ nosetests`
+Use nose2
+`$ pip install nose2`
+`$ nose2`
 """
 import yaml
 
@@ -24,7 +24,7 @@ from hyde.site import Site
 from hyde.generator import Generator
 
 from fswrap import File
-from nose.tools import nottest
+# from nose2.tools.decorators import with_setup, with_teardown
 
 
 TEST_SITE_ROOT = File(__file__).parent.child_folder('sites/test_jinja')
@@ -43,7 +43,6 @@ class TestSimpleCopy(object):
     def teardown_class(cls):
         cls.SITE_PATH.delete()
 
-    @nottest
     def setup_config(self, passthru):
         self.config_file = File(self.SITE_PATH.child('site.yaml'))
         with open(self.config_file.path) as config:
@@ -52,6 +51,7 @@ class TestSimpleCopy(object):
             self.config = Config(sitepath=self.SITE_PATH, config_dict=conf)
 
     def test_simple_copy_basic(self):
+        self.setup_class()
         self.setup_config([
             'about.html'
         ])
@@ -60,8 +60,10 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('about.html')
         assert res
         assert res.simple_copy
+        self.teardown_class()
 
     def test_simple_copy_directory(self):
+        self.setup_class()
         self.setup_config([
             '**/*.html'
         ])
@@ -74,8 +76,10 @@ class TestSimpleCopy(object):
             'blog/2010/december/merry-christmas.html')
         assert res
         assert res.simple_copy
+        self.teardown_class()
 
     def test_simple_copy_multiple(self):
+        self.setup_class()
         self.setup_config([
             '**/*.html',
             'media/css/*.css'
@@ -92,8 +96,10 @@ class TestSimpleCopy(object):
         res = s.content.resource_from_relative_path('media/css/site.css')
         assert res
         assert res.simple_copy
+        self.teardown_class()
 
     def test_generator(self):
+        self.setup_class()
         self.setup_config([
             '**/*.html',
             'media/css/*.css'
@@ -108,9 +114,10 @@ class TestSimpleCopy(object):
         left = source.source_file.read_all()
         right = target.read_all()
         assert left == right
+        self.teardown_class()
 
     def test_plugins(self):
-
+        self.setup_class()
         text = """
 ---
 title: Hey
@@ -146,3 +153,4 @@ twitter: @me
         left = source.source_file.read_all()
         right = target.read_all()
         assert left == right
+        self.teardown_class()

@@ -92,7 +92,7 @@ class PluginProxy(object):
                                 function = getattr(plugin, method_name)
                                 try:
                                     res = function(*args)
-                                except:
+                                except Exception:
                                     HydeException.reraise(
                                         'Error occured when calling %s' %
                                         plugin.plugin_name, sys.exc_info())
