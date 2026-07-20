@@ -373,7 +373,7 @@ class CLTransformer(Plugin):
         Gets the application path from the site configuration.
 
         If the path is not configured, attempts to guess the path
-        from the sytem path environment variable.
+        from the system path environment variable.
         """
 
         try:
